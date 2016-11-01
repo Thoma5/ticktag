@@ -1,6 +1,7 @@
 package io.ticktag
 
-import io.ticktag.service.hello.impl.HelloServiceImpl
+import io.ticktag.service.hello.dto.HelloParams
+import io.ticktag.service.hello.services.impl.HelloServiceImpl
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
@@ -14,5 +15,5 @@ open class TicktagApplication {
 fun main(params: Array<String>) {
     val context = AnnotationConfigApplicationContext(TicktagApplication::class.java)
     val hello = context.getBean(HelloServiceImpl::class.java)
-    println(hello.hello("Tick", "Tag"))
+    println(hello.hello(HelloParams("Tick", "Tag")))
 }
