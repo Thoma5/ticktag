@@ -21,7 +21,9 @@ import springfox.documentation.spi.DocumentationType
 import springfox.documentation.spring.web.plugins.Docket
 import springfox.documentation.swagger2.annotations.EnableSwagger2
 import java.io.File
+import java.io.FileInputStream
 import java.util.*
+import javax.inject.Named
 import javax.persistence.EntityManagerFactory
 import javax.sql.DataSource
 
@@ -31,23 +33,22 @@ import javax.sql.DataSource
 @EnableJpaRepositories("io.ticktag.persistence")
 @EnableSwagger2
 open class TicktagApplication : WebMvcConfigurerAdapter() {
-    private val DB_URL = "jdbc:postgresql://%s:%d%s"
+    @Bean("applicationProperties")
+    open fun applicationProperties(): Properties {
+        val props = Properties()
+        val fp = FileInputStream(File("src/main/resources/application.properties"))
+        props.load(fp)
+        fp.close()
+        return props
+    }
 
     @Bean
-    open fun dataSource(): DataSource {
-        val username = "ticktag"
-        val password = "ticktag"
-        val host = "localhost"
-        val port = 5432
-        val path = "/ticktag"
-        val dbUrl = String.format(DB_URL, host, port, path)
-
+    open fun dataSource(@Named("applicationProperties") props: Properties): DataSource {
         val basicDataSource = BasicDataSource()
         basicDataSource.driverClassName = "org.postgresql.Driver"
-        basicDataSource.url = dbUrl
-        basicDataSource.username = username
-        basicDataSource.password = password
-
+        basicDataSource.url = props.getProperty("db.url")
+        basicDataSource.username = props.getProperty("db.user")
+        basicDataSource.password = props.getProperty("db.password")
         return basicDataSource
     }
 
@@ -93,13 +94,18 @@ open class TicktagApplication : WebMvcConfigurerAdapter() {
 }
 
 fun main(params: Array<String>) {
+    val pwd = File("")
+
     val context = AnnotationConfigWebApplicationContext()
     context.register(TicktagApplication::class.java)
 
-    val pwd = File(".")
+    val props = Properties()
+    val fp = FileInputStream(File("src/main/resources/application.properties"))
+    props.load(fp)
+    fp.close()
 
     val tomcat = Tomcat()
-    tomcat.setPort(8080)
+    tomcat.setPort(Integer.valueOf(props.getProperty("http.port")))
     tomcat.addContext("", pwd.absolutePath)
     val tcServlet = tomcat.addServlet("", "TicktagDispatcherServlet", DispatcherServlet(context))
     tcServlet.addMapping("/*")
