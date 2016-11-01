@@ -13,6 +13,13 @@ import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext
 import org.springframework.web.servlet.DispatcherServlet
 import org.springframework.web.servlet.config.annotation.EnableWebMvc
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
+import springfox.documentation.builders.PathSelectors
+import springfox.documentation.builders.RequestHandlerSelectors
+import springfox.documentation.spi.DocumentationType
+import springfox.documentation.spring.web.plugins.Docket
+import springfox.documentation.swagger2.annotations.EnableSwagger2
 import java.io.File
 import java.util.*
 import javax.persistence.EntityManagerFactory
@@ -22,7 +29,8 @@ import javax.sql.DataSource
 @ComponentScan
 @EnableWebMvc
 @EnableJpaRepositories("io.ticktag.persistence")
-open class TicktagApplication {
+@EnableSwagger2
+open class TicktagApplication : WebMvcConfigurerAdapter() {
     private val DB_URL = "jdbc:postgresql://%s:%d%s"
 
     @Bean
@@ -66,6 +74,21 @@ open class TicktagApplication {
         val transactionManager = JpaTransactionManager()
         transactionManager.entityManagerFactory = emf
         return transactionManager
+    }
+
+    @Bean
+    open fun api(): Docket {
+        return Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .apis(RequestHandlerSelectors.any())
+                .paths(PathSelectors.any()).build()
+    }
+
+    override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
+        registry.addResourceHandler("swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/")
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/")
     }
 }
 
