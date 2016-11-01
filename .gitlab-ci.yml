@@ -1,0 +1,12 @@
+image: debian:8
+
+before_script:
+  - apt-get update -y && apt-get install -y cowsay fortune
+
+server:
+  script:
+    - /usr/games/fortune | /usr/games/cowsay
+
+client:
+  script:
+    - /usr/games/fortune | /usr/games/cowsay
