@@ -1,9 +1,7 @@
 package io.ticktag
 
-import io.ticktag.service.hello.dto.HelloParams
-import io.ticktag.service.hello.services.impl.HelloServiceImpl
+import org.apache.catalina.startup.Tomcat
 import org.apache.commons.dbcp.BasicDataSource
-import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
@@ -12,12 +10,17 @@ import org.springframework.orm.jpa.JpaTransactionManager
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter
 import org.springframework.transaction.PlatformTransactionManager
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext
+import org.springframework.web.servlet.DispatcherServlet
+import org.springframework.web.servlet.config.annotation.EnableWebMvc
+import java.io.File
 import java.util.*
 import javax.persistence.EntityManagerFactory
 import javax.sql.DataSource
 
 @Configuration
 @ComponentScan
+@EnableWebMvc
 @EnableJpaRepositories("io.ticktag.persistence")
 open class TicktagApplication {
     private val DB_URL = "jdbc:postgresql://%s:%d%s"
@@ -67,7 +70,17 @@ open class TicktagApplication {
 }
 
 fun main(params: Array<String>) {
-    val context = AnnotationConfigApplicationContext(TicktagApplication::class.java)
-    val hello = context.getBean(HelloServiceImpl::class.java)
-    println(hello.hello(HelloParams("Tick", "Tag")))
+    val context = AnnotationConfigWebApplicationContext()
+    context.register(TicktagApplication::class.java)
+
+    val pwd = File(".")
+
+    val tomcat = Tomcat()
+    tomcat.setPort(8080)
+    tomcat.addContext("", pwd.absolutePath)
+    val tcServlet = tomcat.addServlet("", "TicktagDispatcherServlet", DispatcherServlet(context))
+    tcServlet.addMapping("/*")
+    tcServlet.loadOnStartup = 1
+    tomcat.start()
+    tomcat.server.await()
 }
