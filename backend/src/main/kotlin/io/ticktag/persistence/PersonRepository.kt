@@ -8,4 +8,5 @@ import java.util.*
 @TicktagRepository
 interface PersonRepository : CrudRepository<Person, UUID> {
     fun findById(id: UUID): Person?
+    fun findByFirstNameAndLastName(firstName: String, lastName: String): Person?
 }

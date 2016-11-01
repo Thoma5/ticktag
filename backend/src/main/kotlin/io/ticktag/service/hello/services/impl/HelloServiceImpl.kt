@@ -16,7 +16,8 @@ class HelloServiceImpl @Inject constructor(
 ) : HelloService {
 
     override fun hello(params: HelloParams): HelloResult {
-        val person = Person(params.firstName, params.lastName)
+        val maybePerson = personRepository.findByFirstNameAndLastName(params.firstName, params.lastName)
+        val person = maybePerson ?: Person(params.firstName, params.lastName)
         personRepository.save(person)
 
         val name = "${params.firstName} ${params.lastName}"
