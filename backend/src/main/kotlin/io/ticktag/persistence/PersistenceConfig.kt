@@ -39,6 +39,7 @@ open class PersistenceConfig {
         jpaProperties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect")
         jpaProperties.put("hibernate.hbm2ddl.auto", "validate")
         jpaProperties.put("hibernate.show_sql", "true")
+        jpaProperties.put("hibernate.globally_quoted_identifiers", "true")
         entityManagerFactoryBean.setJpaProperties(jpaProperties)
 
         return entityManagerFactoryBean
