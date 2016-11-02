@@ -1,7 +1,6 @@
 package io.ticktag.restinterface.auth.controllers
 
 import io.swagger.annotations.ApiOperation
-import io.swagger.annotations.ApiParam
 import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.auth.schema.LoginRequest
 import io.ticktag.restinterface.auth.schema.LoginResult
@@ -17,8 +16,8 @@ open class AuthController @Inject constructor(
         private val userService: UserService
 ) {
     @PostMapping("login")
-    @ApiOperation(httpMethod = "POST", value = "Obtain an auth token for the given credentials", nickname = "login")
-    open fun login(@RequestBody @ApiParam("loginRequest") loginRequest: LoginRequest): LoginResult {
+    @ApiOperation(value = "Obtain an auth token for the given credentials")
+    open fun login(@RequestBody loginRequest: LoginRequest): LoginResult {
         val validLogin = userService.checkPassword(loginRequest.email, loginRequest.password)
 
         if (validLogin) {
