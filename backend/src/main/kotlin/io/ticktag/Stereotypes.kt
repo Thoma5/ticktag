@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 annotation class TicktagRepository
 
 @RestController
-@RequestMapping(produces = arrayOf("application/json"))
+@RequestMapping(produces = arrayOf("application/json"), consumes = arrayOf("application/json"))
 annotation class TicktagRestInterface
 
 // TODO: Add default security

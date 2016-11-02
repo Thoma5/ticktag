@@ -7,14 +7,16 @@ import io.ticktag.service.hello.services.HelloService
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
+import javax.inject.Inject
 
 @TicktagRestInterface
 @RequestMapping("/hello")
-open class HelloController(
+open class HelloControllerImpl @Inject constructor(
         private val hello: HelloService
 ) {
+
     @RequestMapping(method = arrayOf(RequestMethod.GET))
-    fun hello(@RequestParam firstname: String, @RequestParam lastname: String): HelloResultJson {
+    open fun hello(@RequestParam firstname: String, @RequestParam lastname: String): HelloResultJson {
         return HelloResultJson(hello.hello(HelloParams(firstname, lastname)))
     }
 }

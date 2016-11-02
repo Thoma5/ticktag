@@ -8,6 +8,7 @@ import org.apache.catalina.startup.Tomcat
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
+import org.springframework.context.annotation.*
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext
 import org.springframework.web.servlet.DispatcherServlet
 import java.io.File
@@ -16,6 +17,7 @@ import java.util.*
 
 @Configuration
 @Import(PersistenceConfig::class, LibraryConfig::class, ServiceConfig::class, RestConfig::class)
+@EnableAspectJAutoProxy
 open class TicktagApplication {
     @Bean("applicationProperties")
     open fun applicationProperties(): Properties {
