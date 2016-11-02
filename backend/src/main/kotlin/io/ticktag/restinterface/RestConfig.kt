@@ -40,6 +40,8 @@ open class RestConfig : WebMvcConfigurerAdapter() {
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo)
+                .consumes(setOf("application/json"))
+                .produces(setOf("application/json"))
     }
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
