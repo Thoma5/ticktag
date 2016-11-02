@@ -3,6 +3,7 @@ package io.ticktag
 import io.ticktag.library.LibraryConfig
 import io.ticktag.persistence.PersistenceConfig
 import io.ticktag.restinterface.RestConfig
+import io.ticktag.restinterface.SwaggerConfig
 import io.ticktag.service.ServiceConfig
 import org.apache.catalina.startup.Tomcat
 import org.springframework.context.annotation.Bean
@@ -16,7 +17,7 @@ import java.io.FileInputStream
 import java.util.*
 
 @Configuration
-@Import(PersistenceConfig::class, LibraryConfig::class, ServiceConfig::class, RestConfig::class)
+@Import(PersistenceConfig::class, LibraryConfig::class, ServiceConfig::class, RestConfig::class, SwaggerConfig::class)
 @EnableAspectJAutoProxy
 open class TicktagApplication {
     @Bean("applicationProperties")
