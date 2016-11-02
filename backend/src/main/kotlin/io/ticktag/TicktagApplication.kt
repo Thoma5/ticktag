@@ -7,8 +7,8 @@ import io.ticktag.service.ServiceConfig
 import org.apache.catalina.startup.Tomcat
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.EnableAspectJAutoProxy
 import org.springframework.context.annotation.Import
-import org.springframework.context.annotation.*
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext
 import org.springframework.web.servlet.DispatcherServlet
 import java.io.File
@@ -21,11 +21,7 @@ import java.util.*
 open class TicktagApplication {
     @Bean("applicationProperties")
     open fun applicationProperties(): Properties {
-        val props = Properties()
-        val fp = FileInputStream(File("src/main/resources/application.properties"))
-        props.load(fp)
-        fp.close()
-        return props
+        return getApplicationProperties()
     }
 }
 
@@ -35,10 +31,7 @@ fun main(params: Array<String>) {
     val context = AnnotationConfigWebApplicationContext()
     context.register(TicktagApplication::class.java)
 
-    val props = Properties()
-    val fp = FileInputStream(File("src/main/resources/application.properties"))
-    props.load(fp)
-    fp.close()
+    val props = getApplicationProperties()
 
     val tomcat = Tomcat()
     tomcat.setPort(Integer.valueOf(props.getProperty("http.port")))
@@ -48,4 +41,12 @@ fun main(params: Array<String>) {
     tcServlet.loadOnStartup = 1
     tomcat.start()
     tomcat.server.await()
+}
+
+fun getApplicationProperties(): Properties {
+    val props = Properties()
+    val fp = FileInputStream(File("src/main/resources/application.properties"))
+    props.load(fp)
+    fp.close()
+    return props
 }
