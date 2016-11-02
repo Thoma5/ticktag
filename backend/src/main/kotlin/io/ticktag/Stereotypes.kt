@@ -1,5 +1,7 @@
 package io.ticktag
 
+import io.ticktag.service.AuthExpr
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -13,9 +15,9 @@ annotation class TicktagRepository
 @RequestMapping(produces = arrayOf("application/json"), consumes = arrayOf("application/json"))
 annotation class TicktagRestInterface
 
-// TODO: Add default security
 @Service
 @Transactional
+@PreAuthorize(AuthExpr.NOBODY)
 annotation class TicktagService
 
 @Service

@@ -29,7 +29,7 @@
         <aspectj.version>1.8.9</aspectj.version>
         <commons-dbcp.version>1.4</commons-dbcp.version>
         <postgresql.version>9.4.1211</postgresql.version>
-        <tomcat.version>8.5.6</tomcat.version>
+        <jetty.version>9.3.13.v20161014</jetty.version>
         <swagger.version>2.6.0</swagger.version>
 
         <junit.version>4.12</junit.version>
@@ -99,6 +99,16 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
+            <version>${spring-security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>${spring-security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
             <version>${spring-security.version}</version>
         </dependency>
 
@@ -197,11 +207,11 @@
             <version>${aspectj.version}</version>
         </dependency>
 
-        <!-- Embedded Tomcat -->
+        <!-- Embedded Jetty -->
         <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-core</artifactId>
-            <version>${tomcat.version}</version>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-webapp</artifactId>
+            <version>${jetty.version}</version>
         </dependency>
 
         <!-- Test -->
