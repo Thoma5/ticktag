@@ -5,6 +5,7 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -13,6 +14,7 @@ annotation class TicktagRepository
 
 @RestController
 @RequestMapping(produces = arrayOf("application/json"), consumes = arrayOf("application/json"))
+@CrossOrigin(origins = arrayOf("*"))
 annotation class TicktagRestInterface
 
 @Service
