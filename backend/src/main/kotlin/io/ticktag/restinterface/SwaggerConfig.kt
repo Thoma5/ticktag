@@ -39,6 +39,7 @@ open class SwaggerConfig : WebMvcConfigurerAdapter() {
                 .produces(setOf("application/json"))
                 .securitySchemes(listOf(apiKey))
                 .ignoredParameterTypes(Principal::class.java)
+                .protocols(setOf("http"))
     }
 
 
