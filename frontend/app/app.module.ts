@@ -5,6 +5,7 @@ import {AppRoutingModule} from "./app-routing.module";
 import {LoginComponent} from "./login/login.component";
 import {FormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
+import {WhoamiComponent} from "./whoami/whoami.component";
 
 @NgModule({
     imports: [
@@ -16,6 +17,7 @@ import {HttpModule} from "@angular/http";
     declarations: [
         AppComponent,
         LoginComponent,
+        WhoamiComponent,
     ],
     bootstrap: [AppComponent],
 })

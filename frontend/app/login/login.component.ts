@@ -25,6 +25,7 @@ export class LoginComponent {
         this.authApi.loginUsingPOST(req)
             .subscribe(result => {
                 alert(result.token);
+                this.router.navigate(['/whoami']);
             }, error => {
                 alert(error);
             })
