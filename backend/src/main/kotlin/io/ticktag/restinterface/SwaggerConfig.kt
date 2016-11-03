@@ -7,6 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import springfox.documentation.builders.PathSelectors
 import springfox.documentation.builders.RequestHandlerSelectors
 import springfox.documentation.service.ApiInfo
+import springfox.documentation.service.ApiKey
 import springfox.documentation.service.Contact
 import springfox.documentation.spi.DocumentationType
 import springfox.documentation.spring.web.plugins.Docket
@@ -24,6 +25,9 @@ open class SwaggerConfig : WebMvcConfigurerAdapter() {
                 Contact(null, null, null),
                 null,
                 null)
+
+        val apiKey = ApiKey("X-Authorization", "api_key", "header")
+
         return Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.any())
@@ -32,7 +36,9 @@ open class SwaggerConfig : WebMvcConfigurerAdapter() {
                 .apiInfo(apiInfo)
                 .consumes(setOf("application/json"))
                 .produces(setOf("application/json"))
+                .securitySchemes(listOf(apiKey))
     }
+
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
         registry.addResourceHandler("/swagger/**")
