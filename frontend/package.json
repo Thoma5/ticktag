@@ -2,10 +2,11 @@
   "name": "ticktag",
   "version": "1.0.0",
   "scripts": {
-    "start": "tsc && concurrently \"tsc -w\" \"lite-server\" ",
-    "lite": "lite-server",
+    "start": "tsc && superstatic --port 3000 --host localhost ",
+    "live": "tsc && concurrently \"tsc -w\" \"lite-server\" ",
     "tsc": "tsc",
     "tsc:w": "tsc -w"
+
   },
   "licenses": [
     {
@@ -37,6 +38,7 @@
     "@types/node": "^6.0.45",
     "concurrently": "^3.0.0",
     "lite-server": "^2.2.2",
+    "superstatic": "4.0.3",
     "typescript": "^2.0.3"
   }
 }
