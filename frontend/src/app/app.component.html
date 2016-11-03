@@ -1,8 +1,9 @@
 <header>
   <nav>
     <a [routerLink]="['']">Home</a>
-    <a [routerLink]="['login']">Login</a>
     <a [routerLink]="['whoami']">Whoami</a>
+    <a *ngIf="!loggedIn" [routerLink]="['login']">Login</a>
+    <a *ngIf="loggedIn" href="" (click)="logout(); $event.preventDefault()">Logout</a>
   </nav>
 </header>
 <main>
