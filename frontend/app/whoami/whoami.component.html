@@ -1,3 +1,7 @@
 <h2>Whoami</h2>
-<span>{{me.id}}</span>
-<span>{{me.authorities}}</span>
+<input [(ngModel)]="token" type="text">
+<button (click)="getWhoami()">Go</button>
+<div *ngIf="me">
+    <span>{{me.id}}</span>
+    <span>{{me.authorities}}</span>
+</div>
