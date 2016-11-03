@@ -18,6 +18,8 @@
 
         <kotlin.version>1.0.4</kotlin.version>
 
+        <commons-lang.version>3.5</commons-lang.version>
+
         <slf4j.version>1.7.21</slf4j.version>
         <logback.version>1.1.7</logback.version>
 
@@ -43,6 +45,14 @@
             <artifactId>kotlin-stdlib</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
+
+        <!-- Utility -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang.version}</version>
+        </dependency>
+
 
         <!-- Logging -->
         <dependency>

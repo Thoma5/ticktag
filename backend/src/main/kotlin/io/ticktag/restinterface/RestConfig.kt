@@ -1,5 +1,6 @@
 package io.ticktag.restinterface
 
+import org.apache.commons.lang3.ClassUtils
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
@@ -24,13 +25,14 @@ open class RestConfig {
 class RestRequestLoggingAspect {
     companion object {
         private val LOG = LoggerFactory.getLogger(RestRequestLoggingAspect::class.java)
+        private const val MAX_CLASS_NAME_LENGTH = 30
     }
 
     @Around("@within(io.ticktag.TicktagRestInterface)")
     fun around(pjp: ProceedingJoinPoint): Any {
         val signature = pjp.signature
         val name = if (signature is MethodSignature) {
-            "${pjp.target.javaClass.canonicalName}.${signature.name}(...)"
+            "${ClassUtils.getAbbreviatedName(pjp.target.javaClass, MAX_CLASS_NAME_LENGTH)}.${signature.name}(...)"
         } else {
             "???"
         }
