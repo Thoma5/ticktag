@@ -7,5 +7,5 @@
 # See: https://github.com/swagger-api/swagger-codegen
 
 java -jar swagger-codegen-cli.jar generate -i "http://localhost:8080/v2/api-docs" -l "typescript-angular2" -o ./api_new
-rm -r app/api
-mv ./api_new app/api
+rm -r src/app/api
+mv ./api_new src/app/api
