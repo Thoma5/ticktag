@@ -1,7 +1,7 @@
 package io.ticktag.restinterface
 
 import io.ticktag.service.Principal
-import org.hibernate.annotations.common.util.impl.LoggerFactory
+import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationProvider
@@ -66,7 +66,7 @@ open class RestSecurityConfig @Inject constructor(
 @Configuration
 open class RestSecurityConfigBeans {
     companion object {
-        private val LOG = LoggerFactory.logger(RestSecurityConfigBeans::class.java)
+        private val LOG = LoggerFactory.getLogger(RestSecurityConfigBeans::class.java)
     }
 
     @Bean("restAuthTokenService")
