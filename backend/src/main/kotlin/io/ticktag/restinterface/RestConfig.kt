@@ -37,13 +37,13 @@ class RestRequestLoggingAspect {
             "???"
         }
 
-        LOG.info("========== REST request to $name =========")
+        LOG.info("=== REST request to $name ===")
         val start = System.nanoTime()
         try {
             return pjp.proceed()
         } finally {
             val end = System.nanoTime()
-            LOG.info("========== REST request processed in ${(end - start) / 1000000} ms =========")
+            LOG.info("=== REST request processed in ${(end - start) / 1000000} ms ===")
         }
     }
 }
