@@ -1,3 +1,2 @@
 *.map
 *.js
-!api/*.js

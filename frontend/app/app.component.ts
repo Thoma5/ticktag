@@ -1,6 +1,8 @@
 import {Component} from "@angular/core";
+import {AuthApi} from "./api/api/AuthApi";
 
 @Component({
+    providers: [AuthApi],
     moduleId: module.id,
     selector: 'ticktag',
     template: `

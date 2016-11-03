@@ -22,13 +22,11 @@
  * limitations under the License.
  */
 
-'use strict';
 import * as models from './models';
 
 export interface LoginRequest {
-    
+    email: string;
 
-    email?: string;
+    password: string;
 
-    password?: string;
 }
