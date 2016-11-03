@@ -1,5 +1,6 @@
 package io.ticktag.restinterface
 
+import io.ticktag.service.Principal
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
@@ -37,6 +38,7 @@ open class SwaggerConfig : WebMvcConfigurerAdapter() {
                 .consumes(setOf("application/json"))
                 .produces(setOf("application/json"))
                 .securitySchemes(listOf(apiKey))
+                .ignoredParameterTypes(Principal::class.java)
     }
 
 
