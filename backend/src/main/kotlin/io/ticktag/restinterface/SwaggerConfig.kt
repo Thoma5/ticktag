@@ -35,8 +35,9 @@ open class SwaggerConfig : WebMvcConfigurerAdapter() {
     }
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
-        registry.addResourceHandler("swagger-ui.html")
-                .addResourceLocations("classpath:/META-INF/resources/")
+        registry.addResourceHandler("/swagger/**")
+                .addResourceLocations("classpath:/swagger/")
+
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/")
     }

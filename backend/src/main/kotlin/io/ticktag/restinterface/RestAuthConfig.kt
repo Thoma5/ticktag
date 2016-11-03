@@ -40,7 +40,7 @@ open class RestSecurityConfig @Inject constructor(
         http
                 .addFilterBefore(restAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
                 .authorizeRequests()
-                .antMatchers("/swagger-ui.html", "/webjars/**", "/swagger-resources/**", "/v2/api-docs").permitAll()
+                .antMatchers("/webjars/**", "/swagger/**", "/v2/api-docs").permitAll()
                 .antMatchers("/auth/login").permitAll()
                 .anyRequest().authenticated().and()
                 .logout().disable()
