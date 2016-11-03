@@ -10,6 +10,7 @@ import org.springframework.orm.jpa.JpaTransactionManager
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter
 import org.springframework.transaction.PlatformTransactionManager
+import java.sql.Connection
 import java.util.*
 import javax.persistence.EntityManagerFactory
 import javax.sql.DataSource
@@ -25,6 +26,7 @@ open class PersistenceConfig {
         basicDataSource.url = props.dbUrl
         basicDataSource.username = props.dbUser
         basicDataSource.password = props.dbPassword
+        basicDataSource.defaultTransactionIsolation = Connection.TRANSACTION_SERIALIZABLE
         return basicDataSource
     }
 
