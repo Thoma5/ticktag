@@ -1,5 +1,6 @@
 package io.ticktag.restinterface.auth.controllers
 
+import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.auth.schema.LoginRequest
@@ -18,6 +19,7 @@ import javax.inject.Named
 
 @TicktagRestInterface
 @RequestMapping("/auth")
+@Api(tags = arrayOf("auth"), description = "authentication")
 open class AuthController @Inject constructor(
         private val userService: UserService,
         @Named("restAuthTokenService") private val tokenService: TokenService
