@@ -10,6 +10,8 @@
         </filter>
     </appender>
 
+    <logger name="org.hibernate.SQL" level="debug"/>
+
     <root>
         <level value="INFO"/>
         <appender-ref ref="consoleAppender"/>
