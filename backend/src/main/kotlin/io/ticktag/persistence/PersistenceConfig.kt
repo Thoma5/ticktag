@@ -1,5 +1,6 @@
 package io.ticktag.persistence
 
+import io.ticktag.ApplicationProperties
 import org.apache.commons.dbcp.BasicDataSource
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
@@ -10,7 +11,6 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter
 import org.springframework.transaction.PlatformTransactionManager
 import java.util.*
-import javax.inject.Named
 import javax.persistence.EntityManagerFactory
 import javax.sql.DataSource
 
@@ -19,12 +19,12 @@ import javax.sql.DataSource
 @EnableJpaRepositories("io.ticktag.persistence")
 open class PersistenceConfig {
     @Bean
-    open fun dataSource(@Named("applicationProperties") props: Properties): DataSource {
+    open fun dataSource(props: ApplicationProperties): DataSource {
         val basicDataSource = BasicDataSource()
         basicDataSource.driverClassName = "org.postgresql.Driver"
-        basicDataSource.url = props.getProperty("db.url")
-        basicDataSource.username = props.getProperty("db.user")
-        basicDataSource.password = props.getProperty("db.password")
+        basicDataSource.url = props.dbUrl
+        basicDataSource.username = props.dbUser
+        basicDataSource.password = props.dbPassword
         return basicDataSource
     }
 

@@ -26,12 +26,15 @@ import javax.servlet.DispatcherType
 @Import(PersistenceConfig::class, LibraryConfig::class, ServiceConfig::class, RestConfig::class, SwaggerConfig::class)
 @EnableAspectJAutoProxy
 open class TicktagApplication {
-    @Bean("applicationProperties")
-    open fun applicationProperties(): Properties = loadProperties()
+    @Bean
+    open fun applicationProperties(): ApplicationProperties {
+        val props = loadProperties()
+        return parseProperties(props)
+    }
 }
 
 fun main(params: Array<String>) {
-    val props = loadProperties()
+    val props = parseProperties(loadProperties())
 
     val context = AnnotationConfigWebApplicationContext()
     context.register(TicktagApplication::class.java)
@@ -43,11 +46,28 @@ fun main(params: Array<String>) {
     contextHandler.addEventListener(ContextLoaderListener(context))
     contextHandler.addFilter(FilterHolder(DelegatingFilterProxy("springSecurityFilterChain")), "/*", EnumSet.allOf(DispatcherType::class.java))
 
-    val server = Server(Integer.valueOf(props.getProperty("http.port")))
+    val server = Server(Integer.valueOf(props.httpPort))
     server.handler = contextHandler
 
     server.start()
     server.join()
+}
+
+private fun parseProperties(props: Properties): ApplicationProperties {
+    return object : ApplicationProperties {
+        override val dbUrl: String
+            get() = props["db.url"] as String
+        override val dbUser: String
+            get() = props["db.user"] as String
+        override val dbPassword: String
+            get() = props["db.password"] as String
+        override val httpPort: Int
+            get() = (props["http.port"] as String).toInt()
+        override val serverSecret: String
+            get() = props["server.secret"] as String
+        override val serverNumber: Int
+            get() = (props["server.number"] as String).toInt()
+    }
 }
 
 private fun loadProperties(): Properties {

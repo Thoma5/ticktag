@@ -1,5 +1,6 @@
 package io.ticktag.restinterface
 
+import io.ticktag.ApplicationProperties
 import io.ticktag.service.Principal
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
@@ -84,11 +85,11 @@ open class RestSecurityConfigBeans {
     }
 
     @Bean("restAuthTokenService")
-    open fun restAuthTokenService(@Named("applicationProperties") props: Properties): TokenService {
+    open fun restAuthTokenService(props: ApplicationProperties): TokenService {
         val s = KeyBasedPersistenceTokenService()
         s.setSecureRandom(SecureRandom())
-        s.setServerSecret(props.getProperty("server.secret"))
-        s.setServerInteger(Integer.valueOf(props.getProperty("server.number")))
+        s.setServerSecret(props.serverSecret)
+        s.setServerInteger(Integer.valueOf(props.serverNumber))
         return s
     }
 
