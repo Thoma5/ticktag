@@ -9,4 +9,7 @@ interface ApplicationProperties {
 
     val serverSecret: String
     val serverNumber: Int
+
+    val adminMail: String
+    val adminPassword: String
 }

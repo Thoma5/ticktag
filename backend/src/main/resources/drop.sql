@@ -1,5 +1,5 @@
 begin;
 
-drop table "user" cascade;
+drop table if exists "user" cascade;
 
 commit;

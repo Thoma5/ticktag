@@ -1,6 +1,8 @@
 package io.ticktag.restinterface
 
 import io.ticktag.ApplicationProperties
+import io.ticktag.persistence.user.UserRepository
+import io.ticktag.persistence.user.entity.Role
 import io.ticktag.service.Principal
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
@@ -94,7 +96,7 @@ open class RestSecurityConfigBeans {
     }
 
     @Bean("restAuthFilter")
-    open fun restAuthFilter(@Named("restAuthTokenService") tokenService: TokenService): Filter {
+    open fun restAuthFilter(@Named("restAuthTokenService") tokenService: TokenService, users: UserRepository): Filter {
         return object : OncePerRequestFilter() {
             override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
                 // TODO invalidate tokens after some time!
@@ -103,16 +105,22 @@ open class RestSecurityConfigBeans {
                     try {
                         val token = tokenService.verifyToken(tokenKey)
                         if (token != null) {
-                            val principal = Principal(
-                                    id = UUID.fromString(token.extendedInformation),
-                                    authorities = setOf("USER")  // TODO fill
-                            )
-                            val auth = PreAuthenticatedAuthenticationToken(principal, null, principal.authorities.map(::SimpleGrantedAuthority))
-                            auth.details = WebAuthenticationDetails(request)
-                            SecurityContextHolder.getContext().authentication = auth
+                            val userId = UUID.fromString(token.extendedInformation)
+                            val user = users.findById(userId)
+                            if (user != null) {
+                                val authorities = when (user.role) {
+                                    Role.USER -> setOf("USER")
+                                    Role.OBSERVER -> setOf("USER", "OBSERVER")
+                                    Role.ADMIN -> setOf("USER", "OBSERVER", "ADMIN")
+                                }
+                                val principal = Principal(user.id, authorities)
+                                val auth = PreAuthenticatedAuthenticationToken(principal, null, principal.authorities.map(::SimpleGrantedAuthority))
+                                auth.details = WebAuthenticationDetails(request)
+                                SecurityContextHolder.getContext().authentication = auth
+                            }
                         }
                     } catch (ex: Exception) {
-                        LOG.info("Got illegal token (exception was $ex)")
+                        LOG.info("Got an illegal token (exception was $ex)")
                     }
                 }
 

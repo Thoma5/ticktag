@@ -21,16 +21,25 @@ import java.io.File
 import java.io.FileInputStream
 import java.util.*
 import javax.servlet.DispatcherType
+import javax.validation.Validation
+import javax.validation.Validator
+import javax.validation.ValidatorFactory
 
 @Configuration
 @Import(PersistenceConfig::class, LibraryConfig::class, ServiceConfig::class, RestConfig::class, SwaggerConfig::class)
-@EnableAspectJAutoProxy
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 open class TicktagApplication {
     @Bean
     open fun applicationProperties(): ApplicationProperties {
         val props = loadProperties()
         return parseProperties(props)
     }
+
+    @Bean
+    open fun validatorFactory(): ValidatorFactory = Validation.buildDefaultValidatorFactory()
+
+    @Bean
+    open fun validator(validatorFactory: ValidatorFactory): Validator = validatorFactory.validator
 }
 
 fun main(params: Array<String>) {
@@ -67,6 +76,10 @@ private fun parseProperties(props: Properties): ApplicationProperties {
             get() = props["server.secret"] as String
         override val serverNumber: Int
             get() = (props["server.number"] as String).toInt()
+        override val adminMail: String
+            get() = props["admin.mail"] as String
+        override val adminPassword: String
+            get() = props["admin.password"] as String
     }
 }
 

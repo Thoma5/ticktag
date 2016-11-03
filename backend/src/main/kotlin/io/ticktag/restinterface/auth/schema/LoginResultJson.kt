@@ -1,5 +1,5 @@
 package io.ticktag.restinterface.auth.schema
 
-data class LoginResult(
+data class LoginResultJson(
         val token: String
 ) {}
