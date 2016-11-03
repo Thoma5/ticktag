@@ -19,6 +19,7 @@ import org.springframework.security.core.token.TokenService
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.authentication.WebAuthenticationDetails
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
+import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.filter.OncePerRequestFilter
 import java.security.SecureRandom
 import java.util.*
@@ -36,6 +37,18 @@ open class RestSecurityConfig @Inject constructor(
         @Named("restAuthFilter") private val restAuthFilter: Filter
 ) : WebSecurityConfigurerAdapter() {
 
+    companion object {
+        private val CORS_CONFIG = initCorsConfig()
+
+        private fun initCorsConfig(): CorsConfiguration {
+            val cc = CorsConfiguration()
+            cc.addAllowedHeader(CorsConfiguration.ALL)
+            cc.addAllowedMethod(CorsConfiguration.ALL)
+            cc.addAllowedOrigin(CorsConfiguration.ALL)
+            return cc
+        }
+    }
+
     override fun configure(http: HttpSecurity) {
         http
                 .addFilterBefore(restAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
@@ -46,6 +59,7 @@ open class RestSecurityConfig @Inject constructor(
                 .logout().disable()
                 .formLogin().disable()
                 .csrf().disable()
+                .cors().configurationSource { CORS_CONFIG }.and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
     }
 

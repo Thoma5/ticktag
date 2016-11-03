@@ -14,7 +14,6 @@ annotation class TicktagRepository
 
 @RestController
 @RequestMapping(produces = arrayOf("application/json"), consumes = arrayOf("application/json"))
-@CrossOrigin(origins = arrayOf("*"))
 annotation class TicktagRestInterface
 
 @Service
