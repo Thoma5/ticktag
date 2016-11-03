@@ -2,6 +2,7 @@ import {Component} from "@angular/core";
 import {Router} from "@angular/router";
 import {AuthApi} from "../api/api/AuthApi";
 import {LoginRequest} from "../api/model/LoginRequest";
+import {AuthService} from "../service/auth-service.service";
 
 @Component({
     moduleId: module.id,
@@ -13,7 +14,8 @@ export class LoginComponent {
     private password:string;
 
     constructor(private router:Router,
-                private authApi:AuthApi) {
+                private authApi:AuthApi,
+                private authService:AuthService) {
     }
 
     onSubmit():void {
@@ -24,8 +26,8 @@ export class LoginComponent {
 
         this.authApi.loginUsingPOST(req)
             .subscribe(result => {
-                alert(result.token);
-                this.router.navigate(['/whoami']);
+                this.authService.setToken(result.token);
+                this.router.navigate(['/whoami'])
             }, error => {
                 alert(error);
             })

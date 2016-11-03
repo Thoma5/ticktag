@@ -6,6 +6,7 @@ import {LoginComponent} from "./login/login.component";
 import {FormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
 import {WhoamiComponent} from "./whoami/whoami.component";
+import {Ng2Webstorage} from "ng2-webstorage";
 
 @NgModule({
     imports: [
@@ -13,6 +14,7 @@ import {WhoamiComponent} from "./whoami/whoami.component";
         AppRoutingModule,
         FormsModule,
         HttpModule,
+        Ng2Webstorage,
     ],
     declarations: [
         AppComponent,
