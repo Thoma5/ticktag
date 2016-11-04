@@ -9,11 +9,11 @@ import {Injectable} from '@angular/core';
 
 @Injectable()
 class MockAuthService extends AuthService {
-  getUser(): User|null {
+  get user(): User|null {
     return null;
   }
 
-  setUser(user: User|null): void {
+  set user(user: User|null) {
   }
 
   observeUser(): Observable<User|null> {

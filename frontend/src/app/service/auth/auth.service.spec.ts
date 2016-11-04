@@ -4,7 +4,7 @@ import {LocalStorageService} from 'ng2-webstorage/dist/app';
 import {TestBed, inject} from '@angular/core/testing';
 
 class MockLocalStorageService extends LocalStorageService {
-  private data = {};
+  private data: {[key: string]: any} = {};
 
   store(key: string, value: any): void {
     this.data[key] = value;
@@ -25,16 +25,16 @@ describe('Auth Service', () => {
     });
   });
 
-  it('should return previously set value', inject([AuthService], (auth) => {
+  it('should return previously set value', inject([AuthService], (auth: AuthService) => {
     let u: User = {
       token: 'token',
       authorities: ['USER']
     };
-    auth.setUser(u);
-    expect(auth.getUser()).toBe(u);
+    auth.user = u;
+    expect(auth.user).toBe(u);
   }));
 
-  it('should return null when no value was set', inject([AuthService], (auth) => {
-    expect(auth.getUser()).toBe(null);
+  it('should return null when no value was set', inject([AuthService], (auth: AuthService) => {
+    expect(auth.user).toBe(null);
   }));
 });
