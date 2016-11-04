@@ -31,8 +31,7 @@ open class AuthController @Inject constructor(
         if (validLogin != null) {
             return LoginResultJson(tokenService.allocateToken(validLogin.toString()).key)
         } else {
-            // TODO actually return a *real* error here
-            return LoginResultJson("error")
+            return LoginResultJson("")
         }
     }
 

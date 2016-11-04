@@ -1,8 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {Headers} from '@angular/http';
-import {AuthService} from '../service/auth/auth.service';
-import {UserResultJson} from '../api/model/UserResultJson';
-import {UserApi} from '../api/api/UserApi';
+import {ApiCallService} from '../service';
+import {UserApi, UserResultJson} from '../api';
 
 @Component({
   selector: 'tt-users',
@@ -11,8 +9,8 @@ import {UserApi} from '../api/api/UserApi';
 export class UsersComponent implements OnInit {
   private users: UserResultJson[];
 
-  constructor(private userApi: UserApi,
-              private authService: AuthService) {
+  constructor(private readonly userApi: UserApi,
+              private readonly apiCallService: ApiCallService) {
   }
 
   ngOnInit(): void {
@@ -20,12 +18,8 @@ export class UsersComponent implements OnInit {
   }
 
   getUsers(): void {
-    // TODO api call
-    let headers = new Headers();
-    let token = this.authService.getUser().token;
-    headers.append('X-Authorization', token);
-
-    this.userApi.listUsingGET({'headers': headers})
-      .subscribe(res => this.users = res, err => alert(err));
+    this.apiCallService
+      .callNoError<UserResultJson[]>(h => this.userApi.listUsingGETWithHttpInfo(h))
+      .subscribe(users => { this.users = users; });
   }
 }

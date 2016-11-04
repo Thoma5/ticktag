@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import '../style/app.scss';
-import {AuthService} from './service/auth/auth.service';
+import {AuthService, User} from './service';
 
 @Component({
   selector: 'tt-app',
@@ -8,15 +8,15 @@ import {AuthService} from './service/auth/auth.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  private title;
-  private user;
+  private title: string;
+  private user: User;
 
-  constructor(private authService: AuthService) {
+  constructor(private readonly authService: AuthService) {
     this.title = 'TickTag';
   }
 
   ngOnInit(): void {
-    this.user = this.authService.getUser();
+    this.user = this.authService.user;
     this.authService.observeUser()
       .subscribe(user => {
         console.log(user);
@@ -25,6 +25,6 @@ export class AppComponent implements OnInit {
   }
 
   logout(): void {
-    this.authService.setUser(null);
+    this.authService.user = null;
   }
 }

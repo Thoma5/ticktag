@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { routing } from './app.routing';
 
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
-import {AuthService} from './service/auth/auth.service';
+import {AuthService, ApiCallService} from './service';
 import {LoginComponent} from './login/login.component';
 import {WhoamiComponent} from './whoami/whoami.component';
 import {HomeComponent} from './home/home.component';
@@ -35,6 +35,7 @@ import {UserApi} from './api/api/UserApi';
     AuthApi,
     UserApi,
 
+    ApiCallService,
     AuthService
   ],
   bootstrap: [AppComponent]

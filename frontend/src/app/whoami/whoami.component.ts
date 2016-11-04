@@ -1,8 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthApi} from '../api/api/AuthApi';
-import {WhoamiResultJson} from '../api/model/WhoamiResultJson';
-import {Headers} from '@angular/http';
-import {AuthService} from '../service/auth/auth.service';
+import {AuthApi, WhoamiResultJson} from '../api';
+import {ApiCallService} from '../service';
 
 @Component({
   selector: 'tt-whoami',
@@ -11,8 +9,8 @@ import {AuthService} from '../service/auth/auth.service';
 export class WhoamiComponent implements OnInit {
   private me: WhoamiResultJson;
 
-  constructor(private authApi: AuthApi,
-              private authService: AuthService) {
+  constructor(private readonly authApi: AuthApi,
+              private readonly apiCallService: ApiCallService) {
   }
 
   ngOnInit(): void {
@@ -20,12 +18,8 @@ export class WhoamiComponent implements OnInit {
   }
 
   getWhoami(): void {
-    // TODO api call
-    let headers = new Headers();
-    let token = this.authService.getUser().token;
-    headers.append('X-Authorization', token);
-
-    this.authApi.whoamiUsingGET({'headers': headers})
-      .subscribe(res => this.me = res, err => alert(err));
+    this.apiCallService
+      .callNoError((h) => this.authApi.whoamiUsingGETWithHttpInfo(h))
+      .subscribe(user => { this.me = user; });
   }
 }

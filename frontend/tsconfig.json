@@ -5,7 +5,11 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "sourceMap": true,
-    "noEmitHelpers": true
+    "noEmitHelpers": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
+    "noImplicitAny": true
+    // TODO "strictNullChecks": true
   },
   "compileOnSave": false,
   "buildOnSave": false,
