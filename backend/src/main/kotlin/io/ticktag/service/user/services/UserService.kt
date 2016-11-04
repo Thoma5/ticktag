@@ -9,4 +9,5 @@ interface UserService {
     fun createUser(createUser: CreateUser): UserResult
     fun getUser(id: UUID): UserResult?
     fun getUser(mail: String): UserResult?
+    fun listUsers(): List<UserResult>
 }

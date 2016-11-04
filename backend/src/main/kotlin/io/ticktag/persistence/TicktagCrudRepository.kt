@@ -9,6 +9,7 @@ interface TicktagCrudRepository<E>: Repository<E, UUID> {
     fun <S: E> save(entity: S): S
 
     fun findById(id: UUID): E?
+    fun findAll(): List<E>
     fun exists(id: UUID): Boolean
 
     fun delete(entity: E)

@@ -54,4 +54,9 @@ open class UserServiceImpl @Inject constructor(
     override fun getUser(mail: String): UserResult? {
         return UserResult(users.findByMail(mail) ?: return null)
     }
+
+    @PreAuthorize(AuthExpr.ADMIN) // TODO should probably be more granular
+    override fun listUsers(): List<UserResult> {
+        return users.findAll().map(::UserResult)
+    }
 }
