@@ -24,7 +24,7 @@ open class UserServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.ANONYMOUS)
     override fun checkPassword(mail: String, password: String): UUID? {
-        val user = users.findByMail(mail.toLowerCase()) ?: return null
+        val user = users.findByMailIgnoreCase(mail) ?: return null
         if (BCrypt.checkpw(password, user.passwordHash))
             return user.id
         else
@@ -33,11 +33,11 @@ open class UserServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.ADMIN)
     override fun createUser(@Valid createUser: CreateUser): UserResult {
-        if (users.findByMail(createUser.mail) != null) {
+        if (users.findByMailIgnoreCase(createUser.mail) != null) {
             throw TicktagValidationException(listOf(ValidationError("createUser.mail", ValidationErrorDetail.Other("inuse"))))
         }
 
-        val mail = createUser.mail.toLowerCase()
+        val mail = createUser.mail
         val name = createUser.name
         val passwordHash = BCrypt.hashpw(createUser.password, BCrypt.gensalt())
         val user = users.save(User.create(mail, passwordHash, name, Role.USER, UUID.randomUUID()))
@@ -52,7 +52,7 @@ open class UserServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.USER)  // TODO is this correct?
     override fun getUser(mail: String): UserResult? {
-        return UserResult(users.findByMail(mail) ?: return null)
+        return UserResult(users.findByMailIgnoreCase(mail) ?: return null)
     }
 
     @PreAuthorize(AuthExpr.ADMIN) // TODO should probably be more granular

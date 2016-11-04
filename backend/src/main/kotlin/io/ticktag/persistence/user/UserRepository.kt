@@ -6,5 +6,5 @@ import io.ticktag.persistence.user.entity.User
 
 @TicktagRepository
 interface UserRepository : TicktagCrudRepository<User> {
-    fun findByMail(mail: String): User?
+    fun findByMailIgnoreCase(mail: String): User?
 }

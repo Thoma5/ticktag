@@ -8,6 +8,6 @@ create table "user" (
     "role" text not null,
     "current_token" uuid not null
 );
-create index on "user" ("mail");
+create index on "user" (upper("mail"));
 
 commit;
