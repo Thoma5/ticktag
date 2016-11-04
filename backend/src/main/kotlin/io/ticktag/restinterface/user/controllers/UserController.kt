@@ -1,5 +1,6 @@
 package io.ticktag.restinterface.user.controllers
 
+import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.user.schema.CreateUserRequestJson
 import io.ticktag.restinterface.user.schema.UserResultJson
@@ -11,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 import javax.inject.Inject
 
 @TicktagRestInterface
-@RequestMapping("/users")
+@RequestMapping("/user")
+@Api(tags = arrayOf("user"), description = "user management")
 open class UserController @Inject constructor(
         private val userService: UserService
 ) {
