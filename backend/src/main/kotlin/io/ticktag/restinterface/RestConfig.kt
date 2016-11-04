@@ -43,7 +43,7 @@ open class RestMapValidationErrorToJson {
     }
 }
 
-@Order(10)
+@Order(100)
 @Aspect
 class RestRequestLoggingAspect {
     companion object {

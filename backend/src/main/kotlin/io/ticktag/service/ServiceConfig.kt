@@ -10,6 +10,7 @@ import org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.annotation.Order
 import javax.validation.ConstraintViolation
 import javax.validation.Valid
 import javax.validation.Validator
@@ -24,7 +25,7 @@ open class ServiceConfig {
     }
 }
 
-
+@Order(500)
 @Aspect
 class ValidateServiceAspect(private val validator: Validator) {
     @Before("@within(io.ticktag.TicktagService)")

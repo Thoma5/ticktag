@@ -6,6 +6,7 @@ import java.util.*
 
 @NoRepositoryBean
 interface TicktagCrudRepository<E>: Repository<E, UUID> {
+    // TODO seems to make a roundtrip before each insert!?
     fun <S: E> save(entity: S): S
 
     fun findById(id: UUID): E?

@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletResponse
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true, order = 400)
 open class RestSecurityConfig @Inject constructor(
         @Named("restAuthFilter") private val restAuthFilter: Filter
 ) : WebSecurityConfigurerAdapter() {
