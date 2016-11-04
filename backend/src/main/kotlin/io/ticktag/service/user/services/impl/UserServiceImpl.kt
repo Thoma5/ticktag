@@ -40,7 +40,8 @@ open class UserServiceImpl @Inject constructor(
         val mail = createUser.mail
         val name = createUser.name
         val passwordHash = BCrypt.hashpw(createUser.password, BCrypt.gensalt())
-        val user = users.save(User.create(mail, passwordHash, name, Role.USER, UUID.randomUUID()))
+        val user = User.create(mail, passwordHash, name, Role.USER, UUID.randomUUID())
+        users.insert(user)
 
         return UserResult(user)
     }

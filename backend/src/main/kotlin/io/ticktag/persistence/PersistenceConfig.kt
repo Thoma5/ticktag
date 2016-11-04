@@ -24,7 +24,7 @@ import javax.sql.DataSource
 
 @Configuration
 @ComponentScan(basePackages = arrayOf("io.ticktag.persistence"))
-@EnableJpaRepositories("io.ticktag.persistence")
+@EnableJpaRepositories("io.ticktag.persistence", repositoryBaseClass = TicktagBaseRepositoryImpl::class, enableDefaultTransactions = false)
 @EnableTransactionManagement(order = 300)
 open class PersistenceConfig {
     @Bean
