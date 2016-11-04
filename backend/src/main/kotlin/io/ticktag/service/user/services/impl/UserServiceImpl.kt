@@ -2,6 +2,7 @@ package io.ticktag.service.user.services.impl
 
 import io.ticktag.TicktagService
 import io.ticktag.persistence.user.UserRepository
+import io.ticktag.persistence.user.entity.Role
 import io.ticktag.persistence.user.entity.User
 import io.ticktag.service.AuthExpr
 import io.ticktag.service.TicktagValidationException
@@ -36,11 +37,10 @@ open class UserServiceImpl @Inject constructor(
             throw TicktagValidationException(listOf(ValidationError("createUser.mail", ValidationErrorDetail.Other("inuse"))))
         }
 
-        var user = User()
-        user.mail = createUser.mail.toLowerCase()
-        user.name = createUser.name
-        user.passwordHash = BCrypt.hashpw(createUser.password, BCrypt.gensalt())
-        user = users.save(user)
+        val mail = createUser.mail.toLowerCase()
+        val name = createUser.name
+        val passwordHash = BCrypt.hashpw(createUser.password, BCrypt.gensalt())
+        val user = users.save(User.create(mail, passwordHash, name, Role.USER, UUID.randomUUID()))
 
         return UserResult(user)
     }

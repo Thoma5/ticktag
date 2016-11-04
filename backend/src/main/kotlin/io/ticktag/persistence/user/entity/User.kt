@@ -6,23 +6,39 @@ import javax.persistence.*
 @Entity
 @Table(name = "user")
 open class User {
+    companion object {
+        fun create(mail: String, passwordHash: String, name: String, role: Role, currentToken: UUID): User {
+            val u = User()
+            u.id = UUID.randomUUID()
+            u.mail = mail
+            u.passwordHash = passwordHash
+            u.name = name
+            u.role = role
+            u.currentToken = currentToken
+            return u
+        }
+    }
+
     @Id
     @Column(name = "id")
-    open var id: UUID = UUID.randomUUID()
+    lateinit open var id: UUID
+        protected set
 
     @Column(name = "mail", nullable = false)
-    open var mail: String = ""
+    lateinit open var mail: String
 
     @Column(name = "password_hash", nullable = false)
-    open var passwordHash: String = ""
+    lateinit open var passwordHash: String
 
     @Column(name = "name", nullable = false)
-    open var name: String = ""
+    lateinit open var name: String
 
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
-    open var role: Role = Role.USER
+    lateinit open var role: Role
 
     @Column(name = "current_token", nullable = false)
-    open var currentToken: UUID = UUID.randomUUID()
+    lateinit open var currentToken: UUID
+
+    protected constructor()
 }
