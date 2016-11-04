@@ -24,7 +24,11 @@
 
 import * as models from './models';
 
-export interface LoginResult {
-    token?: string;
+export interface CreateUserRequestJson {
+    mail: string;
+
+    name: string;
+
+    password: string;
 
 }

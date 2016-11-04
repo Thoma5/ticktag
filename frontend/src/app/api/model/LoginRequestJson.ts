@@ -24,7 +24,7 @@
 
 import * as models from './models';
 
-export interface LoginRequest {
+export interface LoginRequestJson {
     email: string;
 
     password: string;

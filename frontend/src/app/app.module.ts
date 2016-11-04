@@ -13,6 +13,8 @@ import {WhoamiComponent} from './whoami/whoami.component';
 import {HomeComponent} from './home/home.component';
 import {AuthApi} from './api/api/AuthApi';
 import {Ng2Webstorage} from 'ng2-webstorage/dist/app';
+import {UsersComponent} from './users/users.component';
+import {UserApi} from './api/api/UserApi';
 
 @NgModule({
   imports: [
@@ -27,9 +29,11 @@ import {Ng2Webstorage} from 'ng2-webstorage/dist/app';
     HomeComponent,
     LoginComponent,
     WhoamiComponent,
+    UsersComponent,
   ],
   providers: [
     AuthApi,
+    UserApi,
 
     AuthService
   ],

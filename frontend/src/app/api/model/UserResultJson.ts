@@ -24,9 +24,11 @@
 
 import * as models from './models';
 
-export interface WhoamiResult {
-    authorities?: Array<string>;
-
+export interface UserResultJson {
     id?: string;
+
+    mail?: string;
+
+    name?: string;
 
 }

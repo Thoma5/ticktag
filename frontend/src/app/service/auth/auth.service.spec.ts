@@ -1,3 +1,4 @@
+import {User} from './user';
 import {AuthService} from './auth.service';
 import {LocalStorageService} from 'ng2-webstorage/dist/app';
 import {TestBed, inject} from '@angular/core/testing';
@@ -16,15 +17,24 @@ class MockLocalStorageService extends LocalStorageService {
 
 describe('Auth Service', () => {
   beforeEach(() => {
-    TestBed.configureTestingModule({providers: [AuthService, {provide: LocalStorageService, useClass: MockLocalStorageService}]});
+    TestBed.configureTestingModule({
+      providers: [AuthService, {
+        provide: LocalStorageService,
+        useClass: MockLocalStorageService
+      }]
+    });
   });
 
   it('should return previously set value', inject([AuthService], (auth) => {
-    auth.setToken('foo');
-    expect(auth.getToken()).toBe('foo');
+    let u: User = {
+      token: 'token',
+      authorities: ['USER']
+    };
+    auth.setUser(u);
+    expect(auth.getUser()).toBe(u);
   }));
 
   it('should return null when no value was set', inject([AuthService], (auth) => {
-    expect(auth.getToken()).toBe(null);
+    expect(auth.getUser()).toBe(null);
   }));
 });

@@ -9,22 +9,22 @@ import {AuthService} from './service/auth/auth.service';
 })
 export class AppComponent implements OnInit {
   private title;
-  private loggedIn;
+  private user;
 
   constructor(private authService: AuthService) {
     this.title = 'TickTag';
   }
 
   ngOnInit(): void {
-    this.loggedIn = this.authService.getToken() != null;
-    this.authService.observeToken()
-      .subscribe(token => {
-        console.log(token);
-        this.loggedIn = token != null;
+    this.user = this.authService.getUser();
+    this.authService.observeUser()
+      .subscribe(user => {
+        console.log(user);
+        this.user = user;
       });
   }
 
   logout(): void {
-    this.authService.setToken(null);
+    this.authService.setUser(null);
   }
 }

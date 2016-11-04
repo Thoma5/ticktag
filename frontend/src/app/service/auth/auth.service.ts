@@ -1,16 +1,17 @@
 import {Injectable} from '@angular/core';
 import {LocalStorageService} from 'ng2-webstorage';
 import {Observable} from 'rxjs/Rx';
+import {User} from './user';
 
-const KEY_TOKEN = 'token';
+const KEY_USER = 'user';
 
 @Injectable()
 export class AuthService {
   constructor(private localStorageService: LocalStorageService) {
   }
 
-  getToken(): string|null {
-    let stored = this.localStorageService.retrieve(KEY_TOKEN);
+  getUser(): User|null {
+    let stored = this.localStorageService.retrieve(KEY_USER);
     if (stored) {
       return stored;
     } else {
@@ -18,11 +19,11 @@ export class AuthService {
     }
   }
 
-  setToken(token: string|null): void {
-    this.localStorageService.store(KEY_TOKEN, token);
+  setUser(user: User|null): void {
+    this.localStorageService.store(KEY_USER, user);
   }
 
-  observeToken(): Observable<string|null> {
-    return this.localStorageService.observe(KEY_TOKEN).asObservable();
+  observeUser(): Observable<User|null> {
+    return this.localStorageService.observe(KEY_USER).asObservable();
   }
 }

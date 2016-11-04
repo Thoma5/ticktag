@@ -38,7 +38,7 @@ import { Configuration }                                     from '../configurat
 
 
 @Injectable()
-export class AuthApi {
+export class UserApi {
     protected basePath = 'http://localhost:8080/';
     public defaultHeaders: Headers = new Headers();
     public configuration: Configuration = new Configuration();
@@ -68,12 +68,12 @@ export class AuthApi {
     }
 
     /**
-     * Obtain an auth token for the given credentials
+     * create
      * 
-     * @param loginRequest loginRequest
+     * @param req req
      */
-    public loginUsingPOST(loginRequest: models.LoginRequestJson, extraHttpRequestParams?: any): Observable<models.LoginResultJson> {
-        return this.loginUsingPOSTWithHttpInfo(loginRequest, extraHttpRequestParams)
+    public createUsingPOST(req: models.CreateUserRequestJson, extraHttpRequestParams?: any): Observable<models.UserResultJson> {
+        return this.createUsingPOSTWithHttpInfo(req, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -84,11 +84,11 @@ export class AuthApi {
     }
 
     /**
-     * Returns the logged-in user
+     * list
      * 
      */
-    public whoamiUsingGET(extraHttpRequestParams?: any): Observable<models.WhoamiResultJson> {
-        return this.whoamiUsingGETWithHttpInfo(extraHttpRequestParams)
+    public listUsingGET(extraHttpRequestParams?: any): Observable<Array<models.UserResultJson>> {
+        return this.listUsingGETWithHttpInfo(extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -100,18 +100,18 @@ export class AuthApi {
 
 
     /**
-     * Obtain an auth token for the given credentials
+     * create
      * 
-     * @param loginRequest loginRequest
+     * @param req req
      */
-    public loginUsingPOSTWithHttpInfo(loginRequest: models.LoginRequestJson, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/auth/login`;
+    public createUsingPOSTWithHttpInfo(req: models.CreateUserRequestJson, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/user`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'loginRequest' is not null or undefined
-        if (loginRequest === null || loginRequest === undefined) {
-            throw new Error('Required parameter loginRequest was null or undefined when calling loginUsingPOST.');
+        // verify required parameter 'req' is not null or undefined
+        if (req === null || req === undefined) {
+            throw new Error('Required parameter req was null or undefined when calling createUsingPOST.');
         }
 
 
@@ -133,7 +133,7 @@ export class AuthApi {
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Post,
             headers: headers,
-            body: loginRequest == null ? '' : JSON.stringify(loginRequest), // https://github.com/angular/angular/issues/10612
+            body: req == null ? '' : JSON.stringify(req), // https://github.com/angular/angular/issues/10612
             search: queryParameters
         });
         
@@ -146,11 +146,11 @@ export class AuthApi {
     }
 
     /**
-     * Returns the logged-in user
+     * list
      * 
      */
-    public whoamiUsingGETWithHttpInfo(extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/auth/whoami`;
+    public listUsingGETWithHttpInfo(extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/user`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
