@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.EnableAspectJAutoProxy
 import org.springframework.context.annotation.Import
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.web.context.ContextLoaderListener
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext
 import org.springframework.web.filter.DelegatingFilterProxy
@@ -29,6 +30,7 @@ import javax.validation.ValidatorFactory
 @Configuration
 @Import(PersistenceConfig::class, LibraryConfig::class, ServiceConfig::class, RestConfig::class, SwaggerConfig::class)
 @EnableAspectJAutoProxy(proxyTargetClass = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true, order = 400)
 open class TicktagApplication {
     @Bean
     open fun applicationProperties(): ApplicationProperties {
