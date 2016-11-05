@@ -1,18 +1,19 @@
 package io.ticktag.service.fallbackadmin.services.impl
 
 import io.ticktag.ApplicationProperties
+import io.ticktag.TicktagService
 import io.ticktag.library.hashing.HashingLibrary
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.persistence.user.entity.Role
 import io.ticktag.persistence.user.entity.User
+import io.ticktag.service.AuthExpr
 import io.ticktag.service.fallbackadmin.services.FallbackAdminService
 import org.slf4j.LoggerFactory
-import org.springframework.stereotype.Component
-import org.springframework.transaction.annotation.Transactional
+import org.springframework.security.access.prepost.PreAuthorize
 import java.util.*
 import javax.inject.Inject
 
-@Component
+@TicktagService
 open class FallbackAdminServiceImpl @Inject constructor(
         private val properties: ApplicationProperties,
         private val users: UserRepository,
@@ -22,7 +23,7 @@ open class FallbackAdminServiceImpl @Inject constructor(
         private val LOG = LoggerFactory.getLogger(FallbackAdminServiceImpl::class.java)
     }
 
-    @Transactional
+    @PreAuthorize(AuthExpr.INTERNAL)
     override fun ensureAdminExists() {
         LOG.info("Ensuring fallback admin exists")
         val zeroId = UUID(0, 0)
