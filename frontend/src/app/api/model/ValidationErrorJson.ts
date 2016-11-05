@@ -25,9 +25,13 @@
 
 import * as models from './models';
 
-export interface WhoamiResultJson {
-    authorities?: Array<string>;
+export interface ValidationErrorJson {
+    field?: string;
 
-    id?: string;
+    otherInfo?: models.ValidationErrorOtherJson;
+
+    sizeInfo?: models.ValidationErrorSizeJson;
+
+    type?: string;
 
 }

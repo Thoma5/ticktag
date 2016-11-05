@@ -1,3 +1,4 @@
+/* tslint:disable */
 export class Configuration {
     apiKey: string;
     username: string;
