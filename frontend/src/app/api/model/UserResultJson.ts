@@ -26,10 +26,10 @@
 import * as models from './models';
 
 export interface UserResultJson {
-    id?: string;
+    id: string;
 
-    mail?: string;
+    mail: string;
 
-    name?: string;
+    name: string;
 
 }

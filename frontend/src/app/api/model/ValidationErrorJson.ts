@@ -26,12 +26,12 @@
 import * as models from './models';
 
 export interface ValidationErrorJson {
-    field?: string;
+    field: string;
 
     otherInfo?: models.ValidationErrorOtherJson;
 
     sizeInfo?: models.ValidationErrorSizeJson;
 
-    type?: string;
+    type: string;
 
 }

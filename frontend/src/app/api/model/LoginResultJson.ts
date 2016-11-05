@@ -26,6 +26,6 @@
 import * as models from './models';
 
 export interface LoginResultJson {
-    token?: string;
+    token: string;
 
 }

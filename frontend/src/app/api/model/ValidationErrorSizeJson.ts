@@ -26,8 +26,8 @@
 import * as models from './models';
 
 export interface ValidationErrorSizeJson {
-    max?: number;
+    max: number;
 
-    min?: number;
+    min: number;
 
 }

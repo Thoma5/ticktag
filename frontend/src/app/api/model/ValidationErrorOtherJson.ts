@@ -26,6 +26,6 @@
 import * as models from './models';
 
 export interface ValidationErrorOtherJson {
-    name?: string;
+    name: string;
 
 }
