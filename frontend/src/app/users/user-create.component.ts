@@ -28,7 +28,7 @@ export class UserCreateComponent {
             this.request.mail = '';
             this.request.name = '';
             this.request.password = '';
-            this.created.emit(result);
+            this.created.emit(result.result);
           } else {
             window.alert('Could not create user:\n\n' + JSON.stringify(result.error));
           }

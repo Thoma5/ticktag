@@ -7,7 +7,7 @@ import {ApiCallService} from '../service';
   templateUrl: './whoami.component.html',
 })
 export class WhoamiComponent implements OnInit {
-  private me: WhoamiResultJson;
+  me: WhoamiResultJson;
 
   constructor(private readonly authApi: AuthApi,
               private readonly apiCallService: ApiCallService) {
@@ -19,7 +19,7 @@ export class WhoamiComponent implements OnInit {
 
   getWhoami(): void {
     this.apiCallService
-      .callNoError((h) => this.authApi.whoamiUsingGETWithHttpInfo(h))
+      .callNoError<WhoamiResultJson>((h) => this.authApi.whoamiUsingGETWithHttpInfo(h))
       .subscribe(user => { this.me = user; });
   }
 }
