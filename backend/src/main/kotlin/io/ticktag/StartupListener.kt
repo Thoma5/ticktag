@@ -1,0 +1,17 @@
+package io.ticktag
+
+import io.ticktag.service.fallbackadmin.services.FallbackAdminService
+import org.springframework.context.ApplicationListener
+import org.springframework.context.event.ContextRefreshedEvent
+import org.springframework.stereotype.Component
+import javax.inject.Inject
+
+@Component
+open class StartupListener @Inject constructor(
+        private val fallbackAdminService: FallbackAdminService
+) : ApplicationListener<ContextRefreshedEvent> {
+
+    override fun onApplicationEvent(event: ContextRefreshedEvent?) {
+        fallbackAdminService.ensureAdminExists()
+    }
+}

@@ -8,8 +8,13 @@ import javax.persistence.*
 open class User {
     companion object {
         fun create(mail: String, passwordHash: String, name: String, role: Role, currentToken: UUID): User {
+            return createWithId(UUID.randomUUID(), mail, passwordHash, name, role, currentToken)
+        }
+
+        fun createWithId(uuid: UUID, mail: String, passwordHash: String, name: String, role: Role,
+                         currentToken: UUID): User {
             val u = User()
-            u.id = UUID.randomUUID()
+            u.id = uuid
             u.mail = mail
             u.passwordHash = passwordHash
             u.name = name

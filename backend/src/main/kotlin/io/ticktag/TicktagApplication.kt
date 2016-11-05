@@ -5,6 +5,7 @@ import io.ticktag.persistence.PersistenceConfig
 import io.ticktag.restinterface.RestConfig
 import io.ticktag.restinterface.SwaggerConfig
 import io.ticktag.service.ServiceConfig
+import io.ticktag.service.fallbackadmin.services.FallbackAdminService
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.FilterHolder
 import org.eclipse.jetty.servlet.ServletContextHandler
@@ -40,6 +41,11 @@ open class TicktagApplication {
 
     @Bean
     open fun validator(validatorFactory: ValidatorFactory): Validator = validatorFactory.validator
+
+    @Bean
+    open fun startupListener(fallbackAdminService: FallbackAdminService): StartupListener {
+        return StartupListener(fallbackAdminService)
+    }
 }
 
 fun main(params: Array<String>) {

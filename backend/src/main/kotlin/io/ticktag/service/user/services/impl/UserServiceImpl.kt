@@ -1,6 +1,7 @@
 package io.ticktag.service.user.services.impl
 
 import io.ticktag.TicktagService
+import io.ticktag.library.hashing.HashingLibrary
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.persistence.user.entity.Role
 import io.ticktag.persistence.user.entity.User
@@ -12,20 +13,20 @@ import io.ticktag.service.user.dto.CreateUser
 import io.ticktag.service.user.dto.UserResult
 import io.ticktag.service.user.services.UserService
 import org.springframework.security.access.prepost.PreAuthorize
-import org.springframework.security.crypto.bcrypt.BCrypt
 import java.util.*
 import javax.inject.Inject
 import javax.validation.Valid
 
 @TicktagService
 open class UserServiceImpl @Inject constructor(
-        private val users: UserRepository
+        private val users: UserRepository,
+        private val hashing: HashingLibrary
 ) : UserService {
 
     @PreAuthorize(AuthExpr.ANONYMOUS)
     override fun checkPassword(mail: String, password: String): UserResult? {
         val user = users.findByMailIgnoreCase(mail) ?: return null
-        if (BCrypt.checkpw(password, user.passwordHash))
+        if (hashing.checkPassword(password, user.passwordHash))
             return UserResult(user)
         else
             return null
@@ -39,7 +40,7 @@ open class UserServiceImpl @Inject constructor(
 
         val mail = createUser.mail
         val name = createUser.name
-        val passwordHash = BCrypt.hashpw(createUser.password, BCrypt.gensalt())
+        val passwordHash = hashing.hashPassword(createUser.password)
         val user = User.create(mail, passwordHash, name, Role.USER, UUID.randomUUID())
         users.insert(user)
 
