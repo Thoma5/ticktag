@@ -76,7 +76,7 @@ class TransactionRepeatAspect {
     private val nested = ThreadLocal.withInitial { false }
 
     @Around("@within(io.ticktag.TicktagService)")
-    fun around(pjp: ProceedingJoinPoint): Any {
+    fun around(pjp: ProceedingJoinPoint): Any? {
         if (nested.get()) {
             return pjp.proceed()
         } else {

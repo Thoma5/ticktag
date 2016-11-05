@@ -52,7 +52,7 @@ class RestRequestLoggingAspect {
     }
 
     @Around("@within(io.ticktag.TicktagRestInterface)")
-    fun around(pjp: ProceedingJoinPoint): Any {
+    fun around(pjp: ProceedingJoinPoint): Any? {
         val signature = pjp.signature
         val name = if (signature is MethodSignature) {
             "${ClassUtils.getAbbreviatedName(pjp.target.javaClass, MAX_CLASS_NAME_LENGTH)}.${signature.name}(...)"
