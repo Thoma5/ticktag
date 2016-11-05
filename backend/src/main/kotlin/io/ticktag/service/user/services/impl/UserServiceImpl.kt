@@ -23,10 +23,10 @@ open class UserServiceImpl @Inject constructor(
 ) : UserService {
 
     @PreAuthorize(AuthExpr.ANONYMOUS)
-    override fun checkPassword(mail: String, password: String): UUID? {
+    override fun checkPassword(mail: String, password: String): UserResult? {
         val user = users.findByMailIgnoreCase(mail) ?: return null
         if (BCrypt.checkpw(password, user.passwordHash))
-            return user.id
+            return UserResult(user)
         else
             return null
     }

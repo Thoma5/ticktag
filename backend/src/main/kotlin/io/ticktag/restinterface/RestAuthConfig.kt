@@ -25,6 +25,7 @@ import org.springframework.security.web.authentication.preauth.PreAuthenticatedA
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.filter.OncePerRequestFilter
 import java.security.SecureRandom
+import java.time.Instant
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
@@ -99,15 +100,14 @@ open class RestSecurityConfigBeans {
     open fun restAuthFilter(@Named("restAuthTokenService") tokenService: TokenService, users: UserRepository): Filter {
         return object : OncePerRequestFilter() {
             override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
-                // TODO invalidate tokens after some time!
                 val tokenKey = request.getHeader("X-Authorization")
                 if (tokenKey != null) {
                     try {
-                        val token = tokenService.verifyToken(tokenKey)
-                        if (token != null) {
-                            val userId = UUID.fromString(token.extendedInformation)
-                            val user = users.findById(userId)
-                            if (user != null) {
+                        val rawToken = tokenService.verifyToken(tokenKey)
+                        if (rawToken != null && rawToken.keyCreationTime - Date.from(Instant.now()).time < 7 * 24 * 60 * 60 * 1000) {
+                            val token = RestAuthToken.fromString(rawToken.extendedInformation)
+                            val user = users.findById(token.userId)
+                            if (user != null && user.currentToken == token.currentToken) {
                                 val authorities = when (user.role) {
                                     Role.USER -> setOf("USER")
                                     Role.OBSERVER -> setOf("USER", "OBSERVER")
@@ -127,5 +127,23 @@ open class RestSecurityConfigBeans {
                 filterChain.doFilter(request, response)
             }
         }
+    }
+}
+
+data class RestAuthToken(
+        val userId: UUID,
+        val currentToken: UUID
+) {
+    companion object {
+        fun fromString(s: String): RestAuthToken {
+            val parts = s.split(':')
+            if (parts.size != 2)
+                throw IllegalArgumentException("Token does not have the right amount of colons.")
+            return RestAuthToken(UUID.fromString(parts[0]), UUID.fromString(parts[1]))
+        }
+    }
+
+    override fun toString(): String {
+        return "$userId:$currentToken"
     }
 }
