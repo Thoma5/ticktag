@@ -2,32 +2,29 @@ import {Injectable} from '@angular/core';
 import {Response, Headers} from '@angular/http';
 import {Observable} from 'rxjs';
 import {AuthService} from '..';
+import {ValidationErrorJson} from '../../api';
 
 export type ApiCallFn = (extraParams: any) => Observable<Response>;
-
-export class ApiCallError {
-}
 
 export class ApiCallResult<T> {
   constructor(
     readonly apiCall: ApiCallFn,
     readonly extraHeaders: {[name: string]: string} | null,
-    readonly value: T|ApiCallError
+    readonly isValid: boolean,
+    private readonly value: T|ValidationErrorJson
   ) {}
 
-  get isValid(): boolean { return !(this.value instanceof ApiCallError); }
-
-  get error(): ApiCallError {
+  get error(): ValidationErrorJson {
     if (this.isValid) {
       throw new Error('Called error on valid ApiCallResult.');
     } else {
-      return this.value as ApiCallError;
+      return <ValidationErrorJson>this.value;
     }
   }
 
   get result(): T {
     if (this.isValid) {
-      return this.value as T;
+      return <T>this.value;
     } else {
       throw new Error('Called result on invalid ApiCallResult.');
     }
@@ -47,8 +44,7 @@ export class ApiCallService {
         if (res.isValid) {
           return res.result;
         } else {
-          // TODO global error
-          throw new Error('TODO nice error handling yada yada');
+          throw res;
         }
       });
   }
@@ -69,9 +65,20 @@ export class ApiCallService {
       }
     }
 
-    return apiCall({headers: headers}).map(resp => {
-      // TODO global error handling
-      return new ApiCallResult<T>(apiCall, extraHeaders || null, resp.json());
-    });
+    return apiCall({headers: headers})
+      .map(resp => {
+        return new ApiCallResult<T>(apiCall, extraHeaders || null, true, resp.json());
+      })
+      .catch(resp => {
+        if (resp instanceof Response) {
+          if (resp.status === 422) {
+            return Observable.of(new ApiCallResult<T>(apiCall, extraHeaders || null, false, resp.json()));
+          } else {
+            throw resp;
+          }
+        } else {
+          throw resp;
+        }
+      });
   }
 }

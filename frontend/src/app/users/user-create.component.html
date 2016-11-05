@@ -1,0 +1,9 @@
+<h2>Create New User</h2>
+
+<form>
+  <input type="text" name="name" [(ngModel)]="request.name" placeholder="Name">
+  <input type="text" name="mail" [(ngModel)]="request.mail" placeholder="E-Mail Address">
+  <input type="password" name="password" [(ngModel)]="request.password" placeholder="Password">
+  <input type="button" *ngIf="!working" (click)="onSubmit()" value="Create User">
+  <span *ngIf="working">Working ...</span>
+</form>

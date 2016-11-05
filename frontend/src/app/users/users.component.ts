@@ -7,7 +7,7 @@ import {UserApi, UserResultJson} from '../api';
   templateUrl: './users.component.html',
 })
 export class UsersComponent implements OnInit {
-  private users: UserResultJson[];
+  users: UserResultJson[];
 
   constructor(private readonly userApi: UserApi,
               private readonly apiCallService: ApiCallService) {

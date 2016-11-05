@@ -14,6 +14,7 @@ import {HomeComponent} from './home/home.component';
 import {AuthApi} from './api/api/AuthApi';
 import {Ng2Webstorage} from 'ng2-webstorage/dist/app';
 import {UsersComponent} from './users/users.component';
+import {UserCreateComponent} from './users/user-create.component';
 import {UserApi} from './api/api/UserApi';
 
 @NgModule({
@@ -30,6 +31,7 @@ import {UserApi} from './api/api/UserApi';
     LoginComponent,
     WhoamiComponent,
     UsersComponent,
+    UserCreateComponent,
   ],
   providers: [
     AuthApi,
@@ -42,17 +44,17 @@ import {UserApi} from './api/api/UserApi';
 })
 export class AppModule {
   constructor(public appRef: ApplicationRef) {}
-  hmrOnInit(store) {
+  hmrOnInit(store: any) {
     console.log('HMR store', store);
   }
-  hmrOnDestroy(store) {
+  hmrOnDestroy(store: any) {
     let cmpLocation = this.appRef.components.map(cmp => cmp.location.nativeElement);
     // recreate elements
     store.disposeOldHosts = createNewHosts(cmpLocation);
     // remove styles
     removeNgStyles();
   }
-  hmrAfterDestroy(store) {
+  hmrAfterDestroy(store: any) {
     // display new elements
     store.disposeOldHosts();
     delete store.disposeOldHosts;
