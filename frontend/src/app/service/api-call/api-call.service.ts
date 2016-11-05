@@ -11,14 +11,14 @@ export class ApiCallResult<T> {
     readonly apiCall: ApiCallFn,
     readonly extraHeaders: {[name: string]: string} | null,
     readonly isValid: boolean,
-    private readonly value: T|ValidationErrorJson
+    private readonly value: T|ValidationErrorJson[]
   ) {}
 
-  get error(): ValidationErrorJson {
+  get error(): ValidationErrorJson[] {
     if (this.isValid) {
       throw new Error('Called error on valid ApiCallResult.');
     } else {
-      return <ValidationErrorJson>this.value;
+      return <ValidationErrorJson[]>this.value;
     }
   }
 
