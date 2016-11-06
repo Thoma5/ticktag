@@ -1,6 +1,6 @@
 import {Component, Output, EventEmitter} from '@angular/core';
-import {ApiCallService} from '../service';
-import {UserApi, CreateUserRequestJson, UserResultJson} from '../api';
+import {ApiCallService} from '../../service';
+import {UserApi, CreateUserRequestJson, UserResultJson} from '../../api';
 
 @Component({
   selector: 'tt-user-create',

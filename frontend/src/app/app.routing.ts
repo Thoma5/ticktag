@@ -1,8 +1,8 @@
 import {RouterModule, Routes} from '@angular/router';
-import {WhoamiComponent} from './whoami/whoami.component';
-import {LoginComponent} from './login/login.component';
-import {HomeComponent} from './home/home.component';
-import {UsersComponent} from './users/users.component';
+import {WhoamiComponent} from './ui/whoami/whoami.component';
+import {LoginComponent} from './ui/login/login.component';
+import {HomeComponent} from './ui/home/home.component';
+import {UsersComponent} from './ui/users/users.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthApi, WhoamiResultJson} from '../api';
-import {ApiCallService} from '../service';
+import {AuthApi, WhoamiResultJson} from '../../api';
+import {ApiCallService} from '../../service';
 
 @Component({
   selector: 'tt-whoami',

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {ApiCallService} from '../service';
-import {UserApi, UserResultJson} from '../api';
+import {ApiCallService} from '../../service';
+import {UserApi, UserResultJson} from '../../api';
 
 @Component({
   selector: 'tt-users',

@@ -8,13 +8,13 @@ import { routing } from './app.routing';
 
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
 import {AuthService, ApiCallService} from './service';
-import {LoginComponent} from './login/login.component';
-import {WhoamiComponent} from './whoami/whoami.component';
-import {HomeComponent} from './home/home.component';
+import {LoginComponent} from './ui/login/login.component';
+import {WhoamiComponent} from './ui/whoami/whoami.component';
+import {HomeComponent} from './ui/home/home.component';
 import {AuthApi} from './api/api/AuthApi';
 import {Ng2Webstorage} from 'ng2-webstorage/dist/app';
-import {UsersComponent} from './users/users.component';
-import {UserCreateComponent} from './users/user-create.component';
+import {UsersComponent} from './ui/users/users.component';
+import {UserCreateComponent} from './ui/users/user-create.component';
 import {UserApi} from './api/api/UserApi';
 
 @NgModule({

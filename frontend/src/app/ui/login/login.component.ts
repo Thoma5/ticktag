@@ -1,8 +1,8 @@
 import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 import {Observable} from 'rxjs';
-import {AuthApi, LoginResultJson, WhoamiResultJson} from '../api';
-import {AuthService, ApiCallService} from '../service';
+import {AuthApi, LoginResultJson, WhoamiResultJson} from '../../api';
+import {AuthService, ApiCallService} from '../../service';
 
 @Component({
   selector: 'tt-login',
