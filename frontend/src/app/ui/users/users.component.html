@@ -1,0 +1,11 @@
+<h2>Users</h2>
+
+<ul>
+  <li *ngFor="let user of users">
+    <span class="id">{{user.id}}</span>
+    <span class="mail">{{user.mail}}</span>
+    <span class="name">{{user.name}}</span>
+  </li>
+</ul>
+
+<tt-user-create (created)="getUsers()"></tt-user-create>
