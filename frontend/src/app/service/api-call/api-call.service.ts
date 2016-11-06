@@ -7,12 +7,19 @@ import {ValidationErrorJson} from '../../api';
 export type ApiCallFn = (extraParams: any) => Observable<Response>;
 
 export class ApiCallResult<T> {
-  constructor(
-    readonly apiCall: ApiCallFn,
-    readonly extraHeaders: {[name: string]: string} | null,
-    readonly isValid: boolean,
-    private readonly value: T|ValidationErrorJson[]
-  ) {}
+  // TODO move this to ctr once Intellij supports readonly properties in ctr
+  readonly apiCall: ApiCallFn;
+  readonly extraHeaders: {[name: string]: string} | null;
+  readonly isValid: boolean;
+  private readonly value: T|ValidationErrorJson[];
+
+  constructor(apiCall: ApiCallFn, extraHeaders: {[name: string]: string}, isValid: boolean,
+              value: T|ValidationErrorJson[]) {
+    this.apiCall = apiCall;
+    this.extraHeaders = extraHeaders;
+    this.isValid = isValid;
+    this.value = value;
+  }
 
   get error(): ValidationErrorJson[] {
     if (this.isValid) {
@@ -33,9 +40,8 @@ export class ApiCallResult<T> {
 
 @Injectable()
 export class ApiCallService {
-  constructor(
-    private readonly authService: AuthService
-  ) {}
+  constructor(private authService: AuthService) {
+  }
 
   callNoError<T>(apiCall: ApiCallFn, extraHeaders?: {[name: string]: string}): Observable<T> {
     return this

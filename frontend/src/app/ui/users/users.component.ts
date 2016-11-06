@@ -9,8 +9,9 @@ import {UserApi, UserResultJson} from '../../api';
 export class UsersComponent implements OnInit {
   users: UserResultJson[];
 
-  constructor(private readonly userApi: UserApi,
-              private readonly apiCallService: ApiCallService) {
+  // TODO make readonly once Intellij supports readonly properties in ctr
+  constructor(private userApi: UserApi,
+              private apiCallService: ApiCallService) {
   }
 
   ngOnInit(): void {

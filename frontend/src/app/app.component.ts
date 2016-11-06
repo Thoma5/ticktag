@@ -11,7 +11,8 @@ export class AppComponent implements OnInit {
   private title: string;
   private user: User;
 
-  constructor(private readonly authService: AuthService) {
+  // TODO make readonly once Intellij supports readonly properties in ctr
+  constructor(private authService: AuthService) {
     this.title = 'TickTag';
   }
 

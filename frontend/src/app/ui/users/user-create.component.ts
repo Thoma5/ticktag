@@ -15,8 +15,9 @@ export class UserCreateComponent {
   working = false;
   @Output() readonly created = new EventEmitter<UserResultJson>();
 
-  constructor(private readonly apiCallService: ApiCallService,
-              private readonly userApi: UserApi) {}
+  // TODO make readonly once Intellij supports readonly properties in ctr
+  constructor(private apiCallService: ApiCallService,
+              private userApi: UserApi) {}
 
   onSubmit(): void {
     this.working = true;

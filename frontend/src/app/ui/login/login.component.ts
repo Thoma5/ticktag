@@ -12,10 +12,11 @@ export class LoginComponent {
   private email: string;
   private password: string;
 
-  constructor(private readonly router: Router,
-              private readonly authApi: AuthApi,
-              private readonly authService: AuthService,
-              private readonly apiCallService: ApiCallService) {
+  // TODO make readonly once Intellij supports readonly properties in ctr
+  constructor(private router: Router,
+              private authApi: AuthApi,
+              private authService: AuthService,
+              private apiCallService: ApiCallService) {
   }
 
   onSubmit(): void {

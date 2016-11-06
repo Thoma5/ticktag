@@ -7,7 +7,8 @@ const KEY_USER = 'user';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly localStorageService: LocalStorageService) {
+  // TODO make readonly once Intellij supports readonly properties in ctr
+  constructor(private localStorageService: LocalStorageService) {
   }
 
   get user(): User|null {

@@ -9,8 +9,9 @@ import {ApiCallService} from '../../service';
 export class WhoamiComponent implements OnInit {
   me: WhoamiResultJson;
 
-  constructor(private readonly authApi: AuthApi,
-              private readonly apiCallService: ApiCallService) {
+  // TODO make readonly once Intellij supports readonly properties in ctr
+  constructor(private authApi: AuthApi,
+              private apiCallService: ApiCallService) {
   }
 
   ngOnInit(): void {
