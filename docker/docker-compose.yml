@@ -1,0 +1,42 @@
+version: '2'
+services:
+  
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - "2525:25"
+      - "8025:80"
+    environment:
+      - MH_UI_WEB_PATH=mail
+      - MH_API_BIND_ADDR=0.0.0.0:80
+      - MH_UI_BIND_ADDR=0.0.0.0:80
+      - MH_SMTP_BIND_ADDR=0.0.0.0:25
+      - MH_STORAGE=maildir
+      - MH_MAILDIR_PATH=/var/lib/mailhog
+      - MH_HOSTNAME=dev.ticktag
+    volumes:
+      - ./volumes/mailhog:/var/lib/mailhog
+
+  postgres:
+    image: postgres:9.5
+    ports:
+      - "5432:5432"    
+    environment:
+      - POSTGRES_USER=ticktag
+      - POSTGRES_PASSWORD=ticktag
+      - PGDATA=/var/lib/postgres
+    volumes:
+      - ./volumes/postgres:/var/lib/postgres
+
+  openldap:
+    build:
+      context: images/openldap
+    ports:
+      - "389:389"
+    environment:
+      LDAP_ORGANISATION: "ticktag"
+      LDAP_DOMAIN: "dev.ticktag"
+      LDAP_ADMIN_PASSWORD: "admin"
+    volumes:      
+      - ./volumes/ldap:/var/lib/ldap
+  
