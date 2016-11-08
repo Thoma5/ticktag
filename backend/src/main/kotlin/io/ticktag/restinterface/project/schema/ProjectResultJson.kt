@@ -1,9 +1,9 @@
-package io.ticktag.service.project.dto
+package io.ticktag.restinterface.project.schema
 
-import io.ticktag.persistence.project.entity.Project
+import io.ticktag.service.project.dto.ProjectResult
 import java.util.*
 
-data class ProjectResult(
+class ProjectResultJson(
         val id: UUID,
         val name: String,
         val description: String,
@@ -11,7 +11,7 @@ data class ProjectResult(
         val icon: ByteArray?
 
 ) {
-    constructor(p: Project) : this(id = p.id, name = p.name, description = p.description, creationDate = p.creationDate, icon = p.icon)
+    constructor(p: ProjectResult) : this(id = p.id, name = p.name, description = p.description, creationDate = p.creationDate, icon = p.icon)
 
     override fun equals(other: Any?): Boolean {
         return super.equals(other) && other is ProjectResult && Arrays.equals(other.icon, this.icon)
@@ -25,4 +25,3 @@ data class ProjectResult(
         return super.toString()
     }
 }
-

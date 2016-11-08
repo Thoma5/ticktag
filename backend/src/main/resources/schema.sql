@@ -14,7 +14,7 @@ CREATE TABLE "project" (
     "id"            UUID PRIMARY KEY,
     "name"          TEXT NOT NULL,
     "description"   TEXT NOT NULL,
-    "creation_date" DATE NOT NULL,
+    "creation_date" TIMESTAMP NOT NULL,
     "icon"          BYTEA
 );
 
