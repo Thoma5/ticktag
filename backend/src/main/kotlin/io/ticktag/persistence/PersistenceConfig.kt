@@ -43,7 +43,7 @@ open class PersistenceConfig {
         val entityManagerFactoryBean = LocalContainerEntityManagerFactoryBean()
         entityManagerFactoryBean.dataSource = dataSource
         entityManagerFactoryBean.jpaVendorAdapter = HibernateJpaVendorAdapter()
-        entityManagerFactoryBean.setPackagesToScan("io.ticktag.persistence.user.entity")
+        entityManagerFactoryBean.setPackagesToScan("io.ticktag.persistence")
 
         val jpaProperties = Properties()
         jpaProperties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect")
