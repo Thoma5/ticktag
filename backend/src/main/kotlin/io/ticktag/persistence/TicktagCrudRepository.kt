@@ -1,5 +1,7 @@
 package io.ticktag.persistence
 
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.support.JpaEntityInformation
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository
 import org.springframework.data.repository.NoRepositoryBean
@@ -12,6 +14,7 @@ import javax.persistence.EntityManager
 interface TicktagCrudRepository<E> : Repository<E, UUID>, TicktagBaseRepositoryInsert<E> {
     fun findById(id: UUID): E?
     fun findAll(): List<E>
+    fun findAll(pageable: Pageable): Page<E>
     fun exists(id: UUID): Boolean
 
     fun delete(entity: E)

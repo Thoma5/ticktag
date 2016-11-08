@@ -10,4 +10,12 @@ create table "user" (
 );
 create index on "user" (upper("mail"));
 
+CREATE TABLE "project" (
+    "id"            UUID PRIMARY KEY,
+    "name"          TEXT NOT NULL,
+    "description"   TEXT NOT NULL,
+    "creation_date" DATE NOT NULL,
+    "icon"          BYTEA
+);
+
 commit;
