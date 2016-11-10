@@ -10,4 +10,6 @@ interface ProjectService {
     fun listProjects(name: String, pageable: Pageable): List<ProjectResult>
     fun listProjects(pageable: Pageable): List<ProjectResult>
     fun createProject(project: CreateProject): ProjectResult
+    fun deleteProject(id: UUID)
+    fun updateProject(id: UUID, project: CreateProject) : ProjectResult
 }

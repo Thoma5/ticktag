@@ -9,6 +9,7 @@ import io.ticktag.service.project.services.ProjectService
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.web.bind.annotation.*
+import java.util.*
 import javax.inject.Inject
 
 @TicktagRestInterface
@@ -27,7 +28,7 @@ open class ProjectController @Inject constructor(
                   @RequestParam(name = "name", defaultValue = "", required = false) name: String
     ): List<ProjectResultJson> {
         val ascOrder = if (asc) Sort.Direction.ASC else Sort.Direction.DESC
-        val sortOrder = Sort.Order(ascOrder, order).ignoreCase()
+        val sortOrder = Sort.Order(ascOrder, order).ignoreCase() //TODO: check if order is a valid column
         val pageRequest = PageRequest(page, size, Sort(sortOrder))
         return projectService.listProjects(name, pageRequest).map(::ProjectResultJson)
     }
@@ -35,6 +36,18 @@ open class ProjectController @Inject constructor(
     @PostMapping
     open fun create(@RequestBody req: CreateProjectRequestJson): ProjectResultJson {
         val project = projectService.createProject(CreateProject(req.name, req.description, req.icon))
+        return ProjectResultJson(project)
+    }
+
+    @DeleteMapping(value = "/{id}")
+    open fun delete(@PathVariable(name = "id") id: UUID) {
+        projectService.deleteProject(id)
+    }
+
+    @PutMapping(value = "/{id}")
+    open fun update(@PathVariable(name = "id") id: UUID,
+                    @RequestBody req: CreateProjectRequestJson): ProjectResultJson {
+        val project = projectService.updateProject(id, CreateProject(req.name, req.description, req.icon))
         return ProjectResultJson(project)
     }
 }

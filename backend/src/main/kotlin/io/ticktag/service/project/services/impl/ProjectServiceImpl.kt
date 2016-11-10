@@ -28,7 +28,7 @@ open class ProjectServiceImpl @Inject constructor(
         return ProjectResult(project)
     }
 
-    @PreAuthorize(AuthExpr.ADMIN) //TODO
+    @PreAuthorize(AuthExpr.ADMIN) //TODO: Add access for project member
     override fun getProject(id: UUID): ProjectResult? {
         return ProjectResult(projects.findById(id) ?: return null)
     }
@@ -45,5 +45,22 @@ open class ProjectServiceImpl @Inject constructor(
     @PreAuthorize(AuthExpr.ADMIN)
     override fun listProjects(pageable: Pageable): List<ProjectResult> {
         return listProjects("", pageable)
+    }
+
+    @PreAuthorize(AuthExpr.ADMIN)
+    override fun deleteProject(id: UUID) {
+        val projectToDelete = projects.findById(id) ?: throw RuntimeException() //TODO: change to NOT FOUND (404)
+        projects.delete(projectToDelete)
+    }
+
+    @PreAuthorize(AuthExpr.ADMIN) //TODO: Add access for project member
+    override fun updateProject(id: UUID, project: CreateProject): ProjectResult {
+        val name = project.name
+        val description = project.description
+        val icon = project.icon
+        val creationDate = Date()
+        val project = Project.createWithID(id, name, description, creationDate, icon)
+        projects.save(project)
+        return ProjectResult(project)
     }
 }
