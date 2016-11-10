@@ -22,6 +22,7 @@ open class UserController @Inject constructor(
     @PostMapping
     open fun create(@RequestBody req: CreateUserRequestJson): UserResultJson {
         val user = userService.createUser(CreateUser(mail = req.mail, name = req.name, password = req.password))
+        //test
         return UserResultJson(user)
     }
 
