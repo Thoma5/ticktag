@@ -11,12 +11,8 @@ import javax.persistence.Table
 open class Project {
     companion object {
         fun create(name: String, description: String, creationDate: Date, icon: ByteArray?): Project {
-            return createWithID(UUID.randomUUID(), name, description, creationDate, icon)
-        }
-
-        fun createWithID(id: UUID, name: String, description: String, creationDate: Date, icon: ByteArray?): Project {
             val p = Project()
-            p.id = id
+            p.id = UUID.randomUUID()
             p.name = name
             p.description = description
             p.creationDate = creationDate
