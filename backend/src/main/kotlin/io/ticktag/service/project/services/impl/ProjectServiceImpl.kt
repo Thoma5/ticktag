@@ -30,8 +30,8 @@ open class ProjectServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.ADMIN) //TODO: Add access for project member
-    override fun getProject(id: UUID): ProjectResult? {
-        return ProjectResult(projects.findById(id) ?: return null)
+    override fun getProject(id: UUID): ProjectResult {
+        return ProjectResult(projects.findById(id) ?: throw RuntimeException() /* TODO: change to not found */)
     }
 
     @PreAuthorize(AuthExpr.ADMIN)
@@ -66,7 +66,6 @@ open class ProjectServiceImpl @Inject constructor(
         if (project.icon != null) {
             projectToUpdate.icon = project.icon
         }
-        projects.save(projectToUpdate)
         return ProjectResult(projectToUpdate)
     }
 }
