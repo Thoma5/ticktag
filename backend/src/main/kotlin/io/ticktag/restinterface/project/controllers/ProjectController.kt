@@ -4,7 +4,9 @@ import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.project.schema.CreateProjectRequestJson
 import io.ticktag.restinterface.project.schema.ProjectResultJson
+import io.ticktag.restinterface.project.schema.UpdateProjectRequestJson
 import io.ticktag.service.project.dto.CreateProject
+import io.ticktag.service.project.dto.UpdateProject
 import io.ticktag.service.project.services.ProjectService
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -46,8 +48,8 @@ open class ProjectController @Inject constructor(
 
     @PutMapping(value = "/{id}")
     open fun update(@PathVariable(name = "id") id: UUID,
-                    @RequestBody req: CreateProjectRequestJson): ProjectResultJson {
-        val project = projectService.updateProject(id, CreateProject(req.name, req.description, req.icon))
+                    @RequestBody req: UpdateProjectRequestJson): ProjectResultJson {
+        val project = projectService.updateProject(id, UpdateProject(req.name, req.description, req.icon))
         return ProjectResultJson(project)
     }
 }
