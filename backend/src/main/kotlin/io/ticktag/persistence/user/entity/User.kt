@@ -7,12 +7,12 @@ import javax.persistence.*
 @Table(name = "user")
 open class User {
     companion object {
-        fun create(mail: String, passwordHash: String, name: String, role: Role, currentToken: UUID): User {
-            return createWithId(UUID.randomUUID(), mail, passwordHash, name, role, currentToken)
+        fun create(mail: String, passwordHash: String, name: String, role: Role, currentToken: UUID,profilePic: ByteArray?): User {
+            return createWithId(UUID.randomUUID(), mail, passwordHash, name, role, currentToken,profilePic)
         }
 
         fun createWithId(uuid: UUID, mail: String, passwordHash: String, name: String, role: Role,
-                         currentToken: UUID): User {
+                         currentToken: UUID, profilePic: ByteArray?): User {
             val u = User()
             u.id = uuid
             u.mail = mail
@@ -20,6 +20,7 @@ open class User {
             u.name = name
             u.role = role
             u.currentToken = currentToken
+            u.profilePic = profilePic
             return u
         }
     }
@@ -45,5 +46,7 @@ open class User {
     @Column(name = "current_token", nullable = false)
     lateinit open var currentToken: UUID
 
+    @Column(name ="profile_pic",nullable = true)
+    lateinit open var profilePic: ByteArray?
     protected constructor()
 }

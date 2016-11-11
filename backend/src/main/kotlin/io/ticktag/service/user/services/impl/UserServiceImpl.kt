@@ -42,7 +42,7 @@ open class UserServiceImpl @Inject constructor(
         val mail = createUser.mail
         val name = createUser.name
         val passwordHash = hashing.hashPassword(createUser.password)
-        val user = User.create(mail, passwordHash, name, Role.USER, UUID.randomUUID())
+        val user = User.create(mail, passwordHash, name, Role.USER, UUID.randomUUID(),null)
         users.insert(user)
 
         return UserResult(user)
