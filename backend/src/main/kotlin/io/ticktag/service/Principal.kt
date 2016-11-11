@@ -16,11 +16,17 @@ data class Principal(
 
 class AuthExpr private constructor() {
     companion object {
-        const val USER = "hasAuthority('USER')"
         const val ANONYMOUS = "true"
         const val NOBODY = "false"
+
+        const val USER = "hasAuthority('USER')"
         const val ADMIN = "hasAuthority('ADMIN')"
+        const val OBSERVER = "hasAuthority('OBSERVER')"
         const val INTERNAL = "hasAuthority('INTERNAL')"
+
+        const val PROJECT_OBSERVER = "hasAuthority('OBSERVER') || hasAuthority('PROJECT:OBSERVER:' + #authProjectId)"
+        const val PROJECT_USER = "hasAuthority('ADMIN') || hasAuthority('PROJECT:USER:' + #authProjectId)"
+        const val PROJECT_ADMIN = "hasAuthority('ADMIN') || hasAuthority('PROJECT:ADMIN:' + #authProjectId)"
     }
 }
 

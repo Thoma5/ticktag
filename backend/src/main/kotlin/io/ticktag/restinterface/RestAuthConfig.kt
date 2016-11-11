@@ -1,6 +1,7 @@
 package io.ticktag.restinterface
 
 import io.ticktag.ApplicationProperties
+import io.ticktag.persistence.member.entity.ProjectRole
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.persistence.user.entity.Role
 import io.ticktag.service.Principal
@@ -104,13 +105,22 @@ open class RestSecurityConfigBeans {
                         val rawToken = tokenService.verifyToken(tokenKey)
                         if (rawToken != null && rawToken.keyCreationTime - Date.from(Instant.now()).time < 7 * 24 * 60 * 60 * 1000) {
                             val token = RestAuthToken.fromString(rawToken.extendedInformation)
-                            val user = users.findOne(token.userId)
+                            val user = users.findOneWithProjects(token.userId)
                             if (user != null && user.currentToken == token.currentToken) {
                                 val authorities = when (user.role) {
-                                    Role.USER -> setOf("USER")
-                                    Role.OBSERVER -> setOf("USER", "OBSERVER")
-                                    Role.ADMIN -> setOf("USER", "OBSERVER", "ADMIN")
+                                    Role.USER -> mutableSetOf("USER")
+                                    Role.OBSERVER -> mutableSetOf("USER", "OBSERVER")
+                                    Role.ADMIN -> mutableSetOf("USER", "OBSERVER", "ADMIN")
                                 }
+                                for (membership in user.memberships) {
+                                    val projectAuthories = when (membership.role) {
+                                        ProjectRole.OBSERVER -> setOf("OBSERVER")
+                                        ProjectRole.USER -> setOf("OBSERVER", "USER")
+                                        ProjectRole.ADMIN -> setOf("OBSERVER", "USER", "ADMIN")
+                                    }
+                                    authorities.addAll(projectAuthories.map { "PROJECT:$it:${membership.project.id}" })
+                                }
+
                                 val principal = Principal(user.id, authorities)
                                 val auth = PreAuthenticatedAuthenticationToken(principal, null, principal.authorities.map(::SimpleGrantedAuthority))
                                 auth.details = WebAuthenticationDetails(request)

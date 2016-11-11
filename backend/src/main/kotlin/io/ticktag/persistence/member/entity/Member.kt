@@ -7,7 +7,22 @@ import java.util.*
 import javax.persistence.*
 
 @Embeddable
-data class MemberKey(val user: User, val project: Project) : Serializable
+open class MemberKey protected constructor() : Serializable {
+    companion object {
+        fun create(user: User, project: Project): MemberKey {
+            val mk = MemberKey()
+            mk.user = user
+            mk.project = project
+            return mk
+        }
+    }
+
+    lateinit open var user: User
+        protected set
+
+    lateinit open var project: Project
+        protected set
+}
 
 @Entity
 @Table(name = "member")
@@ -26,13 +41,13 @@ open class Member {
 
     @Id
     @ManyToOne(optional = false)
-    @JoinColumn(name = "u_id", referencedColumnName = "id")
+    @JoinColumn(name = "u_id", referencedColumnName = "id", nullable = false)
     lateinit open var user: User
         protected set
 
     @Id
     @ManyToOne(optional = false)
-    @JoinColumn(name = "p_id", referencedColumnName = "id")
+    @JoinColumn(name = "p_id", referencedColumnName = "id", nullable = false)
     lateinit open var project: Project
         protected set
 

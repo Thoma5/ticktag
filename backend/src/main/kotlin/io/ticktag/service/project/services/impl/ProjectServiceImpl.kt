@@ -5,11 +5,13 @@ import io.ticktag.persistence.project.ProjectRepository
 import io.ticktag.persistence.project.entity.Project
 import io.ticktag.service.AuthExpr
 import io.ticktag.service.NotFoundException
+import io.ticktag.service.Principal
 import io.ticktag.service.project.dto.CreateProject
 import io.ticktag.service.project.dto.ProjectResult
 import io.ticktag.service.project.dto.UpdateProject
 import io.ticktag.service.project.services.ProjectService
 import org.springframework.data.domain.Pageable
+import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
 import java.util.*
 import javax.inject.Inject
@@ -30,23 +32,19 @@ open class ProjectServiceImpl @Inject constructor(
         return ProjectResult(project)
     }
 
-    @PreAuthorize(AuthExpr.ADMIN) //TODO: Add access for project member
-    override fun getProject(id: UUID): ProjectResult {
+    @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
+    override fun getProject(@P("authProjectId") id: UUID): ProjectResult {
         return ProjectResult(projects.findOne(id) ?: throw NotFoundException())
     }
 
     @PreAuthorize(AuthExpr.ADMIN)
-    override fun listProjects(name: String, pageable: Pageable): List<ProjectResult> {
-        if (name.isEmpty()) {
-            return projects.findAll(pageable).content.map(::ProjectResult)
-        } else {
-            return projects.findByNameLike(name, pageable).content.map(::ProjectResult)
-        }
+    override fun listAllProjects(name: String, pageable: Pageable): List<ProjectResult> {
+        return projects.findByNameLike("%$name%", pageable).content.map(::ProjectResult)
     }
 
-    @PreAuthorize(AuthExpr.ADMIN)
-    override fun listProjects(pageable: Pageable): List<ProjectResult> {
-        return listProjects("", pageable)
+    @PreAuthorize(AuthExpr.USER)
+    override fun listUserProjects(principal: Principal, name: String, pageable: Pageable): List<ProjectResult> {
+        return projects.findByMembersUserIdAndNameLike(principal.id, "%$name%", pageable).content.map(::ProjectResult)
     }
 
     @PreAuthorize(AuthExpr.ADMIN)
@@ -55,8 +53,8 @@ open class ProjectServiceImpl @Inject constructor(
         projects.delete(projectToDelete)
     }
 
-    @PreAuthorize(AuthExpr.ADMIN) //TODO: Add access for project member
-    override fun updateProject(id: UUID, project: UpdateProject): ProjectResult {
+    @PreAuthorize(AuthExpr.PROJECT_ADMIN)
+    override fun updateProject(@P("authProjectId") id: UUID, project: UpdateProject): ProjectResult {
         val projectToUpdate = projects.findOne(id) ?: throw NotFoundException()
         if (project.name != null) {
             projectToUpdate.name = project.name
