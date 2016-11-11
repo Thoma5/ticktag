@@ -49,7 +49,7 @@ open class UserServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.USER)  // TODO is this correct?
     override fun getUser(id: UUID): UserResult? {
-        return UserResult(users.findById(id) ?: return null)
+        return UserResult(users.findOne(id) ?: return null)
     }
 
     @PreAuthorize(AuthExpr.USER)  // TODO is this correct?

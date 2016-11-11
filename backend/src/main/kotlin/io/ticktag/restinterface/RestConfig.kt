@@ -1,5 +1,6 @@
 package io.ticktag.restinterface
 
+import io.ticktag.service.NotFoundException
 import io.ticktag.service.TicktagValidationException
 import io.ticktag.service.ValidationErrorDetail
 import org.apache.commons.lang3.ClassUtils
@@ -27,7 +28,7 @@ open class RestConfig {
 }
 
 @ControllerAdvice
-open class RestMapValidationErrorToJson {
+open class RestExceptionHandlers {
     @ExceptionHandler(TicktagValidationException::class)
     open fun handleValidationError(ex: TicktagValidationException): ResponseEntity<List<ValidationErrorJson>> {
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(ex.errros.map {
@@ -40,6 +41,11 @@ open class RestMapValidationErrorToJson {
                     ValidationErrorJson(it.field, "unknown")
             }
         })
+    }
+
+    @ExceptionHandler(NotFoundException::class)
+    open fun handleNotFound(ex: NotFoundException): ResponseEntity<Map<Any, Any>> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(emptyMap())
     }
 }
 

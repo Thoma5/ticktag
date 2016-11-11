@@ -1,5 +1,6 @@
 package io.ticktag.persistence.user.entity
 
+import io.ticktag.persistence.member.entity.Member
 import java.util.*
 import javax.persistence.*
 
@@ -44,6 +45,10 @@ open class User {
 
     @Column(name = "current_token", nullable = false)
     lateinit open var currentToken: UUID
+
+    @OneToMany(mappedBy = "user")
+    lateinit open var memberships: MutableList<Member>
+        protected set
 
     protected constructor()
 }

@@ -104,7 +104,7 @@ open class RestSecurityConfigBeans {
                         val rawToken = tokenService.verifyToken(tokenKey)
                         if (rawToken != null && rawToken.keyCreationTime - Date.from(Instant.now()).time < 7 * 24 * 60 * 60 * 1000) {
                             val token = RestAuthToken.fromString(rawToken.extendedInformation)
-                            val user = users.findById(token.userId)
+                            val user = users.findOne(token.userId)
                             if (user != null && user.currentToken == token.currentToken) {
                                 val authorities = when (user.role) {
                                     Role.USER -> setOf("USER")

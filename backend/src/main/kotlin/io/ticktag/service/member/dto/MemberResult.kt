@@ -11,5 +11,5 @@ data class MemberResult(
         val joinDate: Date,
         val role: ProjectRole
 ) {
-    constructor(m: Member) : this(uID = m.id.uID, pID = m.id.pID, joinDate = m.joinDate, role = m.role)
+    constructor(m: Member) : this(uID = m.user.id, pID = m.project.id, joinDate = m.joinDate, role = m.role)
 }

@@ -4,6 +4,7 @@ import io.ticktag.TicktagService
 import io.ticktag.persistence.project.ProjectRepository
 import io.ticktag.persistence.project.entity.Project
 import io.ticktag.service.AuthExpr
+import io.ticktag.service.NotFoundException
 import io.ticktag.service.project.dto.CreateProject
 import io.ticktag.service.project.dto.ProjectResult
 import io.ticktag.service.project.dto.UpdateProject
@@ -31,7 +32,7 @@ open class ProjectServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.ADMIN) //TODO: Add access for project member
     override fun getProject(id: UUID): ProjectResult {
-        return ProjectResult(projects.findById(id) ?: throw RuntimeException() /* TODO: change to not found */)
+        return ProjectResult(projects.findOne(id) ?: throw NotFoundException())
     }
 
     @PreAuthorize(AuthExpr.ADMIN)
@@ -50,13 +51,13 @@ open class ProjectServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.ADMIN)
     override fun deleteProject(id: UUID) {
-        val projectToDelete = projects.findById(id) ?: throw RuntimeException() //TODO: change to NOT FOUND (404)
+        val projectToDelete = projects.findOne(id) ?: throw NotFoundException()
         projects.delete(projectToDelete)
     }
 
     @PreAuthorize(AuthExpr.ADMIN) //TODO: Add access for project member
     override fun updateProject(id: UUID, project: UpdateProject): ProjectResult {
-        val projectToUpdate = projects.findById(id) ?: throw RuntimeException() //TODO: change to NOT FOUND (404)
+        val projectToUpdate = projects.findOne(id) ?: throw NotFoundException()
         if (project.name != null) {
             projectToUpdate.name = project.name
         }

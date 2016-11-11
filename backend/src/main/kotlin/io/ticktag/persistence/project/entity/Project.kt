@@ -1,10 +1,8 @@
 package io.ticktag.persistence.project.entity
 
+import io.ticktag.persistence.member.entity.Member
 import java.util.*
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "project")
@@ -37,6 +35,10 @@ open class Project {
 
     @Column(name = "icon", nullable = true)
     open var icon: ByteArray? = null
+
+    @OneToMany(mappedBy = "project")
+    lateinit open var members: MutableList<Member>
+        protected set
 
     protected constructor()
 }
