@@ -10,6 +10,7 @@ import io.ticktag.service.TicktagValidationException
 import io.ticktag.service.ValidationError
 import io.ticktag.service.ValidationErrorDetail
 import io.ticktag.service.user.dto.CreateUser
+import io.ticktag.service.user.dto.UpdateUser
 import io.ticktag.service.user.dto.UserResult
 import io.ticktag.service.user.services.UserService
 import org.springframework.security.access.prepost.PreAuthorize
@@ -60,5 +61,24 @@ open class UserServiceImpl @Inject constructor(
     @PreAuthorize(AuthExpr.ADMIN) // TODO should probably be more granular
     override fun listUsers(): List<UserResult> {
         return users.findAll().map(::UserResult)
+    }
+
+    @PreAuthorize(AuthExpr.USER)
+    override fun updateUser(id: UUID, updateUser: UpdateUser):UserResult{
+        val user = users.findById(id) ?: throw RuntimeException() //TODO: NOT FOUND
+
+        if (updateUser.mail != null){
+            user.mail = updateUser.mail
+        }
+
+        if (updateUser.name != null){
+            user.name = updateUser.name
+        }
+
+        if (updateUser.password != null){
+            user.passwordHash = hashing.hashPassword(updateUser.password)
+        }
+        return UserResult(user);
+
     }
 }
