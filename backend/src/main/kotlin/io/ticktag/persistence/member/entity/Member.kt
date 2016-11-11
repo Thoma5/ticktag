@@ -40,13 +40,13 @@ open class Member {
     }
 
     @Id
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "u_id", referencedColumnName = "id", nullable = false)
     lateinit open var user: User
         protected set
 
     @Id
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "p_id", referencedColumnName = "id", nullable = false)
     lateinit open var project: Project
         protected set
