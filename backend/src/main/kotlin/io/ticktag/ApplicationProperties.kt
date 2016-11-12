@@ -4,6 +4,7 @@ interface ApplicationProperties {
     val dbUrl: String
     val dbUser: String
     val dbPassword: String
+    val dbValidate: Boolean
 
     val httpPort: Int
 
