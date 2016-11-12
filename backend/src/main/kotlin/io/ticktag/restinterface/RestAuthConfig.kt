@@ -1,7 +1,6 @@
 package io.ticktag.restinterface
 
 import io.ticktag.ApplicationProperties
-import io.ticktag.persistence.member.entity.ProjectRole
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.persistence.user.entity.Role
 import io.ticktag.service.Principal
@@ -112,16 +111,8 @@ open class RestSecurityConfigBeans {
                                     Role.OBSERVER -> mutableSetOf("USER", "OBSERVER")
                                     Role.ADMIN -> mutableSetOf("USER", "OBSERVER", "ADMIN")
                                 }
-                                for (membership in user.memberships) {
-                                    val projectAuthories = when (membership.role) {
-                                        ProjectRole.OBSERVER -> setOf("OBSERVER")
-                                        ProjectRole.USER -> setOf("OBSERVER", "USER")
-                                        ProjectRole.ADMIN -> setOf("OBSERVER", "USER", "ADMIN")
-                                    }
-                                    authorities.addAll(projectAuthories.map { "PROJECT:$it:${membership.project.id}" })
-                                }
 
-                                val principal = Principal(user.id, authorities)
+                                val principal = Principal(user.id, authorities, user)
                                 val auth = PreAuthenticatedAuthenticationToken(principal, null, principal.authorities.map(::SimpleGrantedAuthority))
                                 auth.details = WebAuthenticationDetails(request)
                                 SecurityContextHolder.getContext().authentication = auth
