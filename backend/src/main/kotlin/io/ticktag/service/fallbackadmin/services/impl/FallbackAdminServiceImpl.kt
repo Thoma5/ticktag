@@ -43,7 +43,7 @@ open class FallbackAdminServiceImpl @Inject constructor(
         // Reset mail and password
         admin.mail = mail
         admin.passwordHash = hash
-        // Reset role to always keep him admin
+        // Reset projectRole to always keep him admin
         admin.role = Role.ADMIN
         // Invalidate old sessions
         admin.currentToken = UUID.randomUUID()

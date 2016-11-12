@@ -7,7 +7,6 @@ import io.ticktag.persistence.member.entity.MemberKey
 import io.ticktag.persistence.project.entity.Project
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
-import org.springframework.data.jpa.repository.JpaRepository
 import java.util.*
 
 @TicktagRepository

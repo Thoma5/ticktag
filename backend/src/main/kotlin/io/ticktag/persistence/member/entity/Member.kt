@@ -51,7 +51,7 @@ open class Member {
     lateinit open var project: Project
         protected set
 
-    @Column(name = "role", nullable = false)
+    @Column(name = "projectRole", nullable = false)
     @Enumerated(EnumType.STRING)
     lateinit open var role: ProjectRole
 
