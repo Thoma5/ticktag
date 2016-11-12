@@ -11,7 +11,7 @@
     "server": "webpack-dashboard -- webpack-dev-server --inline --port 3000",
     "webdriver-update": "webdriver-manager update",
     "webdriver-start": "webdriver-manager start",
-    "lint": "tslint --force \"src/**/*.ts\" -e \"src/app/api/**/*\"",
+    "lint": "tslint \"src/**/*.ts\"",
     "e2e": "protractor",
     "e2e-live": "protractor --elementExplorer",
     "pretest": "npm run lint",
