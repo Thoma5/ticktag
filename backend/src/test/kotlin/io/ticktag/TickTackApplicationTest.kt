@@ -7,8 +7,9 @@ class TickTackApplicationTest {
     fun test_shouldSucceed() {
     }
 
-    @Test
-    fun test_shouldFail() {
-        throw AssertionError("This test always fails")
-    }
+  //  @Test
+  //  fun test_shouldFail() {
+  //      throw AssertionError("This test always fails")
+  //
+    //  }
 }
