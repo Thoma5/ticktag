@@ -1,11 +1,13 @@
 package io.ticktag
 
+import com.google.common.io.Resources
 import org.junit.Before
 import org.junit.runner.RunWith
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.nio.file.Files
 import java.sql.Connection
 import javax.inject.Inject
 import javax.sql.DataSource
@@ -22,23 +24,22 @@ abstract class BaseTest {
                 if (!INIT_DB_DONE) {
                     INIT_DB_DONE = true
 
-                    val fpdrop = BufferedReader(InputStreamReader(BaseTest::class.java.classLoader.getResourceAsStream("drop.sql")))
-                    val drop = fpdrop.readText()
-                    fpdrop.close()
-
-                    val stmtdrop = connection.prepareStatement(drop)
-                    stmtdrop.execute()
-                    stmtdrop.close()
-
-                    val fp = BufferedReader(InputStreamReader(BaseTest::class.java.classLoader.getResourceAsStream("schema.sql")))
-                    val creates = fp.readText()
-                    fp.close()
-
-                    val stmt = connection.prepareStatement(creates)
-                    stmt.execute()
-                    stmt.close()
+                    execResource(connection, "drop.sql")
+                    execResource(connection, "schema.sql")
                 }
             }
+        }
+
+        private fun readResource(name: String): String? {
+            val resUrl = Resources.getResource(name) ?: return null
+            return Resources.toString(resUrl, Charsets.UTF_8)
+        }
+
+        private fun execResource(connection: Connection, name: String) {
+            val sql = readResource(name)!!
+            val stmt = connection.prepareStatement(sql)
+            stmt.execute()
+            stmt.close()
         }
     }
 
@@ -49,12 +50,6 @@ abstract class BaseTest {
         val connection = datasource.connection
         initDb(connection)
 
-        val fp = BufferedReader(InputStreamReader(BaseTest::class.java.classLoader.getResourceAsStream("samples.sql")))
-        val creates = fp.readText()
-        fp.close()
-
-        val stmt = connection.prepareStatement(creates)
-        stmt.execute()
-        stmt.close()
+        execResource(connection, "samples.sql")
     }
 }
