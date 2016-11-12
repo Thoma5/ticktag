@@ -24,17 +24,17 @@
 
 import * as models from './models';
 
-export interface CreateUserRequestJson {
+export interface UpdateUserRequestJson {
     mail: string;
 
     name: string;
 
     password: string;
 
-    role: CreateUserRequestJson.RoleEnum;
+    role: UpdateUserRequestJson.RoleEnum;
 
 }
-export namespace CreateUserRequestJson {
+export namespace UpdateUserRequestJson {
     export enum RoleEnum {
         USER = <any> 'USER',
         OBSERVER = <any> 'OBSERVER',

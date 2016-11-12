@@ -47,6 +47,6 @@ open class User {
     lateinit open var currentToken: UUID
 
     @Column(name ="profile_pic",nullable = true)
-    lateinit open var profilePic: ByteArray?
+    open var profilePic: ByteArray? = null
     protected constructor()
 }

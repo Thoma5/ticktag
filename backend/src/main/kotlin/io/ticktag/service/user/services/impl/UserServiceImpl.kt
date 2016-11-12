@@ -10,6 +10,7 @@ import io.ticktag.service.TicktagValidationException
 import io.ticktag.service.ValidationError
 import io.ticktag.service.ValidationErrorDetail
 import io.ticktag.service.user.dto.CreateUser
+import io.ticktag.service.user.dto.RoleResult
 import io.ticktag.service.user.dto.UpdateUser
 import io.ticktag.service.user.dto.UserResult
 import io.ticktag.service.user.services.UserService
@@ -42,7 +43,7 @@ open class UserServiceImpl @Inject constructor(
         val mail = createUser.mail
         val name = createUser.name
         val passwordHash = hashing.hashPassword(createUser.password)
-        val user = User.create(mail, passwordHash, name, Role.USER, UUID.randomUUID(),null)
+        val user = User.create(mail, passwordHash, name, createUser.role, UUID.randomUUID(),null)
         users.insert(user)
 
         return UserResult(user)
@@ -63,7 +64,14 @@ open class UserServiceImpl @Inject constructor(
         return users.findAll().map(::UserResult)
     }
 
-    @PreAuthorize(AuthExpr.USER)
+    @PreAuthorize(AuthExpr.ADMIN) // TODO should probably be more granular
+    override fun listRoles(): List<RoleResult> {
+        return  Role.values().map(::RoleResult)
+    }
+
+
+
+    @PreAuthorize(AuthExpr.USER) //TODO: Own User
     override fun updateUser(id: UUID, updateUser: UpdateUser):UserResult{
         val user = users.findById(id) ?: throw RuntimeException() //TODO: NOT FOUND
 
@@ -78,7 +86,13 @@ open class UserServiceImpl @Inject constructor(
         if (updateUser.password != null){
             user.passwordHash = hashing.hashPassword(updateUser.password)
         }
+
+        if (updateUser.role != null){ //TODO: additional premission check
+            user.role = updateUser.role
+        }
         return UserResult(user);
 
     }
+
+
 }

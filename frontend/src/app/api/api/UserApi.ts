@@ -1,4 +1,3 @@
-/* tslint:disable */
 /**
  * TickTag REST API
  * TickTag issue tracking API
@@ -62,7 +61,7 @@ export class UserApi {
     private extendObj<T1,T2>(objA: T1, objB: T2) {
         for(let key in objB){
             if(objB.hasOwnProperty(key)){
-                (<any>objA)[key] = (<any>objB)[key];
+                objA[key] = objB[key];
             }
         }
         return <T1&T2>objA;
@@ -90,6 +89,38 @@ export class UserApi {
      */
     public listUsingGET(extraHttpRequestParams?: any): Observable<Array<models.UserResultJson>> {
         return this.listUsingGETWithHttpInfo(extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
+     * roles
+     * 
+     */
+    public rolesUsingGET(extraHttpRequestParams?: any): Observable<Array<models.RoleResultJson>> {
+        return this.rolesUsingGETWithHttpInfo(extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
+     * update
+     * 
+     * @param id id
+     * @param req req
+     */
+    public updateUsingPUT(id: string, req: models.UpdateUserRequestJson, extraHttpRequestParams?: any): Observable<models.UserResultJson> {
+        return this.updateUsingPUTWithHttpInfo(id, req, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -174,6 +205,96 @@ export class UserApi {
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
+            search: queryParameters
+        });
+        
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * roles
+     * 
+     */
+    public rolesUsingGETWithHttpInfo(extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/user/roles`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json'
+        ];
+        
+            
+
+
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Get,
+            headers: headers,
+            search: queryParameters
+        });
+        
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * update
+     * 
+     * @param id id
+     * @param req req
+     */
+    public updateUsingPUTWithHttpInfo(id: string, req: models.UpdateUserRequestJson, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/user/${id}`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'id' is not null or undefined
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling updateUsingPUT.');
+        }
+        // verify required parameter 'req' is not null or undefined
+        if (req === null || req === undefined) {
+            throw new Error('Required parameter req was null or undefined when calling updateUsingPUT.');
+        }
+
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json'
+        ];
+        
+            
+
+        headers.set('Content-Type', 'application/json');
+
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Put,
+            headers: headers,
+            body: req == null ? '' : JSON.stringify(req), // https://github.com/angular/angular/issues/10612
             search: queryParameters
         });
         

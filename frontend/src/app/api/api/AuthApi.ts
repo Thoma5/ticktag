@@ -1,4 +1,3 @@
-/* tslint:disable */
 /**
  * TickTag REST API
  * TickTag issue tracking API
@@ -62,7 +61,7 @@ export class AuthApi {
     private extendObj<T1,T2>(objA: T1, objB: T2) {
         for(let key in objB){
             if(objB.hasOwnProperty(key)){
-                (<any>objA)[key] = (<any>objB)[key];
+                objA[key] = objB[key];
             }
         }
         return <T1&T2>objA;
