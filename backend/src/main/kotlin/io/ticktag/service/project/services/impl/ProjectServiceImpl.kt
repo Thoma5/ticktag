@@ -27,9 +27,9 @@ open class ProjectServiceImpl @Inject constructor(
         val description = project.description
         val icon = project.icon
         val creationDate = Date()
-        val project = Project.create(name, description, creationDate, icon)
-        projects.insert(project)
-        return ProjectResult(project)
+        val newProject = Project.create(name, description, creationDate, icon)
+        projects.insert(newProject)
+        return ProjectResult(newProject)
     }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
