@@ -1,6 +1,5 @@
 package io.ticktag.restinterface.project.controllers
 
-import ch.qos.logback.core.joran.conditional.ElseAction
 import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.project.schema.CreateProjectRequestJson
