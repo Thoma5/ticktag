@@ -69,12 +69,12 @@ export class ProjectApi {
     }
 
     /**
-     * create
+     * createProject
      * 
      * @param req req
      */
-    public createUsingPOST1(req: models.CreateProjectRequestJson, extraHttpRequestParams?: any): Observable<models.ProjectResultJson> {
-        return this.createUsingPOST1WithHttpInfo(req, extraHttpRequestParams)
+    public createProjectUsingPOST(req: models.CreateProjectRequestJson, extraHttpRequestParams?: any): Observable<models.ProjectResultJson> {
+        return this.createProjectUsingPOSTWithHttpInfo(req, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -85,12 +85,12 @@ export class ProjectApi {
     }
 
     /**
-     * delete
+     * deleteProject
      * 
      * @param id id
      */
-    public deleteUsingDELETE1(id: string, extraHttpRequestParams?: any): Observable<{}> {
-        return this.deleteUsingDELETE1WithHttpInfo(id, extraHttpRequestParams)
+    public deleteProjectUsingDELETE(id: string, extraHttpRequestParams?: any): Observable<{}> {
+        return this.deleteProjectUsingDELETEWithHttpInfo(id, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -101,7 +101,7 @@ export class ProjectApi {
     }
 
     /**
-     * list
+     * listProjects
      * 
      * @param page page
      * @param size size
@@ -110,8 +110,8 @@ export class ProjectApi {
      * @param name name
      * @param all all
      */
-    public listUsingGET(page?: number, size?: number, order?: string, asc?: boolean, name?: string, all?: boolean, extraHttpRequestParams?: any): Observable<Array<models.ProjectResultJson>> {
-        return this.listUsingGETWithHttpInfo(page, size, order, asc, name, all, extraHttpRequestParams)
+    public listProjectsUsingGET(page?: number, size?: number, order?: string, asc?: boolean, name?: string, all?: boolean, extraHttpRequestParams?: any): Observable<Array<models.ProjectResultJson>> {
+        return this.listProjectsUsingGETWithHttpInfo(page, size, order, asc, name, all, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -122,13 +122,13 @@ export class ProjectApi {
     }
 
     /**
-     * update
+     * updateProject
      * 
      * @param id id
      * @param req req
      */
-    public updateUsingPUT1(id: string, req: models.UpdateProjectRequestJson, extraHttpRequestParams?: any): Observable<models.ProjectResultJson> {
-        return this.updateUsingPUT1WithHttpInfo(id, req, extraHttpRequestParams)
+    public updateProjectUsingPUT(id: string, req: models.UpdateProjectRequestJson, extraHttpRequestParams?: any): Observable<models.ProjectResultJson> {
+        return this.updateProjectUsingPUTWithHttpInfo(id, req, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -140,18 +140,18 @@ export class ProjectApi {
 
 
     /**
-     * create
+     * createProject
      * 
      * @param req req
      */
-    public createUsingPOST1WithHttpInfo(req: models.CreateProjectRequestJson, extraHttpRequestParams?: any): Observable<Response> {
+    public createProjectUsingPOSTWithHttpInfo(req: models.CreateProjectRequestJson, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/project`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         // verify required parameter 'req' is not null or undefined
         if (req === null || req === undefined) {
-            throw new Error('Required parameter req was null or undefined when calling createUsingPOST1.');
+            throw new Error('Required parameter req was null or undefined when calling createProjectUsingPOST.');
         }
 
 
@@ -186,18 +186,18 @@ export class ProjectApi {
     }
 
     /**
-     * delete
+     * deleteProject
      * 
      * @param id id
      */
-    public deleteUsingDELETE1WithHttpInfo(id: string, extraHttpRequestParams?: any): Observable<Response> {
+    public deleteProjectUsingDELETEWithHttpInfo(id: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/project/${id}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling deleteUsingDELETE1.');
+            throw new Error('Required parameter id was null or undefined when calling deleteProjectUsingDELETE.');
         }
 
 
@@ -230,7 +230,7 @@ export class ProjectApi {
     }
 
     /**
-     * list
+     * listProjects
      * 
      * @param page page
      * @param size size
@@ -239,7 +239,7 @@ export class ProjectApi {
      * @param name name
      * @param all all
      */
-    public listUsingGETWithHttpInfo(page?: number, size?: number, order?: string, asc?: boolean, name?: string, all?: boolean, extraHttpRequestParams?: any): Observable<Response> {
+    public listProjectsUsingGETWithHttpInfo(page?: number, size?: number, order?: string, asc?: boolean, name?: string, all?: boolean, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/project`;
 
         let queryParameters = new URLSearchParams();
@@ -293,23 +293,23 @@ export class ProjectApi {
     }
 
     /**
-     * update
+     * updateProject
      * 
      * @param id id
      * @param req req
      */
-    public updateUsingPUT1WithHttpInfo(id: string, req: models.UpdateProjectRequestJson, extraHttpRequestParams?: any): Observable<Response> {
+    public updateProjectUsingPUTWithHttpInfo(id: string, req: models.UpdateProjectRequestJson, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/project/${id}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling updateUsingPUT1.');
+            throw new Error('Required parameter id was null or undefined when calling updateProjectUsingPUT.');
         }
         // verify required parameter 'req' is not null or undefined
         if (req === null || req === undefined) {
-            throw new Error('Required parameter req was null or undefined when calling updateUsingPUT1.');
+            throw new Error('Required parameter req was null or undefined when calling updateProjectUsingPUT.');
         }
 
 

@@ -19,7 +19,7 @@ open class MemberController @Inject constructor(
         private val memberService: MemberService
 ) {
     @GetMapping(value = "{pID}/member/{uID}")
-    open fun get(
+    open fun getMember(
             @PathVariable uID: UUID,
             @PathVariable pID: UUID): MemberResultJson {
         val member = memberService.getMember(uID, pID)
@@ -27,7 +27,7 @@ open class MemberController @Inject constructor(
     }
 
     @PostMapping(value = "{pID}/member/{uID}")
-    open fun create(
+    open fun createMember(
             @PathVariable uID: UUID,
             @PathVariable pID: UUID,
             @RequestBody req: CreateMemberRequestJson): MemberResultJson {
@@ -36,14 +36,14 @@ open class MemberController @Inject constructor(
     }
 
     @DeleteMapping(value = "{pID}/member/{uID}")
-    open fun delete(
+    open fun deleteMember(
             @PathVariable uID: UUID,
             @PathVariable pID: UUID) {
         memberService.deleteMember(uID, pID)
     }
 
     @PutMapping(value = "{pID}/member/{uID}")
-    open fun update(
+    open fun updateMember(
             @PathVariable uID: UUID,
             @PathVariable pID: UUID,
             @RequestBody req: UpdateMemberRequestJson): MemberResultJson {

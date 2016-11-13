@@ -25,13 +25,13 @@ open class ProjectController @Inject constructor(
 
     //TODO: adjust default values
     @GetMapping
-    open fun list(@RequestParam(name = "page", defaultValue = "0", required = false) page: Int,
-                  @RequestParam(name = "size", defaultValue = "50", required = false) size: Int,
-                  @RequestParam(name = "order", defaultValue = "name", required = false) order: String,
-                  @RequestParam(name = "asc", defaultValue = "true", required = false) asc: Boolean,
-                  @RequestParam(name = "name", defaultValue = "", required = false) name: String,
-                  @RequestParam(name = "all", defaultValue = "false", required = false) all: Boolean,
-                  @AuthenticationPrincipal principal: Principal
+    open fun listProjects(@RequestParam(name = "page", defaultValue = "0", required = false) page: Int,
+                          @RequestParam(name = "size", defaultValue = "50", required = false) size: Int,
+                          @RequestParam(name = "order", defaultValue = "name", required = false) order: String,
+                          @RequestParam(name = "asc", defaultValue = "true", required = false) asc: Boolean,
+                          @RequestParam(name = "name", defaultValue = "", required = false) name: String,
+                          @RequestParam(name = "all", defaultValue = "false", required = false) all: Boolean,
+                          @AuthenticationPrincipal principal: Principal
     ): List<ProjectResultJson> {
         val ascOrder = if (asc) Sort.Direction.ASC else Sort.Direction.DESC
         val sortOrder = Sort.Order(ascOrder, order).ignoreCase() //TODO: check if order is a valid column
@@ -45,18 +45,18 @@ open class ProjectController @Inject constructor(
     }
 
     @PostMapping
-    open fun create(@RequestBody req: CreateProjectRequestJson): ProjectResultJson {
+    open fun createProject(@RequestBody req: CreateProjectRequestJson): ProjectResultJson {
         val project = projectService.createProject(CreateProject(req.name, req.description, req.icon))
         return ProjectResultJson(project)
     }
 
     @DeleteMapping(value = "/{id}")
-    open fun delete(@PathVariable(name = "id") id: UUID) {
+    open fun deleteProject(@PathVariable(name = "id") id: UUID) {
         projectService.deleteProject(id)
     }
 
     @PutMapping(value = "/{id}")
-    open fun update(@PathVariable(name = "id") id: UUID,
+    open fun updateProject(@PathVariable(name = "id") id: UUID,
                     @RequestBody req: UpdateProjectRequestJson): ProjectResultJson {
         val project = projectService.updateProject(id, UpdateProject(req.name, req.description, req.icon))
         return ProjectResultJson(project)
