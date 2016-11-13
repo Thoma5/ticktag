@@ -1,12 +1,23 @@
-image: debian:8
+variables:
+  POSTGRES_USER: ticktag
+  POSTGRES_PASSWORD: ticktag
+  POSTGRES_DB: ticktag
 
-before_script:
-  - apt-get update -y && apt-get install -y cowsay fortune
+services:
+  - postgres:9.6
 
 server:
+  image: maven:3.3.9-jdk-8
   script:
-    - /usr/games/fortune | /usr/games/cowsay
+    - apt-get update -y && apt-get install -y postgresql-client
+    - export PGPASSWORD=$POSTGRES_PASSWORD
+    - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
+    - mvn test -f backend/pom.xml
 
 client:
+  image: node:7.0
   script:
-    - /usr/games/fortune | /usr/games/cowsay
+    - cd frontend
+    - npm install
+    - npm build
+    - npm test
