@@ -42,3 +42,4 @@ export namespace MemberResultJson {
         ADMIN = <any> 'ADMIN'
     }
 }
+

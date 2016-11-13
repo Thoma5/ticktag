@@ -33,3 +33,4 @@ export interface CreateUserRequestJson {
     password: string;
 
 }
+

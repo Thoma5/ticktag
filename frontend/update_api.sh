@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # This script pulls the api spec from the local server and generates the Angular2 bindings to app/api
 # Make sure the server is running on localhost:8080
@@ -14,12 +14,12 @@ java -jar swagger-codegen-cli.jar generate -i "http://localhost:8080/v2/api-docs
 
 for F in $(find api_new -name '*.ts'); do
 	# Disable tslint.
-	echo "/* tslint:disable */\n$(cat $F)" > $F
+	echo -e $"/* tslint:disable */\n$(cat $F)\n" > $F
 
 	# Fix implicit any error.
 	# Note that this transformation is completely harmless, since casts are a
 	# no-op in TypeScript.
-	sed -i'' 's/objA\[key\] = objB\[key\]/\(<any>objA\)\[key\] = \(<any>objB\)\[key\]/g' $F
+	sed -i'.bak' 's/objA\[key\] = objB\[key\]/\(<any>objA\)\[key\] = \(<any>objB\)\[key\]/g' $F
 done
 
 rm -rf src/app/api

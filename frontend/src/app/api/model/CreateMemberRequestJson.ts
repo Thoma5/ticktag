@@ -36,3 +36,4 @@ export namespace CreateMemberRequestJson {
         ADMIN = <any> 'ADMIN'
     }
 }
+

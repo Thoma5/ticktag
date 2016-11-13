@@ -36,3 +36,4 @@ export namespace UpdateMemberRequestJson {
         ADMIN = <any> 'ADMIN'
     }
 }
+

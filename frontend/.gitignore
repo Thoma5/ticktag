@@ -55,3 +55,6 @@ __build__/**
 .idea/
 *.swp
 .vscode/
+
+# OS X :)
+*.bak
