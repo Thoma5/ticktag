@@ -12,7 +12,7 @@ server:
     - apt-get update -y && apt-get install -y postgresql-client
     - export PGPASSWORD=$POSTGRES_PASSWORD
     - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
-    - mvn test -f backend/pom.xml
+    - mvn -B test -f backend/pom.xml
 
 client:
   image: node:7.0
