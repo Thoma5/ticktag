@@ -103,7 +103,7 @@ open class RestSecurityConfigBeans {
                         val rawToken = tokenService.verifyToken(tokenKey)
                         if (rawToken != null && rawToken.keyCreationTime - Date.from(Instant.now()).time < 7 * 24 * 60 * 60 * 1000) {
                             val token = RestAuthToken.fromString(rawToken.extendedInformation)
-                            val user = users.findOneWithProjects(token.userId)
+                            val user = users.findOne(token.userId)
                             if (user != null && user.currentToken == token.currentToken) {
                                 val principal = Principal(user.id, user.role, members)
                                 val auth = PreAuthenticatedAuthenticationToken(principal, null, emptySet())
