@@ -16,6 +16,9 @@ import {Ng2Webstorage} from 'ng2-webstorage/dist/app';
 import {UsersComponent} from './ui/users/users.component';
 import {UserCreateComponent} from './ui/users/user-create.component';
 import {UserApi} from './api/api/UserApi';
+import {ProjectsComponent} from './ui/projects/projects.component';
+import {ProjectCreateComponent} from './ui/projects/project-create.component';
+import {ProjectApi} from './api/api/ProjectApi';
 
 @NgModule({
   imports: [
@@ -32,10 +35,13 @@ import {UserApi} from './api/api/UserApi';
     WhoamiComponent,
     UsersComponent,
     UserCreateComponent,
+    ProjectsComponent,
+    ProjectCreateComponent,
   ],
   providers: [
     AuthApi,
     UserApi,
+    ProjectApi,
 
     ApiCallService,
     AuthService

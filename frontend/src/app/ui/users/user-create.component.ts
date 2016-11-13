@@ -22,7 +22,7 @@ export class UserCreateComponent {
   onSubmit(): void {
     this.working = true;
     this.apiCallService
-      .call<UserResultJson>(h => this.userApi.createUsingPOSTWithHttpInfo(this.request, h))
+      .call<UserResultJson>(h => this.userApi.createUserUsingPOSTWithHttpInfo(this.request, h))
       .subscribe(
         result => {
           if (result.isValid) {

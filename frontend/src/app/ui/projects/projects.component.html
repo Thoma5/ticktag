@@ -1,0 +1,13 @@
+<h2>Projects</h2>
+
+<ul>
+  <li *ngFor="let project of projects">
+    <span class="id">{{project.id}}</span>
+    <span class="name">{{project.name}}</span>
+    <span class="description">{{project.description}}</span>
+    <span class="creationDate">{{project.creationDate}}</span>
+  </li>
+</ul>
+<tt-project-create (created)="getProjects()"></tt-project-create>
+
+
