@@ -1,5 +1,4 @@
-/* tslint:disable */
-/**
+/* tslint:disable */\n/**
  * TickTag REST API
  * TickTag issue tracking API
  *
@@ -73,8 +72,8 @@ export class UserApi {
      * 
      * @param req req
      */
-    public createUsingPOST(req: models.CreateUserRequestJson, extraHttpRequestParams?: any): Observable<models.UserResultJson> {
-        return this.createUsingPOSTWithHttpInfo(req, extraHttpRequestParams)
+    public createUsingPOST2(req: models.CreateUserRequestJson, extraHttpRequestParams?: any): Observable<models.UserResultJson> {
+        return this.createUsingPOST2WithHttpInfo(req, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -88,8 +87,8 @@ export class UserApi {
      * list
      * 
      */
-    public listUsingGET(extraHttpRequestParams?: any): Observable<Array<models.UserResultJson>> {
-        return this.listUsingGETWithHttpInfo(extraHttpRequestParams)
+    public listUsingGET1(extraHttpRequestParams?: any): Observable<Array<models.UserResultJson>> {
+        return this.listUsingGET1WithHttpInfo(extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -105,14 +104,14 @@ export class UserApi {
      * 
      * @param req req
      */
-    public createUsingPOSTWithHttpInfo(req: models.CreateUserRequestJson, extraHttpRequestParams?: any): Observable<Response> {
+    public createUsingPOST2WithHttpInfo(req: models.CreateUserRequestJson, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/user`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         // verify required parameter 'req' is not null or undefined
         if (req === null || req === undefined) {
-            throw new Error('Required parameter req was null or undefined when calling createUsingPOST.');
+            throw new Error('Required parameter req was null or undefined when calling createUsingPOST2.');
         }
 
 
@@ -150,7 +149,7 @@ export class UserApi {
      * list
      * 
      */
-    public listUsingGETWithHttpInfo(extraHttpRequestParams?: any): Observable<Response> {
+    public listUsingGET1WithHttpInfo(extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/user`;
 
         let queryParameters = new URLSearchParams();
