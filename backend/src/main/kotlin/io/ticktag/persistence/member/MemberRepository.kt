@@ -13,4 +13,6 @@ import java.util.*
 interface MemberRepository : TicktagCrudRepository<Member, MemberKey> {
     fun findByUser(user: UUID, pageable: Pageable): Page<Project>
     fun findByProject(project: UUID, pageable: Pageable): Page<Project>
+
+    fun findByUserIdAndProjectId(userId: UUID, projectId: UUID): Member?
 }

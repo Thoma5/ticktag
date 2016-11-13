@@ -40,6 +40,6 @@ open class AuthController @Inject constructor(
     @GetMapping("whoami")
     @ApiOperation(value = "Returns the logged-in user")
     open fun whoami(@AuthenticationPrincipal principal: Principal): WhoamiResultJson {
-        return WhoamiResultJson(principal.id, principal.authorities.toList())
+        return WhoamiResultJson(principal.id)
     }
 }

@@ -1,8 +1,8 @@
 package io.ticktag.restinterface
 
 import io.ticktag.ApplicationProperties
+import io.ticktag.persistence.member.MemberRepository
 import io.ticktag.persistence.user.UserRepository
-import io.ticktag.persistence.user.entity.Role
 import io.ticktag.service.Principal
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
@@ -14,7 +14,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.Authentication
-import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.token.KeyBasedPersistenceTokenService
 import org.springframework.security.core.token.TokenService
@@ -95,7 +94,7 @@ open class RestSecurityConfigBeans {
     }
 
     @Bean("restAuthFilter")
-    open fun restAuthFilter(@Named("restAuthTokenService") tokenService: TokenService, users: UserRepository): Filter {
+    open fun restAuthFilter(@Named("restAuthTokenService") tokenService: TokenService, users: UserRepository, members: MemberRepository): Filter {
         return object : OncePerRequestFilter() {
             override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
                 val tokenKey = request.getHeader("X-Authorization")
@@ -106,14 +105,8 @@ open class RestSecurityConfigBeans {
                             val token = RestAuthToken.fromString(rawToken.extendedInformation)
                             val user = users.findOneWithProjects(token.userId)
                             if (user != null && user.currentToken == token.currentToken) {
-                                val authorities = when (user.role) {
-                                    Role.USER -> mutableSetOf("USER")
-                                    Role.OBSERVER -> mutableSetOf("USER", "OBSERVER")
-                                    Role.ADMIN -> mutableSetOf("USER", "OBSERVER", "ADMIN")
-                                }
-
-                                val principal = Principal(user.id, authorities, user)
-                                val auth = PreAuthenticatedAuthenticationToken(principal, null, principal.authorities.map(::SimpleGrantedAuthority))
+                                val principal = Principal(user.id, user.role, members)
+                                val auth = PreAuthenticatedAuthenticationToken(principal, null, emptySet())
                                 auth.details = WebAuthenticationDetails(request)
                                 SecurityContextHolder.getContext().authentication = auth
                             }
