@@ -19,7 +19,7 @@ for F in $(find api_new -name '*.ts'); do
 	# Fix implicit any error.
 	# Note that this transformation is completely harmless, since casts are a
 	# no-op in TypeScript.
-	sed -i 's/objA\[key\] = objB\[key\]/(<any>objA)[key] = (<any>objB)[key]/g' $F
+	sed -i 's/objA\[key\] = objB\[key\]/\(<any>objA\)\[key\] = \(<any>objB\)\[key\]/g' $F
 done
 
 rm -rf src/app/api

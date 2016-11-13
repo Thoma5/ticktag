@@ -1,4 +1,5 @@
-/* tslint:disable */\n/**
+/* tslint:disable */
+/**
  * TickTag REST API
  * TickTag issue tracking API
  *
