@@ -28,7 +28,7 @@ export class ProjectCreateComponent {
           if (result.isValid) {
             this.request.name = '';
             this.request.description = '';
-            this.request.icon =[];
+            this.request.icon = [];
             this.created.emit(result.result);
           } else {
             window.alert('Could not create project:\n\n' + JSON.stringify(result.error));

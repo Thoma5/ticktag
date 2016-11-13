@@ -20,7 +20,7 @@ export class ProjectsComponent implements OnInit {
 
   getProjects(page?: number, size?: number, order?: string, asc?: boolean, name?: string): void {
     this.apiCallService
-      .callNoError<ProjectResultJson[]>(h => this.projectApi.listProjectsUsingGETWithHttpInfo(page,size,order,asc,name,false,h))
+      .callNoError<ProjectResultJson[]>(h => this.projectApi.listProjectsUsingGETWithHttpInfo(page, size , order, asc, name, false, h))
       .subscribe(projects => { this.projects = projects; });
   }
 }
