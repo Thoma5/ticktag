@@ -1,4 +1,5 @@
-/* tslint:disable */\nexport class Configuration {
+/* tslint:disable */
+export class Configuration {
     apiKey: string;
     username: string;
     password: string;

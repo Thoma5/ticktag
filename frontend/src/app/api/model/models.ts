@@ -1,4 +1,5 @@
-/* tslint:disable */\nexport * from './CreateMemberRequestJson';
+/* tslint:disable */
+export * from './CreateMemberRequestJson';
 export * from './CreateProjectRequestJson';
 export * from './CreateUserRequestJson';
 export * from './LoginRequestJson';
