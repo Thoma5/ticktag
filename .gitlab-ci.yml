@@ -19,5 +19,5 @@ client:
   script:
     - cd frontend
     - npm install
-    - npm build
+    - npm run build
     - npm test
