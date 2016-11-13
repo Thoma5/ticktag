@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @TicktagRestInterface
 @RequestMapping("/project")
-@Api(value = "/member", description = "project member management")
+@Api(tags = arrayOf("member"), description = "project member management")
 open class MemberController @Inject constructor(
         private val memberService: MemberService
 ) {

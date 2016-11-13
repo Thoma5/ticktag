@@ -1,4 +1,4 @@
 /* tslint:disable */\nexport * from './AuthApi';
-export * from './MembercontrollerApi';
+export * from './MemberApi';
 export * from './ProjectApi';
 export * from './UserApi';
