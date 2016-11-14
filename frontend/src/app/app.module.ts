@@ -20,13 +20,16 @@ import {ProjectsComponent} from './ui/projects/projects.component';
 import {ProjectCreateComponent} from './ui/projects/project-create.component';
 import {ProjectApi} from './api/api/ProjectApi';
 
+import { Angular2DataTableModule } from 'angular2-data-table';
+
 @NgModule({
   imports: [
     BrowserModule,
     HttpModule,
     FormsModule,
     Ng2Webstorage,
-    routing
+    routing,
+    Angular2DataTableModule
   ],
   declarations: [
     AppComponent,
