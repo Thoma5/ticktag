@@ -4,5 +4,4 @@ import io.ticktag.persistence.member.entity.ProjectRole
 
 data class CreateMemberRequestJson(
         val projectRole: ProjectRole
-) {
-}
+)

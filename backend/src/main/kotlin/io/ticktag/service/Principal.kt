@@ -24,7 +24,7 @@ data class Principal(
     }
 
     fun hasProjectRole(projectId: UUID, roleString: String): Boolean {
-        if (members == null) return false;
+        if (members == null) return false
         val member = members.findByUserIdAndProjectId(id, projectId) ?: return false
         return member.role.includesRole(ProjectRole.valueOf(roleString))
     }

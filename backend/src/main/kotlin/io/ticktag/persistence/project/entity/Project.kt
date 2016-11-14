@@ -6,7 +6,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "project")
-open class Project {
+open class Project protected constructor() {
     companion object {
         fun create(name: String, description: String, creationDate: Date, icon: ByteArray?): Project {
             val p = Project()
@@ -40,5 +40,4 @@ open class Project {
     lateinit open var members: MutableList<Member>
         protected set
 
-    protected constructor()
 }

@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.support.SimpleJpaRepository
 import org.springframework.data.repository.NoRepositoryBean
 import org.springframework.data.repository.Repository
 import java.io.Serializable
-import java.util.*
 import javax.persistence.EntityManager
 
 @NoRepositoryBean

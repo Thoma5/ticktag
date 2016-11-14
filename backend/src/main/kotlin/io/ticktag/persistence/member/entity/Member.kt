@@ -27,7 +27,7 @@ open class MemberKey protected constructor() : Serializable {
 @Entity
 @Table(name = "member")
 @IdClass(MemberKey::class)
-open class Member {
+open class Member protected constructor() {
     companion object {
         fun create(user: User, project: Project, role: ProjectRole, joinDate: Date): Member {
             val m = Member()
@@ -58,5 +58,4 @@ open class Member {
     @Column(name = "join_date", nullable = false)
     lateinit open var joinDate: Date
 
-    protected constructor()
 }

@@ -24,18 +24,18 @@ open class MemberServiceImpl @Inject constructor(
 ) : MemberService {
     @PreAuthorize(AuthExpr.ADMIN)
     override fun getMember(uID: UUID, pID: UUID): MemberResult {
-        var user = users.findOne(uID) ?: throw NotFoundException()
-        var project = projects.findOne(pID) ?: throw NotFoundException()
-        var member = members.findOne(MemberKey.create(user, project)) ?: throw NotFoundException();
+        val user = users.findOne(uID) ?: throw NotFoundException()
+        val project = projects.findOne(pID) ?: throw NotFoundException()
+        val member = members.findOne(MemberKey.create(user, project)) ?: throw NotFoundException()
         members.insert(member)
         return MemberResult(member)
     }
 
     @PreAuthorize(AuthExpr.ADMIN)
     override fun createMember(uID: UUID, pID: UUID, member: CreateMember): MemberResult {
-        var user = users.findOne(uID) ?: throw NotFoundException()
-        var project = projects.findOne(pID) ?: throw NotFoundException()
-        var member = Member.create(user, project, member.role, Date())
+        val user = users.findOne(uID) ?: throw NotFoundException()
+        val project = projects.findOne(pID) ?: throw NotFoundException()
+        val member = Member.create(user, project, member.role, Date())
         members.insert(member)
         return MemberResult(member)
     }

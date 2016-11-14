@@ -44,7 +44,7 @@ open class AuthController @Inject constructor(
         val authorities = if (principal.role == null) {
             emptyList()
         } else {
-            Role.values().filter { principal.role.includesRole(it) }.map { it.toString() }
+            Role.values().filter { principal.role.includesRole(it) }.map(Role::toString)
         }
         return WhoamiResultJson(principal.id, authorities)
     }
