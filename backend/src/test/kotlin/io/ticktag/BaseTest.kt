@@ -1,14 +1,17 @@
 package io.ticktag
 
 import com.google.common.io.Resources
+import io.ticktag.persistence.member.MemberRepository
+import io.ticktag.persistence.user.UserRepository
+import io.ticktag.service.Principal
 import org.junit.Before
 import org.junit.runner.RunWith
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.nio.file.Files
 import java.sql.Connection
+import java.util.*
 import javax.inject.Inject
 import javax.sql.DataSource
 
@@ -44,6 +47,8 @@ abstract class BaseTest {
     }
 
     @Inject lateinit var datasource: DataSource
+    @Inject lateinit var users: UserRepository
+    @Inject lateinit var members: MemberRepository
 
     @Before
     fun setUp() {
@@ -51,5 +56,31 @@ abstract class BaseTest {
         initDb(connection)
 
         execResource(connection, "samples.sql")
+    }
+
+    protected fun withUser(userId: UUID, proc: () -> Unit) {
+        if (SecurityContextHolder.getContext().authentication != null)
+            throw RuntimeException("Called withUser even though the security context is already set")
+
+        val user = users.findOne(userId) ?: throw RuntimeException("Called withUser with an unknown user UUID")
+        val principal = Principal(user.id, user.role, members)
+        SecurityContextHolder.getContext().authentication = PreAuthenticatedAuthenticationToken(principal, null, emptySet())
+        try {
+            proc()
+        } finally {
+            SecurityContextHolder.getContext().authentication = null
+        }
+    }
+
+    protected fun withoutUser(proc: () -> Unit) {
+        if (SecurityContextHolder.getContext().authentication != null)
+            throw RuntimeException("Called withoutUser even though the security context is already set")
+
+        SecurityContextHolder.getContext().authentication = PreAuthenticatedAuthenticationToken(Principal.INTERNAL, null, emptySet())
+        try {
+            proc()
+        } finally {
+            SecurityContextHolder.getContext().authentication = null
+        }
     }
 }

@@ -1,11 +1,12 @@
 package io.ticktag.persistence.user.entity
 
+import io.ticktag.persistence.member.entity.Member
 import java.util.*
 import javax.persistence.*
 
 @Entity
 @Table(name = "user")
-open class User {
+open class User protected constructor() {
     companion object {
         fun create(mail: String, passwordHash: String, name: String, role: Role, currentToken: UUID): User {
             return createWithId(UUID.randomUUID(), mail, passwordHash, name, role, currentToken)
@@ -45,5 +46,8 @@ open class User {
     @Column(name = "current_token", nullable = false)
     lateinit open var currentToken: UUID
 
-    protected constructor()
+    @OneToMany(mappedBy = "user")
+    lateinit open var memberships: MutableList<Member>
+        protected set
+
 }

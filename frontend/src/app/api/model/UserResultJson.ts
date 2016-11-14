@@ -33,3 +33,4 @@ export interface UserResultJson {
     name: string;
 
 }
+

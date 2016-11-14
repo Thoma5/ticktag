@@ -29,3 +29,4 @@ export interface LoginResultJson {
     token: string;
 
 }
+

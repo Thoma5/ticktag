@@ -20,13 +20,13 @@ open class UserController @Inject constructor(
 ) {
 
     @PostMapping
-    open fun create(@RequestBody req: CreateUserRequestJson): UserResultJson {
+    open fun createUser(@RequestBody req: CreateUserRequestJson): UserResultJson {
         val user = userService.createUser(CreateUser(mail = req.mail, name = req.name, password = req.password))
         return UserResultJson(user)
     }
 
     @GetMapping
-    open fun list(): List<UserResultJson> {
+    open fun listUsers(): List<UserResultJson> {
         return userService.listUsers().map(::UserResultJson)
     }
 }

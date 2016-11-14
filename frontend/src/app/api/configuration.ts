@@ -5,3 +5,4 @@ export class Configuration {
     password: string;
     accessToken: string;
 }
+

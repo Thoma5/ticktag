@@ -20,7 +20,7 @@ export class UsersComponent implements OnInit {
 
   getUsers(): void {
     this.apiCallService
-      .callNoError<UserResultJson[]>(h => this.userApi.listUsingGETWithHttpInfo(h))
+      .callNoError<UserResultJson[]>(h => this.userApi.listUsersUsingGETWithHttpInfo(h))
       .subscribe(users => { this.users = users; });
   }
 }
