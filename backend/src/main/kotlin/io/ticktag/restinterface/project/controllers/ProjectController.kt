@@ -23,7 +23,6 @@ import javax.inject.Inject
 open class ProjectController @Inject constructor(
         private val projectService: ProjectService
 ) {
-
     //TODO: adjust default values
     @GetMapping
     open fun listProjects(@RequestParam(name = "page", defaultValue = "0", required = false) page: Int,

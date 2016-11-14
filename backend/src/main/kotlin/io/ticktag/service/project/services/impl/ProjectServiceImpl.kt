@@ -62,7 +62,10 @@ open class ProjectServiceImpl @Inject constructor(
         if (project.description != null) {
             projectToUpdate.description = project.description
         }
-        if (project.icon != null) {
+        if (project.icon != null ) {
+            if(project.icon.isEmpty()){
+                projectToUpdate.icon = null
+            }
             projectToUpdate.icon = project.icon
         }
         return ProjectResult(projectToUpdate)
