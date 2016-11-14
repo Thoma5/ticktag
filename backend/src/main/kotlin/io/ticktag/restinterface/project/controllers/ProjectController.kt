@@ -4,6 +4,7 @@ import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.project.schema.CreateProjectRequestJson
 import io.ticktag.restinterface.project.schema.ProjectResultJson
+import io.ticktag.restinterface.project.schema.ProjectSort
 import io.ticktag.restinterface.project.schema.UpdateProjectRequestJson
 import io.ticktag.service.Principal
 import io.ticktag.service.project.dto.CreateProject
@@ -27,14 +28,14 @@ open class ProjectController @Inject constructor(
     @GetMapping
     open fun listProjects(@RequestParam(name = "page", defaultValue = "0", required = false) page: Int,
                           @RequestParam(name = "size", defaultValue = "50", required = false) size: Int,
-                          @RequestParam(name = "order", defaultValue = "name", required = false) order: String,
+                          @RequestParam(name = "order", defaultValue = "NAME", required = false) order: ProjectSort,
                           @RequestParam(name = "asc", defaultValue = "true", required = false) asc: Boolean,
                           @RequestParam(name = "name", defaultValue = "", required = false) name: String,
                           @RequestParam(name = "all", defaultValue = "false", required = false) all: Boolean,
                           @AuthenticationPrincipal principal: Principal
     ): List<ProjectResultJson> {
         val ascOrder = if (asc) Sort.Direction.ASC else Sort.Direction.DESC
-        val sortOrder = Sort.Order(ascOrder, order).ignoreCase() //TODO: check if order is a valid column
+        val sortOrder = Sort.Order(ascOrder, order.columnName).ignoreCase()
         val pageRequest = PageRequest(page, size, Sort(sortOrder))
 
         return if (all) {
