@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS "project" (
 CREATE TABLE IF NOT EXISTS "member" (
     "u_id"      UUID      NOT NULL REFERENCES "user" (id),
     "p_id"      UUID      NOT NULL REFERENCES "project" (id),
-    "projectRole"      TEXT      NOT NULL,
+    "project_role"      TEXT      NOT NULL,
     "join_date" TIMESTAMP NOT NULL,
     PRIMARY KEY (u_id, p_id)
 );
