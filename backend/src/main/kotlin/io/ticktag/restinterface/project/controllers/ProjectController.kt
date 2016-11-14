@@ -34,7 +34,7 @@ open class ProjectController @Inject constructor(
                           @AuthenticationPrincipal principal: Principal
     ): List<ProjectResultJson> {
         val ascOrder = if (asc) Sort.Direction.ASC else Sort.Direction.DESC
-        val sortOrder = Sort.Order(ascOrder, order.columnName).ignoreCase()
+        val sortOrder = Sort.Order(ascOrder, order.fieldName).ignoreCase()
         val pageRequest = PageRequest(page, size, Sort(sortOrder))
 
         return if (all) {

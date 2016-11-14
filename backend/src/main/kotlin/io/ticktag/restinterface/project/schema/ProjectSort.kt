@@ -1,7 +1,7 @@
 package io.ticktag.restinterface.project.schema
 
 
-enum class ProjectSort(val columnName: String) {
+enum class ProjectSort(val fieldName: String) {
     NAME("name"),
-    CREATION_DATE("creation_date")
+    CREATION_DATE("creationDate")
 }
