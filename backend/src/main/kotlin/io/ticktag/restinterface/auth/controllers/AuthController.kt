@@ -3,6 +3,7 @@ package io.ticktag.restinterface.auth.controllers
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.ticktag.TicktagRestInterface
+import io.ticktag.persistence.user.entity.Role
 import io.ticktag.restinterface.RestAuthToken
 import io.ticktag.restinterface.auth.schema.LoginRequestJson
 import io.ticktag.restinterface.auth.schema.LoginResultJson
@@ -40,6 +41,11 @@ open class AuthController @Inject constructor(
     @GetMapping("whoami")
     @ApiOperation(value = "Returns the logged-in user")
     open fun whoami(@AuthenticationPrincipal principal: Principal): WhoamiResultJson {
-        return WhoamiResultJson(principal.id)
+        val authorities = if (principal.role == null) {
+            emptyList()
+        } else {
+            Role.values().filter { principal.role.includesRole(it) }.map { it.toString() }
+        }
+        return WhoamiResultJson(principal.id, authorities)
     }
 }

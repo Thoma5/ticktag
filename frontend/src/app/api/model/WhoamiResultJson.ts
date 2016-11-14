@@ -26,6 +26,8 @@
 import * as models from './models';
 
 export interface WhoamiResultJson {
+    authorities: Array<string>;
+
     id: string;
 
 }
