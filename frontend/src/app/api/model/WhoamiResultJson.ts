@@ -1,3 +1,4 @@
+/* tslint:disable */
 /**
  * TickTag REST API
  * TickTag issue tracking API
@@ -30,3 +31,4 @@ export interface WhoamiResultJson {
     id: string;
 
 }
+

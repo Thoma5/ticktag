@@ -1,3 +1,4 @@
+/* tslint:disable */
 /**
  * TickTag REST API
  * TickTag issue tracking API
@@ -41,3 +42,4 @@ export namespace UpdateUserRequestJson {
         ADMIN = <any> 'ADMIN'
     }
 }
+

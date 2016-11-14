@@ -43,7 +43,7 @@ open class UserServiceImpl @Inject constructor(
         val mail = createUser.mail
         val name = createUser.name
         val passwordHash = hashing.hashPassword(createUser.password)
-        val user = User.create(mail, passwordHash, name, createUser.role, UUID.randomUUID(),null)
+        val user = User.create(mail, passwordHash, name, createUser.role, UUID.randomUUID(), null)
         users.insert(user)
 
         return UserResult(user)
@@ -51,7 +51,7 @@ open class UserServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.USER)  // TODO is this correct?
     override fun getUser(id: UUID): UserResult? {
-        return UserResult(users.findById(id) ?: return null)
+        return UserResult(users.findOne(id) ?: return null)
     }
 
     @PreAuthorize(AuthExpr.USER)  // TODO is this correct?
@@ -66,33 +66,29 @@ open class UserServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.ADMIN) // TODO should probably be more granular
     override fun listRoles(): List<RoleResult> {
-        return  Role.values().map(::RoleResult)
+        return Role.values().map(::RoleResult)
     }
-
 
 
     @PreAuthorize(AuthExpr.USER) //TODO: Own User
-    override fun updateUser(id: UUID, updateUser: UpdateUser):UserResult{
-        val user = users.findById(id) ?: throw RuntimeException() //TODO: NOT FOUND
+    override fun updateUser(id: UUID, updateUser: UpdateUser): UserResult {
+        val user = users.findOne(id) ?: throw RuntimeException() //TODO: NOT FOUND
 
-        if (updateUser.mail != null){
+        if (updateUser.mail != null) {
             user.mail = updateUser.mail
         }
 
-        if (updateUser.name != null){
+        if (updateUser.name != null) {
             user.name = updateUser.name
         }
 
-        if (updateUser.password != null){
+        if (updateUser.password != null) {
             user.passwordHash = hashing.hashPassword(updateUser.password)
         }
 
-        if (updateUser.role != null){ //TODO: additional premission check
+        if (updateUser.role != null) { //TODO: additional premission check
             user.role = updateUser.role
         }
-        return UserResult(user);
-
+        return UserResult(user)
     }
-
-
 }

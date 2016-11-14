@@ -1,7 +1,7 @@
 import {Component, Output, EventEmitter, OnInit} from '@angular/core';
 import {ApiCallService} from '../../service';
 import {UserApi, CreateUserRequestJson, UserResultJson} from '../../api';
-import {RoleResultJson} from "../../api/model/RoleResultJson";
+import {RoleResultJson} from '../../api/model/RoleResultJson';
 import RoleEnum = CreateUserRequestJson.RoleEnum;
 
 
@@ -10,7 +10,7 @@ import RoleEnum = CreateUserRequestJson.RoleEnum;
   templateUrl: './user-create.component.html',
 })
 
-export class UserCreateComponent implements OnInit{
+export class UserCreateComponent implements OnInit {
   request: CreateUserRequestJson = {
     mail: '',
     name: '',
@@ -18,7 +18,8 @@ export class UserCreateComponent implements OnInit{
     role: RoleEnum.USER
   };
   working = false;
-  private roles:RoleResultJson[] =[];
+  private roles: RoleResultJson[] = [];
+  @Output() readonly created = new EventEmitter<UserResultJson>();
 
   ngOnInit(): void {
     this.getRoles();
@@ -26,12 +27,12 @@ export class UserCreateComponent implements OnInit{
 
   getRoles(): void {
     this.apiCallService
-      .callNoError<RoleResultJson[]>(h => this.userApi.rolesUsingGETWithHttpInfo(h))
-      .subscribe(roles => { this.roles = roles;
-      console.log(this.roles)});
+      .callNoError<RoleResultJson[]>(h => this.userApi.listRolesUsingGETWithHttpInfo(h))
+      .subscribe(roles => {
+        this.roles = roles;
+        console.log(this.roles);
+      });
   }
-
-  @Output() readonly created = new EventEmitter<UserResultJson>();
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(private apiCallService: ApiCallService,
@@ -40,7 +41,7 @@ export class UserCreateComponent implements OnInit{
   onSubmit(): void {
     this.working = true;
     this.apiCallService
-      .call<UserResultJson>(h => this.userApi.createUsingPOSTWithHttpInfo(this.request, h))
+      .call<UserResultJson>(h => this.userApi.createUserUsingPOSTWithHttpInfo(this.request, h))
       .subscribe(
         result => {
           if (result.isValid) {

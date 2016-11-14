@@ -1,5 +1,7 @@
 begin;
 
-drop table if exists "user" cascade;
+DROP TABLE IF EXISTS "user" CASCADE;
+DROP TABLE IF EXISTS "project" CASCADE;
+DROP TABLE IF EXISTS "member" CASCADE;
 
 commit;

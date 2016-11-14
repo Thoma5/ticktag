@@ -1,4 +1,4 @@
-package io.ticktag.restinterface
+package io.ticktag.swaggerinterface
 
 import io.ticktag.service.Principal
 import org.springframework.context.annotation.Bean

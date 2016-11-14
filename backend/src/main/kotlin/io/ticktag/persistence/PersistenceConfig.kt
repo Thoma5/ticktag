@@ -39,7 +39,7 @@ open class PersistenceConfig {
     }
 
     @Bean(name = arrayOf("entityManagerFactory"))
-    open fun entityManagerFactory(dataSource: DataSource): LocalContainerEntityManagerFactoryBean {
+    open fun entityManagerFactory(dataSource: DataSource, props: ApplicationProperties): LocalContainerEntityManagerFactoryBean {
         val entityManagerFactoryBean = LocalContainerEntityManagerFactoryBean()
         entityManagerFactoryBean.dataSource = dataSource
         entityManagerFactoryBean.jpaVendorAdapter = HibernateJpaVendorAdapter()
@@ -47,7 +47,7 @@ open class PersistenceConfig {
 
         val jpaProperties = Properties()
         jpaProperties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect")
-        jpaProperties.put("hibernate.hbm2ddl.auto", "validate")
+        jpaProperties.put("hibernate.hbm2ddl.auto", if (props.dbValidate) "validate" else "none")
         jpaProperties.put("hibernate.show_sql", "true")
         jpaProperties.put("hibernate.globally_quoted_identifiers", "true")
         entityManagerFactoryBean.setJpaProperties(jpaProperties)

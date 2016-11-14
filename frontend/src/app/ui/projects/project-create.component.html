@@ -1,0 +1,8 @@
+<h2>Create New Project</h2>
+
+<form>
+  <input type="text" name="name" [(ngModel)]="request.name" placeholder="Name">
+  <input type="text" name="description" [(ngModel)]="request.description" placeholder="Description">
+  <input type="button" *ngIf="!working" (click)="onSubmit()" value="Create Project">
+  <span *ngIf="working">Working ...</span>
+</form>

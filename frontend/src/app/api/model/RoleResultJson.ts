@@ -1,3 +1,4 @@
+/* tslint:disable */
 /**
  * TickTag REST API
  * TickTag issue tracking API
@@ -35,3 +36,4 @@ export namespace RoleResultJson {
         ADMIN = <any> 'ADMIN'
     }
 }
+

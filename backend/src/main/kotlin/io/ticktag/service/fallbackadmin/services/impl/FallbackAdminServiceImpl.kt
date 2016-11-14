@@ -30,7 +30,7 @@ open class FallbackAdminServiceImpl @Inject constructor(
 
         val mail = properties.adminMail
         val hash = hashing.hashPassword(properties.adminPassword)
-        val existingAdmin = users.findById(zeroId)
+        val existingAdmin = users.findOne(zeroId)
         val admin = if (existingAdmin == null) {
             LOG.info("No existing fallback admin, creating a new one (first start?)")
             val newAdmin = User.createWithId(zeroId, mail, hash, "Admin", Role.ADMIN, UUID.randomUUID(),null)
@@ -43,7 +43,7 @@ open class FallbackAdminServiceImpl @Inject constructor(
         // Reset mail and password
         admin.mail = mail
         admin.passwordHash = hash
-        // Reset role to always keep him admin
+        // Reset projectRole to always keep him admin
         admin.role = Role.ADMIN
         // Invalidate old sessions
         admin.currentToken = UUID.randomUUID()

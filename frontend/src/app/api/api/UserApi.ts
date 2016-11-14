@@ -1,3 +1,4 @@
+/* tslint:disable */
 /**
  * TickTag REST API
  * TickTag issue tracking API
@@ -61,19 +62,19 @@ export class UserApi {
     private extendObj<T1,T2>(objA: T1, objB: T2) {
         for(let key in objB){
             if(objB.hasOwnProperty(key)){
-                objA[key] = objB[key];
+                (<any>objA)[key] = (<any>objB)[key];
             }
         }
         return <T1&T2>objA;
     }
 
     /**
-     * create
+     * createUser
      * 
      * @param req req
      */
-    public createUsingPOST(req: models.CreateUserRequestJson, extraHttpRequestParams?: any): Observable<models.UserResultJson> {
-        return this.createUsingPOSTWithHttpInfo(req, extraHttpRequestParams)
+    public createUserUsingPOST(req: models.CreateUserRequestJson, extraHttpRequestParams?: any): Observable<models.UserResultJson> {
+        return this.createUserUsingPOSTWithHttpInfo(req, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -84,11 +85,11 @@ export class UserApi {
     }
 
     /**
-     * list
+     * listRoles
      * 
      */
-    public listUsingGET(extraHttpRequestParams?: any): Observable<Array<models.UserResultJson>> {
-        return this.listUsingGETWithHttpInfo(extraHttpRequestParams)
+    public listRolesUsingGET(extraHttpRequestParams?: any): Observable<Array<models.RoleResultJson>> {
+        return this.listRolesUsingGETWithHttpInfo(extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -99,11 +100,11 @@ export class UserApi {
     }
 
     /**
-     * roles
+     * listUsers
      * 
      */
-    public rolesUsingGET(extraHttpRequestParams?: any): Observable<Array<models.RoleResultJson>> {
-        return this.rolesUsingGETWithHttpInfo(extraHttpRequestParams)
+    public listUsersUsingGET(extraHttpRequestParams?: any): Observable<Array<models.UserResultJson>> {
+        return this.listUsersUsingGETWithHttpInfo(extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -114,13 +115,13 @@ export class UserApi {
     }
 
     /**
-     * update
+     * updateUser
      * 
      * @param id id
      * @param req req
      */
-    public updateUsingPUT(id: string, req: models.UpdateUserRequestJson, extraHttpRequestParams?: any): Observable<models.UserResultJson> {
-        return this.updateUsingPUTWithHttpInfo(id, req, extraHttpRequestParams)
+    public updateUserUsingPUT(id: string, req: models.UpdateUserRequestJson, extraHttpRequestParams?: any): Observable<models.UserResultJson> {
+        return this.updateUserUsingPUTWithHttpInfo(id, req, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -132,18 +133,18 @@ export class UserApi {
 
 
     /**
-     * create
+     * createUser
      * 
      * @param req req
      */
-    public createUsingPOSTWithHttpInfo(req: models.CreateUserRequestJson, extraHttpRequestParams?: any): Observable<Response> {
+    public createUserUsingPOSTWithHttpInfo(req: models.CreateUserRequestJson, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/user`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         // verify required parameter 'req' is not null or undefined
         if (req === null || req === undefined) {
-            throw new Error('Required parameter req was null or undefined when calling createUsingPOST.');
+            throw new Error('Required parameter req was null or undefined when calling createUserUsingPOST.');
         }
 
 
@@ -178,49 +179,10 @@ export class UserApi {
     }
 
     /**
-     * list
+     * listRoles
      * 
      */
-    public listUsingGETWithHttpInfo(extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/user`;
-
-        let queryParameters = new URLSearchParams();
-        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-
-
-        // to determine the Content-Type header
-        let consumes: string[] = [
-            'application/json'
-        ];
-
-        // to determine the Accept header
-        let produces: string[] = [
-            'application/json'
-        ];
-        
-            
-
-
-
-        let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Get,
-            headers: headers,
-            search: queryParameters
-        });
-        
-        // https://github.com/swagger-api/swagger-codegen/issues/4037
-        if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
-        }
-
-        return this.http.request(path, requestOptions);
-    }
-
-    /**
-     * roles
-     * 
-     */
-    public rolesUsingGETWithHttpInfo(extraHttpRequestParams?: any): Observable<Response> {
+    public listRolesUsingGETWithHttpInfo(extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/user/roles`;
 
         let queryParameters = new URLSearchParams();
@@ -256,23 +218,62 @@ export class UserApi {
     }
 
     /**
-     * update
+     * listUsers
+     * 
+     */
+    public listUsersUsingGETWithHttpInfo(extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/user`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json'
+        ];
+        
+            
+
+
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Get,
+            headers: headers,
+            search: queryParameters
+        });
+        
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * updateUser
      * 
      * @param id id
      * @param req req
      */
-    public updateUsingPUTWithHttpInfo(id: string, req: models.UpdateUserRequestJson, extraHttpRequestParams?: any): Observable<Response> {
+    public updateUserUsingPUTWithHttpInfo(id: string, req: models.UpdateUserRequestJson, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/user/${id}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling updateUsingPUT.');
+            throw new Error('Required parameter id was null or undefined when calling updateUserUsingPUT.');
         }
         // verify required parameter 'req' is not null or undefined
         if (req === null || req === undefined) {
-            throw new Error('Required parameter req was null or undefined when calling updateUsingPUT.');
+            throw new Error('Required parameter req was null or undefined when calling updateUserUsingPUT.');
         }
 
 
@@ -307,3 +308,4 @@ export class UserApi {
     }
 
 }
+

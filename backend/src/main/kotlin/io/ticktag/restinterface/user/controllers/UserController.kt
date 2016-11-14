@@ -12,7 +12,6 @@ import io.ticktag.service.user.services.UserService
 import org.springframework.web.bind.annotation.*
 import java.util.*
 import javax.inject.Inject
-import javax.management.relation.RoleResult
 
 @TicktagRestInterface
 @RequestMapping("/user")
@@ -22,14 +21,14 @@ open class UserController @Inject constructor(
 ) {
 
     @PostMapping
-    open fun create(@RequestBody req: CreateUserRequestJson): UserResultJson {
+    open fun createUser(@RequestBody req: CreateUserRequestJson): UserResultJson {
         val user = userService.createUser(CreateUser(mail = req.mail, name = req.name, password = req.password,role = req.role))
         //test
         return UserResultJson(user)
     }
 
     @PutMapping(value = "/{id}")
-    open fun update(@PathVariable(name = "id") id: UUID,
+    open fun updateUser(@PathVariable(name = "id") id: UUID,
                     @RequestBody req: UpdateUserRequestJson): UserResultJson {
         val user = userService.updateUser(id,UpdateUser(mail = req.mail, name = req.name, password = req.password,role = req.role))
         //test
@@ -37,13 +36,13 @@ open class UserController @Inject constructor(
     }
 
     @GetMapping
-    open fun list(): List<UserResultJson> {
+    open fun listUsers(): List<UserResultJson> {
         return userService.listUsers().map(::UserResultJson)
     }
 
 
     @GetMapping(value="/roles")
-    open fun roles(): List<RoleResultJson> {
+    open fun listRoles(): List<RoleResultJson> {
         return userService.listRoles().map(::RoleResultJson)
     }
 }
