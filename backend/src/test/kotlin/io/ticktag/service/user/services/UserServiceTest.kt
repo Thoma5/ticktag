@@ -1,22 +1,12 @@
 package io.ticktag.service.user.services
 
 import io.ticktag.BaseTest
-
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
-import org.junit.Test
-
 import io.ticktag.persistence.user.entity.Role
-import io.ticktag.service.Principal
 import io.ticktag.service.TicktagValidationException
-import io.ticktag.service.ValidationError
 import io.ticktag.service.user.dto.UpdateUser
 import org.junit.Assert.*
-import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
+import org.junit.Test
 import java.util.*
-
 import javax.inject.Inject
 
 
@@ -24,7 +14,6 @@ class UserServiceTest : BaseTest() {
     @Inject lateinit var userService: UserService
 
     @Test
-
     fun test_checkPassword_negative() {
         withoutUser {
             val validLogin = this.userService.checkPassword("a@a.a", "fail")
@@ -35,7 +24,6 @@ class UserServiceTest : BaseTest() {
 
     @Test
     fun test_checkPassword_positive() {
-
         withoutUser {
             val validLogin = this.userService.checkPassword("a@a.a", "aaaa")
             assertNotNull(validLogin)
@@ -104,7 +92,7 @@ class UserServiceTest : BaseTest() {
         val id = UUID.fromString("00000000-0001-0000-0000-000000000003")
 
         withUser(id) { principal ->
-            this.userService.updateUser(principal, id, UpdateUser(role = Role.ADMIN, oldPassword = null,password = null, mail = null,profilePic = null,name = null))
+            this.userService.updateUser(principal, id, UpdateUser(role = Role.ADMIN, oldPassword = null, password = null, mail = null, profilePic = null, name = null))
 
             val user = this.userService.getUser(id)
         }
