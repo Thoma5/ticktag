@@ -32,7 +32,11 @@ export interface UpdateUserRequestJson {
 
     password: string;
 
+    oldPassword: string;
+
     role: UpdateUserRequestJson.RoleEnum;
+
+    profilePic: Array<string>;
 
 }
 export namespace UpdateUserRequestJson {

@@ -15,7 +15,8 @@ export class UserCreateComponent implements OnInit {
     mail: '',
     name: '',
     password: '',
-    role: RoleEnum.USER
+    role: RoleEnum.USER,
+    profilePic:[]
   };
   working = false;
   private roles: RoleResultJson[] = [];
