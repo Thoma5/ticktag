@@ -42,9 +42,9 @@ class UserServiceTest : BaseTest() {
 
     @Test(expected = RuntimeException::class)
     fun test_checkChangePassword_negative() {
-        withoutUser {
+        withUser(UUID.fromString("00000000-0001-0000-0000-000000000001")) {
             val validLogin = this.userService.checkPassword("a@a.a", "aaaa")
-            this.userService.updateUser(UUID.fromString("00000000-0001-0000-0000-000000000001"), UpdateUser(oldPassword = "notvalid", password = "wrong", mail = null, role = null, profilePic = null, name = null))
+            this.userService.updateUser(principal, UUID.fromString("00000000-0001-0000-0000-000000000001"), UpdateUser(oldPassword = "notvalid", password = "wrong", mail = null, role = null, profilePic = null, name = null))
         }
     }
 
@@ -58,7 +58,7 @@ class UserServiceTest : BaseTest() {
 
         withUser(id) {
             val validLogin = this.userService.checkPassword("a@a.a", "aaaa")
-            this.userService.updateUser(id, UpdateUser(oldPassword = "aaaa", password = newPassword, mail = mail, role = Role.ADMIN, profilePic = null, name = name))
+            this.userService.updateUser(principal, id, UpdateUser(oldPassword = "aaaa", password = newPassword, mail = mail, role = Role.ADMIN, profilePic = null, name = name))
 
             val user = this.userService.getUser(id)
             if (user == null) {

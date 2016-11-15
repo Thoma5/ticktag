@@ -5,10 +5,7 @@ import io.ticktag.library.hashing.HashingLibrary
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.persistence.user.entity.Role
 import io.ticktag.persistence.user.entity.User
-import io.ticktag.service.AuthExpr
-import io.ticktag.service.TicktagValidationException
-import io.ticktag.service.ValidationError
-import io.ticktag.service.ValidationErrorDetail
+import io.ticktag.service.*
 import io.ticktag.service.user.dto.CreateUser
 import io.ticktag.service.user.dto.RoleResult
 import io.ticktag.service.user.dto.UpdateUser
@@ -71,39 +68,35 @@ open class UserServiceImpl @Inject constructor(
 
 
     @PreAuthorize(AuthExpr.USER) //TODO: Own User
-    override fun updateUser(id: UUID, updateUser: UpdateUser): UserResult {
-        val user = users.findOne(id) ?: throw RuntimeException() //TODO: NOT FOUND
-
-        if (updateUser.password != null && updateUser.oldPassword != null) {//TODO: ADMIN allowed to change password
-            val result = checkPassword(user.mail, updateUser.oldPassword)
-            if (result != null) {
-                user.passwordHash = hashing.hashPassword(updateUser.password)
-            }else{
-                throw RuntimeException() //TODO: invalid old PW exception
+    override fun updateUser(principal: Principal, id: UUID, updateUser: UpdateUser): UserResult {
+        if (principal.hasRole("ADMIN") || principal.isId(id)) {
+            val user = users.findOne(id) ?: throw NotFoundException()
+            if (updateUser.password != null) {
+                if (principal.hasRole("ADMIN") || (updateUser.oldPassword != null
+                        && checkPassword(user.mail, updateUser.oldPassword) != null)) {  //ADMIN allowed to change password every password, Own User: Password Check
+                    user.passwordHash = hashing.hashPassword(updateUser.password)
+                } else {
+                    throw throw TicktagValidationException(listOf(ValidationError("updateUser.mail.oldPassword", ValidationErrorDetail.Other("passwordincorrect"))))
+                }
             }
-        }
 
-        if (updateUser.mail != null) {
-            user.mail = updateUser.mail
-        }
-
-        if (updateUser.name != null) {
-            user.name = updateUser.name
-        }
-
-        if (updateUser.password != null && updateUser.oldPassword != null) {
-            val result = checkPassword(user.mail, updateUser.oldPassword)
-            if (result != null) {
-                user.passwordHash = hashing.hashPassword(updateUser.password)
+            if (updateUser.mail != null) {
+                user.mail = updateUser.mail
             }
-        }
-        if (updateUser.profilePic != null) {//TODO: possibility to remove profile PIC
-            user.profilePic = updateUser.profilePic
-        }
-        if (updateUser.role != null) { //TODO: additional premission check
-            user.role = updateUser.role
-        }
-        return UserResult(user)
 
+            if (updateUser.name != null) {
+                user.name = updateUser.name
+            }
+
+            if (updateUser.profilePic != null) {
+                user.profilePic = updateUser.profilePic
+            }
+            if (principal.hasRole("ADMIN") && updateUser.role != null) {  //Only Admins can change user roles!
+                user.role = updateUser.role
+            }
+            return UserResult(user)
+        } else {
+            throw PermissionDeniedException()
+        }
     }
 }

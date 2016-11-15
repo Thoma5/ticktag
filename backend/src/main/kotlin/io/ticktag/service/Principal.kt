@@ -18,6 +18,10 @@ data class Principal(
 
     fun isInternal(): Boolean = members == null
 
+    fun isId(id: UUID): Boolean {
+        return this.id == id
+    }
+
     fun hasRole(roleString: String): Boolean {
         if (role == null) return false
         else return role.includesRole(Role.valueOf(roleString))
