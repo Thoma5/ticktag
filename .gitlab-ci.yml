@@ -8,16 +8,28 @@ services:
 
 server:
   image: maven:3.3.9-jdk-8
+  cache:
+    paths:
+    - .mvn-cache
   script:
-    - apt-get update -y && apt-get install -y postgresql-client
-    - export PGPASSWORD=$POSTGRES_PASSWORD
-    - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
+    - mkdir -p ~/.m2
+    - rm -rf ~/.m2/repository/
+    - mkdir -p .mvn-cache
+    - ln -s "$CI_PROJECT_DIR/.mvn-cache" ~/.m2/repository
+    - ls -ld ~/.m2/repository
     - mvn -B test -f backend/pom.xml
 
 client:
   image: node:7.0
+  cache:
+    paths:
+    - .npm-cache
+    - frontend/node_modules
   script:
+    - npm config set cache "$CI_PROJECT_DIR/.npm-cache"
+    - npm config get cache
     - cd frontend
     - npm install
+    - npm prune
     - npm run build
     - npm test
