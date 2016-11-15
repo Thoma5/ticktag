@@ -63,9 +63,9 @@ ALTER TABLE "ticket"
 CREATE TABLE IF NOT EXISTS "ticket_tag" (
   "id"         UUID PRIMARY KEY,
   "project_id" UUID REFERENCES "project",
-  "group_id"   UUID NOT NULL,
-  "name"       TEXT NOT NULL,
-  "color"      TEXT NOT NULL, -- RRGGBB
+  "group_id"   UUID    NOT NULL,
+  "name"       TEXT    NOT NULL,
+  "color"      TEXT    NOT NULL, -- RRGGBB
   "order"      INTEGER NOT NULL
 );
 CREATE INDEX ON "ticket_tag" ("project_id");
@@ -104,8 +104,8 @@ CREATE INDEX ON "assigned_ticket_user" ("user_id");
 
 CREATE TABLE IF NOT EXISTS "logged_time" (
   "id"          UUID PRIMARY KEY,
-  "comment_id"  UUID    NOT NULL REFERENCES "comment",
-  "category_id" UUID    NOT NULL REFERENCES "time_category",
+  "comment_id"  UUID   NOT NULL REFERENCES "comment",
+  "category_id" UUID   NOT NULL REFERENCES "time_category",
   "time"        BIGINT NOT NULL
 );
 CREATE INDEX ON "logged_time" ("comment_id");
@@ -118,127 +118,127 @@ CREATE TABLE IF NOT EXISTS "mentioned_ticket" (
 );
 CREATE INDEX ON "mentioned_ticket" ("mentioned_ticket_id");
 
-create table "ticket_event" (
-    "id" uuid primary key,
-    "ticket_id" uuid not null references "ticket",
-    "user_id" uuid not null references "user",
-    "time" timestamp not null
+CREATE TABLE "ticket_event" (
+  "id"        UUID PRIMARY KEY,
+  "ticket_id" UUID      NOT NULL REFERENCES "ticket",
+  "user_id"   UUID      NOT NULL REFERENCES "user",
+  "time"      TIMESTAMP NOT NULL
 );
-create index on "ticket_event" ("ticket_id");
-create index on "ticket_event" ("user_id");
+CREATE INDEX ON "ticket_event" ("ticket_id");
+CREATE INDEX ON "ticket_event" ("user_id");
 
-create table if not exists "ticket_event_parent_changed" (
-    "id" uuid primary key references "ticket_event",
-    "src_parent_id" uuid references "ticket",
-    "dst_parent_id" uuid references "ticket"
+CREATE TABLE IF NOT EXISTS "ticket_event_parent_changed" (
+  "id"            UUID PRIMARY KEY REFERENCES "ticket_event",
+  "src_parent_id" UUID REFERENCES "ticket",
+  "dst_parent_id" UUID REFERENCES "ticket"
 );
-create index on "ticket_event_parent_changed" ("src_parent_id");
-create index on "ticket_event_parent_changed" ("dst_parent_id");
+CREATE INDEX ON "ticket_event_parent_changed" ("src_parent_id");
+CREATE INDEX ON "ticket_event_parent_changed" ("dst_parent_id");
 
-create table if not exists "ticket_event_title_changed" (
-    "id" uuid primary key references "ticket_event",
-    "src_title" text not null,
-    "dst_title" text not null
-);
-
-create table if not exists "ticket_event_state_changed" (
-    "id" uuid primary key references "ticket_event",
-    "src_state" BOOLEAN not null,
-    "dst_state" boolean not null
+CREATE TABLE IF NOT EXISTS "ticket_event_title_changed" (
+  "id"        UUID PRIMARY KEY REFERENCES "ticket_event",
+  "src_title" TEXT NOT NULL,
+  "dst_title" TEXT NOT NULL
 );
 
-create table if not exists "ticket_event_story_points_changed" (
-    "id" uuid primary key references "ticket_event",
-    "src_story_points" integer,
-    "dst_story_points" integer
+CREATE TABLE IF NOT EXISTS "ticket_event_state_changed" (
+  "id"        UUID PRIMARY KEY REFERENCES "ticket_event",
+  "src_state" BOOLEAN NOT NULL,
+  "dst_state" BOOLEAN NOT NULL
 );
 
-create table if not exists "ticket_event_initial_estimated_time_changed" (
-    "id" uuid primary key references "ticket_event",
-    "src_initial_estimated_time" bigint,
-    "dst_initial_estimated_time" bigint
+CREATE TABLE IF NOT EXISTS "ticket_event_story_points_changed" (
+  "id"               UUID PRIMARY KEY REFERENCES "ticket_event",
+  "src_story_points" INTEGER,
+  "dst_story_points" INTEGER
 );
 
-create table if not exists "ticket_event_current_estimated_time_changed" (
-    "id" uuid primary key references "ticket_event",
-    "src_current_estimated_time" bigint,
-    "dst_current_estimated_time" bigint
+CREATE TABLE IF NOT EXISTS "ticket_event_initial_estimated_time_changed" (
+  "id"                         UUID PRIMARY KEY REFERENCES "ticket_event",
+  "src_initial_estimated_time" BIGINT,
+  "dst_initial_estimated_time" BIGINT
 );
 
-create table if not exists "ticket_event_due_date_changed" (
-    "id" uuid primary key references "ticket_event",
-    "src_due_date" timestamp,
-    "dst_due_date" timestamp
+CREATE TABLE IF NOT EXISTS "ticket_event_current_estimated_time_changed" (
+  "id"                         UUID PRIMARY KEY REFERENCES "ticket_event",
+  "src_current_estimated_time" BIGINT,
+  "dst_current_estimated_time" BIGINT
 );
 
-create table if not exists "ticket_event_comment_text_changed" (
-    "id" uuid primary key references "ticket_event",
-    "comment_id" uuid not null references "comment",
-    "src_text" text not null,
-    "dst_text" text not null
+CREATE TABLE IF NOT EXISTS "ticket_event_due_date_changed" (
+  "id"           UUID PRIMARY KEY REFERENCES "ticket_event",
+  "src_due_date" TIMESTAMP,
+  "dst_due_date" TIMESTAMP
 );
-create index on "ticket_event_comment_text_changed" ("comment_id");
 
-create table if not exists "ticket_event_tag_added" (
-    "id" uuid primary key references "ticket_event",
-    "ticket_tag_id" uuid not null references "ticket_tag"
+CREATE TABLE IF NOT EXISTS "ticket_event_comment_text_changed" (
+  "id"         UUID PRIMARY KEY REFERENCES "ticket_event",
+  "comment_id" UUID NOT NULL REFERENCES "comment",
+  "src_text"   TEXT NOT NULL,
+  "dst_text"   TEXT NOT NULL
 );
-create index on "ticket_event_tag_added" ("ticket_tag_id");
+CREATE INDEX ON "ticket_event_comment_text_changed" ("comment_id");
 
-create table if not exists "ticket_event_tag_removed" (
-    "id" uuid primary key references "ticket_event",
-    "ticket_tag_id" uuid not null references "ticket_tag"
+CREATE TABLE IF NOT EXISTS "ticket_event_tag_added" (
+  "id"            UUID PRIMARY KEY REFERENCES "ticket_event",
+  "ticket_tag_id" UUID NOT NULL REFERENCES "ticket_tag"
 );
-create index on "ticket_event_tag_removed" ("ticket_tag_id");
+CREATE INDEX ON "ticket_event_tag_added" ("ticket_tag_id");
 
-create table if not exists "ticket_event_user_added" (
-    "id" uuid primary key references "ticket_event",
-    "user_id" uuid not null references "user",
-    "assignment_tag_id" uuid not null references "assignment_tag"
+CREATE TABLE IF NOT EXISTS "ticket_event_tag_removed" (
+  "id"            UUID PRIMARY KEY REFERENCES "ticket_event",
+  "ticket_tag_id" UUID NOT NULL REFERENCES "ticket_tag"
 );
-create index on "ticket_event_user_added" ("user_id");
-create index on "ticket_event_user_added" ("assignment_tag_id");
+CREATE INDEX ON "ticket_event_tag_removed" ("ticket_tag_id");
 
-create table if not exists "ticket_event_user_removed" (
-    "id" uuid primary key references "ticket_event",
-    "user_id" uuid not null references "user",
-    "assignment_tag_id" uuid not null references "assignment_tag"
+CREATE TABLE IF NOT EXISTS "ticket_event_user_added" (
+  "id"                UUID PRIMARY KEY REFERENCES "ticket_event",
+  "user_id"           UUID NOT NULL REFERENCES "user",
+  "assignment_tag_id" UUID NOT NULL REFERENCES "assignment_tag"
 );
-create index on "ticket_event_user_removed" ("user_id");
-create index on "ticket_event_user_removed" ("assignment_tag_id");
+CREATE INDEX ON "ticket_event_user_added" ("user_id");
+CREATE INDEX ON "ticket_event_user_added" ("assignment_tag_id");
 
-create table if not exists "ticket_event_mention_added" (
-    "id" uuid primary key references "ticket_event",
-    "comment_id" uuid not null references "comment",
-    "ticket_id" uuid not null references "ticket"
+CREATE TABLE IF NOT EXISTS "ticket_event_user_removed" (
+  "id"                UUID PRIMARY KEY REFERENCES "ticket_event",
+  "user_id"           UUID NOT NULL REFERENCES "user",
+  "assignment_tag_id" UUID NOT NULL REFERENCES "assignment_tag"
 );
-create index on "ticket_event_mention_added" ("comment_id");
-create index on "ticket_event_mention_added" ("ticket_id");
+CREATE INDEX ON "ticket_event_user_removed" ("user_id");
+CREATE INDEX ON "ticket_event_user_removed" ("assignment_tag_id");
 
-create table if not exists "ticket_event_mention_removed" (
-    "id" uuid primary key references "ticket_event",
-    "comment_id" uuid not null references "comment",
-    "ticket_id" uuid not null references "ticket"
+CREATE TABLE IF NOT EXISTS "ticket_event_mention_added" (
+  "id"         UUID PRIMARY KEY REFERENCES "ticket_event",
+  "comment_id" UUID NOT NULL REFERENCES "comment",
+  "ticket_id"  UUID NOT NULL REFERENCES "ticket"
 );
-create index on "ticket_event_mention_removed" ("comment_id");
-create index on "ticket_event_mention_removed" ("ticket_id");
+CREATE INDEX ON "ticket_event_mention_added" ("comment_id");
+CREATE INDEX ON "ticket_event_mention_added" ("ticket_id");
 
-create table if not exists "ticket_event_logged_time_added" (
-    "id" uuid primary key references "ticket_event",
-    "comment_id" uuid not null references "comment",
-    "time_category_id" uuid not null references "time_category",
-    "time" bigint not null
+CREATE TABLE IF NOT EXISTS "ticket_event_mention_removed" (
+  "id"         UUID PRIMARY KEY REFERENCES "ticket_event",
+  "comment_id" UUID NOT NULL REFERENCES "comment",
+  "ticket_id"  UUID NOT NULL REFERENCES "ticket"
 );
-create index on "ticket_event_logged_time_added" ("comment_id");
-create index on "ticket_event_logged_time_added" ("time_category_id");
+CREATE INDEX ON "ticket_event_mention_removed" ("comment_id");
+CREATE INDEX ON "ticket_event_mention_removed" ("ticket_id");
 
-create table if not exists "ticket_event_logged_time_removed" (
-    "id" uuid primary key references "ticket_event",
-    "comment_id" uuid not null references "comment",
-    "time_category_id" uuid not null references "time_category",
-    "time" bigint not null
+CREATE TABLE IF NOT EXISTS "ticket_event_logged_time_added" (
+  "id"               UUID PRIMARY KEY REFERENCES "ticket_event",
+  "comment_id"       UUID   NOT NULL REFERENCES "comment",
+  "time_category_id" UUID   NOT NULL REFERENCES "time_category",
+  "time"             BIGINT NOT NULL
 );
-create index on "ticket_event_logged_time_removed" ("comment_id");
-create index on "ticket_event_logged_time_removed" ("time_category_id");
+CREATE INDEX ON "ticket_event_logged_time_added" ("comment_id");
+CREATE INDEX ON "ticket_event_logged_time_added" ("time_category_id");
+
+CREATE TABLE IF NOT EXISTS "ticket_event_logged_time_removed" (
+  "id"               UUID PRIMARY KEY REFERENCES "ticket_event",
+  "comment_id"       UUID   NOT NULL REFERENCES "comment",
+  "time_category_id" UUID   NOT NULL REFERENCES "time_category",
+  "time"             BIGINT NOT NULL
+);
+CREATE INDEX ON "ticket_event_logged_time_removed" ("comment_id");
+CREATE INDEX ON "ticket_event_logged_time_removed" ("time_category_id");
 
 COMMIT;
