@@ -68,8 +68,8 @@ open class UserServiceImpl @Inject constructor(
     }
 
 
-    @PreAuthorize(AuthExpr.ADMIN_OR_SELF) //TODO: Own User
-    override fun updateUser(principal: Principal, @P("userId") id: UUID, updateUser: UpdateUser): UserResult {
+    @PreAuthorize(AuthExpr.ADMIN_OR_SELF)
+    override fun updateUser(principal: Principal, @P("userId") id: UUID, @Valid updateUser: UpdateUser): UserResult {
         val user = users.findOne(id) ?: throw NotFoundException()
         if (updateUser.password != null) {
             if (principal.hasRole("ADMIN") || (updateUser.oldPassword != null
