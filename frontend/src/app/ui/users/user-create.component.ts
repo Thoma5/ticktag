@@ -1,19 +1,39 @@
-import {Component, Output, EventEmitter} from '@angular/core';
+import {Component, Output, EventEmitter, OnInit} from '@angular/core';
 import {ApiCallService} from '../../service';
 import {UserApi, CreateUserRequestJson, UserResultJson} from '../../api';
+import {RoleResultJson} from '../../api/model/RoleResultJson';
+import RoleEnum = CreateUserRequestJson.RoleEnum;
+
 
 @Component({
   selector: 'tt-user-create',
   templateUrl: './user-create.component.html',
 })
-export class UserCreateComponent {
+
+export class UserCreateComponent implements OnInit {
   request: CreateUserRequestJson = {
     mail: '',
     name: '',
     password: '',
+    role: RoleEnum.USER,
+    profilePic: []
   };
   working = false;
+  private roles: RoleResultJson[] = [];
   @Output() readonly created = new EventEmitter<UserResultJson>();
+
+  ngOnInit(): void {
+    this.getRoles();
+  }
+
+  getRoles(): void {
+    this.apiCallService
+      .callNoError<RoleResultJson[]>(h => this.userApi.listRolesUsingGETWithHttpInfo(h))
+      .subscribe(roles => {
+        this.roles = roles;
+        console.log(this.roles);
+      });
+  }
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(private apiCallService: ApiCallService,
