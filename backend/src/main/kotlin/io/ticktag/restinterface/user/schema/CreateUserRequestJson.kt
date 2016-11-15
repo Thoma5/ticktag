@@ -6,5 +6,6 @@ data class CreateUserRequestJson(
         val mail: String,
         val name: String,
         val password: String,
-        val role:Role
+        val role: Role,
+        val profilePic: ByteArray?
 )

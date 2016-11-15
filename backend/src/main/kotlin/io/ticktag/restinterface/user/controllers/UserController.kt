@@ -22,16 +22,16 @@ open class UserController @Inject constructor(
 
     @PostMapping
     open fun createUser(@RequestBody req: CreateUserRequestJson): UserResultJson {
-        val user = userService.createUser(CreateUser(mail = req.mail, name = req.name, password = req.password,role = req.role))
+        val user = userService.createUser(CreateUser(mail = req.mail, name = req.name, password = req.password, role = req.role, profilePic = req.profilePic))
         //test
         return UserResultJson(user)
     }
 
     @PutMapping(value = "/{id}")
     open fun updateUser(@PathVariable(name = "id") id: UUID,
-                    @RequestBody req: UpdateUserRequestJson): UserResultJson {
-        val user = userService.updateUser(id,UpdateUser(mail = req.mail, name = req.name, password = req.password,role = req.role))
-        //test
+                        @RequestBody req: UpdateUserRequestJson): UserResultJson {
+        val user = userService.updateUser(id, UpdateUser(mail = req.mail, name = req.name, password = req.password,
+                role = req.role, profilePic = req.profilePic, oldPassword = req.oldPassword))
         return UserResultJson(user)
     }
 
@@ -41,7 +41,7 @@ open class UserController @Inject constructor(
     }
 
 
-    @GetMapping(value="/roles")
+    @GetMapping(value = "/roles")
     open fun listRoles(): List<RoleResultJson> {
         return userService.listRoles().map(::RoleResultJson)
     }

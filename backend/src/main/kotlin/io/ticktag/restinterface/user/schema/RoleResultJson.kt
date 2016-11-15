@@ -4,7 +4,6 @@ import io.ticktag.persistence.user.entity.Role
 import io.ticktag.service.user.dto.RoleResult
 
 
-
 data class RoleResultJson(
         val role: Role
 ) {

@@ -13,5 +13,5 @@ interface UserService {
     fun getUser(mail: String): UserResult?
     fun listUsers(): List<UserResult>
     fun listRoles(): List<RoleResult>
-    fun updateUser(id: UUID,updateUser: UpdateUser): UserResult
+    fun updateUser(id: UUID, updateUser: UpdateUser): UserResult
 }

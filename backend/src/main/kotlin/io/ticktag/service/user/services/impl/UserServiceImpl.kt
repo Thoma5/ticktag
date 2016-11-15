@@ -43,7 +43,7 @@ open class UserServiceImpl @Inject constructor(
         val mail = createUser.mail
         val name = createUser.name
         val passwordHash = hashing.hashPassword(createUser.password)
-        val user = User.create(mail, passwordHash, name, createUser.role, UUID.randomUUID(), null)
+        val user = User.create(mail, passwordHash, name, createUser.role, UUID.randomUUID(), createUser.profilePic)
         users.insert(user)
 
         return UserResult(user)
@@ -74,6 +74,15 @@ open class UserServiceImpl @Inject constructor(
     override fun updateUser(id: UUID, updateUser: UpdateUser): UserResult {
         val user = users.findOne(id) ?: throw RuntimeException() //TODO: NOT FOUND
 
+        if (updateUser.password != null && updateUser.oldPassword != null) {//TODO: ADMIN allowed to change password
+            val result = checkPassword(user.mail, updateUser.oldPassword)
+            if (result != null) {
+                user.passwordHash = hashing.hashPassword(updateUser.password)
+            }else{
+                throw RuntimeException() //TODO: invalid old PW exception
+            }
+        }
+
         if (updateUser.mail != null) {
             user.mail = updateUser.mail
         }
@@ -82,13 +91,19 @@ open class UserServiceImpl @Inject constructor(
             user.name = updateUser.name
         }
 
-        if (updateUser.password != null) {
-            user.passwordHash = hashing.hashPassword(updateUser.password)
+        if (updateUser.password != null && updateUser.oldPassword != null) {
+            val result = checkPassword(user.mail, updateUser.oldPassword)
+            if (result != null) {
+                user.passwordHash = hashing.hashPassword(updateUser.password)
+            }
         }
-
+        if (updateUser.profilePic != null) {//TODO: possibility to remove profile PIC
+            user.profilePic = updateUser.profilePic
+        }
         if (updateUser.role != null) { //TODO: additional premission check
             user.role = updateUser.role
         }
         return UserResult(user)
+
     }
 }

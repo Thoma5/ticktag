@@ -10,5 +10,5 @@ data class UserResultJson(
         val mail: String,
         val role: Role
 ) {
-    constructor(u: UserResult) : this(id = u.id, name = u.name, mail = u.mail,role = u.role)
+    constructor(u: UserResult) : this(id = u.id, name = u.name, mail = u.mail, role = u.role)
 }
