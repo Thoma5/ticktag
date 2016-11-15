@@ -9,6 +9,18 @@ import javax.persistence.*
 @Table(name = "comment")
 open class Comment protected constructor() {
     companion object {
+        fun create(createTime: Instant, text: String, user: User, ticket: Ticket): Comment {
+            val o = Comment()
+            o.id = UUID.randomUUID()
+            o.createTime = createTime
+            o.text = text
+            o.user = user
+            o.ticket = ticket
+            o.describedTicket = null
+            o.mentionedTickets = mutableListOf()
+            o.loggedTimes = mutableListOf()
+            return o
+        }
     }
 
     @Id

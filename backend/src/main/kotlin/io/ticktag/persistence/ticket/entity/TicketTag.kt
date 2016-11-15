@@ -8,6 +8,16 @@ import javax.persistence.*
 @Table(name = "ticket_tag")
 open class TicketTag protected constructor() {
     companion object {
+        fun create(name: String, color: String, groupID: UUID, project: Project): TicketTag {
+            val o = TicketTag()
+            o.id = UUID.randomUUID()
+            o.name = name
+            o.color = color
+            o.groupId = groupID
+            o.project = project
+            o.tickets = mutableListOf()
+            return o
+        }
     }
 
     @Id

@@ -11,6 +11,30 @@ import javax.persistence.*
 @Table(name = "ticket")
 open class Ticket protected constructor() {
     companion object {
+        fun create(number: Int, createTime: Instant, title: String, open: Boolean, storyPoints: Int?,
+                   initialEstimatedTime: Duration?, currentEstimatedTime: Duration?, dueDate: Instant?,
+                   parentTicket: Ticket?, project: Project, createdBy: User, descriptionComment: Comment): Ticket {
+            val o = Ticket()
+            o.id = UUID.randomUUID()
+            o.number = number
+            o.createTime = createTime
+            o.title = title
+            o.open = open
+            o.storyPoints = storyPoints
+            o.initialEstimatedTime = initialEstimatedTime
+            o.currentEstimatedTime = currentEstimatedTime
+            o.dueDate = dueDate
+            o.parentTicket = parentTicket
+            o.subTickets = mutableListOf()
+            o.project = project
+            o.createdBy = createdBy
+            o.descriptionComment = descriptionComment
+            o.tags = mutableListOf()
+            o.mentioningComments = mutableListOf()
+            o.comments = mutableListOf()
+            o.assignedTicketUsers = mutableListOf()
+            return o
+        }
     }
 
     @Id

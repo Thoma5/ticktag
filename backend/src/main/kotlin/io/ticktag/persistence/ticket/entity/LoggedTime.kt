@@ -8,6 +8,14 @@ import javax.persistence.*
 @Table(name = "logged_time")
 open class LoggedTime protected constructor() {
     companion object {
+        fun create(time: Duration, comment: Comment, category: TimeCategory): LoggedTime {
+            val o = LoggedTime()
+            o.id = UUID.randomUUID()
+            o.time = time
+            o.comment = comment
+            o.category = category
+            return o
+        }
     }
 
     @Id

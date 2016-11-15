@@ -8,6 +8,14 @@ import javax.persistence.*
 @Table(name = "time_category")
 open class TimeCategory protected constructor() {
     companion object {
+        fun create(name: String, project: Project): TimeCategory {
+            val o = TimeCategory()
+            o.id = UUID.randomUUID()
+            o.name = name
+            o.project = project
+            o.loggedTimes = mutableListOf()
+            return o
+        }
     }
 
     @Id

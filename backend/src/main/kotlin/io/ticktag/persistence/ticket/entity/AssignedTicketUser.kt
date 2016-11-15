@@ -51,6 +51,13 @@ open class AssignedTicketUserKey protected constructor() : Serializable {
 @IdClass(AssignedTicketUserKey::class)
 open class AssignedTicketUser protected constructor() {
     companion object {
+        fun create(ticket: Ticket, tag: AssignmentTag, user: User): AssignedTicketUser {
+            val o = AssignedTicketUser()
+            o.ticket = ticket
+            o.tag = tag
+            o.user = user
+            return o
+        }
     }
 
     @Id
