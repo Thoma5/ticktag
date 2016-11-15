@@ -15,6 +15,7 @@ import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
 import java.util.*
 import javax.inject.Inject
+import javax.validation.Valid
 
 @TicktagService
 open class ProjectServiceImpl @Inject constructor(
@@ -22,7 +23,7 @@ open class ProjectServiceImpl @Inject constructor(
 ) : ProjectService {
 
     @PreAuthorize(AuthExpr.ADMIN)
-    override fun createProject(project: CreateProject): ProjectResult {
+    override fun createProject(@Valid project: CreateProject): ProjectResult {
         val name = project.name
         val description = project.description
         val icon = project.icon
@@ -54,7 +55,7 @@ open class ProjectServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.PROJECT_ADMIN)
-    override fun updateProject(@P("authProjectId") id: UUID, project: UpdateProject): ProjectResult {
+    override fun updateProject(@P("authProjectId") id: UUID, @Valid project: UpdateProject): ProjectResult {
         val projectToUpdate = projects.findOne(id) ?: throw NotFoundException()
         if (project.name != null) {
             projectToUpdate.name = project.name
