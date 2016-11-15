@@ -83,7 +83,7 @@ class UserServiceTest : BaseTest() {
         val newPassword = "password"
 
         withUser(id) { principal ->
-            this.userService.updateUser(principal, id, UpdateUser(oldPassword = "cccc", password = newPassword, mail = mail, role = Role.USER, profilePic = null, name = name))
+            this.userService.updateUser(principal, id, UpdateUser(oldPassword = "cccc", password = newPassword, mail = mail, profilePic = null, name = name, role = null))
 
             val user = this.userService.getUser(id)
             if (user == null) {
@@ -96,6 +96,17 @@ class UserServiceTest : BaseTest() {
                 val newLogin = this.userService.checkPassword(mail, newPassword)
                 assertNotNull(newLogin)
             }
+        }
+    }
+
+    @Test(expected = TicktagValidationException::class)
+    fun test_checkUpdate_withNonAdmin_shoudlFail() {
+        val id = UUID.fromString("00000000-0001-0000-0000-000000000003")
+
+        withUser(id) { principal ->
+            this.userService.updateUser(principal, id, UpdateUser(role = Role.ADMIN, oldPassword = null,password = null, mail = null,profilePic = null,name = null))
+
+            val user = this.userService.getUser(id)
         }
     }
 
