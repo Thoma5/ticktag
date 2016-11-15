@@ -2,6 +2,7 @@ package io.ticktag.persistence.ticket.entity
 
 import io.ticktag.persistence.project.entity.Project
 import io.ticktag.persistence.user.entity.User
+import java.lang.management.MemoryUsage
 import java.time.Duration
 import java.time.Instant
 import java.util.*
@@ -33,6 +34,11 @@ open class Ticket protected constructor() {
             o.mentioningComments = mutableListOf()
             o.comments = mutableListOf()
             o.assignedTicketUsers = mutableListOf()
+            o.events = mutableListOf()
+            o.parentChangedEventsDst = mutableListOf()
+            o.parentChangedEventsSrc = mutableListOf()
+            o.mentionAddedEvents = mutableListOf()
+            o.mentionRemovedEvents = mutableListOf()
             return o
         }
     }
@@ -105,5 +111,25 @@ open class Ticket protected constructor() {
 
     @OneToMany(mappedBy = "ticket")
     lateinit open var assignedTicketUsers: MutableList<AssignedTicketUser>
+        protected set
+
+    @OneToMany(mappedBy = "ticket")
+    lateinit open var events: MutableList<TicketEvent>
+        protected set
+
+    @OneToMany(mappedBy = "srcParent")
+    lateinit open var parentChangedEventsSrc: MutableList<TicketEventParentChanged>
+        protected set
+
+    @OneToMany(mappedBy = "dstParent")
+    lateinit open var parentChangedEventsDst: MutableList<TicketEventParentChanged>
+        protected set
+
+    @OneToMany(mappedBy = "mentionedTicket")
+    lateinit open var mentionAddedEvents: MutableList<TicketEventMentionAdded>
+        protected set
+
+    @OneToMany(mappedBy = "mentionedTicket")
+    lateinit open var mentionRemovedEvents: MutableList<TicketEventMentionRemoved>
         protected set
 }

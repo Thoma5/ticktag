@@ -14,6 +14,8 @@ open class TimeCategory protected constructor() {
             o.name = name
             o.project = project
             o.loggedTimes = mutableListOf()
+            o.loggedTimeAddedEvents = mutableListOf()
+            o.loggedTimeRemovedEvents = mutableListOf()
             return o
         }
     }
@@ -32,6 +34,14 @@ open class TimeCategory protected constructor() {
 
     @OneToMany(mappedBy = "category")
     lateinit open var loggedTimes: MutableList<LoggedTime>
+        protected set
+
+    @OneToMany(mappedBy = "category")
+    lateinit open var loggedTimeAddedEvents: MutableList<TicketEventLoggedTimeAdded>
+        protected set
+
+    @OneToMany(mappedBy = "category")
+    lateinit open var loggedTimeRemovedEvents: MutableList<TicketEventLoggedTimeRemoved>
         protected set
 }
 

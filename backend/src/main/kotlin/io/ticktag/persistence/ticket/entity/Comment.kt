@@ -19,6 +19,11 @@ open class Comment protected constructor() {
             o.describedTicket = null
             o.mentionedTickets = mutableListOf()
             o.loggedTimes = mutableListOf()
+            o.textChangedEvents = mutableListOf()
+            o.mentionAddedEvents = mutableListOf()
+            o.mentionRemovedEvents = mutableListOf()
+            o.loggedTimeAddedEvents = mutableListOf()
+            o.loggedTimeRemovedEvents = mutableListOf()
             return o
         }
     }
@@ -56,5 +61,25 @@ open class Comment protected constructor() {
 
     @OneToMany(mappedBy = "comment")
     lateinit open var loggedTimes: MutableList<LoggedTime>
+        protected set
+
+    @OneToMany(mappedBy = "comment")
+    lateinit open var textChangedEvents: MutableList<TicketEventCommentTextChanged>
+        protected set
+
+    @OneToMany(mappedBy = "comment")
+    lateinit open var mentionAddedEvents: MutableList<TicketEventMentionAdded>
+        protected set
+
+    @OneToMany(mappedBy = "comment")
+    lateinit open var mentionRemovedEvents: MutableList<TicketEventMentionRemoved>
+        protected set
+
+    @OneToMany(mappedBy = "comment")
+    lateinit open var loggedTimeAddedEvents: MutableList<TicketEventLoggedTimeAdded>
+        protected set
+
+    @OneToMany(mappedBy = "comment")
+    lateinit open var loggedTimeRemovedEvents: MutableList<TicketEventLoggedTimeRemoved>
         protected set
 }

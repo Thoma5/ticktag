@@ -15,6 +15,8 @@ open class AssignmentTag protected constructor() {
             o.color = color
             o.project = project
             o.assignedTicketUsers = mutableListOf()
+            o.userAddedEvents = mutableListOf()
+            o.userRemovedEvents = mutableListOf()
             return o
         }
     }
@@ -36,6 +38,14 @@ open class AssignmentTag protected constructor() {
 
     @OneToMany(mappedBy = "tag")
     lateinit open var assignedTicketUsers: MutableList<AssignedTicketUser>
+        protected set
+
+    @OneToMany(mappedBy = "tag")
+    lateinit open var userAddedEvents: MutableList<TicketEventUserAdded>
+        protected set
+
+    @OneToMany(mappedBy = "tag")
+    lateinit open var userRemovedEvents: MutableList<TicketEventUserRemoved>
         protected set
 }
 
