@@ -58,7 +58,13 @@ abstract class BaseTest {
         execResource(connection, "samples.sql")
     }
 
-    protected fun withUser(userId: UUID, proc: () -> Unit) {
+    protected fun <T> withUser(userId: UUID, proc: () -> T): T {
+        return withUser(userId) { principal ->
+            proc()
+        }
+    }
+
+    protected fun <T> withUser(userId: UUID, proc: (Principal) -> T): T {
         if (SecurityContextHolder.getContext().authentication != null)
             throw RuntimeException("Called withUser even though the security context is already set")
 
@@ -66,19 +72,19 @@ abstract class BaseTest {
         val principal = Principal(user.id, user.role, members)
         SecurityContextHolder.getContext().authentication = PreAuthenticatedAuthenticationToken(principal, null, emptySet())
         try {
-            proc()
+            return proc(principal)
         } finally {
             SecurityContextHolder.getContext().authentication = null
         }
     }
 
-    protected fun withoutUser(proc: () -> Unit) {
+    protected fun <T> withoutUser(proc: () -> T): T {
         if (SecurityContextHolder.getContext().authentication != null)
             throw RuntimeException("Called withoutUser even though the security context is already set")
 
         SecurityContextHolder.getContext().authentication = PreAuthenticatedAuthenticationToken(Principal.INTERNAL, null, emptySet())
         try {
-            proc()
+            return proc()
         } finally {
             SecurityContextHolder.getContext().authentication = null
         }
