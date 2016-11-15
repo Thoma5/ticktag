@@ -76,7 +76,7 @@ open class UserServiceImpl @Inject constructor(
                     && checkPassword(user.mail, updateUser.oldPassword) != null)) {  //ADMIN allowed to change password every password, Own User: Password Check
                 user.passwordHash = hashing.hashPassword(updateUser.password)
             } else {
-                throw TicktagValidationException(listOf(ValidationError("updateUser.mail.oldPassword", ValidationErrorDetail.Other("passwordincorrect"))))
+                throw TicktagValidationException(listOf(ValidationError("updateUser.oldPassword", ValidationErrorDetail.Other("passwordincorrect"))))
             }
         }
 
@@ -91,8 +91,12 @@ open class UserServiceImpl @Inject constructor(
         if (updateUser.profilePic != null) {
             user.profilePic = updateUser.profilePic
         }
-        if (principal.hasRole("ADMIN") && updateUser.role != null) {  //Only Admins can change user roles!
-            user.role = updateUser.role
+        if (updateUser.role != null ) {
+            if (principal.hasRole("ADMIN")) {  //Only Admins can change user roles!
+                user.role = updateUser.role
+            } else {
+                throw TicktagValidationException(listOf(ValidationError("updateUser.role", ValidationErrorDetail.Other("notpermitted"))))
+            }
         }
         return UserResult(user)
     }
