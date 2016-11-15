@@ -1,6 +1,5 @@
 package io.ticktag.persistence.ticket.entity
 
-import com.sun.org.apache.xpath.internal.operations.Bool
 import io.ticktag.persistence.user.entity.User
 import java.time.Duration
 import java.time.Instant
@@ -92,7 +91,7 @@ open class TicketEventStoryPointsChanged protected constructor() : TicketEvent()
 @Entity
 @Table(name = "ticket_event_initial_estimated_time_changed")
 @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
-open class TicketEventInitialEsimatedTimeChanged protected constructor() : TicketEvent() {
+open class TicketEventInitialEstimatedTimeChanged protected constructor() : TicketEvent() {
     companion object {
     }
 
@@ -106,7 +105,7 @@ open class TicketEventInitialEsimatedTimeChanged protected constructor() : Ticke
 @Entity
 @Table(name = "ticket_event_current_estimated_time_changed")
 @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
-open class TicketEventCurrentEsimatedTimeChanged protected constructor() : TicketEvent() {
+open class TicketEventCurrentEstimatedTimeChanged protected constructor() : TicketEvent() {
     companion object {
     }
 
