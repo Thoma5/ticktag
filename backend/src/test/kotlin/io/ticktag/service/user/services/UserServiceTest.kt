@@ -8,6 +8,8 @@ import org.junit.Test
 
 import io.ticktag.persistence.user.entity.Role
 import io.ticktag.service.Principal
+import io.ticktag.service.TicktagValidationException
+import io.ticktag.service.ValidationError
 import io.ticktag.service.user.dto.UpdateUser
 import org.junit.Assert.*
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -32,7 +34,7 @@ class UserServiceTest : BaseTest() {
     }
 
     @Test
-    fun test_checkPassword_positive(){
+    fun test_checkPassword_positive() {
 
         withoutUser {
             val validLogin = this.userService.checkPassword("a@a.a", "aaaa")
@@ -40,24 +42,22 @@ class UserServiceTest : BaseTest() {
         }
     }
 
-    @Test(expected = RuntimeException::class)
+    @Test(expected = TicktagValidationException::class)
     fun test_checkChangePassword_negative() {
-        withUser(UUID.fromString("00000000-0001-0000-0000-000000000001")) { principal ->
-            val validLogin = this.userService.checkPassword("a@a.a", "aaaa")
-            this.userService.updateUser(principal, UUID.fromString("00000000-0001-0000-0000-000000000001"), UpdateUser(oldPassword = "notvalid", password = "wrong", mail = null, role = null, profilePic = null, name = null))
+        withUser(UUID.fromString("00000000-0001-0000-0000-000000000003")) { principal ->
+            this.userService.updateUser(principal, UUID.fromString("00000000-0001-0000-0000-000000000003"), UpdateUser(oldPassword = "notvalid", password = "wrong", mail = null, role = null, profilePic = null, name = null))
         }
     }
 
 
     @Test
-    fun test_checkUpdate_positiv() {
+    fun test_checkUpdate_positive_admin() {
         val id = UUID.fromString("00000000-0001-0000-0000-000000000001")
         val name = "name"
         val mail = "mail"
         val newPassword = "password"
 
         withUser(id) { principal ->
-            val validLogin = this.userService.checkPassword("a@a.a", "aaaa")
             this.userService.updateUser(principal, id, UpdateUser(oldPassword = "aaaa", password = newPassword, mail = mail, role = Role.ADMIN, profilePic = null, name = name))
 
             val user = this.userService.getUser(id)
@@ -66,13 +66,48 @@ class UserServiceTest : BaseTest() {
             } else {
                 assertEquals(user.name, name)
                 assertEquals(user.mail, mail)
-                assertEquals(user.role, Role.ADMIN)
+                assertEquals(user.role.name, Role.ADMIN.name)
 
-                val newLogin = this.userService.checkPassword("a@a.a", newPassword)
-                assertNotNull(validLogin)
+                val newLogin = this.userService.checkPassword(mail, newPassword)
+                assertNotNull(newLogin)
             }
         }
+    }
 
 
+    @Test
+    fun test_checkUpdate_positive_own_user() {
+        val id = UUID.fromString("00000000-0001-0000-0000-000000000003")
+        val name = "name"
+        val mail = "cccc@c.c"
+        val newPassword = "password"
+
+        withUser(id) { principal ->
+            this.userService.updateUser(principal, id, UpdateUser(oldPassword = "cccc", password = newPassword, mail = mail, role = Role.USER, profilePic = null, name = name))
+
+            val user = this.userService.getUser(id)
+            if (user == null) {
+                fail()
+            } else {
+                assertEquals(user.name, name)
+                assertEquals(user.mail, mail)
+                assertEquals(user.role.name, Role.OBSERVER.name) //Can't change own role!
+
+                val newLogin = this.userService.checkPassword(mail, newPassword)
+                assertNotNull(newLogin)
+            }
+        }
+    }
+
+    @Test(expected = org.springframework.security.access.AccessDeniedException::class)
+    fun test_checkUpdate_negative_other_user() {
+        val ownId = UUID.fromString("00000000-0001-0000-0000-000000000002")
+        val otherId = UUID.fromString("00000000-0001-0000-0000-000000000003")
+        val name = "new Name"
+        val mail = "cccc@c.c"
+        val newPassword = "password"
+        withUser(ownId) { principal ->
+            this.userService.updateUser(principal, otherId, UpdateUser(oldPassword = "cccc", password = newPassword, mail = mail, role = Role.USER, profilePic = null, name = name))
+        }
     }
 }

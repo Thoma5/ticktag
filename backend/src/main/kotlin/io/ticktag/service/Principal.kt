@@ -18,8 +18,8 @@ data class Principal(
 
     fun isInternal(): Boolean = members == null
 
-    fun isId(id: UUID): Boolean {
-        return this.id == id
+    fun isId(otherId: UUID): Boolean {
+        return this.id == otherId
     }
 
     fun hasRole(roleString: String): Boolean {
@@ -47,6 +47,8 @@ class AuthExpr private constructor() {
         const val PROJECT_OBSERVER = "principal.hasRole('OBSERVER') || principal.hasProjectRole(#authProjectId, 'OBSERVER')"
         const val PROJECT_USER = "principal.hasRole('ADMIN') || principal.hasProjectRole(#authProjectId, 'USER')"
         const val PROJECT_ADMIN = "principal.hasRole('ADMIN') || principal.hasProjectRole(#authProjectId, 'ADMIN')"
+
+        const val ADMIN_OR_SELF = "principal.hasRole('ADMIN') || principal.isId(#userId)"
     }
 }
 

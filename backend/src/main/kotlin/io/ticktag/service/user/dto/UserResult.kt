@@ -9,7 +9,8 @@ data class UserResult(
         val mail: String,
         val name: String,
         val currentToken: UUID,
-        val role: Role
+        val role: Role,
+        val profile_pic: ByteArray?
 ) {
-    constructor(u: User) : this(id = u.id, mail = u.mail, name = u.name, currentToken = u.currentToken, role = u.role)
+    constructor(u: User) : this(id = u.id, mail = u.mail, name = u.name, currentToken = u.currentToken, role = u.role, profile_pic = u.profilePic)
 }
