@@ -1,6 +1,10 @@
 package io.ticktag.persistence.project.entity
 
 import io.ticktag.persistence.member.entity.Member
+import io.ticktag.persistence.ticket.entity.AssignmentTag
+import io.ticktag.persistence.ticket.entity.Ticket
+import io.ticktag.persistence.ticket.entity.TicketTag
+import io.ticktag.persistence.ticket.entity.TimeCategory
 import java.util.*
 import javax.persistence.*
 
@@ -40,4 +44,19 @@ open class Project protected constructor() {
     lateinit open var members: MutableList<Member>
         protected set
 
+    @OneToMany(mappedBy = "project")
+    lateinit open var tickets: MutableList<Ticket>
+        protected set
+
+    @OneToMany(mappedBy = "project")
+    lateinit open var ticketTags: MutableList<TicketTag>
+        protected set
+
+    @OneToMany(mappedBy = "project")
+    lateinit open var assignmentTags: MutableList<AssignmentTag>
+        protected set
+
+    @OneToMany(mappedBy = "project")
+    lateinit open var timeCategories: MutableList<TimeCategory>
+        protected set
 }

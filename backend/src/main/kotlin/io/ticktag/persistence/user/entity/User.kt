@@ -1,6 +1,9 @@
 package io.ticktag.persistence.user.entity
 
 import io.ticktag.persistence.member.entity.Member
+import io.ticktag.persistence.ticket.entity.AssignedTicketUser
+import io.ticktag.persistence.ticket.entity.Comment
+import io.ticktag.persistence.ticket.entity.Ticket
 import java.util.*
 import javax.persistence.*
 
@@ -50,4 +53,15 @@ open class User protected constructor() {
     lateinit open var memberships: MutableList<Member>
         protected set
 
+    @OneToMany(mappedBy = "createdBy")
+    lateinit open var createdTickets: MutableList<Ticket>
+        protected set
+
+    @OneToMany(mappedBy = "user")
+    lateinit open var comments: MutableList<Comment>
+        protected set
+
+    @OneToMany(mappedBy = "user")
+    lateinit open var assignedTicketUsers: MutableList<AssignedTicketUser>
+        protected set
 }

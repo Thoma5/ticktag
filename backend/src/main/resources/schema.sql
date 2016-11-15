@@ -37,9 +37,9 @@ CREATE TABLE IF NOT EXISTS "ticket" (
   "title"                  TEXT        NOT NULL,
   "open"                   BOOLEAN     NOT NULL,
   "story_points"           INTEGER,
-  "initial_estimated_time" INTERVAL,
-  "current_estimated_time" INTERVAL,
-  "due_date"               DATE
+  "initial_estimated_time" BIGINT,
+  "current_estimated_time" BIGINT,
+  "due_date"               TIMESTAMP
 );
 CREATE INDEX ON "ticket" ("number");
 CREATE INDEX ON "ticket" ("parent_ticket_id");
@@ -63,9 +63,9 @@ ALTER TABLE "ticket"
 CREATE TABLE IF NOT EXISTS "ticket_tag" (
   "id"         UUID PRIMARY KEY,
   "project_id" UUID REFERENCES "project",
-  "group_id"   UUID,
-  "name"       TEXT    NOT NULL,
-  "color"      CHAR(6) NOT NULL -- RRGGBB
+  "group_id"   UUID NOT NULL,
+  "name"       TEXT NOT NULL,
+  "color"      TEXT NOT NULL -- RRGGBB
 );
 CREATE INDEX ON "ticket_tag" ("project_id");
 CREATE INDEX ON "ticket_tag" ("group_id");
@@ -73,8 +73,8 @@ CREATE INDEX ON "ticket_tag" ("group_id");
 CREATE TABLE IF NOT EXISTS "assignment_tag" (
   "id"         UUID PRIMARY KEY,
   "project_id" UUID REFERENCES "project",
-  "name"       TEXT    NOT NULL,
-  "color"      CHAR(6) NOT NULL -- RRGGBB
+  "name"       TEXT NOT NULL,
+  "color"      TEXT NOT NULL -- RRGGBB
 );
 CREATE INDEX ON "assignment_tag" ("project_id");
 
@@ -103,9 +103,9 @@ CREATE INDEX ON "assigned_ticket_user" ("user_id");
 
 CREATE TABLE IF NOT EXISTS "logged_time" (
   "id"          UUID PRIMARY KEY,
-  "comment_id"  UUID     NOT NULL REFERENCES "comment",
-  "category_id" UUID     NOT NULL REFERENCES "time_category",
-  "time"        INTERVAL NOT NULL
+  "comment_id"  UUID    NOT NULL REFERENCES "comment",
+  "category_id" UUID    NOT NULL REFERENCES "time_category",
+  "time"        BIGINT NOT NULL
 );
 CREATE INDEX ON "logged_time" ("comment_id");
 CREATE INDEX ON "logged_time" ("category_id");
