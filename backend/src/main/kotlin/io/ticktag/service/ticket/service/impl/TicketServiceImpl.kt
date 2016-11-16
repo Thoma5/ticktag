@@ -31,7 +31,7 @@ open class TicketServiceImpl @Inject constructor(
         return TicketResult(tickets.findOne(id) ?: throw NotFoundException())
     }
 
-    override fun createTicket(createTicket:CreateTicket):TicketResult {
+   /* override fun createTicket(createTicket:CreateTicket):TicketResult {
         val id=createTicket.id
         val number = createTicket.number
         val createTime = createTicket.createTime
@@ -55,5 +55,5 @@ open class TicketServiceImpl @Inject constructor(
         //assignedUsers
 
         val description: String
-    }
+    }*/
 }

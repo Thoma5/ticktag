@@ -8,5 +8,5 @@ import java.util.*
 interface TicketService {
     fun listTickets(): List<TicketResult>
     fun getTicket(id:UUID): TicketResult
-    fun createTicket(createTicket: CreateTicket):TicketResult
+   // fun createTicket(createTicket: CreateTicket):TicketResult
 }

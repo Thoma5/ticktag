@@ -28,11 +28,11 @@ open class TicketController@Inject constructor(
         return TicketResultJson(ticketService.getTicket(id))
     }
 
-    @PostMapping
+    /*@PostMapping
     open fun createTicket(@RequestBody req: CreateTicketRequestJson): TicketResultJson {
         val ticket = ticketService.createTicket(CreateTicket(
                 req.id,req.number,req.createTime,req.title,req.open,req.storyPoints,req.initialEstimatedTime,
                 req.currentEstimatedTime,req.dueDate,req.description,req.projectID))
         return TicketResultJson(ticket)
-    }
+    }*/
 }
