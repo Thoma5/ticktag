@@ -1,6 +1,7 @@
 package io.ticktag.persistence.user.entity
 
 import io.ticktag.persistence.member.entity.Member
+import io.ticktag.persistence.ticket.entity.*
 import java.util.*
 import javax.persistence.*
 
@@ -22,6 +23,13 @@ open class User protected constructor() {
             u.role = role
             u.currentToken = currentToken
             u.profilePic = profilePic
+            u.memberships = mutableListOf()
+            u.createdTickets = mutableListOf()
+            u.comments = mutableListOf()
+            u.assignedTicketUsers = mutableListOf()
+            u.events = mutableListOf()
+            u.userAddedEvents = mutableListOf()
+            u.userRemovedEvents = mutableListOf()
             return u
         }
     }
@@ -52,5 +60,29 @@ open class User protected constructor() {
 
     @OneToMany(mappedBy = "user")
     lateinit open var memberships: MutableList<Member>
+        protected set
+
+    @OneToMany(mappedBy = "createdBy")
+    lateinit open var createdTickets: MutableList<Ticket>
+        protected set
+
+    @OneToMany(mappedBy = "user")
+    lateinit open var comments: MutableList<Comment>
+        protected set
+
+    @OneToMany(mappedBy = "user")
+    lateinit open var assignedTicketUsers: MutableList<AssignedTicketUser>
+        protected set
+
+    @OneToMany(mappedBy = "user")
+    lateinit open var events: MutableList<TicketEvent>
+        protected set
+
+    @OneToMany(mappedBy = "addedUser")
+    lateinit open var userAddedEvents: MutableList<TicketEventUserAdded>
+        protected set
+
+    @OneToMany(mappedBy = "removedUser")
+    lateinit open var userRemovedEvents: MutableList<TicketEventUserRemoved>
         protected set
 }

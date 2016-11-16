@@ -22,6 +22,24 @@ open class MemberKey protected constructor() : Serializable {
 
     lateinit open var project: Project
         protected set
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other?.javaClass != javaClass) return false
+
+        other as MemberKey
+
+        if (user.id != other.user.id) return false
+        if (project.id != other.project.id) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = user.id.hashCode()
+        result = 31 * result + project.id.hashCode()
+        return result
+    }
 }
 
 @Entity
