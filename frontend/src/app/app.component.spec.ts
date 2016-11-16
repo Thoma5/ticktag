@@ -32,7 +32,7 @@ describe('App', () => {
     });
   });
 
-  it('should have a menu', () => {
+  it('should have a title', () => {
     let fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     expect(fixture.debugElement.componentInstance.title).toEqual('TickTag');
