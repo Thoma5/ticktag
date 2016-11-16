@@ -1,8 +1,27 @@
-<h2>Login</h2>
-<form>
-    <label>Email: </label>
-    <input [(ngModel)]="email" name="email" placeholder="you@example.com" type="email">
-    <label>Password: </label>
-    <input [(ngModel)]="password" name="password" type="password">
-    <input (click)="onSubmit()" type="submit">
-</form>
+<div class="row">
+	<div class="col-sm-4 col-sm-offset-4 form-box">
+<img src="/img/TickTag256px.png">
+		<div class="form-top">
+			<div class="form-top-left">
+				<h2>Login </h2>
+				<p>Enter your email and password to log on:</p>
+			</div>
+			<div class="form-top-right">
+				<i class="fa fa-key"></i>
+			</div>
+		</div>
+		<div class="form-bottom">
+			<form class="login-form" (ngSubmit)="onSubmit()" #f="ngForm">
+				<label class="sr-only" for="form-email">E-Mail</label>
+				<div class="form-group">
+					<input class="form-email form-control" [(ngModel)]="email" name="email" placeholder="you@example.com" type="email" required >
+				</div>
+				<label class="sr-only" for="form-password">Password</label>
+				<div class="form-group">
+					<input class="form-password form-control" [(ngModel)]="password" name="password" type="password" required>
+				</div>
+				<button type="submit" [disabled]="!f.form.valid" class="btn btn-success btn-block">Sign in!</button>
+			</form>
+		</div>
+	</div>
+</div>

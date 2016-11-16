@@ -1,8 +1,9 @@
 <h2>Create New Project</h2>
 
-<form>
-  <input type="text" name="name" [(ngModel)]="request.name" placeholder="Name">
-  <input type="text" name="description" [(ngModel)]="request.description" placeholder="Description">
-  <input type="button" *ngIf="!working" (click)="onSubmit()" value="Create Project">
-  <span *ngIf="working">Working ...</span>
+<form (ngSubmit)="onSubmit()" #f="ngForm">
+	<div class="col-md-4"><input class="form-control" type="text" name="name" [(ngModel)]="request.name" placeholder="Name" required></div>
+	<div class="col-md-4"><input class="form-control" type="text" name="description" [(ngModel)]="request.description" placeholder="Description" required></div>
+	<div class="col-md-4"><input type="button" type="submit" [disabled]="!f.form.valid" class="btn btn-success btn-block" *ngIf="!working" (click)="onSubmit()"
+			value="Create Project"></div>
+	<span *ngIf="working">Working ...</span>
 </form>
