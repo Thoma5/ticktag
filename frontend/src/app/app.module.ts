@@ -19,8 +19,10 @@ import {UserApi} from './api/api/UserApi';
 import {ProjectsComponent} from './ui/projects/projects.component';
 import {ProjectCreateComponent} from './ui/projects/project-create.component';
 import {ProjectApi} from './api/api/ProjectApi';
-
+import { Ng2BootstrapModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { Angular2DataTableModule } from 'angular2-data-table';
+import { MaterialModule } from '@angular/material';
+
 
 @NgModule({
   imports: [
@@ -29,7 +31,9 @@ import { Angular2DataTableModule } from 'angular2-data-table';
     FormsModule,
     Ng2Webstorage,
     routing,
-    Angular2DataTableModule
+    Angular2DataTableModule,
+    Ng2BootstrapModule,
+    MaterialModule.forRoot()
   ],
   declarations: [
     AppComponent,
@@ -39,13 +43,12 @@ import { Angular2DataTableModule } from 'angular2-data-table';
     UsersComponent,
     UserCreateComponent,
     ProjectsComponent,
-    ProjectCreateComponent,
+    ProjectCreateComponent
   ],
   providers: [
     AuthApi,
     UserApi,
     ProjectApi,
-
     ApiCallService,
     AuthService
   ],

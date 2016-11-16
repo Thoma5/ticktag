@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import '../style/app.scss';
 import {AuthService, User} from './service';
+import { Router} from '@angular/router';
 
 @Component({
   selector: 'tt-app',
@@ -10,6 +11,7 @@ import {AuthService, User} from './service';
 export class AppComponent implements OnInit {
   private title: string;
   private user: User;
+  private router: Router;
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(private authService: AuthService) {
@@ -27,5 +29,6 @@ export class AppComponent implements OnInit {
 
   logout(): void {
     this.authService.user = null;
+    this.router.navigate(['/']);
   }
 }
