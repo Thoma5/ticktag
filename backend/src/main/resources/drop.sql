@@ -1,0 +1,7 @@
+begin;
+
+DROP TABLE IF EXISTS "user" CASCADE;
+DROP TABLE IF EXISTS "project" CASCADE;
+DROP TABLE IF EXISTS "member" CASCADE;
+
+commit;
