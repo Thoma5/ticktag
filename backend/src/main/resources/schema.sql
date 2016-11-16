@@ -59,7 +59,8 @@ CREATE INDEX ON "comment" ("ticket_id");
 
 -- Circular comment reference resolved here
 ALTER TABLE "ticket"
-  ADD FOREIGN KEY ("description_comment_id") REFERENCES "comment";
+  ADD FOREIGN KEY ("description_comment_id") REFERENCES "comment" DEFERRABLE, initially deferred;
+
 
 CREATE TABLE IF NOT EXISTS "ticket_tag" (
   "id"         UUID PRIMARY KEY,
@@ -119,7 +120,7 @@ CREATE TABLE IF NOT EXISTS "mentioned_ticket" (
 );
 CREATE INDEX ON "mentioned_ticket" ("mentioned_ticket_id");
 
-CREATE TABLE "ticket_event" (
+CREATE TABLE  "ticket_event" (
   "id"        UUID PRIMARY KEY,
   "ticket_id" UUID      NOT NULL REFERENCES "ticket",
   "user_id"   UUID      NOT NULL REFERENCES "user",
