@@ -6,6 +6,7 @@ import {AuthService} from './service/auth/auth.service';
 import {User} from './service/auth/user';
 import {Observable} from 'rxjs/Rx';
 import {Injectable} from '@angular/core';
+import {MaterialModule} from '@angular/material';
 
 @Injectable()
 class MockAuthService extends AuthService {
@@ -25,13 +26,13 @@ describe('App', () => {
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
+      imports: [RouterTestingModule, MaterialModule],
       declarations: [AppComponent],
       providers: [provideRoutes([]), {provide: AuthService, useClass: MockAuthService}],
     });
   });
 
-  it('should have a title', () => {
+  it('should have a menu', () => {
     let fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     expect(fixture.debugElement.componentInstance.title).toEqual('TickTag');
