@@ -1,8 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import '../style/app.scss';
 import {AuthService, User} from './service';
-import { Router} from '@angular/router';
-
+import {Router} from '@angular/router';
 @Component({
   selector: 'tt-app',
   templateUrl: './app.component.html',
