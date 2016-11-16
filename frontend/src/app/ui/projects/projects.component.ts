@@ -9,11 +9,11 @@ import {ProjectApi, ProjectResultJson} from '../../api';
 export class ProjectsComponent implements OnInit {
   projects: ProjectResultJson[];
     columns = [
-    { prop: 'id' },
+    { name: 'ID' },
     { name: 'Name' },
-    { name: 'description' },
-     { name: 'creationDate'},
-     {name: 'icon'}
+    { name: 'Description' },
+    { name: 'CreationDate'},
+    { name: 'Icon'}
   ];
 
   // TODO make readonly once Intellij supports readonly properties in ctr

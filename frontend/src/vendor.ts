@@ -12,3 +12,6 @@ import '@angularclass/hmr';
 // Other vendors for example jQuery, Lodash or Bootstrap
 // You can import js, ts, css, sass, ...
 import 'bootstrap/dist/css/bootstrap.css';
+import 'angular2-data-table/release/datatable.css';
+import 'angular2-data-table/release/material.css';
+import '@angular/material/core/theming/prebuilt/deeppurple-amber.css';

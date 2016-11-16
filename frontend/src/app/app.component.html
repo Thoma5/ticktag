@@ -1,28 +1,31 @@
 <md-sidenav-layout>
-	<md-sidenav #start (open)="mybutton.focus()">
-		Start Sidenav.
-		<br>
-		<button md-button #mybutton (click)="start.close()">Close</button>
-	</md-sidenav>
-	<md-sidenav #end align="end">
-		End Sidenav.
-		<button md-button (click)="end.close()">Close</button>
-	</md-sidenav>
-</md-sidenav-layout>
-<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-	<div class="container-fluid">
-		<div class="navbar-header">
-			<a class="navbar-brand" [routerLink]="['']">Home</a>
-			<a class="navbar-brand" *ngIf="user && (user.authorities.indexOf('ADMIN') != -1)" [routerLink]="['users']">Users</a>
-			<a class="navbar-brand" *ngIf="user" [routerLink]="['projects']">Projects</a>
-			<a class="navbar-brand" *ngIf="user" [routerLink]="['whoami']">Whoami</a>
-			<a class="navbar-brand" *ngIf="!user" [routerLink]="['login']">Login</a>
-			<a class="navbar-brand" *ngIf="user" href="" (click)="logout(); $event.preventDefault()">Logout</a>
+	<md-sidenav #start opened mode="side">
+		<div>
+			<a md-button [routerLink]="['']">Home</a>
 		</div>
+		<div>
+			<a md-button *ngIf="user && (user.authorities.indexOf('ADMIN') != -1)" [routerLink]="['users']">Users</a>
+		</div>
+		<div>
+			<a md-button *ngIf="user" [routerLink]="['projects']">Projects</a>
+		</div>
+		<div>
+			<a md-button *ngIf="user" [routerLink]="['whoami']">Whoami</a>
+		</div>
+			<div>
+			<a md-button>Placeholders are really amazing!</a>
+		</div>
+
+	</md-sidenav>
+	<div>
+		<button md-button (click)="start.toggle()">Menu</button>
+		<a md-button align="end" *ngIf="!user" [routerLink]="['login']">Login</a>
+		<a md-button align="end" *ngIf="user" href="" (click)="logout(); $event.preventDefault()">Logout</a>
 	</div>
-</div>
-<main>
-	<router-outlet></router-outlet>
-</main>
+	<main>
+		<router-outlet></router-outlet>
+	</main>
+</md-sidenav-layout>
+
 <footer>
 </footer>
