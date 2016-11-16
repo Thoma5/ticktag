@@ -19,6 +19,11 @@ open class Project protected constructor() {
             p.description = description
             p.creationDate = creationDate
             p.icon = icon
+            p.members = mutableListOf()
+            p.tickets = mutableListOf()
+            p.ticketTags = mutableListOf()
+            p.assignmentTags = mutableListOf()
+            p.timeCategories = mutableListOf()
             return p
         }
     }
