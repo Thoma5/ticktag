@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS "ticket" (
   "parent_ticket_id"       UUID        NULL REFERENCES "ticket",
   "project_id"             UUID        NOT NULL REFERENCES "project",
   "created_by"             UUID        NOT NULL REFERENCES "user",
-  "description_comment_id" UUID UNIQUE NOT NULL, -- REFERENCES "comment", added below due to circular references
+  "description_comment_id" UUID UNIQUE NOT NULL,  -- REFERENCES "comment", added below due to circular references
   "create_time"            TIMESTAMP   NOT NULL,
   "title"                  TEXT        NOT NULL,
   "open"                   BOOLEAN     NOT NULL,
