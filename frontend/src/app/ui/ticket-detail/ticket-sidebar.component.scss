@@ -1,4 +1,7 @@
+@import '../../../style/constants.scss';
+
 .sidebar {
-    background-color: #bdbdbd;
+    background-color: $card-background;
     overflow: hidden;
+    padding: $card-padding;
 }

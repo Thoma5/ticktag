@@ -1,1 +1,8 @@
-// styles in src/style directory are applied to the whole page
+/* Background pattern from subtlepatterns.com */
+body {
+    background-image: url('../public/img/handmadepaper.png')
+}
+
+md-sidenav-layout {
+    background: none;
+}
