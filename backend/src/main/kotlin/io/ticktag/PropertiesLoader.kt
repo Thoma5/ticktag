@@ -41,24 +41,19 @@ class PropertiesLoader {
     private fun loadProperties(): Properties {
         val defaultProperties = loadLocalProperties()
         val overrideProperties = loadEnvProperties()
-        val mergedProperties = Properties()
 
+        val mergedProperties = Properties()
         mergedProperties.putAll(defaultProperties)
-        if (overrideProperties != null ) {
-            mergedProperties.putAll(overrideProperties)
-        }
+        overrideProperties?.let { mergedProperties.putAll(it) }
 
         return mergedProperties
     }
 
     private fun loadLocalProperties(): Properties {
-        val props = Properties()
-        val fp = javaClass.classLoader.getResourceAsStream("application.properties")
-        try {
-            props.load(fp)
+        javaClass.classLoader.getResourceAsStream("application.properties").use {
+            val props = Properties()
+            props.load(it)
             return props
-        } finally {
-            fp.close()
         }
     }
 
