@@ -39,6 +39,7 @@ class MockTicketApi {
 @Component({
   selector: 'tt-ticket-detail',
   templateUrl: './ticket-detail.component.html',
+  styleUrls: ['./ticket-detail.component.scss']
 })
 export class TicketDetailComponent implements OnInit {
   private ticketApi: MockTicketApi;

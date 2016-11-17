@@ -1,12 +1,22 @@
 <h2>Ticket Detail</h2>
 <div *ngIf="loading" class='loading'>Loading...</div>
-<div *ngIf="!loading" class='content'>
-    <div class='core'>
-        <h3>{{ ticket.title }}</h3>
-        <p> {{ ticket.description }}</p>
+<div *ngIf="!loading" class='content row'>
+    <div class='left col-md-8'>
+        <div class='core'>
+            <h3>{{ ticket.title }}</h3>
+            <p> {{ ticket.description }}</p>
+        </div>
+        <div class='comments'>
+            <h3>Comments</h3>
+
+            <div class='comment'>
+                Comment
+            </div>
+        </div>
     </div>
-    <div class='comments'>
-    </div>
-    <div class='sidebar'>
+    <div class='right col-md-4'>
+        <div class='sidebar'>
+            <h3>Sidebar</h3>
+        </div>
     </div>
 </div>
