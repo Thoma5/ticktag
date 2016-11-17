@@ -7,7 +7,7 @@ import 'rxjs/add/operator/switchMap';
 import {Duration, Instant} from 'js-joda';
 
 
-class TicketResultJson {
+export class TicketResultJson {
   constructor(
     public number: number, public title: string, public description: string,
     public open: boolean, public storyPoints: number,

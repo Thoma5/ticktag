@@ -20,6 +20,7 @@ import {ProjectsComponent} from './ui/projects/projects.component';
 import {ProjectCreateComponent} from './ui/projects/project-create.component';
 import {ProjectApi} from './api/api/ProjectApi';
 import {TicketDetailComponent} from './ui/ticket-detail/ticket-detail.component';
+import {TicketSidebarComponent} from './ui/ticket-detail/ticket-sidebar.component';
 import { Ng2BootstrapModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { Angular2DataTableModule } from 'angular2-data-table';
 import { MaterialModule } from '@angular/material';
@@ -46,6 +47,7 @@ import { MaterialModule } from '@angular/material';
     ProjectsComponent,
     ProjectCreateComponent,
     TicketDetailComponent,
+    TicketSidebarComponent
   ],
   providers: [
     AuthApi,
