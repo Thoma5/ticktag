@@ -1,6 +1,5 @@
 package io.ticktag.persistence.ticket.entity
 
-import io.ticktag.persistence.project.entity.Project
 import java.util.*
 import javax.persistence.*
 
@@ -8,14 +7,13 @@ import javax.persistence.*
 @Table(name = "ticket_tag")
 open class TicketTag protected constructor() {
     companion object {
-        fun create(name: String, color: String, groupID: UUID, order: Int, project: Project): TicketTag {
+        fun create(name: String, color: String, order: Int, ticketTagGroup: TicketTagGroup): TicketTag {
             val o = TicketTag()
             o.id = UUID.randomUUID()
             o.name = name
             o.color = color
-            o.groupId = groupID
             o.order = order
-            o.project = project
+            o.ticketTagGroup = ticketTagGroup
             o.tickets = mutableListOf()
             o.tagAddedEvents = mutableListOf()
             o.tagRemovedEvents = mutableListOf()
@@ -34,15 +32,12 @@ open class TicketTag protected constructor() {
     @Column(name = "color", nullable = false)
     lateinit open var color: String
 
-    @Column(name = "group_id", nullable = false)
-    lateinit open var groupId: UUID
-
     @Column(name = "order", nullable = false)
     open var order: Int = -1
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id", referencedColumnName = "id", nullable = false)
-    lateinit open var project: Project
+    @JoinColumn(name = "ticket_tag_group_id", referencedColumnName = "id", nullable = false)
+    lateinit open var ticketTagGroup: TicketTagGroup
 
     @ManyToMany(mappedBy = "tags")
     lateinit open var tickets: MutableList<Ticket>
