@@ -7,7 +7,7 @@ import java.time.Instant
 import java.util.*
 
 
-class CommentResult(
+data class CommentResult(
         val id: UUID,
         val createTime: Instant,
         val text: String,

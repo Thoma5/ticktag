@@ -3,7 +3,7 @@ package io.ticktag.restinterface.comment.schema
 import java.util.*
 
 
-class CreateCommentRequestJson(
+data class CreateCommentRequestJson(
         val text: String,
         val ticketID: UUID
 ) {

@@ -5,7 +5,7 @@ import java.time.Instant
 import java.util.*
 
 
-class CommentResultJson(val id: UUID,
+data class CommentResultJson(val id: UUID,
                         val createTime: Instant,
                         val text: String,
                         val userID: UUID,

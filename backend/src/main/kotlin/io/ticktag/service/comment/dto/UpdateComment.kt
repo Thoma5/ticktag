@@ -1,6 +1,6 @@
 package io.ticktag.service.comment.dto
+import javax.validation.constraints.Size
 
-
-class UpdateComment(
-        val text: String
+data class UpdateComment(
+        @field:Size(min = 1, max = 500) val text: String
 ) {}

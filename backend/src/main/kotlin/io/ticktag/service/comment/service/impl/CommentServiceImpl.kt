@@ -18,6 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal
 import java.time.Instant
 import java.util.*
 import javax.inject.Inject
+import javax.validation.Valid
 
 @TicktagService
 open class CommentServiceImpl @Inject constructor(
@@ -32,7 +33,7 @@ open class CommentServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.PROJECT_USER)
-    override fun createComment(createComment: CreateComment, principal: Principal): CommentResult {
+    override fun createComment(@Valid createComment: CreateComment, principal: Principal): CommentResult {
 
         val text = createComment.text
         val ticket = tickets.findOne(createComment.ticketID) ?: throw NotFoundException()
@@ -52,8 +53,8 @@ open class CommentServiceImpl @Inject constructor(
         return CommentResult(comment)
     }
 
-    @PreAuthorize(AuthExpr.PROJECT_USER)
-    override fun updateComment(commentID: UUID, updateComment: UpdateComment): CommentResult? {
+    @PreAuthorize(AuthExpr.ADMIN_OR_SELF)
+    override fun updateComment(commentID: UUID, @Valid updateComment: UpdateComment): CommentResult? {
 
         val comment = comments.findOne(commentID) ?: throw NotFoundException()
         if (comment.describedTicket != null) {
@@ -64,7 +65,7 @@ open class CommentServiceImpl @Inject constructor(
         return CommentResult(comment)
     }
 
-    @PreAuthorize(AuthExpr.PROJECT_USER)
+    @PreAuthorize(AuthExpr.ADMIN_OR_SELF)
     override fun deleteComment(commentID: UUID) {
         val comment = comments.findOne(commentID) ?: throw NotFoundException()
         if (comment.describedTicket != null) {

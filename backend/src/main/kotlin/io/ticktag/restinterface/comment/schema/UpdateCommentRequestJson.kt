@@ -1,5 +1,5 @@
 package io.ticktag.restinterface.comment.schema
 
 
-class UpdateCommentRequestJson(
+data class UpdateCommentRequestJson(
         val text: String) {}
