@@ -3,8 +3,24 @@
 <div *ngIf="!loading" class='content row'>
     <div class='left col-md-8'>
         <div class='core'>
-            <h3>{{ ticket.title }}</h3>
-            <p> {{ ticket.description }}</p>
+            <div class='header-row'>
+                <h3 class='title'>
+                    <span class='number'>#{{ticket.number}}</span>
+                    <span class='title-text'>{{ticket.title}}</span>
+                </h3>
+                <div class='story-points'>
+                    {{ticket.storyPoints}}
+                </div>
+            </div>
+            <div class='sub-header-row'>
+                <div class='open-button'>
+                </div>
+                <div class='tags'>
+                </div>
+            </div>
+            <div class='description'>{{ticket.description}}</div>
+            <div class='subtickets'>Subtickets</div>
+            <div class='status'>Status</div>
         </div>
         <div class='comments'>
             <h3>Comments</h3>
@@ -17,6 +33,15 @@
     <div class='right col-md-4'>
         <div class='sidebar'>
             <h3>Sidebar</h3>
+            <div class='assigned-users'>
+                Assigned
+            </div>
+            <div class='references'>
+                References
+            </div>
+            <div class='back-references'>
+                Backreferences
+            </div>
         </div>
     </div>
 </div>

@@ -9,9 +9,9 @@ import {Duration, Instant} from 'js-joda';
 
 class TicketResultJson {
   constructor(
-    public title: string, public description: string, public open: boolean,
-    public storyPoints: number, public initialEstimatedTime: Duration,
-    public dueDate: Instant,
+    public number: number, public title: string, public description: string,
+    public open: boolean, public storyPoints: number,
+    public initialEstimatedTime: Duration, public dueDate: Instant,
   ) {}
 }
 
@@ -20,6 +20,7 @@ class MockTicketApi {
 
   constructor() {
     this.ticket = {
+      number: 123,
       title: 'Implement ticket details UI',
       description: 'It is severly lacking at the moment',
       open: false,

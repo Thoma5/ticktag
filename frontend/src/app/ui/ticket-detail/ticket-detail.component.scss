@@ -13,3 +13,23 @@
     overflow: hidden;
     margin-top: 1rem;
 }
+
+.header-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.title {
+    flex-grow: 1;
+}
+
+.story-points {
+    width: 2em;
+    height: 2em;
+    font-size: 2em;
+    background-color: #ff0000;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+}
