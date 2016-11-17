@@ -15,7 +15,7 @@ import javax.inject.Inject
 @TicktagRestInterface
 @RequestMapping("/tickettag")
 @Api(tags = arrayOf("ticketTag"), description = "ticketTag management")
-class TicketTagController @Inject constructor(
+open class TicketTagController @Inject constructor(
         private val ticketTagService: TicketTagService
 ) {
     @PostMapping
