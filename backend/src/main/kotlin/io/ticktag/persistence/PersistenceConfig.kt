@@ -16,6 +16,8 @@ import org.springframework.orm.jpa.JpaTransactionManager
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter
 import org.springframework.transaction.PlatformTransactionManager
+import org.springframework.transaction.TransactionDefinition
+import org.springframework.transaction.TransactionStatus
 import org.springframework.transaction.annotation.EnableTransactionManagement
 import java.sql.Connection
 import java.util.*
@@ -58,8 +60,24 @@ open class PersistenceConfig {
     @Bean
     open fun transactionManager(emf: EntityManagerFactory): PlatformTransactionManager {
         val transactionManager = JpaTransactionManager()
+        val logger = LoggerFactory.getLogger(PlatformTransactionManager::class.java)
         transactionManager.entityManagerFactory = emf
-        return transactionManager
+        return object : PlatformTransactionManager {
+            override fun commit(status: TransactionStatus) {
+                logger.info("COMMIT")
+                transactionManager.commit(status)
+            }
+
+            override fun rollback(status: TransactionStatus) {
+                logger.info("ROLLBACK")
+                transactionManager.rollback(status)
+            }
+
+            override fun getTransaction(definition: TransactionDefinition): TransactionStatus {
+                logger.info("BEGIN")
+                return transactionManager.getTransaction(definition)
+            }
+        }
     }
 
     @Bean
