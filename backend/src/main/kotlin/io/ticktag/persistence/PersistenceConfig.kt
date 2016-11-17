@@ -48,7 +48,7 @@ open class PersistenceConfig {
         val jpaProperties = Properties()
         jpaProperties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect")
         jpaProperties.put("hibernate.hbm2ddl.auto", if (props.dbValidate) "validate" else "none")
-        jpaProperties.put("hibernate.show_sql", "true")
+        jpaProperties.put("hibernate.show_sql", "false")
         jpaProperties.put("hibernate.globally_quoted_identifiers", "true")
         entityManagerFactoryBean.setJpaProperties(jpaProperties)
 
