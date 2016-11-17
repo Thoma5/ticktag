@@ -5,6 +5,7 @@ import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.comment.schema.CommentResultJson
 import io.ticktag.restinterface.comment.schema.CreateCommentRequestJson
 import io.ticktag.restinterface.comment.schema.UpdateCommentRequestJson
+import io.ticktag.service.NotFoundException
 import io.ticktag.service.Principal
 import io.ticktag.service.comment.dto.CreateComment
 import io.ticktag.service.comment.dto.UpdateComment
@@ -30,7 +31,7 @@ open class CommentController @Inject constructor(
 
     @GetMapping(value = "/{id}")
     open fun getComment(@PathVariable(name = "id") id: UUID): CommentResultJson {
-        return CommentResultJson(commentService.getComment(id))
+        return CommentResultJson(commentService.getComment(id)?:throw NotFoundException())
     }
 
 
@@ -44,7 +45,7 @@ open class CommentController @Inject constructor(
     @PutMapping(value = "/{id}")
     open fun updateComment(@RequestBody req: UpdateCommentRequestJson,
                            @PathVariable(name = "id") id: UUID):CommentResultJson{
-        return CommentResultJson( commentService.updateComment(updateComment = UpdateComment(req.text),commentID = id))
+        return CommentResultJson( commentService.updateComment(updateComment = UpdateComment(req.text),commentID = id)?:throw NotFoundException())
     }
 
     @DeleteMapping(value = "/{id}")

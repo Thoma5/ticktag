@@ -44,7 +44,7 @@ open class CommentServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.PROJECT_USER)
-    override fun getComment(commentID: UUID): CommentResult {
+    override fun getComment(commentID: UUID): CommentResult? {
         val comment = comments.findOne(commentID)?: throw NotFoundException()
         if (comment.describedTicket != null ){
             throw NotFoundException()
@@ -53,7 +53,7 @@ open class CommentServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.PROJECT_USER)
-    override fun updateComment(commentID: UUID, updateComment: UpdateComment): CommentResult {
+    override fun updateComment(commentID: UUID, updateComment: UpdateComment): CommentResult? {
 
         val comment = comments.findOne(commentID)?: throw NotFoundException()
         if (comment.describedTicket != null ){
