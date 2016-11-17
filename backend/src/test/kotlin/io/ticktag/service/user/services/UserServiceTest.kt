@@ -32,15 +32,16 @@ class UserServiceTest : BaseTest() {
 
     @Test(expected = TicktagValidationException::class)
     fun test_checkChangePassword_negative() {
-        withUser(UUID.fromString("00000000-0001-0000-0000-000000000003")) { principal ->
-            this.userService.updateUser(principal, UUID.fromString("00000000-0001-0000-0000-000000000003"), UpdateUser(oldPassword = "notvalid", password = "wrong", mail = null, role = null, profilePic = null, name = null))
+        val id = observerId()
+        withUser(id) { principal ->
+            this.userService.updateUser(principal, id, UpdateUser(oldPassword = "notvalid", password = "wrong", mail = null, role = null, profilePic = null, name = null))
         }
     }
 
 
     @Test
     fun test_checkUpdate_positive_admin() {
-        val id = UUID.fromString("00000000-0001-0000-0000-000000000001")
+        val id = adminId()
         val name = "name"
         val mail = "mail"
         val newPassword = "password"
@@ -65,7 +66,7 @@ class UserServiceTest : BaseTest() {
 
     @Test
     fun test_checkUpdate_positive_own_user() {
-        val id = UUID.fromString("00000000-0001-0000-0000-000000000003")
+        val id = observerId()
         val name = "name"
         val mail = "cccc@c.c"
         val newPassword = "password"
@@ -88,8 +89,8 @@ class UserServiceTest : BaseTest() {
     }
 
     @Test(expected = TicktagValidationException::class)
-    fun test_checkUpdate_withNonAdmin_shoudlFail() {
-        val id = UUID.fromString("00000000-0001-0000-0000-000000000003")
+    fun test_checkUpdate_withNonAdmin_shouldFail() {
+        val id = observerId()
 
         withUser(id) { principal ->
             this.userService.updateUser(principal, id, UpdateUser(role = Role.ADMIN, oldPassword = null, password = null, mail = null, profilePic = null, name = null))
@@ -98,15 +99,39 @@ class UserServiceTest : BaseTest() {
         }
     }
 
+    @Test
+    fun update_withNewPassword_shouldUpdateCurrentToken() {
+        val id = adminId()
+
+        withUser(id) { principal ->
+            val tokenBefore = userService.getUser(id)!!.currentToken
+            this.userService.updateUser(principal, id, UpdateUser(role = null, oldPassword = null, password = "abc", mail = null, profilePic = null, name = null))
+
+            val tokenNow = this.userService.getUser(id)!!.currentToken
+            assertNotEquals(tokenBefore, tokenNow)
+        }
+    }
+
     @Test(expected = org.springframework.security.access.AccessDeniedException::class)
     fun test_checkUpdate_negative_other_user() {
-        val ownId = UUID.fromString("00000000-0001-0000-0000-000000000002")
-        val otherId = UUID.fromString("00000000-0001-0000-0000-000000000003")
+        val ownId = userId()
+        val otherId = observerId()
         val name = "new Name"
         val mail = "cccc@c.c"
         val newPassword = "password"
         withUser(ownId) { principal ->
             this.userService.updateUser(principal, otherId, UpdateUser(oldPassword = "cccc", password = newPassword, mail = mail, role = Role.USER, profilePic = null, name = name))
         }
+    }
+
+    fun adminId() : UUID {
+        return UUID.fromString("00000000-0001-0000-0000-000000000001")
+    }
+
+    fun userId() : UUID {
+        return UUID.fromString("00000000-0001-0000-0000-000000000002")
+    }
+    fun observerId() : UUID {
+        return UUID.fromString("00000000-0001-0000-0000-000000000003")
     }
 }
