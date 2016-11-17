@@ -1,6 +1,7 @@
 .core {
     background-color: #bdbdbd;
     overflow: hidden;
+    padding: 1rem;
 }
 
 .header-row {
@@ -24,7 +25,7 @@
 }
 
 .description {
-    margin-top: 1rem;
+    margin-top: 2rem;
 }
 
 .sub-header-row {
@@ -40,7 +41,7 @@
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    margin-top: 1rem;
+    margin-top: 2rem;
 
     div {
         flex-basis: 50%;
@@ -51,12 +52,9 @@
 .footer-row {
     display: flex;
     flex-direction: row;
-    margin-top: 1rem;
+    margin-top: 2rem;
 
     .filler {
         flex-grow: 1;
     }
-}
-
-.created-by {
 }
