@@ -7,7 +7,6 @@ import java.util.*
 
 
 class CreateComment (
-        val id: UUID,
         val text: String,
         val userID: UUID, //TODO: eigentlich unnötig
         val ticketID: UUID
