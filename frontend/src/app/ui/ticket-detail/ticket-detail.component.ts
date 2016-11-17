@@ -5,7 +5,6 @@ import { ApiCallService } from '../../service';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
 
-
 export class TicketResultJson {
   constructor(
     public number: number, public createTime: moment.Moment, public title: string,
@@ -40,7 +39,7 @@ class MockTicketApi {
 
   getTicket(): Observable<TicketResultJson> {
     return Observable.of(this.ticket)
-      .delay(150);
+      .delay(5000);
   }
 }
 

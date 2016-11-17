@@ -1,18 +1,26 @@
-<h2>Ticket Detail</h2>
-<div *ngIf="loading" class='loading'>Loading...</div>
-<div *ngIf="!loading" class='content row'>
-    <div class='left col-md-8'>
-        <tt-ticket-core [ticket]="ticket"></tt-ticket-core>
-
-        <div class='comments'>
-            <h3>Comments</h3>
-
-            <div class='comment'>
-                Comment
-            </div>
+<div class='container'>
+    <div *ngIf="loading" class='loading'>
+        <div class="sk-folding-cube">
+            <div class="sk-cube1 sk-cube"></div>
+            <div class="sk-cube2 sk-cube"></div>
+            <div class="sk-cube4 sk-cube"></div>
+            <div class="sk-cube3 sk-cube"></div>
         </div>
     </div>
-    <div class='right col-md-4'>
-        <tt-ticket-sidebar [ticket]="ticket"></tt-ticket-sidebar>
+    <div *ngIf="!loading" class='content row'>
+        <div class='left col-md-8'>
+            <tt-ticket-core [ticket]="ticket"></tt-ticket-core>
+
+            <div class='comments'>
+                <h3>Comments</h3>
+
+                <div class='comment'>
+                    Comment
+                </div>
+            </div>
+        </div>
+        <div class='right col-md-4'>
+            <tt-ticket-sidebar [ticket]="ticket"></tt-ticket-sidebar>
+        </div>
     </div>
 </div>
