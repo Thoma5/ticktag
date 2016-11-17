@@ -1,0 +1,16 @@
+<div class='assigned-user'>
+    <div class='image'>
+        <img src="img/angular.png" alt="" width="100%" height="100%" />
+    </div>
+    <div class='info'>
+        <div class='name'>{{ user.name }}</div>
+        <div class='tags'>
+            <tag-input [ngModel]="['a', 'b', 'c']" #input>
+              <div class="tag" *ngFor="let item of input.value">xx
+                <span class="tagname">{{ item }} </span>
+                <span (click)="input.remove(item)">x</span>
+              </div>
+            </tag-input>
+        </div>
+    </div>
+</div>

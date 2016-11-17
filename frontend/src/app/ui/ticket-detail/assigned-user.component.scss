@@ -1,0 +1,24 @@
+.assigned-user {
+    display: flex;
+    flex-direction: row;
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+.image {
+    width: 3em;
+    height: 3em;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+}
+
+.name {
+    font-weight: bold;
+}
+
+.tags {
+
+}
