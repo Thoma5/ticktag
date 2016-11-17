@@ -8,7 +8,7 @@ import javax.validation.constraints.Size
 
 data class CreateComment(
         @field:Size(min = 1, max = 500) val text: String,
-        val ticketID: UUID
+        val ticketId: UUID
 ) {
 
 }

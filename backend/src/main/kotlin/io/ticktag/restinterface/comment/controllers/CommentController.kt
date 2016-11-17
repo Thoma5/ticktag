@@ -4,10 +4,12 @@ import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.comment.schema.CommentResultJson
 import io.ticktag.restinterface.comment.schema.CreateCommentRequestJson
+
 import io.ticktag.restinterface.comment.schema.UpdateCommentRequestJson
 import io.ticktag.service.NotFoundException
 import io.ticktag.service.Principal
 import io.ticktag.service.comment.dto.CreateComment
+
 import io.ticktag.service.comment.dto.UpdateComment
 import io.ticktag.service.comment.service.CommentService
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -24,8 +26,8 @@ open class CommentController @Inject constructor(
 ) {
 
     @GetMapping
-    open fun listComments(): List<CommentResultJson> {
-        return commentService.listComments().map(::CommentResultJson)
+    open fun listComments(@RequestParam(name = "projectID") req: UUID): List<CommentResultJson> {
+        return commentService.listComments(req).map(::CommentResultJson)
     }
 
 
@@ -38,18 +40,18 @@ open class CommentController @Inject constructor(
     @PostMapping
     open fun createComment(@RequestBody req: CreateCommentRequestJson,
                            @AuthenticationPrincipal principal: Principal): CommentResultJson {
-        val comment = commentService.createComment(createComment = CreateComment(req.text, req.ticketID), principal = principal)
+        val comment = commentService.createComment(createComment = CreateComment(req.text, req.ticketID), principal = principal, ticketId = req.ticketID)
         return CommentResultJson(comment)
     }
 
     @PutMapping(value = "/{id}")
     open fun updateComment(@RequestBody req: UpdateCommentRequestJson,
                            @PathVariable(name = "id") id: UUID): CommentResultJson {
-        return CommentResultJson(commentService.updateComment(updateComment = UpdateComment(req.text), commentID = id) ?: throw NotFoundException())
+        return CommentResultJson(commentService.updateComment(updateComment = UpdateComment(req.text), commentId = id) ?: throw NotFoundException())
     }
 
     @DeleteMapping(value = "/{id}")
-    open fun updateComment(@PathVariable(name = "id") id: UUID) {
+    open fun deleteComment(@PathVariable(name = "id") id: UUID) {
         commentService.deleteComment(id)
     }
 }

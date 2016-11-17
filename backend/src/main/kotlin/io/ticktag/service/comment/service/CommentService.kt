@@ -8,10 +8,9 @@ import java.util.*
 
 
 interface CommentService {
-    fun listComments(): List<CommentResult>
-    fun getComment(commentID: UUID): CommentResult?
-    fun createComment(createComment: CreateComment, principal: Principal): CommentResult
-    fun updateComment(commentID: UUID, updateComment: UpdateComment): CommentResult?
-
-    fun deleteComment(commentID: UUID)
+    fun listComments(pId: UUID): List<CommentResult>
+    fun getComment(commentId: UUID): CommentResult?
+    fun createComment(createComment: CreateComment, principal: Principal, ticketId: UUID): CommentResult
+    fun updateComment(commentId: UUID, updateComment: UpdateComment): CommentResult?
+    fun deleteComment(commentId: UUID)
 }

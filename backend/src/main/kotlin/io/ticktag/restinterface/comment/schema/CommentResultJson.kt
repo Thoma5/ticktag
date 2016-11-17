@@ -6,9 +6,9 @@ import java.util.*
 
 
 data class CommentResultJson(val id: UUID,
-                        val createTime: Instant,
-                        val text: String,
-                        val userID: UUID,
-                        val ticketID: UUID) {
-    constructor(c: CommentResult) : this(id = c.id, createTime = c.createTime, text = c.text, userID = c.userID, ticketID = c.ticketID)
+                             val createTime: Instant,
+                             val text: String,
+                             val userId: UUID,
+                             val ticketId: UUID) {
+    constructor(c: CommentResult) : this(id = c.id, createTime = c.createTime, text = c.text, userId = c.userId, ticketId = c.ticketId)
 }

@@ -8,4 +8,5 @@ import java.util.*
 
 @TicktagRepository
 interface CommentRepository : TicktagCrudRepository<Comment, UUID> {
+    fun findByTicketProjectId(projectId:UUID) : List<Comment>
 }

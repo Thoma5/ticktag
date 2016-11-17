@@ -20,8 +20,9 @@ class CommentTest : BaseTest() {
     @Test
     fun test_check_getList() {
         val id = UUID.fromString("00000000-0001-0000-0000-000000000001")
+        val pid = UUID.fromString("00000000-0002-0000-0000-000000000001")
         withUser(id) { principal ->
-            commentService.listComments()
+            commentService.listComments(pid)
         }
     }
 

@@ -11,8 +11,8 @@ data class CommentResult(
         val id: UUID,
         val createTime: Instant,
         val text: String,
-        val userID: UUID,
-        val ticketID: UUID
+        val userId: UUID,
+        val ticketId: UUID
 ) {
-    constructor(c: Comment) : this(id = c.id, createTime = c.createTime, text = c.text, userID = c.user.id, ticketID = c.ticket.id)
+    constructor(c: Comment) : this(id = c.id, createTime = c.createTime, text = c.text, userId = c.user.id, ticketId = c.ticket.id)
 }
