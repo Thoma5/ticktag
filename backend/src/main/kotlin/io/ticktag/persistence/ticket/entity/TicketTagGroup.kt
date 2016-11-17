@@ -32,11 +32,11 @@ open class TicketTagGroup protected constructor() {
     open var exclusive: Boolean = false
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "projectId", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "project_id", referencedColumnName = "id", nullable = false)
     lateinit open var project: Project
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY) //TODO: is fetch ok?
-    @JoinColumn(name = "defaultTicketTagId", referencedColumnName = "id", nullable = false)
+    @OneToOne(optional = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "default_ticket_tag_id", referencedColumnName = "id", nullable = true)
     open var defaultTicketTag: TicketTag? = null
 
     @OneToMany(mappedBy = "ticketTagGroup")
