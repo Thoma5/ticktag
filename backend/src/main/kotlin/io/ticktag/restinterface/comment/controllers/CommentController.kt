@@ -21,7 +21,7 @@ import javax.inject.Inject
 @Api(tags = arrayOf("comments"), description = "comments management")
 open class CommentController @Inject constructor(
         private val commentService: CommentService
-){
+) {
 
     @GetMapping
     open fun listComments(): List<CommentResultJson> {
@@ -31,25 +31,25 @@ open class CommentController @Inject constructor(
 
     @GetMapping(value = "/{id}")
     open fun getComment(@PathVariable(name = "id") id: UUID): CommentResultJson {
-        return CommentResultJson(commentService.getComment(id)?:throw NotFoundException())
+        return CommentResultJson(commentService.getComment(id) ?: throw NotFoundException())
     }
 
 
     @PostMapping
     open fun createComment(@RequestBody req: CreateCommentRequestJson,
                            @AuthenticationPrincipal principal: Principal): CommentResultJson {
-        val comment = commentService.createComment(createComment = CreateComment(req.text, req.ticketID),principal = principal)
+        val comment = commentService.createComment(createComment = CreateComment(req.text, req.ticketID), principal = principal)
         return CommentResultJson(comment)
     }
 
     @PutMapping(value = "/{id}")
     open fun updateComment(@RequestBody req: UpdateCommentRequestJson,
-                           @PathVariable(name = "id") id: UUID):CommentResultJson{
-        return CommentResultJson( commentService.updateComment(updateComment = UpdateComment(req.text),commentID = id)?:throw NotFoundException())
+                           @PathVariable(name = "id") id: UUID): CommentResultJson {
+        return CommentResultJson(commentService.updateComment(updateComment = UpdateComment(req.text), commentID = id) ?: throw NotFoundException())
     }
 
     @DeleteMapping(value = "/{id}")
-    open fun updateComment(@PathVariable(name = "id") id: UUID){
+    open fun updateComment(@PathVariable(name = "id") id: UUID) {
         commentService.deleteComment(id)
     }
 }

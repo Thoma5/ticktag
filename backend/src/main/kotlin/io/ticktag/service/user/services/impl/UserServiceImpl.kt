@@ -91,7 +91,7 @@ open class UserServiceImpl @Inject constructor(
         if (updateUser.profilePic != null) {
             user.profilePic = updateUser.profilePic
         }
-        if (updateUser.role != null ) {
+        if (updateUser.role != null) {
             if (principal.hasRole("ADMIN")) {  //Only Admins can change user roles!
                 user.role = updateUser.role
             } else {

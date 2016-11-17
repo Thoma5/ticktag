@@ -6,9 +6,9 @@ import java.time.Instant
 import java.util.*
 
 
-class CreateComment (
+class CreateComment(
         val text: String,
         val ticketID: UUID
-){
+) {
 
 }

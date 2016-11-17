@@ -1,7 +1,6 @@
 package io.ticktag.service.comment.dto
 
 
-class UpdateComment (
-    val text: String
-)
-{}
+class UpdateComment(
+        val text: String
+) {}

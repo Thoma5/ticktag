@@ -4,13 +4,11 @@ import io.ticktag.service.comment.dto.CommentResult
 import java.time.Instant
 import java.util.*
 
-/**
- * Created by stefandraskovits on 17/11/2016.
- */
-class CommentResultJson (val id: UUID,
-                         val createTime: Instant,
-                         val text: String,
-                         val userID: UUID,
-                         val ticketID: UUID){
+
+class CommentResultJson(val id: UUID,
+                        val createTime: Instant,
+                        val text: String,
+                        val userID: UUID,
+                        val ticketID: UUID) {
     constructor(c: CommentResult) : this(id = c.id, createTime = c.createTime, text = c.text, userID = c.userID, ticketID = c.ticketID)
 }

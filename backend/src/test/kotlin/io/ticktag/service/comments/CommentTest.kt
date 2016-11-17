@@ -12,7 +12,7 @@ import java.util.*
 import javax.inject.Inject
 
 
-class CommentTest :BaseTest(){
+class CommentTest : BaseTest() {
 
     @Inject lateinit private var commentService: CommentService
 
@@ -31,7 +31,7 @@ class CommentTest :BaseTest(){
         val comment_id = UUID.fromString("00000000-0004-0000-0000-000000000006")
         withUser(id) { principal ->
             commentService.updateComment(comment_id, UpdateComment("test"))
-            val comment =  commentService.getComment(comment_id)?: throw NotFoundException()
+            val comment = commentService.getComment(comment_id) ?: throw NotFoundException()
             assert(comment.text.equals("test"))
         }
     }
@@ -41,13 +41,13 @@ class CommentTest :BaseTest(){
         val id = UUID.fromString("00000000-0001-0000-0000-000000000001")
         val comment_id = UUID.fromString("00000000-0004-0000-0000-000000000006")
         withUser(id) { principal ->
-            var comment = commentService.getComment(comment_id)?:throw NotFoundException()
+            var comment = commentService.getComment(comment_id) ?: throw NotFoundException()
             assert(comment.id.equals(comment_id))
         }
     }
 
     @Test(expected = NotFoundException::class)
-    fun test_check_deleteComment()  {
+    fun test_check_deleteComment() {
         val id = UUID.fromString("00000000-0001-0000-0000-000000000001")
         val comment_id = UUID.fromString("00000000-0004-0000-0000-000000000006")
         withUser(id) { principal ->
