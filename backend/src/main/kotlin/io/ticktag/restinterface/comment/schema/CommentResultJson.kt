@@ -12,5 +12,5 @@ class CommentResultJson (val id: UUID,
                          val text: String,
                          val userID: UUID,
                          val ticketID: UUID){
-    constructor(c: CommentResult) : this(id = c.id, createTime = c.createTime, text = c.text, userID = c.id, ticketID = c.id)
+    constructor(c: CommentResult) : this(id = c.id, createTime = c.createTime, text = c.text, userID = c.userID, ticketID = c.ticketID)
 }
