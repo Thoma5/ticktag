@@ -72,9 +72,11 @@ open class UserServiceImpl @Inject constructor(
     override fun updateUser(principal: Principal, @P("userId") id: UUID, @Valid updateUser: UpdateUser): UserResult {
         val user = users.findOne(id) ?: throw NotFoundException()
         if (updateUser.password != null) {
-            if (principal.hasRole("ADMIN") || (updateUser.oldPassword != null
-                    && checkPassword(user.mail, updateUser.oldPassword) != null)) {  //ADMIN allowed to change password every password, Own User: Password Check
-                user.passwordHash = hashing.hashPassword(updateUser.password)
+            //ADMIN allowed to change password every password, Own User: Password Check
+            val isAdmin = principal.hasRole("ADMIN")
+            val oldPasswordMatches = (updateUser.oldPassword != null && checkPassword(user.mail, updateUser.oldPassword) != null)
+            if (isAdmin || oldPasswordMatches) {
+                unsafeUpdateUserPassword(user, updateUser.password)
             } else {
                 throw TicktagValidationException(listOf(ValidationError("updateUser.oldPassword", ValidationErrorDetail.Other("passwordincorrect"))))
             }
@@ -99,5 +101,10 @@ open class UserServiceImpl @Inject constructor(
             }
         }
         return UserResult(user)
+    }
+
+    private fun unsafeUpdateUserPassword(user: User, newPassword: String) {
+        user.passwordHash = hashing.hashPassword(newPassword)
+        user.currentToken = UUID.randomUUID()
     }
 }
