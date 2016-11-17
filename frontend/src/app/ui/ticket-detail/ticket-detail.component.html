@@ -1,0 +1,12 @@
+<h2>Ticket Detail</h2>
+<div *ngIf="loading" class='loading'>Loading...</div>
+<div *ngIf="!loading" class='content'>
+    <div class='core'>
+        <h3>{{ ticket.title }}</h3>
+        <p> {{ ticket.description }}</p>
+    </div>
+    <div class='comments'>
+    </div>
+    <div class='sidebar'>
+    </div>
+</div>
