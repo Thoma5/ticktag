@@ -28,3 +28,14 @@
     align-content: center;
     flex-direction: column;
 }
+
+.status {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+
+    div {
+        flex-basis: 50%;
+        text-align: left;
+    }
+}

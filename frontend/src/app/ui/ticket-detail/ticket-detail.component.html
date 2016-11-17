@@ -20,7 +20,20 @@
             </div>
             <div class='description'>{{ticket.description}}</div>
             <div class='subtickets'>Subtickets</div>
-            <div class='status'>Status</div>
+            <div class='status'>
+                <div class='initial-estimation'>
+                    {{ticket.initialEstimatedTime}}
+                </div>
+                <div class='current-estimation'>
+                    TODO
+                </div>
+                <div class='ticket-progress'>
+                    TODO
+                </div>
+                <div class='due-date'>
+                    {{ticket.dueDate}}
+                </div>
+            </div>
         </div>
         <div class='comments'>
             <h3>Comments</h3>
