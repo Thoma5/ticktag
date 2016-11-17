@@ -4,18 +4,29 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { ApiCallService } from '../../service';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/switchMap';
+import {Duration, Instant} from 'js-joda';
 
 
 class TicketResultJson {
-  constructor(public title: string, public description: string) {
-  }
+  constructor(
+    public title: string, public description: string, public open: boolean,
+    public storyPoints: number, public initialEstimatedTime: Duration,
+    public dueDate: Instant,
+  ) {}
 }
 
 class MockTicketApi {
   private ticket: TicketResultJson;
 
   constructor() {
-    this.ticket = new TicketResultJson('Implement ticket details UI', 'It is severly lacking at the moment');
+    this.ticket = {
+      title: 'Implement ticket details UI',
+      description: 'It is severly lacking at the moment',
+      open: false,
+      storyPoints: 8,
+      initialEstimatedTime: Duration.ofHours(2),
+      dueDate: Instant.ofEpochMilli(0),
+    };
   }
 
   getTicket(): Observable<TicketResultJson> {
