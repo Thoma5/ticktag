@@ -1,22 +1,15 @@
+<div class="row">
+	<div class="col-md-6 col-md-offset-3 form-box">
+		<tt-project-create (created)="getProjects()"></tt-project-create>
+	</div>
+</div>
 <h2>Projects</h2>
-
-<ul>
-	<li *ngFor="let project of projects">
-		<span class="id">{{project.id}}</span>
-		<span class="name">{{project.name}}</span>
-		<span class="description">{{project.description}}</span>
-		<span class="creationDate">{{project.creationDate}}</span>
-	</li>
-</ul>
-<tt-project-create (created)="getProjects()"></tt-project-create>
-<div>
-        <datatable
-        class="material"
-        [rows]="projects"
-        [columns]="columns"
-        [columnMode]="'force'"
-        [headerHeight]="50"
-        [footerHeight]="50"
-        [rowHeight]="'auto'">
-      </datatable>
+<div class="row">
+	<div class="col-md-6 col-md-offset-3 form-box">
+		<div>
+			<datatable class="material" [rows]="projects" [columns]="columns" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+				[rowHeight]="'auto'">
+			</datatable>
+		</div>
+	</div>
 </div>

@@ -4,6 +4,7 @@ import com.google.common.io.Resources
 import io.ticktag.persistence.member.MemberRepository
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.Principal
+import io.ticktag.util.tryw
 import org.junit.Before
 import org.junit.runner.RunWith
 import org.springframework.security.core.context.SecurityContextHolder
@@ -52,10 +53,10 @@ abstract class BaseTest {
 
     @Before
     fun setUp() {
-        val connection = datasource.connection
-        initDb(connection)
-
-        execResource(connection, "samples.sql")
+        datasource.connection.tryw({
+            initDb(it)
+            execResource(it, "samples.sql")
+        })
     }
 
     protected fun <T> withUser(userId: UUID, proc: () -> T): T {
