@@ -1,0 +1,35 @@
+.core {
+    background-color: #bdbdbd;
+    overflow: hidden;
+}
+
+.header-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.title {
+    flex-grow: 1;
+}
+
+.story-points {
+    width: 2em;
+    height: 2em;
+    font-size: 2em;
+    background-color: #ff0000;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+}
+
+.status {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+
+    div {
+        flex-basis: 50%;
+        text-align: left;
+    }
+}
