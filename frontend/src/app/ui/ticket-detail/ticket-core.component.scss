@@ -20,12 +20,9 @@
     background-color: #ff0000;
     display: flex;
     justify-content: center;
+    text-align: center;
     align-content: center;
     flex-direction: column;
-}
-
-.description {
-    margin-top: 2rem;
 }
 
 .sub-header-row {
@@ -35,6 +32,14 @@
 
 .tags {
     flex-grow: 1;
+}
+
+.description {
+    margin-top: 2rem;
+}
+
+.subtickets {
+    margin-top: 2rem;
 }
 
 .status {
