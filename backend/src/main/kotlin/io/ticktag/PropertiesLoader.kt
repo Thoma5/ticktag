@@ -1,12 +1,14 @@
 package io.ticktag
 
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.FileInputStream
 import java.util.*
 
 class PropertiesLoader {
     companion object {
-        val OVERRIDE_PROPERTIES_KEY = "TICKTAG_CONFIG"
+        private val LOG = LoggerFactory.getLogger(PropertiesLoader::class.java)
+        private val OVERRIDE_PROPERTIES_KEY = "TICKTAG_CONFIG"
     }
 
     fun getProperties(): ApplicationProperties {
@@ -37,25 +39,31 @@ class PropertiesLoader {
     }
 
     private fun loadProperties(): Properties {
-        return loadEnvProperties() ?: loadLocalProperties()
+        val defaultProperties = loadLocalProperties()
+        val overrideProperties = loadEnvProperties()
+
+        val mergedProperties = Properties()
+        mergedProperties.putAll(defaultProperties)
+        overrideProperties?.let { mergedProperties.putAll(it) }
+
+        return mergedProperties
     }
 
     private fun loadLocalProperties(): Properties {
-        val props = Properties()
-        val fp = javaClass.classLoader.getResourceAsStream("application.properties")
-        try {
-            props.load(fp)
+        javaClass.classLoader.getResourceAsStream("application.properties").use {
+            val props = Properties()
+            props.load(it)
             return props
-        } finally {
-            fp.close()
         }
     }
 
     private fun loadEnvProperties(): Properties? {
         val path: String = System.getProperty(OVERRIDE_PROPERTIES_KEY) ?: return null
+        LOG.info("Attempting to load override properties from $path")
         FileInputStream(File(path)).use {
             val props = Properties()
             props.load(it)
+            LOG.info("Loaded override properties")
             return props
         }
     }
