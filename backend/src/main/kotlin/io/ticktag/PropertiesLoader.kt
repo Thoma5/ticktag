@@ -7,8 +7,8 @@ import java.util.*
 
 class PropertiesLoader {
     companion object {
-        val LOG = LoggerFactory.getLogger(PropertiesLoader::class.java)
-        val OVERRIDE_PROPERTIES_KEY = "TICKTAG_CONFIG"
+        private val LOG = LoggerFactory.getLogger(PropertiesLoader::class.java)
+        private val OVERRIDE_PROPERTIES_KEY = "TICKTAG_CONFIG"
     }
 
     fun getProperties(): ApplicationProperties {
