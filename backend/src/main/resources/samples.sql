@@ -121,20 +121,28 @@ INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES ('
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES ('00000000-0004-0000-0000-000000000008', '660f2968-aa46-4870-bcc5-a3805366cff2', '00000000-0003-0000-0000-000000000006', '2016-11-16 20:09:59.019000', 'There is still so much todo');
 
 COMMIT;
---TAGS
 
+
+--TICKET TAG GROUPS
 BEGIN;
-INSERT INTO public.ticket_tag (id, project_id, group_id, name, color, "order")
-VALUES ('00000000-0005-0000-0000-000000000001', '00000000-0002-0000-0000-000000000001', '00000000-0006-0000-0000-000000000001', 'Feature', 'blue', 1);
 
-INSERT INTO public.ticket_tag (id, project_id, group_id, name, color, "order")
-VALUES ('00000000-0005-0000-0000-000000000002', '00000000-0002-0000-0000-000000000001', '00000000-0006-0000-0000-000000000002', 'Bug', 'red', 1);
+INSERT INTO public.ticket_tag_group (id, project_id, default_ticket_tag_id, name, exclusive)
+VALUES ('00000000-0009-0000-0000-000000000001', '00000000-0002-0000-0000-000000000001', '00000000-0005-0000-0000-000000000001', 'Agile', TRUE );
 
-INSERT INTO public.ticket_tag (id, project_id, group_id, name, color, "order")
-VALUES ('00000000-0005-0000-0000-000000000003', '00000000-0002-0000-0000-000000000001', '00000000-0006-0000-0000-000000000003', 'Implementing', 'red', 1);
 
-INSERT INTO public.ticket_tag (id, project_id, group_id, name, color, "order")
-VALUES ('00000000-0005-0000-0000-000000000004', '00000000-0002-0000-0000-000000000001', '00000000-0006-0000-0000-000000000003', 'Review', 'red', 1);
+--TICKET TAGS
+
+INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, color, "order")
+VALUES ('00000000-0005-0000-0000-000000000001', '00000000-0009-0000-0000-000000000001', 'Feature', 'blue', 1);
+
+INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, color, "order")
+VALUES ('00000000-0005-0000-0000-000000000002', '00000000-0009-0000-0000-000000000001', 'Bug', 'red', 2);
+
+INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, color, "order")
+VALUES ('00000000-0005-0000-0000-000000000003', '00000000-0009-0000-0000-000000000001', 'Implementing', 'red', 3);
+
+INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, color, "order")
+VALUES ('00000000-0005-0000-0000-000000000004', '00000000-0009-0000-0000-000000000001', 'Review', 'red', 4);
 
 --TICKET TAG TICKET
 INSERT INTO public.assigned_ticket_tag (ticket_id, ticket_tag_id)
@@ -158,6 +166,9 @@ VALUES ('00000000-0003-0000-0000-000000000003', '00000000-0005-0000-0000-0000000
 INSERT INTO public.assigned_ticket_tag (ticket_id, ticket_tag_id)
 VALUES ('00000000-0003-0000-0000-000000000004', '00000000-0005-0000-0000-000000000001');
 
+COMMIT;
+
+BEGIN;
 --Assignment-Tag
 
 INSERT INTO public.assignment_tag (id, project_id, name, color)
