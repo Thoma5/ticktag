@@ -25,7 +25,6 @@ import {TicketCoreComponent} from './ui/ticket-detail/ticket-core.component';
 import { Ng2BootstrapModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { Angular2DataTableModule } from 'angular2-data-table';
 import { MaterialModule } from '@angular/material';
-import {TagInputModule} from 'ng2-tag-input';
 import {AssignedUserComponent} from './ui/ticket-detail/assigned-user.component';
 import { HumanizeDurationPipe } from './util/humanize-duration.pipe';
 import { FormatMomentPipe } from './util/format-moment.pipe';
@@ -41,7 +40,6 @@ import { FormatMomentPipe } from './util/format-moment.pipe';
     Angular2DataTableModule,
     Ng2BootstrapModule,
     MaterialModule.forRoot(),
-    TagInputModule,
   ],
   declarations: [
     AppComponent,
