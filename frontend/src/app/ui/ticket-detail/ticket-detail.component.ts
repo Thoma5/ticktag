@@ -3,15 +3,15 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 // import { Response, ResponseContentType } from '@angular/http';
 import { ApiCallService } from '../../service';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/switchMap';
-import {Duration, Instant} from 'js-joda';
+import * as moment from 'moment';
 
 
 export class TicketResultJson {
   constructor(
-    public number: number, public title: string, public description: string,
-    public open: boolean, public storyPoints: number,
-    public initialEstimatedTime: Duration, public dueDate: Instant,
+    public number: number, public createTime: moment.Moment, public title: string,
+    public description: string, public open: boolean, public storyPoints: number,
+    public initialEstimatedTime: moment.Duration, public currentEstimatedTime: moment.Duration,
+    public dueDate: moment.Moment,
   ) {}
 }
 
@@ -21,12 +21,14 @@ class MockTicketApi {
   constructor() {
     this.ticket = {
       number: 123,
+      createTime: moment.utc(0),
       title: 'Implement ticket details UI',
       description: 'It is severly lacking at the moment',
       open: false,
       storyPoints: 8,
-      initialEstimatedTime: Duration.ofHours(2),
-      dueDate: Instant.ofEpochMilli(0),
+      initialEstimatedTime: moment.duration(2, 'hours'),
+      currentEstimatedTime: moment.duration(3, 'hours'),
+      dueDate: moment.utc(60 * 60 * 2),
     };
   }
 

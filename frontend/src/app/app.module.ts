@@ -27,6 +27,8 @@ import { Angular2DataTableModule } from 'angular2-data-table';
 import { MaterialModule } from '@angular/material';
 import {TagInputModule} from 'ng2-tag-input';
 import {AssignedUserComponent} from './ui/ticket-detail/assigned-user.component';
+import { HumanizeDurationPipe } from './util/humanize-duration.pipe';
+import { FormatMomentPipe } from './util/format-moment.pipe';
 
 
 @NgModule({
@@ -54,6 +56,9 @@ import {AssignedUserComponent} from './ui/ticket-detail/assigned-user.component'
     TicketSidebarComponent,
     TicketCoreComponent,
     AssignedUserComponent,
+
+    HumanizeDurationPipe,
+    FormatMomentPipe,
   ],
   providers: [
     AuthApi,

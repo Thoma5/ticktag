@@ -10,6 +10,9 @@
     </div>
     <div class='sub-header-row'>
         <div class='open-button'>
+            <button type="button" class="btn btn-primary" [(ngModel)]="ticket.open" btnCheckbox btnCheckboxTrue="true" btnCheckboxFalse="false">
+            Open: {{ticket.open}}
+            </button>
         </div>
         <div class='tags'>
         </div>
@@ -18,16 +21,22 @@
     <div class='subtickets'>Subtickets</div>
     <div class='status'>
         <div class='initial-estimation'>
-            {{ticket.initialEstimatedTime}}
+            Initial estimation: {{ticket.initialEstimatedTime | ttHumanizeDuration}}
         </div>
         <div class='current-estimation'>
-            TODO
+            Current estimation: {{ticket.currentEstimatedTime | ttHumanizeDuration}}
         </div>
         <div class='ticket-progress'>
-            TODO
+            Progress: ???%
         </div>
         <div class='due-date'>
-            {{ticket.dueDate}}
+            Due date: {{ticket.dueDate | ttFormatMoment}}
+        </div>
+    </div>
+    <div class='footer-row'>
+        <div class='filler'></div>
+        <div class='created-by'>
+            Created by ?user? on {{ticket.createTime | ttFormatMoment}}
         </div>
     </div>
 </div>
