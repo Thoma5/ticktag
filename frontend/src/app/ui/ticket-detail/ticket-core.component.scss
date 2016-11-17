@@ -1,5 +1,7 @@
 @import '../../../style/constants.scss';
 
+$story-points-background: #2196F3;
+
 .core {
     background-color: $card-background;
     overflow: hidden;
@@ -19,13 +21,20 @@
     width: 2em;
     height: 2em;
     font-size: 2em;
-    background-color: #ff0000;
+    background-color: $story-points-background;
     display: flex;
     justify-content: center;
     text-align: center;
     align-content: center;
     flex-direction: column;
     border-radius: 50%;
+
+    input {
+        outline: none;
+        background: none;
+        border: none;
+        text-align: center;
+    }
 }
 
 .sub-header-row {

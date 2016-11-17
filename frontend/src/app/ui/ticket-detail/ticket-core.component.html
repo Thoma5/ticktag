@@ -5,7 +5,7 @@
             <span class='title-text'>{{ticket.title}}</span>
         </h3>
         <div class='story-points'>
-            {{ticket.storyPoints}}
+            <input [(ngModel)]="ticket.storyPoints">
         </div>
     </div>
     <div class='sub-header-row'>

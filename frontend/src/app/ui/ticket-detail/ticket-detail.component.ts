@@ -39,7 +39,7 @@ class MockTicketApi {
 
   getTicket(): Observable<TicketResultJson> {
     return Observable.of(this.ticket)
-      .delay(5000);
+      .delay(500);
   }
 }
 
