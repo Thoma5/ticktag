@@ -32,7 +32,7 @@ open class CommentServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listComments(@P("authProjectId") pId: UUID): List<CommentResult> {
-        return comments.findByTicketProjectId(pId).filter { c -> c.describedTicket == null }.map(::CommentResult)
+        return comments.findByTicketProjectId(pId).map(::CommentResult)
     }
 
     @PreAuthorize(AuthExpr.CREATE_COMMENT)

@@ -26,7 +26,7 @@ open class CommentController @Inject constructor(
 ) {
 
     @GetMapping
-    open fun listComments(@RequestParam(name = "projectID") req: UUID): List<CommentResultJson> {
+    open fun listComments(@RequestParam(name = "projectId") req: UUID): List<CommentResultJson> {
         return commentService.listComments(req).map(::CommentResultJson)
     }
 
