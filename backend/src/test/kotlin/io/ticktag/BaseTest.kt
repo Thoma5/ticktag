@@ -1,6 +1,7 @@
 package io.ticktag
 
 import com.google.common.io.Resources
+import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.member.MemberRepository
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.Principal
@@ -50,6 +51,7 @@ abstract class BaseTest {
     @Inject lateinit var datasource: DataSource
     @Inject lateinit var users: UserRepository
     @Inject lateinit var members: MemberRepository
+    @Inject lateinit var comments: CommentRepository
 
     @Before
     fun setUp() {
@@ -70,7 +72,7 @@ abstract class BaseTest {
             throw RuntimeException("Called withUser even though the security context is already set")
 
         val user = users.findOne(userId) ?: throw RuntimeException("Called withUser with an unknown user UUID")
-        val principal = Principal(user.id, user.role, members)
+        val principal = Principal(user.id, user.role, members,comments)
         SecurityContextHolder.getContext().authentication = PreAuthenticatedAuthenticationToken(principal, null, emptySet())
         try {
             return proc(principal)
