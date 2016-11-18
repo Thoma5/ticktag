@@ -1,16 +1,20 @@
 package io.ticktag.service.user.services
 
 import io.ticktag.BaseTest
+import io.ticktag.adminId
+import io.ticktag.observerId
 import io.ticktag.persistence.user.entity.Role
+import io.ticktag.service.ServiceBaseTest
 import io.ticktag.service.TicktagValidationException
 import io.ticktag.service.user.dto.UpdateUser
+import io.ticktag.userId
 import org.junit.Assert.*
 import org.junit.Test
 import java.util.*
 import javax.inject.Inject
 
 
-class UserServiceTest : BaseTest() {
+class UserServiceTest : ServiceBaseTest() {
     @Inject lateinit var userService: UserService
 
     @Test
@@ -122,16 +126,5 @@ class UserServiceTest : BaseTest() {
         withUser(ownId) { principal ->
             this.userService.updateUser(principal, otherId, UpdateUser(oldPassword = "cccc", password = newPassword, mail = mail, role = Role.USER, profilePic = null, name = name))
         }
-    }
-
-    fun adminId() : UUID {
-        return UUID.fromString("00000000-0001-0000-0000-000000000001")
-    }
-
-    fun userId() : UUID {
-        return UUID.fromString("00000000-0001-0000-0000-000000000002")
-    }
-    fun observerId() : UUID {
-        return UUID.fromString("00000000-0001-0000-0000-000000000003")
     }
 }

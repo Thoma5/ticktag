@@ -3,6 +3,7 @@ package io.ticktag.service.comments
 import io.ticktag.BaseTest
 import io.ticktag.restinterface.comment.controllers.CommentController
 import io.ticktag.service.NotFoundException
+import io.ticktag.service.ServiceBaseTest
 import io.ticktag.service.TicktagValidationException
 import io.ticktag.service.comment.dto.UpdateComment
 import io.ticktag.service.comment.service.CommentService
@@ -12,7 +13,7 @@ import java.util.*
 import javax.inject.Inject
 
 
-class CommentTest : BaseTest() {
+class CommentTest : ServiceBaseTest() {
 
     @Inject lateinit private var commentService: CommentService
 

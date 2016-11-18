@@ -19,7 +19,6 @@ import javax.sql.DataSource
 
 
 @RunWith(SpringJUnit4ClassRunner::class)
-@ContextConfiguration(classes = arrayOf(TicktagTestApplication::class))
 abstract class BaseTest {
     companion object {
         private var INIT_DB_DONE = false
