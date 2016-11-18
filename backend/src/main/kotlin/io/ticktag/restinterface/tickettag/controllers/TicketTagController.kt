@@ -21,7 +21,7 @@ open class TicketTagController @Inject constructor(
 ) {
     @PostMapping
     open fun createTicketTag(@RequestBody req: CreateTicketTagRequestJson): TicketTagResultJson {
-        val ticketTag = ticketTagService.createTicketTag(CreateTicketTag(req.name, req.color, req.order, req.ticketTagGroupId))
+        val ticketTag = ticketTagService.createTicketTag(CreateTicketTag(req.name, req.color, req.order), req.ticketTagGroupId)
         return TicketTagResultJson(ticketTag)
     }
 

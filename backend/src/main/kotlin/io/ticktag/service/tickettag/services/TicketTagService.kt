@@ -9,7 +9,7 @@ import java.util.*
 interface TicketTagService {
     fun getTicketTag(id: UUID): TicketTagResult
     fun listTicketTags(ticketTagGroupID: UUID): List<TicketTagResult>
-    fun createTicketTag(ticketTag: CreateTicketTag): TicketTagResult
+    fun createTicketTag(ticketTag: CreateTicketTag, ticketTagGroupID: UUID): TicketTagResult
     fun deleteTicketTag(id: UUID)
     fun updateTicketTag(id: UUID, ticketTag: UpdateTicketTag) : TicketTagResult
 }

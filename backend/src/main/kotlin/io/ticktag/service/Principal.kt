@@ -64,6 +64,12 @@ data class Principal(
         return member.role.includesRole(ProjectRole.valueOf(roleString))
     }
 
+    fun hasProjectRoleForTicketTag(ticketTagId: UUID, roleString: String): Boolean {
+        if (members == null) return false
+        val member = members.findByUserIdAndTicketTagId(this.id, ticketTagId) ?: return false
+        return member.role.includesRole(ProjectRole.valueOf(roleString))
+    }
+
 }
 
 class AuthExpr private constructor() {
@@ -87,6 +93,11 @@ class AuthExpr private constructor() {
         const val READ_TICKET_TAG_GROUP = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForTicketTagGroup(#authTicketTagGroupId, 'OBSERVER')"
         const val CREATE_TICKET_TAG_GROUP = "principal.hasRole('ADMIN') || principal.hasProjectRole(#authProjectId, 'ADMIN')"
         const val EDIT_TICKET_TAG_GROUP = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicketTagGroup(#authTicketTagGroupId, 'ADMIN')"
+
+        const val READ_TICKET_TAG = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForTicketTag(#authTicketTagId, 'OBSERVER')"
+        const val READ_TICKET_TAG_FOR_GROUP = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForTicketTagGroup(#authTicketTagGroupId, 'OBSERVER')"
+        const val CREATE_TICKET_TAG = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicketTagGroup(#authTicketTagGroupId, 'ADMIN')"
+        const val EDIT_TICKET_TAG = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicketTag(#authTicketTagId, 'ADMIN')"
 
         const val ADMIN_OR_SELF = "principal.hasRole('ADMIN') || principal.isId(#userId)"
 
