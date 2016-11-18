@@ -1,7 +1,9 @@
 <ul class="taginput">
-  <li *ngFor="let tag of sortedTags" class="tag" [style.backgroundColor]="tag.color ? ('#' + tag.color) : 'transparent'">
-    <span class="name">{{ tag.name }}</span>
-    <span class="delete" (click)="onDeleteClick(tag)">×</span>
+  <li *ngFor="let tag of sortedTags" class="tag" [style.backgroundColor]="'#' + tag.color">
+    <span class="nobr">
+      <span class="name">{{ tag.name }}</span>
+      <a href="javascript:void(0)" class="delete" (click)="onDeleteClick(tag)">×</a>
+    </span>
   </li>
   <li class="newtag">
     <input type="text" [(ngModel)]="newTagName" (keydown.enter)="onAddClick()">

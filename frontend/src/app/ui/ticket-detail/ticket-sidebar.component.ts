@@ -16,10 +16,7 @@ export class TicketSidebarComponent {
       name: 'Max Mustermann',
       role: UserResultJson.RoleEnum.OBSERVER,
     };
-    tags: AssignmentTagResultJson[] = [
-      {id: 'asdfasdfasdfasdf', name: 'Developer', color: 'ffff00', order: 1},
-      {id: '0938rfgjhsd0wsafd', name: 'Reviewer', color: 'ff00ff', order: 2},
-    ];
+    tags: string[] = ['asdfasdfasdfasdf', '0938rfgjhsd0wsafd'];
     allTags: AssignmentTagResultJson[] = [
       {id: 'asdfasdfasdfasdf', name: 'Developer', color: 'ffff00', order: 1},
       {id: '0938rfgjhsd0wsafd', name: 'Reviewer', color: 'ff00ff', order: 2},

@@ -1,8 +1,24 @@
 @import '../../../style/constants.scss';
 
-.tag, .newtag {
-  display: inline;
-  list-style: none;
+.taginput {
+  padding: 0;
+  margin: 0;
 }
 
+.tag {
+  display: inline;
+  border: $thin-line solid #000; 
+  border-radius: 0.5em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  box-sizing: content-box;
+  //margin: $internal-space;
+}
 
+.newtag {
+  display: inline;
+}
+
+.nobr {
+  white-space: nowrap;
+}

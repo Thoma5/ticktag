@@ -1,24 +1,29 @@
 .assigned-user {
     display: flex;
     flex-direction: row;
-    margin-left: 1em;
-    margin-right: 1em;
 }
 
 .image {
     width: 3em;
     height: 3em;
+    flex-grow: 0;
+    flex-shrink: 0;
 }
 
 .info {
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
+    flex-shrink: 1;
 }
 
 .name {
     font-weight: bold;
+    flex-grow: 0;
+    flex-shrink: 0;
 }
 
 .tags {
-
+    flex-grow: 1;
+    flex-shrink: 1;
 }

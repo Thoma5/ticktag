@@ -16,7 +16,7 @@ export type AssignmentTagResultJson = {
 })
 export class AssignedUserComponent implements OnInit {
   @Input() user: UserResultJson;
-  @Input() tags: AssignmentTagResultJson[];
+  @Input() tags: string[];
   @Input() allTags: AssignmentTagResultJson[];
 
   constructor(private element: ElementRef) {
