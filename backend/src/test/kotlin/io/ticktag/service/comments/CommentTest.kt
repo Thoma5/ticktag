@@ -34,7 +34,7 @@ class CommentTest : ServiceBaseTest() {
         withUser(id) { principal ->
             commentService.updateComment(comment_id, UpdateComment("test"))
             val comment = commentService.getComment(comment_id) ?: throw NotFoundException()
-            assert(comment.text.equals("test"))
+            assert(comment.text == "test")
         }
     }
 
@@ -43,8 +43,8 @@ class CommentTest : ServiceBaseTest() {
         val id = UUID.fromString("00000000-0001-0000-0000-000000000001")
         val comment_id = UUID.fromString("00000000-0004-0000-0000-000000000006")
         withUser(id) { principal ->
-            var comment = commentService.getComment(comment_id) ?: throw NotFoundException()
-            assert(comment.id.equals(comment_id))
+            val comment = commentService.getComment(comment_id) ?: throw NotFoundException()
+            assert(comment.id == comment_id)
         }
     }
 

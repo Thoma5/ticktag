@@ -1,16 +1,14 @@
 package io.ticktag.service.user.services
 
-import io.ticktag.BaseTest
-import io.ticktag.adminId
-import io.ticktag.observerId
+import io.ticktag.ADMIN_ID
+import io.ticktag.OBSERVER_ID
+import io.ticktag.USER_ID
 import io.ticktag.persistence.user.entity.Role
 import io.ticktag.service.ServiceBaseTest
 import io.ticktag.service.TicktagValidationException
 import io.ticktag.service.user.dto.UpdateUser
-import io.ticktag.userId
 import org.junit.Assert.*
 import org.junit.Test
-import java.util.*
 import javax.inject.Inject
 
 
@@ -36,7 +34,7 @@ class UserServiceTest : ServiceBaseTest() {
 
     @Test(expected = TicktagValidationException::class)
     fun test_checkChangePassword_negative() {
-        val id = observerId()
+        val id = OBSERVER_ID
         withUser(id) { principal ->
             this.userService.updateUser(principal, id, UpdateUser(oldPassword = "notvalid", password = "wrong", mail = null, role = null, profilePic = null, name = null))
         }
@@ -45,7 +43,7 @@ class UserServiceTest : ServiceBaseTest() {
 
     @Test
     fun test_checkUpdate_positive_admin() {
-        val id = adminId()
+        val id = ADMIN_ID
         val name = "name"
         val mail = "mail"
         val newPassword = "password"
@@ -70,7 +68,7 @@ class UserServiceTest : ServiceBaseTest() {
 
     @Test
     fun test_checkUpdate_positive_own_user() {
-        val id = observerId()
+        val id = OBSERVER_ID
         val name = "name"
         val mail = "cccc@c.c"
         val newPassword = "password"
@@ -94,18 +92,18 @@ class UserServiceTest : ServiceBaseTest() {
 
     @Test(expected = TicktagValidationException::class)
     fun test_checkUpdate_withNonAdmin_shouldFail() {
-        val id = observerId()
+        val id = OBSERVER_ID
 
         withUser(id) { principal ->
             this.userService.updateUser(principal, id, UpdateUser(role = Role.ADMIN, oldPassword = null, password = null, mail = null, profilePic = null, name = null))
 
-            val user = this.userService.getUser(id)
+            this.userService.getUser(id)
         }
     }
 
     @Test
     fun update_withNewPassword_shouldUpdateCurrentToken() {
-        val id = adminId()
+        val id = ADMIN_ID
 
         withUser(id) { principal ->
             val tokenBefore = userService.getUser(id)!!.currentToken
@@ -118,8 +116,8 @@ class UserServiceTest : ServiceBaseTest() {
 
     @Test(expected = org.springframework.security.access.AccessDeniedException::class)
     fun test_checkUpdate_negative_other_user() {
-        val ownId = userId()
-        val otherId = observerId()
+        val ownId = USER_ID
+        val otherId = OBSERVER_ID
         val name = "new Name"
         val mail = "cccc@c.c"
         val newPassword = "password"

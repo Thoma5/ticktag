@@ -1,11 +1,11 @@
 package io.ticktag.restinterface.user
 
-import io.ticktag.adminId
-import io.ticktag.observerId
+import io.ticktag.ADMIN_ID
+import io.ticktag.OBSERVER_ID
 import io.ticktag.persistence.user.entity.Role
+import io.ticktag.restinterface.ApiBaseTest
 import io.ticktag.restinterface.user.controllers.UserController
 import io.ticktag.restinterface.user.schema.CreateUserRequestJson
-import io.ticktag.service.ApiBaseTest
 import org.hamcrest.CoreMatchers.*
 import org.junit.Assert.*
 import org.junit.Test
@@ -18,15 +18,15 @@ class UserApiTest : ApiBaseTest() {
 
     @Test(expected = AccessDeniedException::class)
     fun `createUser by non-admin should fail`() {
-        withUser(observerId()) { ->
+        withUser(OBSERVER_ID) { ->
             val req = CreateUserRequestJson("a@b.com", "name", "password", Role.USER, null)
-            val res = userController.createUser(req)
+            userController.createUser(req)
         }
     }
 
     @Test
     fun `createUser by admin should create new user`() {
-        withUser(adminId()) { ->
+        withUser(ADMIN_ID) { ->
             val req = CreateUserRequestJson("a@b.com", "name", "password", Role.USER, null)
             val res = userController.createUser(req)
 

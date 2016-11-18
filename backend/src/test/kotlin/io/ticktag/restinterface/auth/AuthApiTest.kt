@@ -1,10 +1,10 @@
 package io.ticktag.restinterface.auth
 
-import io.ticktag.adminId
+import io.ticktag.ADMIN_ID
 import io.ticktag.restinterface.auth.controllers.AuthController
 import io.ticktag.restinterface.auth.schema.LoginRequestJson
-import io.ticktag.service.ApiBaseTest
-import io.ticktag.userId
+import io.ticktag.USER_ID
+import io.ticktag.restinterface.ApiBaseTest
 import org.hamcrest.CoreMatchers.*
 import org.junit.Assert.*
 import org.junit.Test
@@ -34,7 +34,7 @@ class AuthApiTest : ApiBaseTest() {
 
     @Test
     fun `Whoami with admin should return correct authorities`() {
-        val id = adminId()
+        val id = ADMIN_ID
         val expectedAuthorities = listOf("USER", "OBSERVER", "ADMIN")
 
         withUser(id) { principal ->
@@ -46,7 +46,7 @@ class AuthApiTest : ApiBaseTest() {
 
     @Test
     fun `Whoami with user should return correct authorities`() {
-        val id = userId()
+        val id = USER_ID
         val expectedAuthorities = listOf("USER")
 
         withUser(id) { principal ->

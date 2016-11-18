@@ -1,8 +1,7 @@
-package io.ticktag.service
+package io.ticktag.restinterface
 
 import io.ticktag.BaseTest
 import io.ticktag.TicktagApiTestApplication
-import io.ticktag.TicktagServiceTestApplication
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
 
