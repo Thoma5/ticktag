@@ -1,3 +1,5 @@
+$edit-background-color: #E0E0E0;
+
 .container {
     width: 100%;
 }
@@ -9,9 +11,16 @@
 
 .editing {
     width: 100%;
+    background-color: $edit-background-color;
+
     textarea {
         width: 100%;
         height: auto;
         overflow: hidden;
+        border: none;
+        background-color: transparent;
+        resize: none;
+        outline: none;
+        box-shadow: none;
     }
 }
