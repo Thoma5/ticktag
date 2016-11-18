@@ -13,10 +13,8 @@
         </div>
     </div>
     <div class='sub-header-row'>
-        <div class='open-button'>
-            <button type='button' class='btn btn-primary' [(ngModel)]='ticket.open' btnCheckbox btnCheckboxTrue='true' btnCheckboxFalse='false'>
-            Open: {{ticket.open}}
-            </button>
+        <div class='open-container'>
+            <tt-open-closed-button [(open)]='ticket.open'></tt-open-closed-button>
         </div>
         <div class='tags'>
         </div>

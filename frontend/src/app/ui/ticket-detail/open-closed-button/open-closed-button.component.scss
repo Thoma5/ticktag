@@ -1,0 +1,25 @@
+$open-color: #4CAF50;
+$closed-color: #F44336;
+
+.open-button {
+    width: 4em;
+    height: 4em;
+
+    &.open {
+        background-color: $open-color;
+    }
+    
+    &.closed {
+        background-color: $closed-color;
+    }
+}
+
+.btn-circle {
+    padding: 0;
+    border-radius: 50%;
+
+    div {
+        width: 100%;
+        text-align: center;
+    }
+}

@@ -29,7 +29,7 @@ class MockTicketApi {
       Capitalise on low hanging fruit to identify a ballpark value added activity to beta test. Override the digital divide with additional clickthroughs from DevOps. Nanotechnology immersion along the information highway will close the loop on focusing solely on the bottom line.
       `,
       /* tslint:enable */
-      open: false,
+      open: true,
       storyPoints: 8,
       initialEstimatedTime: moment.duration(2, 'hours'),
       currentEstimatedTime: moment.duration(3, 'hours'),

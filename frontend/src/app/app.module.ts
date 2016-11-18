@@ -23,6 +23,7 @@ import {TicketDetailComponent} from './ui/ticket-detail/ticket-detail.component'
 import {TicketSidebarComponent} from './ui/ticket-detail/ticket-sidebar.component';
 import {TicketCoreComponent} from './ui/ticket-detail/ticket-core/ticket-core.component';
 import {EditableTextviewComponent} from './ui/ticket-detail/editable-textview/editable-textview.component';
+import {OpenClosedButtonComponent} from './ui/ticket-detail/open-closed-button/open-closed-button.component';
 import { Ng2BootstrapModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { Angular2DataTableModule } from 'angular2-data-table';
 import { MaterialModule } from '@angular/material';
@@ -57,6 +58,7 @@ import { FocusDirective } from './util/focus.directive';
     TicketSidebarComponent,
     TicketCoreComponent,
     EditableTextviewComponent,
+    OpenClosedButtonComponent,
     AssignedUserComponent,
 
     HumanizeDurationPipe,
