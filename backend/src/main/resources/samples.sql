@@ -5,6 +5,7 @@ DELETE FROM "time_category";
 DELETE FROM "assigned_ticket_user";
 DELETE FROM "assignment_tag";
 DELETE FROM "assigned_ticket_tag";
+UPDATE TICKET SET description_comment_id = null;
 DELETE FROM "comment";
 DELETE FROM "ticket";
 DELETE FROM "ticket_tag";
@@ -182,12 +183,13 @@ VALUES ('00000000-0003-0000-0000-000000000006', 6, NULL, '00000000-0002-0000-000
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
   ('00000000-0004-0000-0000-000000000007', '93ef43d9-20b7-461a-b960-2d1e89ba099f',
    '00000000-0003-0000-0000-000000000006', '2016-11-16 17:09:59.019000', 'CI is very importnat');
-Update public.ticket set description_comment_id = '00000000-0004-0000-0000-000000000006' where id = '00000000-0003-0000-0000-000000000007';
+Update public.ticket set description_comment_id = '00000000-0004-0000-0000-000000000007' where id = '00000000-0003-0000-0000-000000000006';
 
 
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
   ('00000000-0004-0000-0000-000000000008', '660f2968-aa46-4870-bcc5-a3805366cff2',
    '00000000-0003-0000-0000-000000000006', '2016-11-16 20:09:59.019000', 'There is still so much todo');
+
 
 
 --TAGS

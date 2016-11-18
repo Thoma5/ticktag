@@ -4,8 +4,10 @@ import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.ticket.schema.TicketResultJson
 import io.ticktag.restinterface.user.schema.CreateTicketRequestJson
+import io.ticktag.restinterface.user.schema.UpdateTicketRequestJson
 import io.ticktag.service.Principal
 import io.ticktag.service.project.dto.CreateTicket
+import io.ticktag.service.project.dto.UpdateTicket
 import io.ticktag.service.ticket.dto.TicketResult
 import io.ticktag.service.ticket.service.TicketService
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -33,9 +35,15 @@ open class TicketController@Inject constructor(
     @PostMapping
     open fun createTicket(@RequestBody req: CreateTicketRequestJson,
                           @AuthenticationPrincipal principal: Principal): TicketResultJson {
-        val ticket = ticketService.createTicket(CreateTicket(
-                req.number,req.createTime,req.title,req.open,req.storyPoints,req.initialEstimatedTime,
-                req.currentEstimatedTime,req.dueDate,req.description,req.projectID),principal)
+        val ticket = ticketService.createTicket(CreateTicket(req),principal)
+        return TicketResultJson(ticket)
+    }
+
+    @PutMapping(value ="/{id}")
+    open fun updateTicket(@RequestBody req: UpdateTicketRequestJson,
+                          @PathVariable(name = "id") id: UUID,
+                          @AuthenticationPrincipal principal: Principal): TicketResultJson {
+        val ticket = ticketService.updateTicket(UpdateTicket(req),id,principal)
         return TicketResultJson(ticket)
     }
 }

@@ -7,7 +7,6 @@ import java.util.*
 
 data class CreateTicketRequestJson(
         val number:Int,
-        val createTime: Instant,
         val title: String,
         val open:Boolean,
         val storyPoints:Int?,
@@ -15,5 +14,8 @@ data class CreateTicketRequestJson(
         val currentEstimatedTime: Duration?,
         val dueDate: Instant?,
         val description: String,
-        val projectID: UUID
+        val projectID: UUID,
+        val subTickets: List<CreateTicketRequestJson>,
+        val existingSubTicketIds: List<UUID>,
+        val partenTicket: UUID?
 )
