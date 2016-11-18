@@ -9,6 +9,7 @@ DELETE FROM "assigned_ticket_tag";
 DELETE FROM "comment"  ;
 DELETE FROM "ticket"  ;
 DELETE FROM "ticket_tag";
+DELETE FROM "ticket_tag_group";
 DELETE FROM "member";
 DELETE FROM "project";
 DELETE FROM "user";
