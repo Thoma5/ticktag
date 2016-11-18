@@ -1,4 +1,5 @@
-$edit-background-color: #E0E0E0;
+@import '../../../../style/constants.scss';
+$edit-background-color: palette(Grey, 300);
 
 .container {
     width: 100%;

@@ -1,1 +1,3 @@
-$card-background: #ffffff
+@import '~google-material-color/dist/palette';
+
+$card-background: palette(White, 500);

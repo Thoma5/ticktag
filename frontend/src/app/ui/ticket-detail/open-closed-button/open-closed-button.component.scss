@@ -1,5 +1,6 @@
-$open-color: #4CAF50;
-$closed-color: #F44336;
+@import '../../../../style/constants.scss';
+$open-color: palette(Green, 500);
+$closed-color: palette(Red, 500);
 
 .open-button {
     width: 4em;
