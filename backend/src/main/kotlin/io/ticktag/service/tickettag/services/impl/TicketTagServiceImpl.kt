@@ -20,7 +20,7 @@ open class TicketTagServiceImpl @Inject constructor(
         private val ticketTags: TicketTagRepository
 ) : TicketTagService {
 
-    override fun getTicketTag(id: UUID): TicketTagResult? {
+    override fun getTicketTag(id: UUID): TicketTagResult {
         return TicketTagResult(ticketTags.findOne(id) ?: throw NotFoundException())
     }
 

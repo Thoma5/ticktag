@@ -6,7 +6,7 @@ import io.ticktag.service.tickettaggroup.dto.UpdateTicketTagGroup
 import java.util.*
 
 interface TicketTagGroupService {
-    fun getTicketTagGroup(id: UUID): TicketTagGroupResult?
+    fun getTicketTagGroup(id: UUID): TicketTagGroupResult
     fun listTicketTagGroups(projectId: UUID): List<TicketTagGroupResult>
     fun createTicketTagGroup(ticketTagGroup: CreateTicketTagGroup, projectId: UUID): TicketTagGroupResult
     fun deleteTicketTagGroup(id: UUID)

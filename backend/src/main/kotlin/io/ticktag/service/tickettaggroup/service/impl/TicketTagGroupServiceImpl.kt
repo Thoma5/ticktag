@@ -24,7 +24,7 @@ open class TicketTagGroupServiceImpl @Inject constructor(
 ) : TicketTagGroupService {
 
     @PreAuthorize(AuthExpr.READ_TICKET_TAG_GROUP)
-    override fun getTicketTagGroup(@P("authTicketTagGroupId") id: UUID): TicketTagGroupResult? {
+    override fun getTicketTagGroup(@P("authTicketTagGroupId") id: UUID): TicketTagGroupResult {
         return TicketTagGroupResult(ticketTagGroups.findOne(id) ?: throw NotFoundException())
     }
 

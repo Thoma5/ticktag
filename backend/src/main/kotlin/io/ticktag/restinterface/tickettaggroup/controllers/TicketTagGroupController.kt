@@ -32,6 +32,11 @@ open class TicketTagGroupController @Inject constructor(
         return TicketTagGroupResultJson(ticketTagGroup)
     }
 
+    @GetMapping(value = "/{id}")
+    open fun getTicketTagGroup(@PathVariable(name = "id") id: UUID): TicketTagGroupResultJson {
+        return TicketTagGroupResultJson(ticketTagGroupService.getTicketTagGroup(id))
+    }
+
     @GetMapping(value = "/project/{id}")
     open fun listTicketTagGroups(@PathVariable(name = "id") id: UUID): List<TicketTagGroupResultJson> {
         return ticketTagGroupService.listTicketTagGroups(id).map(::TicketTagGroupResultJson)
