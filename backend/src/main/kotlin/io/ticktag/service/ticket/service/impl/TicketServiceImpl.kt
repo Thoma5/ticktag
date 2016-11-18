@@ -14,6 +14,7 @@ import io.ticktag.service.project.dto.CreateTicket
 import io.ticktag.service.project.dto.UpdateTicket
 import io.ticktag.service.ticket.dto.TicketResult
 import io.ticktag.service.ticket.service.TicketService
+import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
 import java.time.Duration
 import java.time.Instant
@@ -29,20 +30,20 @@ open class TicketServiceImpl @Inject constructor(
 
 ) :TicketService{
 
-    @PreAuthorize(AuthExpr.USER)
-    override fun listTickets(projectId: UUID): List<TicketResult> {
+    @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
+    override fun listTickets(@P("authProjectId") projectId: UUID): List<TicketResult> {
         return tickets.findByProjectId(projectId).map(::TicketResult)
     }
 
-    @PreAuthorize(AuthExpr.USER)
-    override fun getTicket(id:UUID): TicketResult{
+    @PreAuthorize(AuthExpr.READ_TICKET)
+    override fun getTicket( @P("authTicketId")id:UUID): TicketResult{
         return TicketResult(tickets.findOne(id) ?: throw NotFoundException())
     }
 
 
     //TODO: Reference: Mentions, Tags, Assignee
-    @PreAuthorize(AuthExpr.USER)
-    override fun createTicket(createTicket:CreateTicket, principal: Principal):TicketResult {
+    @PreAuthorize(AuthExpr.PROJECT_USER)
+    override fun createTicket(createTicket:CreateTicket, principal: Principal, @P("authProjectId")projectId: UUID):TicketResult {
         val number = createTicket.number
         val createTime = Instant.now()
         val title = createTicket.title
@@ -70,7 +71,7 @@ open class TicketServiceImpl @Inject constructor(
         comments.insert(newComment)
         newTicket.descriptionComment= newComment
         //SubTickets
-        var newSubs = createTicket.subTickets.map ({ sub -> createTicket(sub,principal).id }).toMutableList()
+        var newSubs = createTicket.subTickets.map ({ sub -> createTicket(sub,principal,projectId).id }).toMutableList()
         newSubs.addAll(createTicket.existingSubTicketIds)
         newSubs.forEach { subID ->
             val subTicket = tickets.findOne(subID) ?: throw NotFoundException()
@@ -83,8 +84,8 @@ open class TicketServiceImpl @Inject constructor(
     }
 
     //TODO: Log Changes in History
-    @PreAuthorize(AuthExpr.USER)
-    override fun updateTicket(updateTicket: UpdateTicket,ticketId: UUID,principal: Principal): TicketResult{
+    @PreAuthorize(AuthExpr.WRITE_TICKET)
+    override fun updateTicket(updateTicket: UpdateTicket,@P("authTicketId")ticketId: UUID,principal: Principal): TicketResult{
 
         val ticket = tickets.findOne(ticketId)?:throw NotFoundException()
         if (updateTicket.title != null){
@@ -102,8 +103,6 @@ open class TicketServiceImpl @Inject constructor(
         if (updateTicket.dueDate != null){
             ticket.dueDate = updateTicket.dueDate
         }
-
-
         var parentTicket: Ticket? = null
         if (updateTicket.partenTicket != null){
             ticket.parentTicket = tickets.findOne(updateTicket.partenTicket)
@@ -120,7 +119,7 @@ open class TicketServiceImpl @Inject constructor(
         }
         if (updateTicket.subTickets != null) {
 
-            var newSubs = updateTicket.subTickets.map({ sub -> createTicket(sub, principal).id }).toMutableList()
+            var newSubs = updateTicket.subTickets.map({ sub -> createTicket(sub, principal,ticket.project.id).id }).toMutableList()
 
             newSubs.forEach { subID ->
                 val subTicket = tickets.findOne(subID) ?: throw NotFoundException()
@@ -139,5 +138,10 @@ open class TicketServiceImpl @Inject constructor(
         }
 
         return TicketResult(ticket)
+    }
+
+    @PreAuthorize(AuthExpr.WRITE_TICKET)
+    override fun deleteTicket(@P("authTicketId") id: UUID) {
+        tickets.delete(tickets.findOne(id) ?: throw NotFoundException())
     }
 }

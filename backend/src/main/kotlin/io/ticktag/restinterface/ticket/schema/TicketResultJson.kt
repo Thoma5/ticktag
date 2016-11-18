@@ -1,6 +1,7 @@
 package io.ticktag.restinterface.ticket.schema
 
 import io.ticktag.persistence.project.entity.Project
+import io.ticktag.persistence.ticket.entity.AssignedTicketUser
 import io.ticktag.persistence.ticket.entity.Ticket
 import io.ticktag.persistence.user.entity.User
 import io.ticktag.service.ticket.dto.TicketResult

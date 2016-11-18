@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS "time_category" (
 CREATE INDEX ON "time_category" ("project_id");
 
 CREATE TABLE IF NOT EXISTS "assigned_ticket_tag" (
-  "ticket_id"     UUID REFERENCES "ticket",
+  "ticket_id"     UUID REFERENCES "ticket" ON DELETE CASCADE ,
   "ticket_tag_id" UUID REFERENCES "ticket_tag",
   PRIMARY KEY ("ticket_id", "ticket_tag_id")
 );

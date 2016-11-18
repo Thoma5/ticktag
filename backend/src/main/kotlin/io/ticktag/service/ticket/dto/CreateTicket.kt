@@ -21,7 +21,7 @@ data class CreateTicket(
         val partenTicket: UUID?
 ){constructor(req:CreateTicketRequestJson) : this (
         req.number,req.title,req.open,req.storyPoints,req.initialEstimatedTime,
-        req.currentEstimatedTime,req.dueDate,req.description,req.projectID,req.subTickets.map { s->CreateTicket(s) },req.existingSubTicketIds,req.partenTicket)
+        req.currentEstimatedTime,req.dueDate,req.description,req.projectId,req.subTickets.map { s->CreateTicket(s) },req.existingSubTicketIds,req.partenTicket)
 
 
 }

@@ -74,7 +74,7 @@ open class Ticket protected constructor() {
     @JoinColumn(name = "parent_ticket_id", referencedColumnName = "id", nullable = true)
     open var parentTicket: Ticket? = null
 
-    @OneToMany(mappedBy = "parentTicket")
+    @OneToMany(mappedBy = "parentTicket",cascade = arrayOf(CascadeType.REMOVE))
     lateinit open var subTickets: MutableList<Ticket>
         protected set
 
@@ -86,7 +86,7 @@ open class Ticket protected constructor() {
     @JoinColumn(name = "created_by", referencedColumnName = "id", nullable = false)
     lateinit open var createdBy: User
 
-    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    @OneToOne(optional = false, fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.REMOVE))
     @JoinColumn(name = "description_comment_id", referencedColumnName = "id", nullable = true)
     lateinit open var descriptionComment: Comment
 
@@ -99,15 +99,20 @@ open class Ticket protected constructor() {
     lateinit open var tags: MutableList<TicketTag>
         protected set
 
+
+
+
+
+
     @ManyToMany(mappedBy = "mentionedTickets")
     lateinit open var mentioningComments: MutableList<Comment>
         protected set
 
-    @OneToMany(mappedBy = "ticket")
+    @OneToMany(mappedBy = "ticket",cascade = arrayOf(CascadeType.REMOVE))
     lateinit open var comments: MutableList<Comment>
         protected set
 
-    @OneToMany(mappedBy = "ticket")
+    @OneToMany(mappedBy = "ticket",cascade = arrayOf(CascadeType.REMOVE))
     lateinit open var assignedTicketUsers: MutableList<AssignedTicketUser>
         protected set
 

@@ -2,10 +2,12 @@ package io.ticktag.restinterface.ticket.controllers
 
 import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
+import io.ticktag.restinterface.comment.schema.CommentResultJson
 import io.ticktag.restinterface.ticket.schema.TicketResultJson
 import io.ticktag.restinterface.user.schema.CreateTicketRequestJson
 import io.ticktag.restinterface.user.schema.UpdateTicketRequestJson
 import io.ticktag.service.Principal
+import io.ticktag.service.comment.service.CommentService
 import io.ticktag.service.project.dto.CreateTicket
 import io.ticktag.service.project.dto.UpdateTicket
 import io.ticktag.service.ticket.dto.TicketResult
@@ -19,12 +21,18 @@ import javax.inject.Inject
 @RequestMapping("/tickets")
 @Api(tags = arrayOf("ticket"), description = "ticket manager")
 open class TicketController@Inject constructor(
-        private val ticketService: TicketService
+        private val ticketService: TicketService,
+        private val commentService: CommentService
 ) {
 
     @GetMapping
     open fun listTickets(@RequestParam(name = "projectId") req: UUID): List<TicketResultJson> {
         return ticketService.listTickets(req).map(::TicketResultJson)
+    }
+
+    @GetMapping(value= "/{id}/comments")
+    open fun listComments(@PathVariable(name = "id") req: UUID): List<CommentResultJson> {
+        return commentService.listCommentsForTicket(req).map(::CommentResultJson)
     }
 
     @GetMapping(value = "/{id}")
@@ -35,7 +43,7 @@ open class TicketController@Inject constructor(
     @PostMapping
     open fun createTicket(@RequestBody req: CreateTicketRequestJson,
                           @AuthenticationPrincipal principal: Principal): TicketResultJson {
-        val ticket = ticketService.createTicket(CreateTicket(req),principal)
+        val ticket = ticketService.createTicket(CreateTicket(req),principal,req.projectId)
         return TicketResultJson(ticket)
     }
 
@@ -46,4 +54,11 @@ open class TicketController@Inject constructor(
         val ticket = ticketService.updateTicket(UpdateTicket(req),id,principal)
         return TicketResultJson(ticket)
     }
+
+    @DeleteMapping(value = "/{id}")
+    open fun deleteTicket(@PathVariable(name = "id") id: UUID){
+        ticketService.deleteTicket(id)
+    }
+
+
 }
