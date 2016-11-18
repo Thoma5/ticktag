@@ -1,16 +1,20 @@
 <div class='core'>
     <div class='header-row'>
         <h3 class='title'>
-            <span class='number'>#{{ticket.number}}</span>
-            <span class='title-text'>{{ticket.title}}</span>
+            <div class='title-container'>
+                <span class='number'>#{{ticket.number}}</span>
+                <span class='title-text-wrapper'>
+                    <tt-editable-textview [(text)]='ticket.title'></tt-editable-textview>
+                </span>
+            </div>
         </h3>
         <div class='story-points'>
-            <input [(ngModel)]="ticket.storyPoints">
+            <input [(ngModel)]='ticket.storyPoints'>
         </div>
     </div>
     <div class='sub-header-row'>
         <div class='open-button'>
-            <button type="button" class="btn btn-primary" [(ngModel)]="ticket.open" btnCheckbox btnCheckboxTrue="true" btnCheckboxFalse="false">
+            <button type='button' class='btn btn-primary' [(ngModel)]='ticket.open' btnCheckbox btnCheckboxTrue='true' btnCheckboxFalse='false'>
             Open: {{ticket.open}}
             </button>
         </div>
@@ -18,7 +22,7 @@
         </div>
     </div>
     <div class='description'>
-        <tt-editable-textview [(text)]="ticket.description"></tt-editable-textview>
+        <tt-editable-textview [(text)]='ticket.description'></tt-editable-textview>
     </div>
     <div class='subtickets'>Subtickets</div>
     <div class='status'>
