@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'tt-editable-textview',
@@ -8,6 +8,7 @@ import { Component, Input } from '@angular/core';
 export class EditableTextviewComponent {
   @Input() text: string;
   @Input() editing: boolean = false;
+  @Output() textChange: EventEmitter<string> = new EventEmitter<string>();
 
   beginEditing(): void {
     this.editing = true;
@@ -15,5 +16,6 @@ export class EditableTextviewComponent {
 
   endEditing(): void {
     this.editing = false;
+    this.textChange.emit(this.text);
   }
 }

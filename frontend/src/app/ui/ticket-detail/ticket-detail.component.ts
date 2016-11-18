@@ -11,7 +11,7 @@ export class TicketResultJson {
     public description: string, public open: boolean, public storyPoints: number,
     public initialEstimatedTime: moment.Duration, public currentEstimatedTime: moment.Duration,
     public dueDate: moment.Moment,
-  ) {}
+  ) { }
 }
 
 class MockTicketApi {
