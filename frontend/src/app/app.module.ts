@@ -21,7 +21,7 @@ import {ProjectCreateComponent} from './ui/projects/project-create.component';
 import {ProjectApi} from './api/api/ProjectApi';
 import {TicketDetailComponent} from './ui/ticket-detail/ticket-detail.component';
 import {TicketSidebarComponent} from './ui/ticket-detail/ticket-sidebar.component';
-import {TicketCoreComponent} from './ui/ticket-detail/ticket-core.component';
+import {TicketCoreComponent} from './ui/ticket-detail/ticket-core/ticket-core.component';
 import {EditableTextviewComponent} from './ui/ticket-detail/editable-textview/editable-textview.component';
 import { Ng2BootstrapModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { Angular2DataTableModule } from 'angular2-data-table';

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { TicketResultJson } from './ticket-detail.component';
+import { TicketResultJson } from '../ticket-detail.component';
 
 @Component({
   selector: 'tt-ticket-core',
