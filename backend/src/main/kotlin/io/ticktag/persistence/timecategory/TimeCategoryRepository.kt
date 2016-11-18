@@ -9,6 +9,6 @@ import java.util.*
 
 @TicktagRepository
 interface TimeCategoryRepository : TicktagCrudRepository<TimeCategory, UUID> {
-    fun findByProjectAndNameLike(pId: UUID, name: String, pageable: Pageable): Page<TimeCategory>
-    fun findByNameLike(name: String, pageable: Pageable): Page<TimeCategory>
+    fun findByProjectIdAndNameContainingIgnoreCase(pId: UUID, name: String, pageable: Pageable): Page<TimeCategory>
+    fun findByNameContainingIgnoreCase(name: String, pageable: Pageable): Page<TimeCategory>
 }

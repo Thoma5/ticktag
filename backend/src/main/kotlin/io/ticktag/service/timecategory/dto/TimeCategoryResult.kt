@@ -5,10 +5,10 @@ import java.util.*
 
 data class TimeCategoryResult(
         val id: UUID,
-        val pId: UUID,
+        val projectId: UUID,
         val name: String
 ) {
-    constructor(t: TimeCategory) : this(id = t.id, pId = t.project.id, name = t.name)
+    constructor(t: TimeCategory) : this(id = t.id, projectId = t.project.id, name = t.name)
 }
 
 

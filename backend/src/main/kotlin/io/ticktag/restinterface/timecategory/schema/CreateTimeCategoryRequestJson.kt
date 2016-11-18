@@ -3,7 +3,7 @@ package io.ticktag.restinterface.timecategory.schema
 import java.util.*
 
 data class CreateTimeCategoryRequestJson(
-        val pId: UUID,
+        val projectId: UUID,
         val name: String
 )
 

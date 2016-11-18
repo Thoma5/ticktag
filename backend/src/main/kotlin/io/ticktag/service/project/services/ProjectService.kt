@@ -4,6 +4,7 @@ import io.ticktag.service.Principal
 import io.ticktag.service.project.dto.CreateProject
 import io.ticktag.service.project.dto.ProjectResult
 import io.ticktag.service.project.dto.UpdateProject
+import io.ticktag.service.timecategory.dto.TimeCategoryResult
 import org.springframework.data.domain.Pageable
 import java.util.*
 
@@ -14,4 +15,7 @@ interface ProjectService {
     fun createProject(project: CreateProject): ProjectResult
     fun deleteProject(id: UUID)
     fun updateProject(id: UUID, project: UpdateProject) : ProjectResult
+    fun listProjectTimeCategories(projectId: UUID, name: String, pageable: Pageable): List<TimeCategoryResult>
+    fun getProjectCount(): Int
+    fun getUserProjectCount(principal: Principal): Int
 }

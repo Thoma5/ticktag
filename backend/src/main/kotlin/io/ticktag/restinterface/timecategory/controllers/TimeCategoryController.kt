@@ -2,6 +2,7 @@ package io.ticktag.restinterface.timecategory.controllers
 
 import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
+import io.ticktag.restinterface.generic.CountJson
 import io.ticktag.restinterface.timecategory.schema.CreateTimeCategoryRequestJson
 import io.ticktag.restinterface.timecategory.schema.TimeCategoryJson
 import io.ticktag.restinterface.timecategory.schema.TimeCategorySort
@@ -26,53 +27,32 @@ open class TimeCategoryController @Inject constructor(
                                 @RequestParam(name = "size", defaultValue = "50", required = false) size: Int,
                                 @RequestParam(name = "order", defaultValue = "NAME", required = false) order: TimeCategorySort,
                                 @RequestParam(name = "asc", defaultValue = "true", required = false) asc: Boolean,
-                                @RequestParam(name = "usage", defaultValue = "false", required = false) usage: Boolean,
                                 @RequestParam(name = "name", defaultValue = "", required = false) name: String
     ): List<TimeCategoryJson> {
         val ascOrder = if (asc) Sort.Direction.ASC else Sort.Direction.DESC
         val sortOrder = Sort.Order(ascOrder, order.fieldName).ignoreCase()
         val pageRequest = PageRequest(page, size, Sort(sortOrder))
 
-        return if (usage) {
-            timeCategoryService.listTimeCategoriesWithUsage(name, pageRequest).map(::TimeCategoryJson)
-        } else {
-            timeCategoryService.listTimeCategories(name, pageRequest).map(::TimeCategoryJson)
-        }
-    }
+        return timeCategoryService.listTimeCategories(name, pageRequest).map(::TimeCategoryJson)
 
-    @GetMapping(value = "/projects/{pId}") //TODO: Either put this method to projects or do something else since this isn't RESTful
-    open fun listProjectTimeCategories(@PathVariable(name = "pId") pId: UUID,
-                                       @RequestParam(name = "page", defaultValue = "0", required = false) page: Int,
-                                       @RequestParam(name = "size", defaultValue = "50", required = false) size: Int,
-                                       @RequestParam(name = "order", defaultValue = "NAME", required = false) order: TimeCategorySort,
-                                       @RequestParam(name = "asc", defaultValue = "true", required = false) asc: Boolean,
-                                       @RequestParam(name = "usage", defaultValue = "false", required = false) usage: Boolean,
-                                       @RequestParam(name = "name", defaultValue = "", required = false) name: String
-    ): List<TimeCategoryJson> {
-        val ascOrder = if (asc) Sort.Direction.ASC else Sort.Direction.DESC
-        val sortOrder = Sort.Order(ascOrder, order.fieldName).ignoreCase()
-        val pageRequest = PageRequest(page, size, Sort(sortOrder))
-
-        return if (usage) {
-            timeCategoryService.listProjectTimeCategoriesWithUsage(pId, name, pageRequest).map(::TimeCategoryJson)
-        } else {
-            timeCategoryService.listProjectTimeCategories(pId, name, pageRequest).map(::TimeCategoryJson)
-        }
     }
 
     @GetMapping(value = "/{id}")
     open fun getTimeCategory(@PathVariable(name = "id") id: UUID,
                              @RequestParam(name = "usage", defaultValue = "false", required = false) usage: Boolean): TimeCategoryJson {
-        return if (usage) {
-            TimeCategoryJson(timeCategoryService.getTimeCategoryWithUsage(id))
-        } else {
-            TimeCategoryJson(timeCategoryService.getTimeCategory(id))
-        }
+        return TimeCategoryJson(timeCategoryService.getTimeCategory(id))
+
+    }
+
+    @GetMapping(value = "/count")
+    open fun getTimeCategoryCount(): CountJson {
+        return CountJson(timeCategoryService.getTimeCategoryCount())
+
     }
 
     @PostMapping
     open fun createTimeCategory(@RequestBody req: CreateTimeCategoryRequestJson): TimeCategoryJson {
-        val timeCategory = timeCategoryService.createTimeCategory(CreateTimeCategory(req.pId, req.name))
+        val timeCategory = timeCategoryService.createTimeCategory(CreateTimeCategory(req.projectId, req.name))
         return TimeCategoryJson(timeCategory)
     }
 

@@ -9,7 +9,6 @@ import io.ticktag.service.NotFoundException
 import io.ticktag.service.timecategory.TimeCategoryService
 import io.ticktag.service.timecategory.dto.CreateTimeCategory
 import io.ticktag.service.timecategory.dto.TimeCategoryResult
-import io.ticktag.service.timecategory.dto.TimeCategoryWithUsageResult
 import io.ticktag.service.timecategory.dto.UpdateTimeCategory
 import org.springframework.data.domain.Pageable
 import org.springframework.security.access.prepost.PreAuthorize
@@ -29,37 +28,22 @@ open class TimeCategoryServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.PROJECT_USER)
-    override fun getTimeCategoryWithUsage(id: UUID): TimeCategoryWithUsageResult {
-        val timeCategory = timeCategories.findOne(id) ?: throw NotFoundException()
-        return TimeCategoryWithUsageResult(timeCategory)
+    override fun getTimeCategoryCount(): Int {
+        return timeCategories.count()
     }
+
 
     @PreAuthorize(AuthExpr.ADMIN)
     override fun listTimeCategories(name: String, pageable: Pageable): List<TimeCategoryResult> {
-        return timeCategories.findByNameLike("%$name%", pageable).content.map(::TimeCategoryResult)
-    }
-
-    @PreAuthorize(AuthExpr.ADMIN)
-    override fun listTimeCategoriesWithUsage(name: String, pageable: Pageable): List<TimeCategoryWithUsageResult> {
-        return timeCategories.findByNameLike("%$name%", pageable).content.map(::TimeCategoryWithUsageResult)
-    }
-
-    @PreAuthorize(AuthExpr.PROJECT_USER)
-    override fun listProjectTimeCategories(pId: UUID, name: String, pageable: Pageable): List<TimeCategoryResult> {
-        return timeCategories.findByProjectAndNameLike(pId, "%$name%", pageable).content.map(::TimeCategoryResult)
-    }
-
-    @PreAuthorize(AuthExpr.PROJECT_USER)
-    override fun listProjectTimeCategoriesWithUsage(pId: UUID, name: String, pageable: Pageable): List<TimeCategoryWithUsageResult> {
-        return timeCategories.findByProjectAndNameLike(pId, "%$name%", pageable).content.map(:: TimeCategoryWithUsageResult)
+        return timeCategories.findByNameContainingIgnoreCase(name, pageable).content.map(::TimeCategoryResult)
     }
 
     @PreAuthorize(AuthExpr.PROJECT_ADMIN)
     override fun createTimeCategory(timeCategory: CreateTimeCategory): TimeCategoryResult {
-        val project = projects.findOne(timeCategory.pId) ?: throw NotFoundException()
-        val timeCategory = TimeCategory.create(timeCategory.name, project)
-        timeCategories.insert(timeCategory)
-        return TimeCategoryResult(timeCategory)
+        val project = projects.findOne(timeCategory.projectId) ?: throw NotFoundException()
+        val newTimeCategory = TimeCategory.create(timeCategory.name, project)
+        timeCategories.insert(newTimeCategory)
+        return TimeCategoryResult(newTimeCategory)
     }
 
     @PreAuthorize(AuthExpr.PROJECT_ADMIN)
