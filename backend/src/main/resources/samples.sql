@@ -8,6 +8,7 @@ DELETE FROM "assignment_tag";
 DELETE FROM "assigned_ticket_tag";
 DELETE FROM "comment";
 DELETE FROM "ticket";
+UPDATE public.ticket_tag_group SET default_ticket_tag_id = NULL;
 DELETE FROM "ticket_tag";
 DELETE FROM "ticket_tag_group";
 DELETE FROM "member";
