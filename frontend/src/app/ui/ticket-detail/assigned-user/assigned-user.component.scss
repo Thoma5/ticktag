@@ -1,11 +1,12 @@
+@import "../../../../style/constants.scss";
+
 .assigned-user {
     display: flex;
     flex-direction: row;
 }
 
 .image {
-    width: 3em;
-    height: 3em;
+    @extend %user-icon;
     flex-grow: 0;
     flex-shrink: 0;
 }
@@ -15,6 +16,7 @@
     flex-direction: column;
     flex-grow: 1;
     flex-shrink: 1;
+    margin-left: $internal-space;
 }
 
 .name {

@@ -1,17 +1,27 @@
 <div class='sidebar'>
     <div class='assigned-users'>
         <h3>Ticket Users</h3>
-        <tt-assigned-user [user]="user" [tags]="tags" [allTags]="allTags"></tt-assigned-user>
+        <div class="assigned-user" *ngFor="let a of assigned">
+            <tt-assigned-user [user]="a.user" [tags]="a.tags" [allTags]="allTags"></tt-assigned-user>
+        </div>
+        <div class="add-assigned-user">
+            <a *ngIf="!adding" href="javascript:void(0)" (click)="onShowAdd()">Add&nbsp;User</a>
+            <div *ngIf="adding">
+                <input type="text" value="" placeholder="User Name" [(ngModel)]="newUserName" ttFocus (focusout)="onHideAdd()" (keydown.enter)="onAdd()">
+            </div>
+        </div>
     </div>
+
     <div class='references'>
         <h3>Referenced Tickets</h3>
         <ul class="ticket-refs">
-            <li *ngFor="let ticket of referencedByTickets" class="ticket-ref">
+            <li *ngFor="let ticket of referencedTickets" class="ticket-ref">
                 <span class="number"><a href="">#{{ ticket.number }}</a></span>
                 <span class="title"><a href="">{{ ticket.title }}</a></span>
             </li>
         </ul>
     </div>
+
     <div class='referenced-by'>
         <h3>Referenced by</h3>
         <ul class="ticket-refs">

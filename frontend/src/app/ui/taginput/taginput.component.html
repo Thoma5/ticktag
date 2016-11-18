@@ -1,12 +1,11 @@
-<ul class="taginput">
-  <li *ngFor="let tag of sortedTags" class="tag" [style.backgroundColor]="'#' + tag.color">
-    <span class="nobr">
+<div class="tags">
+  <div *ngFor="let tag of sortedTags" class="tag" [style.backgroundColor]="'#' + tag.color">
       <span class="name">{{ tag.name }}</span>
-      <a href="javascript:void(0)" class="delete" (click)="onDeleteClick(tag)">×</a>
-    </span>
-  </li>
-  <li class="newtag">
-    <input type="text" [(ngModel)]="newTagName" (keydown.enter)="onAddClick()">
-    <input type="button" value="Add" (click)="onAddClick()">
-  </li>
-</ul>
+      <a href="javascript:void(0)" class="delete" (click)="onDeleteClick(tag)">&#x2716;</a>
+  </div>
+  <div *ngIf="!editing" class="add-button"><a href="javascript:void(0)" (click)="onShowAdd()">Add&nbsp;Tag</a></div>
+</div>
+
+<div *ngIf="editing" class="add-form">
+    <input type="text" [(ngModel)]="newTagName" (keydown.enter)="onAdd()" (focusout)="onHideAdd()" ttFocus>
+</div>

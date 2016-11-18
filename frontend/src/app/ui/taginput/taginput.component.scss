@@ -5,20 +5,33 @@
   margin: 0;
 }
 
+.tags {
+  margin-left: -$internal-space;
+}
+
 .tag {
-  display: inline;
-  border: $thin-line solid #000; 
-  border-radius: 0.5em;
-  padding-left: 0.5em;
-  padding-right: 0.5em;
-  box-sizing: content-box;
-  //margin: $internal-space;
+  display: inline-block;
+  border-radius: 0.25em;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+  box-shadow: 0 ($px * 1em) 0 rgba(0,0,0,0.12);
+  margin-left: $internal-space;
+  margin-bottom: 0.25em;
+
+  .delete {
+    @extend %edit-a;
+  }
+}
+
+.add-button {
+  display: inline-block;
+  margin-left: $internal-space;
+
+  a {
+    @extend %edit-a;
+  }
 }
 
 .newtag {
   display: inline;
-}
-
-.nobr {
-  white-space: nowrap;
 }

@@ -1,4 +1,6 @@
-import { Component, Input, OnChanges, Output, EventEmitter } from '@angular/core';
+import {
+  Component, Input, OnChanges, Output, EventEmitter, ViewChild, ElementRef
+} from '@angular/core';
 
 export interface Tag {
   id: string;
@@ -25,6 +27,7 @@ export class TaginputComponent implements OnChanges {
   private sortedTags: Tag[];
 
   private newTagName: string;
+  private editing: boolean = false;
 
   ngOnChanges(): void {
     this.allTagsMap = {};
@@ -47,7 +50,15 @@ export class TaginputComponent implements OnChanges {
     }
   }
 
-  onAddClick() {
+  onShowAdd() {
+    this.editing = true;
+  }
+
+  onHideAdd() {
+    this.editing = false;
+  }
+
+  onAdd() {
     let tag = this.allTags.find(t => t.name.toLowerCase() === this.newTagName.toLowerCase());
     if (tag) {
       let alreadyAdded = this.tags.indexOf(tag.id);

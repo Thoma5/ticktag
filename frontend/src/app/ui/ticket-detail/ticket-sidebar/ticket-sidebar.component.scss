@@ -1,8 +1,18 @@
 @import '../../../../style/constants.scss';
 
 .sidebar {
-    @extend .card;
+    @extend %card;
     overflow: hidden;
+}
+
+.assigned-user {
+    margin-bottom: $internal-space;
+}
+
+.add-assigned-user {
+    a {
+        @extend %edit-a;
+    }
 }
 
 .ticket-refs {

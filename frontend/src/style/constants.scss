@@ -1,8 +1,55 @@
-@import 'colors.scss';
-@import 'sizes.scss';
+@import '~google-material-color/dist/palette';
 
-.card {
+// Conversion of a pixel to a (r)em at standard zoom and standard font size.
+$px: (1 / 16);
+
+// Layout stuff (font-size independent)
+$card-background: palette(White, 500);
+$card-shadow: 0 ($px * 1rem) ($px * 3rem) rgba(0,0,0,0.12);
+$card-padding: 1rem;
+$thin-line: ($px * 1rem);
+
+// Inner spacings and sizes (font-size dependent)
+$internal-space: 1ex;
+
+// Colors
+$text-color: #000;  // TODO this is not the truth at the moment!
+$edit-text-color: #aaa;
+$edit-text-color-focus: #444;
+
+// Other stuff :)
+$fast-transition: 75ms ease-in-out;
+
+// Edit link/button
+%edit-a {
+    color: $edit-text-color;
+    transition: color $fast-transition;
+    text-transform: uppercase;
+    font-size: 75%;
+    font-weight: bolder;
+
+    &:hover, &:focus {
+        color: $edit-text-color-focus;
+        transition: color $fast-transition;
+    }
+}
+
+// Layout card
+%card {
     background: $card-background;
     box-shadow: $card-shadow;
     padding: $card-padding;
+}
+
+// User/Project icon
+%user-icon {
+    height: 2em;
+    width: 2em;
+    border-radius: 50%;
+    overflow: hidden;
+
+    img {
+        width: 100%;
+        height: 100%;
+    }
 }
