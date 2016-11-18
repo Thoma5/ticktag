@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, ElementRef } from '@angular/core';
 import { UserResultJson } from '../../api';
 
 // TODO remove this is a mock
@@ -6,6 +6,7 @@ export type AssignmentTagResultJson = {
   id: string,
   name: string,
   color: string,
+  order: number,
 };
 
 @Component({
@@ -13,7 +14,14 @@ export type AssignmentTagResultJson = {
   templateUrl: './assigned-user.component.html',
   styleUrls: ['./assigned-user.component.scss']
 })
-export class AssignedUserComponent {
+export class AssignedUserComponent implements OnInit {
   @Input() user: UserResultJson;
   @Input() tags: AssignmentTagResultJson[];
+  @Input() allTags: AssignmentTagResultJson[];
+
+  constructor(private element: ElementRef) {
+  }
+
+  ngOnInit(): void {
+  }
 }

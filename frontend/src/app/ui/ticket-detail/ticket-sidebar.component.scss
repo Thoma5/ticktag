@@ -2,6 +2,27 @@
 
 .sidebar {
     background-color: $card-background;
-    overflow: hidden;
     padding: $card-padding;
+}
+
+.ticket-refs {
+    padding: 0;
+    display: table;
+    border-collapse: separate;
+    border-spacing: $internal-space;
+}
+
+.ticket-ref {
+    list-style: none;
+    display: table-row;
+}
+
+.ticket-ref .number {
+    font-weight: bold;
+    display: table-cell;
+    text-align: right;
+}
+
+.ticket-ref .title {
+    display: table-cell;
 }

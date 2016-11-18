@@ -1,12 +1,24 @@
 <div class='sidebar'>
-    <h3>Sidebar</h3>
     <div class='assigned-users'>
-        <tt-assigned-user [user]="user" [tags]="tags"></tt-assigned-user>
+        <h3>Ticket Users</h3>
+        <tt-assigned-user [user]="user" [tags]="tags" [allTags]="allTags"></tt-assigned-user>
     </div>
     <div class='references'>
-        References
+        <h3>Referenced Tickets</h3>
+        <ul class="ticket-refs">
+            <li *ngFor="let ticket of referencedByTickets" class="ticket-ref">
+                <span class="number"><a href="">#{{ ticket.number }}</a></span>
+                <span class="title"><a href="">{{ ticket.title }}</a></span>
+            </li>
+        </ul>
     </div>
-    <div class='back-references'>
-        Backreferences
+    <div class='referenced-by'>
+        <h3>Referenced by</h3>
+        <ul class="ticket-refs">
+            <li *ngFor="let ticket of referencedByTickets" class="ticket-ref">
+                <span class="number"><a href="">#{{ ticket.number }}</a></span>
+                <span class="title"><a href="">{{ ticket.title }}</a></span>
+            </li>
+        </ul>
     </div>
 </div>

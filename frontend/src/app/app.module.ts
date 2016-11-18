@@ -32,6 +32,7 @@ import { HumanizeDurationPipe } from './util/humanize-duration.pipe';
 import { FormatMomentPipe } from './util/format-moment.pipe';
 import { AutosizeTextareaDirective } from './util/autosize-textarea.directive';
 import { FocusDirective } from './util/focus.directive';
+import { TaginputComponent } from './ui/taginput/taginput.component';
 
 
 @NgModule({
@@ -60,6 +61,7 @@ import { FocusDirective } from './util/focus.directive';
     EditableTextviewComponent,
     OpenClosedButtonComponent,
     AssignedUserComponent,
+    TaginputComponent,
 
     HumanizeDurationPipe,
     FormatMomentPipe,
