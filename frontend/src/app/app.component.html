@@ -1,20 +1,31 @@
-<header>
-  <nav>
-    <a [routerLink]="['']">Home</a>
-    <a *ngIf="user && (user.authorities.indexOf('ADMIN') != -1)" [routerLink]="['users']">Users</a>
-    <a *ngIf="user" [routerLink]="['projects']">Projects</a>
-    <a *ngIf="user" [routerLink]="['whoami']">Whoami</a>
-    <a *ngIf="!user" [routerLink]="['login']">Login</a>
-    <a *ngIf="user" href="" (click)="logout(); $event.preventDefault()">Logout</a>
-  </nav>
-</header>
-<main>
-  <h1>Hello from {{title}}!</h1>
+<md-sidenav-layout fullscreen>
+	<md-sidenav #start opened mode="side">
+		<div>
+			<a md-button [routerLink]="['']">Home</a>
+		</div>
+		<div>
+			<a md-button *ngIf="user && (user.authorities.indexOf('ADMIN') != -1)" [routerLink]="['users']">Users</a>
+		</div>
+		<div>
+			<a md-button *ngIf="user" [routerLink]="['projects']">Projects</a>
+		</div>
+		<div>
+			<a md-button *ngIf="user" [routerLink]="['whoami']">Whoami</a>
+		</div>
+			<div>
+			<a md-button>Placeholders are really amazing!</a>
+		</div>
 
-  <!-- Images (and assets) are parsed and loaded from within the public directory -->
-  <img src="/img/angular.png">
+	</md-sidenav>
+	<div>
+		<button md-button (click)="start.toggle()">Menu</button>
+		<a md-button align="end" *ngIf="!user" [routerLink]="['login']">Login</a>
+		<a md-button align="end" *ngIf="user" href="" (click)="logout(); $event.preventDefault()">Logout</a>
+	</div>
+	<main>
+		<router-outlet></router-outlet>
+	</main>
+</md-sidenav-layout>
 
-  <router-outlet></router-outlet>
-</main>
 <footer>
 </footer>
