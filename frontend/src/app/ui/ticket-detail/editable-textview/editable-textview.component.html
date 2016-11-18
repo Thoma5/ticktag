@@ -1,0 +1,10 @@
+<div class='container'>
+    <div *ngIf="!editing" class='reading' (click)='beginEditing()'>
+        {{text}}
+    </div>
+    <div *ngIf="editing" class='editing'>
+        <!-- TODO For some reason [ttFocus]='editing' throws..why? -->
+        <textarea ttAutosize [(ngModel)]="text" (keydown.control.enter)='endEditing()' (blur)='endEditing()'>
+        </textarea>
+    </div>
+</div>

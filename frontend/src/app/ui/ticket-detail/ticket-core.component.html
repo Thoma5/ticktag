@@ -17,7 +17,9 @@
         <div class='tags'>
         </div>
     </div>
-    <div class='description'>{{ticket.description}}</div>
+    <div class='description'>
+        <tt-editable-textview [(text)]="ticket.description"></tt-editable-textview>
+    </div>
     <div class='subtickets'>Subtickets</div>
     <div class='status'>
         <div class='initial-estimation'>

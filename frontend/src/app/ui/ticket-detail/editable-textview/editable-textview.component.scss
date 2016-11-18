@@ -1,0 +1,17 @@
+.container {
+    width: 100%;
+}
+
+.reading {
+    width: 100%;
+    cursor: pointer;
+}
+
+.editing {
+    width: 100%;
+    textarea {
+        width: 100%;
+        height: auto;
+        overflow: hidden;
+    }
+}

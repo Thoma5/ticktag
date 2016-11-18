@@ -22,12 +22,15 @@ import {ProjectApi} from './api/api/ProjectApi';
 import {TicketDetailComponent} from './ui/ticket-detail/ticket-detail.component';
 import {TicketSidebarComponent} from './ui/ticket-detail/ticket-sidebar.component';
 import {TicketCoreComponent} from './ui/ticket-detail/ticket-core.component';
+import {EditableTextviewComponent} from './ui/ticket-detail/editable-textview/editable-textview.component';
 import { Ng2BootstrapModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { Angular2DataTableModule } from 'angular2-data-table';
 import { MaterialModule } from '@angular/material';
 import {AssignedUserComponent} from './ui/ticket-detail/assigned-user.component';
 import { HumanizeDurationPipe } from './util/humanize-duration.pipe';
 import { FormatMomentPipe } from './util/format-moment.pipe';
+import { AutosizeTextareaDirective } from './util/autosize-textarea.directive';
+import { FocusDirective } from './util/focus.directive';
 
 
 @NgModule({
@@ -53,10 +56,13 @@ import { FormatMomentPipe } from './util/format-moment.pipe';
     TicketDetailComponent,
     TicketSidebarComponent,
     TicketCoreComponent,
+    EditableTextviewComponent,
     AssignedUserComponent,
 
     HumanizeDurationPipe,
     FormatMomentPipe,
+    AutosizeTextareaDirective,
+    FocusDirective,
   ],
   providers: [
     AuthApi,
