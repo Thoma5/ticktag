@@ -10,7 +10,6 @@ import org.junit.Before
 import org.junit.runner.RunWith
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
-import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import java.sql.Connection
 import java.util.*
@@ -19,7 +18,6 @@ import javax.sql.DataSource
 
 
 @RunWith(SpringJUnit4ClassRunner::class)
-@ContextConfiguration(classes = arrayOf(TicktagTestApplication::class))
 abstract class BaseTest {
     companion object {
         private var INIT_DB_DONE = false
