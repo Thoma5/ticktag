@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ElementRef } from '@angular/core';
-import { UserResultJson } from '../../api';
+import { UserResultJson } from '../../../api';
 
 // TODO remove this is a mock
 export type AssignmentTagResultJson = {

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { TicketResultJson } from './ticket-detail.component';
-import { UserResultJson } from '../../api';
-import { AssignmentTagResultJson } from './assigned-user.component';
+import { TicketResultJson } from '../ticket-detail.component';
+import { UserResultJson } from '../../../api';
+import { AssignmentTagResultJson } from '../assigned-user/assigned-user.component';
 
 @Component({
   selector: 'tt-ticket-sidebar',
