@@ -9,7 +9,7 @@ import java.util.*
 
 @TicktagRepository
 interface ProjectRepository : TicktagCrudRepository<Project, UUID> {
-    fun findByNameLike(name: String, pageable: Pageable): Page<Project>
-    fun findByMembersUserIdAndNameLike(userId: UUID, name: String, pageable: Pageable): Page<Project>
+    fun findByNameContainingIgnoreCase(name: String, pageable: Pageable): Page<Project>
+    fun findByMembersUserIdAndNameContainingIgnoreCase(userId: UUID, name: String, pageable: Pageable): Page<Project>
     fun countByMembersUserId(userId: UUID): Int
 }

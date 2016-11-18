@@ -43,12 +43,12 @@ open class ProjectServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.ADMIN)
     override fun listAllProjects(name: String, pageable: Pageable): List<ProjectResult> {
-        return projects.findByNameLike("%$name%", pageable).content.map(::ProjectResult)
+        return projects.findByNameContainingIgnoreCase(name, pageable).content.map(::ProjectResult)
     }
 
     @PreAuthorize(AuthExpr.USER)
     override fun listUserProjects(principal: Principal, name: String, pageable: Pageable): List<ProjectResult> {
-        return projects.findByMembersUserIdAndNameLike(principal.id, "%$name%", pageable).content.map(::ProjectResult)
+        return projects.findByMembersUserIdAndNameContainingIgnoreCase(principal.id, name, pageable).content.map(::ProjectResult)
     }
 
     @PreAuthorize(AuthExpr.ADMIN)
