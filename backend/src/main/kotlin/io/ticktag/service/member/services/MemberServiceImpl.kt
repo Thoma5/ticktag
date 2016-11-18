@@ -27,7 +27,6 @@ open class MemberServiceImpl @Inject constructor(
         val user = users.findOne(uID) ?: throw NotFoundException()
         val project = projects.findOne(pID) ?: throw NotFoundException()
         val member = members.findOne(MemberKey.create(user, project)) ?: throw NotFoundException()
-        members.insert(member)
         return MemberResult(member)
     }
 
