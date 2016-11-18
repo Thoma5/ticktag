@@ -1,8 +1,8 @@
 @import '../../../style/constants.scss';
 
 .sidebar {
-    background-color: $card-background;
-    padding: $card-padding;
+    @extend .card;
+    overflow: hidden;
 }
 
 .ticket-refs {

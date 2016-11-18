@@ -1,2 +1,8 @@
 @import 'colors.scss';
 @import 'sizes.scss';
+
+.card {
+    background: $card-background;
+    box-shadow: $card-shadow;
+    padding: $card-padding;
+}

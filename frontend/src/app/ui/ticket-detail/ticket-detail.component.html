@@ -11,12 +11,8 @@
         <div class='left col-md-8'>
             <tt-ticket-core [ticket]="ticket"></tt-ticket-core>
 
-            <div class='comments'>
-                <h3>Comments</h3>
-
-                <div class='comment'>
-                    Comment
-                </div>
+            <div class='comments-wrapper'>
+                <tt-ticket-comments [comments]='comments'></tt-ticket-comments>
             </div>
         </div>
         <div class='right col-md-4'>

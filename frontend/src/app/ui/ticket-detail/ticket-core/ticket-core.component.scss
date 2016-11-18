@@ -3,9 +3,8 @@
 $story-points-background: #2196F3;
 
 .core {
-    background-color: $card-background;
+    @extend .card;
     overflow: hidden;
-    padding: $card-padding;
 }
 
 .header-row {

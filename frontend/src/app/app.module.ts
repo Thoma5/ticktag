@@ -24,6 +24,8 @@ import {TicketSidebarComponent} from './ui/ticket-detail/ticket-sidebar.componen
 import {TicketCoreComponent} from './ui/ticket-detail/ticket-core/ticket-core.component';
 import {EditableTextviewComponent} from './ui/ticket-detail/editable-textview/editable-textview.component';
 import {OpenClosedButtonComponent} from './ui/ticket-detail/open-closed-button/open-closed-button.component';
+import {TicketCommentsComponent} from './ui/ticket-detail/ticket-comments/ticket-comments.component';
+import {TicketCommentComponent} from './ui/ticket-detail/ticket-comment/ticket-comment.component';
 import { Ng2BootstrapModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { Angular2DataTableModule } from 'angular2-data-table';
 import { MaterialModule } from '@angular/material';
@@ -62,6 +64,8 @@ import { TaginputComponent } from './ui/taginput/taginput.component';
     OpenClosedButtonComponent,
     AssignedUserComponent,
     TaginputComponent,
+    TicketCommentsComponent,
+    TicketCommentComponent,
 
     HumanizeDurationPipe,
     FormatMomentPipe,

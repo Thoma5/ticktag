@@ -14,32 +14,61 @@ export class TicketResultJson {
   ) { }
 }
 
+export class Comment {
+  constructor(
+    public createTime: moment.Moment, public text: string,
+    public name: string,
+  ) { }
+}
+
+
 class MockTicketApi {
   private ticket: TicketResultJson;
+  private comments: [Comment];
 
   constructor() {
     this.ticket = {
       number: 123,
-      createTime: moment.utc(0),
-      title: 'Implement ticket details UI',
+      createTime: moment('1932-01-01 11:12:13'),
+      title: 'Break the Enigma',
       /* tslint:disable */
-      description:
-      `Leverage agile frameworks to provide a robust synopsis for high level overviews. Iterative approaches to corporate strategy foster collaborative thinking to further the overall value proposition. Organically grow the holistic world view of disruptive innovation via workplace diversity and empowerment.
-      Bring to the table win-win survival strategies to ensure proactive domination. At the end of the day, going forward, a new normal that has evolved from generation X is on the runway heading towards a streamlined cloud solution. User generated content in real-time will have multiple touchpoints for offshoring.
-      Capitalise on low hanging fruit to identify a ballpark value added activity to beta test. Override the digital divide with additional clickthroughs from DevOps. Nanotechnology immersion along the information highway will close the loop on focusing solely on the bottom line.
+      description: `
+      The Enigma machines were a series of electro-mechanical rotor cipher machines developed and used in the early- to mid-twentieth century to protect commercial, diplomatic and military communication. Enigma was invented by the German engineer Arthur Scherbius at the end of World War I.[1] Early models were used commercially from the early 1920s, and adopted by military and government services of several countries, most notably Nazi Germany before and during World War II.[2] Several different Enigma models were produced, but the German military models are the most commonly recognised. However, Japanese and Italian models have been used
       `,
       /* tslint:enable */
       open: true,
       storyPoints: 8,
-      initialEstimatedTime: moment.duration(2, 'hours'),
-      currentEstimatedTime: moment.duration(3, 'hours'),
-      dueDate: moment.utc(60 * 60 * 2),
+      initialEstimatedTime: moment.duration(4, 'months'),
+      currentEstimatedTime: moment.duration(1, 'year'),
+      dueDate: moment('1945-05-01 13:14:15'),
     };
+
+    let c1 = {
+      createTime: moment('1932-02-12 16:17:18'),
+      text: 'Oh well, that wasn\'t so hard',
+      name: 'Marian Rejewski',
+    };
+    let c2 = {
+      createTime: moment('1940-01-17 19:20:21'),
+      text: 'The new versions are more complex, maybe we can we automate it?',
+      name: 'Alan Turing',
+    };
+
+    this.comments = [c1, c2];
   }
 
   getTicket(): Observable<TicketResultJson> {
     return Observable.of(this.ticket)
       .delay(500);
+  }
+
+  getComments(): Observable<Comment[]> {
+    return Observable.of(this.comments)
+      .delay(1000);
+  }
+
+  getTicketAndComments(): Observable<[TicketResultJson, Comment[]]> {
+    return this.getTicket().zip(this.getComments());
   }
 }
 
@@ -53,6 +82,7 @@ export class TicketDetailComponent implements OnInit {
   private ticketApi: MockTicketApi;
   private loading = false;
   private ticket: TicketResultJson | null;
+  private comments: Comment[] | null;
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(
@@ -69,11 +99,12 @@ export class TicketDetailComponent implements OnInit {
         // let ticketNumber = +params['ticketNumber'];
 
         this.loading = true;
-        return this.ticketApi.getTicket();
+        return this.ticketApi.getTicketAndComments();
       })
       .subscribe(
       result => {
-        this.ticket = result;
+        this.ticket = result[0];
+        this.comments = result[1];
         this.loading = false;
       },
       () => { this.loading = false; });
