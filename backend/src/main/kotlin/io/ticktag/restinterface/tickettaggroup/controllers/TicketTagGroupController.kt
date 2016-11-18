@@ -2,9 +2,11 @@ package io.ticktag.restinterface.tickettaggroup.controllers
 
 import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
+import io.ticktag.restinterface.tickettag.schema.TicketTagResultJson
 import io.ticktag.restinterface.tickettaggroup.schema.CreateTicketTagGroupRequestJson
 import io.ticktag.restinterface.tickettaggroup.schema.TicketTagGroupResultJson
 import io.ticktag.restinterface.tickettaggroup.schema.UpdateTicketTagGroupRequestJson
+import io.ticktag.service.tickettag.services.TicketTagService
 import io.ticktag.service.tickettaggroup.dto.CreateTicketTagGroup
 import io.ticktag.service.tickettaggroup.dto.UpdateTicketTagGroup
 import io.ticktag.service.tickettaggroup.service.TicketTagGroupService
@@ -16,7 +18,8 @@ import javax.inject.Inject
 @RequestMapping("/tickettaggroup")
 @Api(tags = arrayOf("ticketTagGroup"), description = "ticketTagGroup management")
 open class TicketTagGroupController @Inject constructor(
-        private val ticketTagGroupService: TicketTagGroupService
+        private val ticketTagGroupService: TicketTagGroupService,
+        private val ticketTagService: TicketTagService
 ) {
     @PostMapping
     open fun createTicketTagGroup(@RequestBody req: CreateTicketTagGroupRequestJson): TicketTagGroupResultJson {
@@ -37,13 +40,13 @@ open class TicketTagGroupController @Inject constructor(
         return TicketTagGroupResultJson(ticketTagGroupService.getTicketTagGroup(id))
     }
 
-    @GetMapping(value = "/project/{id}")
-    open fun listTicketTagGroups(@PathVariable(name = "id") id: UUID): List<TicketTagGroupResultJson> {
-        return ticketTagGroupService.listTicketTagGroups(id).map(::TicketTagGroupResultJson)
-    }
-
     @DeleteMapping(value = "/{id}")
     open fun deleteTicketTagGroup(@PathVariable(name = "id") id: UUID) {
         ticketTagGroupService.deleteTicketTagGroup(id)
+    }
+
+    @GetMapping(value = "/{id}/tickettag")
+    open fun listTicketTags(@PathVariable(name = "id") id: UUID): List<TicketTagResultJson> {
+        return ticketTagService.listTicketTags(id).map(::TicketTagResultJson)
     }
 }

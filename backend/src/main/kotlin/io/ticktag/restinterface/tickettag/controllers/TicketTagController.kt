@@ -5,7 +5,6 @@ import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.tickettag.schema.CreateTicketTagRequestJson
 import io.ticktag.restinterface.tickettag.schema.TicketTagResultJson
 import io.ticktag.restinterface.tickettag.schema.UpdateTicketTagRequestJson
-import io.ticktag.restinterface.tickettaggroup.schema.TicketTagGroupResultJson
 import io.ticktag.service.tickettag.dto.CreateTicketTag
 import io.ticktag.service.tickettag.dto.UpdateTicketTag
 import io.ticktag.service.tickettag.services.TicketTagService
@@ -36,11 +35,6 @@ open class TicketTagController @Inject constructor(
     @GetMapping(value = "/{id}")
     open fun getTicketTag(@PathVariable(name = "id") id: UUID): TicketTagResultJson {
         return TicketTagResultJson(ticketTagService.getTicketTag(id))
-    }
-
-    @GetMapping(value = "/project/{id}")
-    open fun listTicketTags(@PathVariable(name = "id") id: UUID): List<TicketTagResultJson> {
-        return ticketTagService.listTicketTags(id).map(::TicketTagResultJson)
     }
 
     @DeleteMapping(value = "/{id}")
