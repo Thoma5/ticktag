@@ -1,14 +1,16 @@
-import { Directive, ElementRef, AfterViewInit, OnChanges, Input, SimpleChanges } from '@angular/core';
+import {
+    Directive, ElementRef, AfterViewInit, OnChanges, Input, SimpleChanges
+} from '@angular/core';
 
 @Directive({
     selector: '[ttFocus]',
 })
 export class FocusDirective implements AfterViewInit, OnChanges {
-    @Input('focus') focus: boolean;
+    @Input() ttFocus: boolean;
 
     constructor(private elementRef: ElementRef) { }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         this.elementRef.nativeElement.focus();
     }
 
