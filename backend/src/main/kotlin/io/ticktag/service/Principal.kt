@@ -16,7 +16,7 @@ data class Principal(
         private val comments: CommentRepository?
 ) {
     companion object {
-        val INTERNAL = Principal(UUID(-1, -1), null, null,null)
+        val INTERNAL = Principal(UUID(-1, -1), null, null, null)
     }
 
     fun isInternal(): Boolean = members == null
@@ -31,29 +31,29 @@ data class Principal(
     }
 
     fun hasProjectRole(projectId: UUID, roleString: String): Boolean {
-        if (members == null ) return false
+        if (members == null) return false
 
         val member = members.findByUserIdAndProjectId(id, projectId) ?: return false
         return member.role.includesRole(ProjectRole.valueOf(roleString))
     }
 
-    fun hasProjectRoleForTicket(ticketId:UUID,roleString: String) : Boolean {
-        if (members == null ) return false
-        val member = members.findByUserIdAndTicketId(this.id, ticketId)?: return false
+    fun hasProjectRoleForTicket(ticketId: UUID, roleString: String): Boolean {
+        if (members == null) return false
+        val member = members.findByUserIdAndTicketId(this.id, ticketId) ?: return false
         return member.role.includesRole(ProjectRole.valueOf(roleString))
 
     }
 
-    fun hasProjectRoleForComment(commentId:UUID,roleString: String) : Boolean {
-        if (members == null ) return false
-        val member = members.findByUserIdAndCommentId(this.id, commentId)?: return false
+    fun hasProjectRoleForComment(commentId: UUID, roleString: String): Boolean {
+        if (members == null) return false
+        val member = members.findByUserIdAndCommentId(this.id, commentId) ?: return false
         return member.role.includesRole(ProjectRole.valueOf(roleString))
 
     }
 
-    fun userIdForCommentId(commentId:UUID) : UUID {
-        if (comments == null ) return UUID.fromString("invalid")
-        val comment = comments.findOne(commentId)?: return UUID.fromString("invalid")
+    fun userIdForCommentId(commentId: UUID): UUID {
+        if (comments == null) return UUID.fromString("invalid")
+        val comment = comments.findOne(commentId) ?: return UUID.fromString("invalid")
         return comment.user.id
 
     }

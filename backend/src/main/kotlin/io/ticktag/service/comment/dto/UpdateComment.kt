@@ -1,4 +1,5 @@
 package io.ticktag.service.comment.dto
+
 import javax.validation.constraints.Size
 
 data class UpdateComment(

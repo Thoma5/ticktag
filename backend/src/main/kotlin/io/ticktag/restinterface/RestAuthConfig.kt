@@ -96,7 +96,7 @@ open class RestSecurityConfigBeans {
     }
 
     @Bean("restAuthFilter")
-    open fun restAuthFilter(@Named("restAuthTokenService") tokenService: TokenService, users: UserRepository, members: MemberRepository,comments:CommentRepository): Filter {
+    open fun restAuthFilter(@Named("restAuthTokenService") tokenService: TokenService, users: UserRepository, members: MemberRepository, comments: CommentRepository): Filter {
         return object : OncePerRequestFilter() {
             override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
                 val tokenKey = request.getHeader("X-Authorization")
@@ -107,7 +107,7 @@ open class RestSecurityConfigBeans {
                             val token = RestAuthToken.fromString(rawToken.extendedInformation)
                             val user = users.findOne(token.userId)
                             if (user != null && user.currentToken == token.currentToken) {
-                                val principal = Principal(user.id, user.role, members,comments)
+                                val principal = Principal(user.id, user.role, members, comments)
                                 val auth = PreAuthenticatedAuthenticationToken(principal, null, emptySet())
                                 auth.details = WebAuthenticationDetails(request)
                                 SecurityContextHolder.getContext().authentication = auth
