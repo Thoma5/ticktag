@@ -36,7 +36,7 @@ open class CommentServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.CREATE_COMMENT)
-    override fun createComment(@Valid createComment: CreateComment, principal: Principal, @P("authTicketID") ticketId: UUID): CommentResult {
+    override fun createComment(@Valid createComment: CreateComment, principal: Principal, @P("authTicketId") ticketId: UUID): CommentResult {
 
         val text = createComment.text
         val ticket = tickets.findOne(createComment.ticketId) ?: throw NotFoundException()

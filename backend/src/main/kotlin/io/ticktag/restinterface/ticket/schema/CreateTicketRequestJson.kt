@@ -6,7 +6,6 @@ import java.time.Instant
 import java.util.*
 
 data class CreateTicketRequestJson(
-        val id: UUID,
         val number:Int,
         val createTime: Instant,
         val title: String,

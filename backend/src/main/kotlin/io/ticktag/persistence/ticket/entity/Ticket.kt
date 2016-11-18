@@ -13,7 +13,7 @@ open class Ticket protected constructor() {
     companion object {
         fun create(number: Int, createTime: Instant, title: String, open: Boolean, storyPoints: Int?,
                    initialEstimatedTime: Duration?, currentEstimatedTime: Duration?, dueDate: Instant?,
-                   parentTicket: Ticket?, project: Project, createdBy: User, descriptionComment: Comment): Ticket {
+                   parentTicket: Ticket?, project: Project, createdBy: User): Ticket {
             val o = Ticket()
             o.id = UUID.randomUUID()
             o.number = number
@@ -28,7 +28,6 @@ open class Ticket protected constructor() {
             o.subTickets = mutableListOf()
             o.project = project
             o.createdBy = createdBy
-            o.descriptionComment = descriptionComment
             o.tags = mutableListOf()
             o.mentioningComments = mutableListOf()
             o.comments = mutableListOf()
@@ -88,7 +87,7 @@ open class Ticket protected constructor() {
     lateinit open var createdBy: User
 
     @OneToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "description_comment_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "description_comment_id", referencedColumnName = "id", nullable = true)
     lateinit open var descriptionComment: Comment
 
     @ManyToMany

@@ -6,4 +6,5 @@ import java.util.*
 
 @TicktagRepository
 interface TicketRepository : TicktagCrudRepository<Ticket, UUID> {
+    fun findByProjectId(projectId: UUID):List<Ticket>
 }

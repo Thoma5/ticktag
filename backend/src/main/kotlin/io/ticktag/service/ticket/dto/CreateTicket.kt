@@ -6,7 +6,6 @@ import java.util.*
 import javax.validation.constraints.Size
 
 data class CreateTicket(
-        val id: UUID,
         val number:Int,
         val createTime: Instant,
         val title: String,

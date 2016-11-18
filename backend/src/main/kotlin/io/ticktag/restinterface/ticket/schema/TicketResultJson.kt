@@ -17,10 +17,20 @@ class TicketResultJson (
         val storyPoints:Int?,
         val initialEstimatedTime:Duration?,
         val currentEstimatedTime: Duration?,
-        val dueDate: Instant?
+        val dueDate: Instant?,
+        val description: String,
+        val projectId: UUID,
+
+        val subTicketIds: List<UUID>,
+        val parentTicketId:UUID?,
+        val createdBy: UUID,
+        val tagIds: List<UUID>?,
+        val mentoningCommentIds: List<UUID>,
+        val commentIds: List<UUID>
 
 ){
     constructor(t: TicketResult) : this(id = t.id,number = t.number,createTime =  t.createTime, title = t.title,
                 open = t.open,storyPoints = t.storyPoints,initialEstimatedTime = t.initialEstimatedTime,currentEstimatedTime = t.currentEstimatedTime,
-            dueDate = t.dueDate)
+            dueDate = t.dueDate, description = t.description, projectId = t.projectId,subTicketIds = t.subTicketIds,parentTicketId = t.parentTicketId,
+            createdBy = t.createdBy, tagIds = t.tagIds,mentoningCommentIds = t.mentoningCommentIds,commentIds = t.commentIds)
 }
