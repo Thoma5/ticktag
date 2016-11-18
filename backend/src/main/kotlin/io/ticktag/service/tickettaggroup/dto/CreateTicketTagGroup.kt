@@ -4,7 +4,5 @@ import java.util.*
 
 data class CreateTicketTagGroup(
         val name: String,
-        val exclusive: Boolean,
-        val projectId: UUID,
-        val defaultTicketTagId: UUID?
+        val exclusive: Boolean
 )
