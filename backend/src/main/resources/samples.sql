@@ -183,8 +183,9 @@ COMMIT;
 BEGIN;
 
 INSERT INTO public.ticket_tag_group (id, project_id, default_ticket_tag_id, name, exclusive)
-VALUES ('00000000-0009-0000-0000-000000000001', '00000000-0002-0000-0000-000000000001', '00000000-0005-0000-0000-000000000001', 'Agile', TRUE );
-
+VALUES ('00000000-0009-0000-0000-000000000001', '00000000-0002-0000-0000-000000000001', NULL, 'Agile', TRUE );
+INSERT INTO public.ticket_tag_group (id, project_id, default_ticket_tag_id, name, exclusive)
+VALUES ('00000000-0009-0000-0000-000000000002', '00000000-0002-0000-0000-000000000001', NULL, 'Priority', TRUE );
 
 --TICKET TAGS
 
@@ -199,6 +200,21 @@ VALUES ('00000000-0005-0000-0000-000000000003', '00000000-0009-0000-0000-0000000
 
 INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, color, "order")
 VALUES ('00000000-0005-0000-0000-000000000004', '00000000-0009-0000-0000-000000000001', 'Review', 'red', 4);
+
+
+INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, color, "order")
+VALUES ('00000000-0005-0000-0001-000000000001', '00000000-0009-0000-0000-000000000002', 'Low', 'blue', 5);
+
+INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, color, "order")
+VALUES ('00000000-0005-0000-0001-000000000002', '00000000-0009-0000-0000-000000000002', 'Medium', 'red', 6);
+
+INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, color, "order")
+VALUES ('00000000-0005-0000-0001-000000000003', '00000000-0009-0000-0000-000000000002', 'High', 'red', 7);
+
+UPDATE public.ticket_tag_group SET default_ticket_tag_id = '00000000-0005-0000-0000-000000000001'
+WHERE id = '00000000-0009-0000-0000-000000000001';
+UPDATE public.ticket_tag_group SET default_ticket_tag_id = '00000000-0005-0000-0001-000000000001'
+WHERE id = '00000000-0009-0000-0000-000000000002';
 
 --TICKET TAG TICKET
 INSERT INTO public.assigned_ticket_tag (ticket_id, ticket_tag_id)

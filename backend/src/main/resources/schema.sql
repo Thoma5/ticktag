@@ -82,7 +82,7 @@ CREATE INDEX ON "ticket_tag" ("ticket_tag_group_id");
 
 -- Circular comment reference resolved here
 ALTER TABLE "ticket_tag_group"
-  ADD FOREIGN KEY ("default_ticket_tag_id") REFERENCES "ticket_tag" DEFERRABLE INITIALLY DEFERRED;
+  ADD FOREIGN KEY ("default_ticket_tag_id") REFERENCES "ticket_tag";
 
 CREATE TABLE IF NOT EXISTS "assignment_tag" (
   "id"         UUID PRIMARY KEY,

@@ -5,6 +5,5 @@ import java.util.*
 data class CreateTicketTagGroupRequestJson(
         val name: String,
         val exclusive: Boolean,
-        val projectId: UUID,
-        val defaultTicketTagId: UUID?
+        val projectId: UUID
 )

@@ -32,6 +32,7 @@ open class TicketTagServiceImpl @Inject constructor(
     override fun createTicketTag(@Valid ticketTag: CreateTicketTag): TicketTagResult {
         val ticketTagGroup = ticketTagGroups.findOne(ticketTag.ticketTagGroupId) ?: throw NotFoundException()
         val newTicketTag = TicketTag.create(ticketTag.name, ticketTag.color, ticketTag.order, ticketTagGroup)
+        ticketTags.insert(newTicketTag)
         return TicketTagResult(newTicketTag)
     }
 
