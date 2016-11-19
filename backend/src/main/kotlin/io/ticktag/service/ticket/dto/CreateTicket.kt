@@ -9,7 +9,7 @@ import javax.validation.constraints.DecimalMin
 import javax.validation.constraints.Size
 
 data class CreateTicket(
-        @field:Size(max = 100) val title: String,
+        @field:Size(min=1,max = 100) val title: String,
         val open: Boolean,
         @field:DecimalMin("0") val storyPoints: Int?,
         val initialEstimatedTime: Duration?,
