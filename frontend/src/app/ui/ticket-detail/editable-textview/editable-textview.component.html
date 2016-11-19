@@ -1,6 +1,8 @@
 <div class='container'>
-    <div *ngIf="!editing" class='reading' (click)='beginEditing()'>
-        {{text}}
+    <div *ngIf="!editing" class='reading'>
+        <div class='reading-content'>
+            {{text}}
+        </div>
     </div>
     <div *ngIf="editing" class='editing'>
         <textarea [ttFocus]='editing' ttAutosize [(ngModel)]="currentlyEditingText" (keydown.control.enter)='saveEdit()' (blur)='abortEdit()'>

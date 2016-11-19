@@ -1,6 +1,6 @@
 @import '../../../../style/constants.scss';
 
-$story-points-background: #2196F3;
+$story-points-background: palette(Blue, 500);
 
 .core {
     @extend %card;
@@ -20,10 +20,15 @@ $story-points-background: #2196F3;
     width: 100%;
     display: flex;
     flex-direction: row;
+    flex-wrap: nowrap;
 }
 
-.title-text-container {
-    flex-grow: 1;
+.title-text-wrapper {
+}
+
+.edit-button {
+    @extend %reset-button;
+    @extend %edit-a;
 }
 
 .story-points {
@@ -55,8 +60,12 @@ $story-points-background: #2196F3;
     flex-grow: 1;
 }
 
-.description {
+.description-container {
     margin-top: 2rem;
+
+    .edit-button {
+        float: right;
+    }
 }
 
 .subtickets {

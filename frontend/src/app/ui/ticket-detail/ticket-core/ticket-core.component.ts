@@ -8,4 +8,6 @@ import { TicketResultJson } from '../ticket-detail.component';
 })
 export class TicketCoreComponent {
     @Input() ticket: TicketResultJson;
+    editingTitle: boolean;
+    editingDescription: boolean;
 }

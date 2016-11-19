@@ -4,8 +4,11 @@
             <div class='title-container'>
                 <span class='number'>#{{ticket.number}}</span>
                 <span class='title-text-wrapper'>
-                    <tt-editable-textview [(text)]='ticket.title'></tt-editable-textview>
+                    <tt-editable-textview [(editing)]='editingTitle' [(text)]='ticket.title'></tt-editable-textview>
                 </span>
+                <button *ngIf='!editingTitle' type='button' class='edit-button' (click)='editingTitle=true'>
+                    <i class='fa fa-pencil'></i>
+                </button>
             </div>
         </h3>
         <div class='story-points'>
@@ -19,8 +22,13 @@
         <div class='tags'>
         </div>
     </div>
-    <div class='description'>
-        <tt-editable-textview [(text)]='ticket.description'></tt-editable-textview>
+    <div class='description-container'>
+        <button *ngIf='!editingDescription' type='button' class='edit-button' (click)='editingDescription=true'>
+            <i class='fa fa-pencil'></i>
+        </button>
+        <div class='description-wrapper'>
+            <tt-editable-textview [(editing)]='editingDescription' [(text)]='ticket.description'></tt-editable-textview>
+        </div>
     </div>
     <div class='subtickets'>Subtickets</div>
     <div class='status'>

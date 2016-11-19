@@ -53,3 +53,10 @@ $fast-transition: 75ms ease-in-out;
         height: 100%;
     }
 }
+
+
+// Button reset
+%reset-button {
+    background: none;
+    border: none;
+}

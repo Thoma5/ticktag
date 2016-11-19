@@ -7,25 +7,42 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 })
 export class EditableTextviewComponent {
   @Input() text: string;
-  @Input() editing: boolean = false;
+  _editing: boolean;
   currentlyEditingText: string;
   @Output() textChange: EventEmitter<string> = new EventEmitter<string>();
+  @Output() editingChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  beginEditing(): void {
-    this.editing = true;
-    this.currentlyEditingText = this.text;
+  @Input()
+  set editing(editing: boolean) {
+    if (editing) {
+      this.prepareEdit();
+    }
+    this.updateEditing(editing);
+  }
+
+  get editing() {
+    return this._editing;
+  }
+
+  updateEditing(editing: boolean): void {
+    this._editing = editing;
+    this.editingChange.emit(editing);
+  }
+
+  prepareEdit(): void {
+      this.currentlyEditingText = this.text;
   }
 
   saveEdit(): void {
-    this.editing = false;
     this.text = this.currentlyEditingText;
     this.textChange.emit(this.text);
+    this.updateEditing(false);
   }
 
   abortEdit(): void {
     if (this.currentlyEditingText !== this.text) {
       // TODO request confirmation due to unsaved changes?
     }
-    this.editing = false;
+    this.updateEditing(false);
   }
 }
