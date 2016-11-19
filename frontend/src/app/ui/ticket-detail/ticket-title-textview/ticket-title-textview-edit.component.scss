@@ -1,0 +1,15 @@
+@import '../../../../style/constants.scss';
+
+$edit-background-color: palette(Grey, 100);
+
+textarea {
+    background-color: $edit-background-color;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    border: none;
+    background-color: transparent;
+    resize: none;
+    outline: none;
+    box-shadow: none;
+}

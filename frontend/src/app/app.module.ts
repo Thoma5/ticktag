@@ -23,6 +23,10 @@ import { TicketDetailComponent } from './ui/ticket-detail/ticket-detail.componen
 import { TicketSidebarComponent } from './ui/ticket-detail/ticket-sidebar/ticket-sidebar.component';
 import { TicketCoreComponent } from './ui/ticket-detail/ticket-core/ticket-core.component';
 import { EditableTextviewComponent } from './ui/ticket-detail/editable-textview/editable-textview.component';
+import {
+  TitleTextviewReadComponent,
+  TitleTextviewEditComponent
+} from './ui/ticket-detail/ticket-title-textview/ticket-title-textview.component';
 import { OpenClosedButtonComponent } from './ui/ticket-detail/open-closed-button/open-closed-button.component';
 import { TicketCommentsComponent } from './ui/ticket-detail/ticket-comments/ticket-comments.component';
 import { TicketCommentComponent } from './ui/ticket-detail/ticket-comment/ticket-comment.component';
@@ -64,6 +68,8 @@ import { EditButtonComponent } from './util/edit-button/edit-button.component';
     TicketSidebarComponent,
     TicketCoreComponent,
     EditableTextviewComponent,
+    TitleTextviewReadComponent,
+    TitleTextviewEditComponent,
     OpenClosedButtonComponent,
     TicketStorypointsComponent,
     AssignedUserComponent,

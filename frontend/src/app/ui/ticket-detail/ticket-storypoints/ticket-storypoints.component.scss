@@ -1,5 +1,6 @@
 @import '../../../../style/constants.scss';
 
+$edit-background-color: palette(Grey, 100);
 $points-font-size: 2em;
 
 .points-container {
@@ -13,7 +14,7 @@ $points-font-size: 2em;
     input {
         font-size: $points-font-size;
         outline: none;
-        background: #aaa;
+        background: $edit-background-color;
         border: none;
         text-align: center;
     }
