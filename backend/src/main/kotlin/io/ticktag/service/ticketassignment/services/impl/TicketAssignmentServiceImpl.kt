@@ -1,6 +1,7 @@
 package io.ticktag.service.member.services
 
 import io.ticktag.TicktagService
+import io.ticktag.persistence.ticket.AssignmentTagRepository
 import io.ticktag.persistence.ticket.entity.AssignedTicketUser
 import io.ticktag.persistence.ticket.entity.AssignedTicketUserKey
 import io.ticktag.persistence.ticket.entity.TicketAssignmentRepository
@@ -9,9 +10,6 @@ import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.NotFoundException
 import io.ticktag.service.member.dto.TicketAssignmentResult
 import io.ticktag.service.timecategory.TicketAssignmentService
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageImpl
-import org.springframework.data.domain.Pageable
 import java.util.*
 import javax.inject.Inject
 
@@ -46,19 +44,6 @@ open class TicketAssignmentServiceImpl @Inject constructor(
         val ticketAssignmentToDelete = ticketAssignments.findOne(AssignedTicketUserKey.create(ticket, assignmentTag, user)) ?: throw NotFoundException()
         ticketAssignments.delete(ticketAssignmentToDelete)
     }
-
-    override fun listTicketAssignments(pageable: Pageable): Page<TicketAssignmentResult> {
-        var page = ticketAssignments.findAll(pageable)
-        var content = page.content.map(::TicketAssignmentResult)
-        return PageImpl(content, pageable, page.totalElements)
-    }
-
-    override fun listUsersTicketAssignments(userId: UUID, pageable: Pageable): Page<TicketAssignmentResult> {
-        var page = ticketAssignments.findByUserId(userId, pageable)
-        var content = page.content.map(::TicketAssignmentResult)
-        return PageImpl(content, pageable, page.totalElements)
-    }
-
 }
 
 

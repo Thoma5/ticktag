@@ -10,6 +10,8 @@ import io.ticktag.restinterface.timecategory.schema.UpdateTimeCategoryRequestJso
 import io.ticktag.service.timecategory.TimeCategoryService
 import io.ticktag.service.timecategory.dto.CreateTimeCategory
 import io.ticktag.service.timecategory.dto.UpdateTimeCategory
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.web.bind.annotation.*
@@ -28,12 +30,14 @@ open class TimeCategoryController @Inject constructor(
                                 @RequestParam(name = "order", defaultValue = "NAME", required = false) order: TimeCategorySort,
                                 @RequestParam(name = "asc", defaultValue = "true", required = false) asc: Boolean,
                                 @RequestParam(name = "name", defaultValue = "", required = false) name: String
-    ): List<TimeCategoryJson> {
+    ): Page<TimeCategoryJson> {
         val ascOrder = if (asc) Sort.Direction.ASC else Sort.Direction.DESC
         val sortOrder = Sort.Order(ascOrder, order.fieldName).ignoreCase()
         val pageRequest = PageRequest(page, size, Sort(sortOrder))
 
-        return timeCategoryService.listTimeCategories(name, pageRequest).map(::TimeCategoryJson)
+        var page = timeCategoryService.listTimeCategories(name, pageRequest)
+        var content = page.content.map(::TimeCategoryJson)
+        return PageImpl(content, pageRequest, page.totalElements)
 
     }
 
