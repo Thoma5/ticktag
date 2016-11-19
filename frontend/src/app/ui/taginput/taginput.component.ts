@@ -1,5 +1,5 @@
 import {
-  Component, Input, OnChanges, Output, EventEmitter, ViewChild, ElementRef
+  Component, Input, OnChanges, Output, EventEmitter
 } from '@angular/core';
 
 export interface Tag {
