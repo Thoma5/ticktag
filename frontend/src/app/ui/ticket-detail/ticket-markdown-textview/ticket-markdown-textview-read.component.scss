@@ -1,0 +1,8 @@
+@import '../../../../style/constants.scss';
+
+.markdown-textview.markdown-body {
+    font-family: $base-font;
+    font-size: $base-pt;
+    line-height: $base-line-height;
+    color: $font-color;
+}

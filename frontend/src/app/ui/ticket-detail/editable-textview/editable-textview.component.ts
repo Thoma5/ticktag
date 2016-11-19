@@ -44,7 +44,6 @@ export class EditableTextviewComponent implements AfterContentInit {
                 }, null, null);
             this.editComponent.textChange
                 .subscribe((txt: string) => {
-                    console.log(txt);
                     this.currentlyEditingText = txt;
                 }, null, null);
             this.editComponent.abort

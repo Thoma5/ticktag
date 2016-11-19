@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { routing } from './app.routing';
 
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
-import { AuthService, ApiCallService } from './service';
+import { AuthService, ApiCallService, MarkdownService } from './service';
 import { LoginComponent } from './ui/login/login.component';
 import { WhoamiComponent } from './ui/whoami/whoami.component';
 import { HomeComponent } from './ui/home/home.component';
@@ -39,6 +39,7 @@ import { Angular2DataTableModule } from 'angular2-data-table';
 import { MaterialModule } from '@angular/material';
 import { HumanizeDurationPipe } from './util/humanize-duration.pipe';
 import { FormatMomentPipe } from './util/format-moment.pipe';
+import { MarkdownToHtmlPipe } from './util/markdown-to-html.pipe';
 import { AutosizeTextareaDirective } from './util/autosize-textarea.directive';
 import { FocusDirective } from './util/focus.directive';
 import { TaginputComponent } from './util/taginput/taginput.component';
@@ -84,6 +85,7 @@ import { EditButtonComponent } from './util/edit-button/edit-button.component';
 
     HumanizeDurationPipe,
     FormatMomentPipe,
+    MarkdownToHtmlPipe,
     AutosizeTextareaDirective,
     FocusDirective,
     SelectAllDirective,
@@ -94,6 +96,7 @@ import { EditButtonComponent } from './util/edit-button/edit-button.component';
     ProjectApi,
     ApiCallService,
     AuthService,
+    MarkdownService,
   ],
   bootstrap: [AppComponent]
 })
