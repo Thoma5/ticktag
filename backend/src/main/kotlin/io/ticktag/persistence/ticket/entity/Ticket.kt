@@ -2,6 +2,7 @@ package io.ticktag.persistence.ticket.entity
 
 import io.ticktag.persistence.project.entity.Project
 import io.ticktag.persistence.user.entity.User
+import org.hibernate.annotations.Cascade
 import java.time.Duration
 import java.time.Instant
 import java.util.*
@@ -13,7 +14,7 @@ open class Ticket protected constructor() {
     companion object {
         fun create(number: Int, createTime: Instant, title: String, open: Boolean, storyPoints: Int?,
                    initialEstimatedTime: Duration?, currentEstimatedTime: Duration?, dueDate: Instant?,
-                   parentTicket: Ticket?, project: Project, createdBy: User, descriptionComment: Comment): Ticket {
+                   parentTicket: Ticket?, project: Project, createdBy: User): Ticket {
             val o = Ticket()
             o.id = UUID.randomUUID()
             o.number = number
@@ -28,7 +29,6 @@ open class Ticket protected constructor() {
             o.subTickets = mutableListOf()
             o.project = project
             o.createdBy = createdBy
-            o.descriptionComment = descriptionComment
             o.tags = mutableListOf()
             o.mentioningComments = mutableListOf()
             o.comments = mutableListOf()
@@ -75,7 +75,7 @@ open class Ticket protected constructor() {
     @JoinColumn(name = "parent_ticket_id", referencedColumnName = "id", nullable = true)
     open var parentTicket: Ticket? = null
 
-    @OneToMany(mappedBy = "parentTicket")
+    @OneToMany(mappedBy = "parentTicket", cascade = arrayOf(CascadeType.REMOVE))
     lateinit open var subTickets: MutableList<Ticket>
         protected set
 
@@ -87,8 +87,8 @@ open class Ticket protected constructor() {
     @JoinColumn(name = "created_by", referencedColumnName = "id", nullable = false)
     lateinit open var createdBy: User
 
-    @OneToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "description_comment_id", referencedColumnName = "id", nullable = false)
+    @OneToOne(optional = false, fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.REMOVE))
+    @JoinColumn(name = "description_comment_id", referencedColumnName = "id", nullable = true)
     lateinit open var descriptionComment: Comment
 
     @ManyToMany
@@ -100,15 +100,16 @@ open class Ticket protected constructor() {
     lateinit open var tags: MutableList<TicketTag>
         protected set
 
+
     @ManyToMany(mappedBy = "mentionedTickets")
     lateinit open var mentioningComments: MutableList<Comment>
         protected set
 
-    @OneToMany(mappedBy = "ticket")
+    @OneToMany(mappedBy = "ticket", cascade = arrayOf(CascadeType.REMOVE))
     lateinit open var comments: MutableList<Comment>
         protected set
 
-    @OneToMany(mappedBy = "ticket")
+    @OneToMany(mappedBy = "ticket", cascade = arrayOf(CascadeType.REMOVE))
     lateinit open var assignedTicketUsers: MutableList<AssignedTicketUser>
         protected set
 
