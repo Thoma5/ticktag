@@ -8,10 +8,12 @@ $closed-color: palette(Red, 500);
 
     &.open {
         background-color: $open-color;
+        transition: background-color $fast-transition;
     }
     
     &.closed {
         background-color: $closed-color;
+        transition: background-color $fast-transition;
     }
 }
 
