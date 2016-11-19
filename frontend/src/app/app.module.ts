@@ -7,26 +7,26 @@ import { AppComponent } from './app.component';
 import { routing } from './app.routing';
 
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
-import {AuthService, ApiCallService} from './service';
-import {LoginComponent} from './ui/login/login.component';
-import {WhoamiComponent} from './ui/whoami/whoami.component';
-import {HomeComponent} from './ui/home/home.component';
-import {AuthApi} from './api/api/AuthApi';
-import {Ng2Webstorage} from 'ng2-webstorage/dist/app';
-import {UsersComponent} from './ui/users/users.component';
-import {UserCreateComponent} from './ui/users/user-create.component';
-import {UserApi} from './api/api/UserApi';
-import {ProjectsComponent} from './ui/projects/projects.component';
-import {ProjectCreateComponent} from './ui/projects/project-create.component';
-import {ProjectApi} from './api/api/ProjectApi';
-import {TicketDetailComponent} from './ui/ticket-detail/ticket-detail.component';
-import {TicketSidebarComponent} from './ui/ticket-detail/ticket-sidebar/ticket-sidebar.component';
-import {TicketCoreComponent} from './ui/ticket-detail/ticket-core/ticket-core.component';
-import {EditableTextviewComponent} from './ui/ticket-detail/editable-textview/editable-textview.component';
-import {OpenClosedButtonComponent} from './ui/ticket-detail/open-closed-button/open-closed-button.component';
-import {TicketCommentsComponent} from './ui/ticket-detail/ticket-comments/ticket-comments.component';
-import {TicketCommentComponent} from './ui/ticket-detail/ticket-comment/ticket-comment.component';
-import {AssignedUserComponent} from './ui/ticket-detail/assigned-user/assigned-user.component';
+import { AuthService, ApiCallService } from './service';
+import { LoginComponent } from './ui/login/login.component';
+import { WhoamiComponent } from './ui/whoami/whoami.component';
+import { HomeComponent } from './ui/home/home.component';
+import { AuthApi } from './api/api/AuthApi';
+import { Ng2Webstorage } from 'ng2-webstorage/dist/app';
+import { UsersComponent } from './ui/users/users.component';
+import { UserCreateComponent } from './ui/users/user-create.component';
+import { UserApi } from './api/api/UserApi';
+import { ProjectsComponent } from './ui/projects/projects.component';
+import { ProjectCreateComponent } from './ui/projects/project-create.component';
+import { ProjectApi } from './api/api/ProjectApi';
+import { TicketDetailComponent } from './ui/ticket-detail/ticket-detail.component';
+import { TicketSidebarComponent } from './ui/ticket-detail/ticket-sidebar/ticket-sidebar.component';
+import { TicketCoreComponent } from './ui/ticket-detail/ticket-core/ticket-core.component';
+import { EditableTextviewComponent } from './ui/ticket-detail/editable-textview/editable-textview.component';
+import { OpenClosedButtonComponent } from './ui/ticket-detail/open-closed-button/open-closed-button.component';
+import { TicketCommentsComponent } from './ui/ticket-detail/ticket-comments/ticket-comments.component';
+import { TicketCommentComponent } from './ui/ticket-detail/ticket-comment/ticket-comment.component';
+import { AssignedUserComponent } from './ui/ticket-detail/assigned-user/assigned-user.component';
 import { Ng2BootstrapModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { Angular2DataTableModule } from 'angular2-data-table';
 import { MaterialModule } from '@angular/material';
@@ -82,7 +82,7 @@ import { TaginputComponent } from './ui/taginput/taginput.component';
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(public appRef: ApplicationRef) {}
+  constructor(public appRef: ApplicationRef) { }
   hmrOnInit(store: any) {
     console.log('HMR store', store);
   }

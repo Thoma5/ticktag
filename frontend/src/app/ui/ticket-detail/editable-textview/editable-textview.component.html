@@ -3,8 +3,7 @@
         {{text}}
     </div>
     <div *ngIf="editing" class='editing'>
-        <!-- TODO For some reason [ttFocus]='editing' throws..why? -->
-        <textarea ttAutosize [(ngModel)]="text" (keydown.control.enter)='endEditing()' (blur)='endEditing()'>
+        <textarea [ttFocus]='editing' ttAutosize [(ngModel)]="currentlyEditingText" (keydown.control.enter)='saveEdit()' (blur)='abortEdit()'>
         </textarea>
     </div>
 </div>
