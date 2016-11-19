@@ -1,19 +1,19 @@
 package io.ticktag.service.project.dto
 
-import io.ticktag.restinterface.user.schema.CreateTicketRequestJson
 import io.ticktag.restinterface.user.schema.UpdateTicketRequestJson
 import java.time.Duration
 import java.time.Instant
 import java.util.*
 import javax.validation.constraints.Size
+import javax.validation.constraints.DecimalMin
 
 data class UpdateTicket(
-        val title: String?,
+        @field:Size(max = 100) val title: String?,
         val open:Boolean?,
-        val storyPoints:Int?,
+        @field:DecimalMin("0") val storyPoints:Int?,
         val currentEstimatedTime: Duration?,
         val dueDate: Instant?,
-        val description: String?,
+        @field:Size(min = 1,max = 5000) val description: String?,
         val subTickets: List<CreateTicket>?,
         val existingSubTicketIds: List<UUID>?,
         val partenTicket: UUID?

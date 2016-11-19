@@ -14,7 +14,7 @@ data class CreateTicketRequestJson(
         val dueDate: Instant?,
         val description: String,
         val projectId: UUID,
-        val subTickets: List<CreateTicketRequestJson>,
-        val existingSubTicketIds: List<UUID>,
+        val subTickets: List<CreateTicketRequestJson>?,
+        val existingSubTicketIds: List<UUID>?,
         val partenTicket: UUID?
 )
