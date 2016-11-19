@@ -35,11 +35,11 @@ open class TicketTagGroup protected constructor() {
     @JoinColumn(name = "project_id", referencedColumnName = "id", nullable = false)
     lateinit open var project: Project
 
-    @OneToOne(optional = true, fetch = FetchType.LAZY)
+    @OneToOne(optional = true, fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.REMOVE))
     @JoinColumn(name = "default_ticket_tag_id", referencedColumnName = "id", nullable = true)
     open var defaultTicketTag: TicketTag? = null
 
-    @OneToMany(mappedBy = "ticketTagGroup")
+    @OneToMany(mappedBy = "ticketTagGroup", cascade = arrayOf(CascadeType.REMOVE))
     lateinit open var ticketTags: MutableList<TicketTag>
         protected set
 }

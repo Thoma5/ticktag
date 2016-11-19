@@ -101,7 +101,7 @@ CREATE INDEX ON "time_category" ("project_id");
 
 CREATE TABLE IF NOT EXISTS "assigned_ticket_tag" (
   "ticket_id"     UUID REFERENCES "ticket",
-  "ticket_tag_id" UUID REFERENCES "ticket_tag",
+  "ticket_tag_id" UUID REFERENCES "ticket_tag" ON DELETE CASCADE,
   PRIMARY KEY ("ticket_id", "ticket_tag_id")
 );
 CREATE INDEX ON "assigned_ticket_tag" ("ticket_tag_id");
