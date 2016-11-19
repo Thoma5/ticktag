@@ -27,6 +27,8 @@ import {
   TitleTextviewReadComponent,
   TitleTextviewEditComponent
 } from './ui/ticket-detail/ticket-title-textview/ticket-title-textview.component';
+import { MarkdownTextviewEditComponent } from './ui/ticket-detail/ticket-markdown-textview/ticket-markdown-textview-edit.component';
+import { MarkdownTextviewReadComponent } from './ui/ticket-detail/ticket-markdown-textview/ticket-markdown-textview-read.component';
 import { OpenClosedButtonComponent } from './ui/ticket-detail/open-closed-button/open-closed-button.component';
 import { TicketCommentsComponent } from './ui/ticket-detail/ticket-comments/ticket-comments.component';
 import { TicketCommentComponent } from './ui/ticket-detail/ticket-comment/ticket-comment.component';
@@ -70,6 +72,8 @@ import { EditButtonComponent } from './util/edit-button/edit-button.component';
     EditableTextviewComponent,
     TitleTextviewReadComponent,
     TitleTextviewEditComponent,
+    MarkdownTextviewReadComponent,
+    MarkdownTextviewEditComponent,
     OpenClosedButtonComponent,
     TicketStorypointsComponent,
     AssignedUserComponent,
