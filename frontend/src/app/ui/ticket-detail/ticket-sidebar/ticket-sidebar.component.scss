@@ -3,7 +3,6 @@
 h2 {
     @extend %subtitle;
     margin-top: $medium-gap;
-    margin-bottom: $small-gap;
 
     &.first {
         margin-top: 0;

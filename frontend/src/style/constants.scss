@@ -4,7 +4,7 @@
 $px: (1 / 16);
 
 // Base fonts
-$base-font: "Roboto", sans-serif;
+$base-font: "Segoe UI", Candara, "Bitstream Vera Sans", "DejaVu Sans", "Bitstream Vera Sans", "Trebuchet MS", Verdana, "Verdana Ref", sans-serif;
 $base-pt: 10.5pt;
 $base-line-height: 1.5;
 
@@ -39,8 +39,8 @@ $fast-transition: 75ms ease-in-out;
     color: $edit-font-color;
     transition: color $fast-transition;
     text-transform: uppercase;
-    font-size: ($base-pt * 0.75);
-    font-weight: 500;
+    font-size: 75%;
+    font-weight: bold;
 
     &:hover, &:focus {
         color: $edit-font-color-focus;
