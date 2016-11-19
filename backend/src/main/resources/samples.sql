@@ -1,11 +1,12 @@
 BEGIN;
-SET CONSTRAINTS ALL DEFERRED;
 
 DELETE FROM "logged_time";
 DELETE FROM "time_category";
 DELETE FROM "assigned_ticket_user";
 DELETE FROM "assignment_tag";
 DELETE FROM "assigned_ticket_tag";
+UPDATE TICKET
+SET description_comment_id = NULL;
 DELETE FROM "comment";
 DELETE FROM "ticket";
 DELETE FROM "ticket_tag";
@@ -107,38 +108,50 @@ COMMIT;
 --TICKETS
 
 
-BEGIN;
-SET CONSTRAINTS ALL DEFERRED;
-
 INSERT INTO public.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, open, story_points, initial_estimated_time, current_estimated_time, due_date)
 VALUES ('00000000-0003-0000-0000-000000000001', 1, NULL, '00000000-0002-0000-0000-000000000001',
                                                 '660f2968-aa46-4870-bcc5-a3805366cff2',
-                                                '00000000-0004-0000-0000-000000000001', '2016-11-16 17:06:07.221000',
+                                                NULL,
+                                                '2016-11-16 17:06:07.221000',
                                                 'Added Models to Layout', TRUE, 10, 20, 25,
         '2016-11-20 17:07:05.554000');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text)
 VALUES ('00000000-0004-0000-0000-000000000001', '660f2968-aa46-4870-bcc5-a3805366cff2',
         '00000000-0003-0000-0000-000000000001', '2016-11-16 17:09:59.019000', 'Hello World');
 
+UPDATE public.ticket
+SET description_comment_id = '00000000-0004-0000-0000-000000000001'
+WHERE id = '00000000-0003-0000-0000-000000000001';
+
+
 INSERT INTO public.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, open, story_points, initial_estimated_time, current_estimated_time, due_date)
 VALUES ('00000000-0003-0000-0000-000000000002', 2, NULL, '00000000-0002-0000-0000-000000000001',
                                                 '660f2968-aa46-4870-bcc5-a3805366cff2',
-                                                '00000000-0004-0000-0000-000000000002', '2016-11-16 18:06:07.221000',
+                                                NULL, '2016-11-16 18:06:07.221000',
                                                 'Create Users View', TRUE, 10, 20, 25, '2016-11-20 17:07:05.554000');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text)
 VALUES ('00000000-0004-0000-0000-000000000002', '660f2968-aa46-4870-bcc5-a3805366cff2',
         '00000000-0003-0000-0000-000000000002', '2016-11-16 17:09:59.019000', 'You have to do 3 sub Tasks');
+UPDATE public.ticket
+SET description_comment_id = '00000000-0004-0000-0000-000000000002'
+WHERE id = '00000000-0003-0000-0000-000000000002';
+
 
 INSERT INTO public.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, open, story_points, initial_estimated_time, current_estimated_time, due_date)
 VALUES ('00000000-0003-0000-0000-000000000003', 3, '00000000-0003-0000-0000-000000000002',
                                                 '00000000-0002-0000-0000-000000000001',
                                                 '660f2968-aa46-4870-bcc5-a3805366cff2',
-                                                '00000000-0004-0000-0000-000000000003', '2016-11-16 18:06:07.221000',
+                                                NULL, '2016-11-16 18:06:07.221000',
                                                 'UI Users View', FALSE, 10, 10, 10, '2016-11-20 17:07:05.554000');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
   ('00000000-0004-0000-0000-000000000003', '660f2968-aa46-4870-bcc5-a3805366cff2',
    '00000000-0003-0000-0000-000000000003', '2016-11-16 17:09:59.019000',
    'Design UI --Comment there is no Closed Event atm');
+UPDATE public.ticket
+SET description_comment_id = '00000000-0004-0000-0000-000000000003'
+WHERE id = '00000000-0003-0000-0000-000000000003';
+
+
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
   ('00000000-0004-0000-0000-000000000006', '660f2968-aa46-4870-bcc5-a3805366cff2',
    '00000000-0003-0000-0000-000000000003', '2016-11-16 18:09:59.019000', 'Finished');
@@ -147,35 +160,47 @@ INSERT INTO public.ticket (id, number, parent_ticket_id, project_id, created_by,
 VALUES ('00000000-0003-0000-0000-000000000004', 4, '00000000-0003-0000-0000-000000000002',
                                                 '00000000-0002-0000-0000-000000000001',
                                                 '660f2968-aa46-4870-bcc5-a3805366cff2',
-                                                '00000000-0004-0000-0000-000000000004', '2016-11-16 18:06:07.221000',
+                                                NULL, '2016-11-16 18:06:07.221000',
                                                 'Implement Users View', TRUE, 4, 25, 25, '2016-11-20 17:07:05.554000');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
   ('00000000-0004-0000-0000-000000000004', '660f2968-aa46-4870-bcc5-a3805366cff2',
    '00000000-0003-0000-0000-000000000004', '2016-11-16 17:09:59.019000', 'Implement Users View');
+UPDATE public.ticket
+SET description_comment_id = '00000000-0004-0000-0000-000000000004'
+WHERE id = '00000000-0003-0000-0000-000000000004';
+
 
 INSERT INTO public.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, open, story_points, initial_estimated_time, current_estimated_time, due_date)
 VALUES ('00000000-0003-0000-0000-000000000005', 5, '00000000-0003-0000-0000-000000000002',
                                                 '00000000-0002-0000-0000-000000000001',
                                                 '660f2968-aa46-4870-bcc5-a3805366cff2',
-                                                '00000000-0004-0000-0000-000000000005', '2016-11-16 18:06:07.221000',
+                                                NULL, '2016-11-16 18:06:07.221000',
                                                 'Test Users View', FALSE, 20, 20, 25, '2016-11-20 17:07:05.554000');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
   ('00000000-0004-0000-0000-000000000005', '660f2968-aa46-4870-bcc5-a3805366cff2',
    '00000000-0003-0000-0000-000000000005', '2016-11-16 17:09:59.019000', 'Test Users View');
+UPDATE public.ticket
+SET description_comment_id = '00000000-0004-0000-0000-000000000005'
+WHERE id = '00000000-0003-0000-0000-000000000005';
+
 
 INSERT INTO public.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, open, story_points, initial_estimated_time, current_estimated_time, due_date)
 VALUES ('00000000-0003-0000-0000-000000000006', 6, NULL, '00000000-0002-0000-0000-000000000001',
                                                 '93ef43d9-20b7-461a-b960-2d1e89ba099f',
-                                                '00000000-0004-0000-0000-000000000007', '2016-11-16 18:06:07.221000',
+                                                NULL, '2016-11-16 18:06:07.221000',
                                                 'Set UP CI', FALSE, 20, 20, 49, '2016-11-20 17:07:05.554000');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
   ('00000000-0004-0000-0000-000000000007', '93ef43d9-20b7-461a-b960-2d1e89ba099f',
    '00000000-0003-0000-0000-000000000006', '2016-11-16 17:09:59.019000', 'CI is very importnat');
+UPDATE public.ticket
+SET description_comment_id = '00000000-0004-0000-0000-000000000007'
+WHERE id = '00000000-0003-0000-0000-000000000006';
+
+
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
   ('00000000-0004-0000-0000-000000000008', '660f2968-aa46-4870-bcc5-a3805366cff2',
    '00000000-0003-0000-0000-000000000006', '2016-11-16 20:09:59.019000', 'There is still so much todo');
 
-COMMIT;
 --TAGS
 
 BEGIN;
@@ -220,10 +245,23 @@ VALUES ('00000000-0003-0000-0000-000000000004', '00000000-0005-0000-0000-0000000
 --Assignment-Tag
 
 INSERT INTO public.assignment_tag (id, project_id, name, color)
-VALUES ('00000000-0006-0000-0000-000000000001', '00000000-0002-0000-0000-000000000001', 'implementing', 'blue');
+VALUES ('00000000-0006-0000-0000-000000000001', '00000000-0002-0000-0000-000000000001', 'implementing', '0000ff');
 
 INSERT INTO public.assignment_tag (id, project_id, name, color)
-VALUES ('00000000-0006-0000-0000-000000000002', '00000000-0002-0000-0000-000000000001', 'testing', 'blue');
+VALUES ('00000000-0006-0000-0000-000000000002', '00000000-0002-0000-0000-000000000001', 'testing', '00ff00');
+
+INSERT INTO public.assignment_tag (id, project_id, name, color)
+VALUES ('00000000-0006-0000-0000-000000000003', '00000000-0002-0000-0000-000000000001', 'bugfixing', 'ff0000');
+
+INSERT INTO public.assignment_tag (id, project_id, name, color)
+VALUES ('00000000-0006-0000-0000-000000000004', '00000000-0002-0000-0000-000000000001', 'Ticket Owner', 'ff0000');
+
+INSERT INTO public.assignment_tag (id, project_id, name, color)
+VALUES ('00000000-0006-0000-0000-000000000005', '00000000-0002-0000-0000-000000000001', 'document', 'ff0000');
+
+INSERT INTO public.assignment_tag (id, project_id, name, color)
+VALUES ('00000000-0006-0000-0000-000000000006', '00000000-0002-0000-0000-000000000001', 'review', 'ff0000');
+
 
 --TICKET USER
 INSERT INTO public.assigned_ticket_user (ticket_id, assignment_tag_id, user_id)
