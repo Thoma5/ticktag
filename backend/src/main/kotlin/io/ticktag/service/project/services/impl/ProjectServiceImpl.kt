@@ -6,7 +6,6 @@ import io.ticktag.persistence.project.entity.Project
 import io.ticktag.persistence.timecategory.TimeCategoryRepository
 import io.ticktag.service.AuthExpr
 import io.ticktag.service.NotFoundException
-import io.ticktag.service.Principal
 import io.ticktag.service.project.dto.CreateProject
 import io.ticktag.service.project.dto.ProjectResult
 import io.ticktag.service.project.dto.UpdateProject
@@ -46,9 +45,9 @@ open class ProjectServiceImpl @Inject constructor(
         return projects.findByNameContainingIgnoreCase(name, pageable).content.map(::ProjectResult)
     }
 
-    @PreAuthorize(AuthExpr.USER)
-    override fun listUserProjects(principal: Principal, name: String, pageable: Pageable): List<ProjectResult> {
-        return projects.findByMembersUserIdAndNameContainingIgnoreCase(principal.id, name, pageable).content.map(::ProjectResult)
+    @PreAuthorize(AuthExpr.ADMIN_OR_SELF)
+    override fun listUserProjects(userId: UUID, name: String, pageable: Pageable): List<ProjectResult> {
+        return projects.findByMembersUserIdAndNameContainingIgnoreCase(userId, name, pageable).content.map(::ProjectResult)
     }
 
     @PreAuthorize(AuthExpr.ADMIN)
@@ -86,8 +85,8 @@ open class ProjectServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.ADMIN_OR_SELF)
-    override fun getUserProjectCount(principal: Principal): Int {
-        return projects.countByMembersUserId(principal.id)
+    override fun getUserProjectCount(userId: UUID): Int {
+        return projects.countByMembersUserId(userId)
     }
 
 }

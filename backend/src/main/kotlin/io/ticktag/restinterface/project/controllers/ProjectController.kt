@@ -43,7 +43,7 @@ open class ProjectController @Inject constructor(
         return if (all) {
             projectService.listAllProjects(name, pageRequest)
         } else {
-            projectService.listUserProjects(principal, name, pageRequest)
+            projectService.listUserProjects(principal.id, name, pageRequest)
         }.map(::ProjectResultJson)
     }
 
@@ -86,7 +86,7 @@ open class ProjectController @Inject constructor(
         return if (all) {
             CountJson(projectService.getProjectCount())
         } else {
-            CountJson(projectService.getUserProjectCount(principal))
+            CountJson(projectService.getUserProjectCount(principal.id))
         }
 
     }
