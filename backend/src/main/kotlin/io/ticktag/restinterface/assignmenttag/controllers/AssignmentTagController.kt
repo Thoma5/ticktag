@@ -19,7 +19,7 @@ open class AssignmentTagController @Inject constructor(
     @GetMapping(value = "{id}")
     open fun getAssignmentTag(
             @PathVariable id: UUID): AssignmentTagResultJson {
-        val assignmentTag = assignmentTagService.getAssignmentTag(id, assignmentTagService.getProjectIdForAssignmentTag(id))
+        val assignmentTag = assignmentTagService.getAssignmentTag(id)
         return AssignmentTagResultJson(assignmentTag)
     }
 
@@ -30,12 +30,6 @@ open class AssignmentTagController @Inject constructor(
         return AssignmentTagResultJson(assignmentTag)
     }
 
-    @DeleteMapping(value = "{id}")
-    open fun deleteAssignmentTag(
-            @PathVariable id: UUID) {
-        assignmentTagService.deleteAssignmentTag(id)
-    }
-
     @PutMapping(value = "{id}")
     open fun updateAssignmentTag(
             @PathVariable id: UUID,
@@ -43,4 +37,22 @@ open class AssignmentTagController @Inject constructor(
         val assignmentTag = assignmentTagService.updateAssignmentTag(id, UpdateAssignmentTag(name = req.name, color = req.color))
         return AssignmentTagResultJson(assignmentTag)
     }
+
+    @GetMapping(value = "project/{projectId}")
+    open fun listAssignmentTags(@RequestParam(name = "projectId") req: UUID): List<AssignmentTagResultJson> {
+        return assignmentTagService.listAssignmentTags(req).map(::AssignmentTagResultJson)
+    }
+
+    @GetMapping(value = "project/{projectId}/search/{name}")
+    open fun searchAssignmentTags(@RequestParam(name = "projectId") pid: UUID, @RequestParam(name = "name") name: String): List<AssignmentTagResultJson> {
+        return assignmentTagService.searchAssignmentTags(pid, name).map(::AssignmentTagResultJson)
+    }
+    /**
+    @DeleteMapping(value = "{id}")
+    open fun deleteAssignmentTag(
+    @PathVariable id: UUID) {
+    assignmentTagService.deleteAssignmentTag(id)
+    }**/
+
+
 }

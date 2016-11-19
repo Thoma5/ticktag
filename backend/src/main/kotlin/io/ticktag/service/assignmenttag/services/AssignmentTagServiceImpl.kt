@@ -19,8 +19,18 @@ open class AssignmentTagServiceImpl @Inject constructor(
         private val projects: ProjectRepository
 ) : AssignmentTagService {
 
-    @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
-    override fun getAssignmentTag(id: UUID, @P("authProjectId") projectId: UUID): AssignmentTagResult {
+    @PreAuthorize(AuthExpr.PROJECT_USER)
+    override fun searchAssignmentTags(@P("authProjectId") pid: UUID, name: String): List<AssignmentTagResult> {
+        return assignmentTags.findByProjectIdAndNameLikeIgnoreCase(pid, name).map(::AssignmentTagResult)
+    }
+
+    @PreAuthorize(AuthExpr.PROJECT_USER)
+    override fun listAssignmentTags(@P("authProjectId") pid: UUID): List<AssignmentTagResult> {
+        return assignmentTags.findByProjectId(pid).map(::AssignmentTagResult)
+    }
+
+    @PreAuthorize(AuthExpr.READ_ASSIGNMENTTAG)
+    override fun getAssignmentTag(@P("authAssignmentTagId") id: UUID): AssignmentTagResult {
         val assignmentTag = assignmentTags.findOne(id) ?: throw NotFoundException()
         return AssignmentTagResult(assignmentTag)
     }
@@ -33,8 +43,8 @@ open class AssignmentTagServiceImpl @Inject constructor(
         return AssignmentTagResult(assignmentTag)
     }
 
-    @PreAuthorize(AuthExpr.PROJECT_USER)
-    override fun updateAssignmentTag(id: UUID, @P("authProjectId") projectId: UUID, @Valid updateAssignmentTag: UpdateAssignmentTag): AssignmentTagResult {
+    @PreAuthorize(AuthExpr.EDIT_ASSIGNMENTTAG)
+    override fun updateAssignmentTag(@P("authAssignmentTagId") id: UUID, @Valid updateAssignmentTag: UpdateAssignmentTag): AssignmentTagResult {
         val assignmentTag = assignmentTags.findOne(id) ?: throw NotFoundException()
         if (updateAssignmentTag.name != null) {
             assignmentTag.name = updateAssignmentTag.name
@@ -45,15 +55,10 @@ open class AssignmentTagServiceImpl @Inject constructor(
         return AssignmentTagResult(assignmentTag)
     }
 
-    @PreAuthorize(AuthExpr.PROJECT_ADMIN)
+    /** Implement it when needed, makes no sense right now
+    @PreAuthorize(AuthExpr.DELETE_ASSIGNMENTTAGS)
     override fun deleteAssignmentTag(id: UUID, @P("authProjectId") projectId: UUID) {
         val assignmentTag = assignmentTags.findOne(id) ?: throw NotFoundException()
         assignmentTags.delete(assignmentTag)
-    }
-
-    override fun getProjectIdForAssignmentTag(id: UUID): UUID {
-        val assignmentTag = assignmentTags.findOne(id) ?: throw NotFoundException()
-        return assignmentTag.project.id
-    }
-
+    }**/
 }
