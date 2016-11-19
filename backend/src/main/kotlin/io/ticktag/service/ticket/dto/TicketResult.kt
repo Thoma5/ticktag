@@ -23,7 +23,7 @@ data class TicketResult(
         val description: String,
         val projectId:UUID,
 
-        val subTicketIds: List<UUID>,
+        var subTicketIds: List<UUID>,
         val parentTicketId:UUID?,
         val createdBy: UUID,
         val tagIds: List<UUID>?,

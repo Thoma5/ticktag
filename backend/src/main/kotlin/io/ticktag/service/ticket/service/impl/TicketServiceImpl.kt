@@ -20,13 +20,15 @@ import java.time.Duration
 import java.time.Instant
 import java.util.*
 import javax.inject.Inject
+import javax.persistence.EntityManager
 
 @TicktagService
 open class TicketServiceImpl @Inject constructor(
         private val tickets: TicketRepository,
         private val projects: ProjectRepository,
         private val users: UserRepository,
-        private val comments:CommentRepository
+        private val comments:CommentRepository,
+        private val em: EntityManager
 
 ) :TicketService{
 
@@ -44,7 +46,7 @@ open class TicketServiceImpl @Inject constructor(
     //TODO: Reference: Mentions, Tags, Assignee
     @PreAuthorize(AuthExpr.PROJECT_USER)
     override fun createTicket(createTicket:CreateTicket, principal: Principal, @P("authProjectId")projectId: UUID):TicketResult {
-        val number = createTicket.number
+        val number = tickets.findNewTicketNumber(createTicket.projectID)?:1
         val createTime = Instant.now()
         val title = createTicket.title
         val open:Boolean = createTicket.open
@@ -61,7 +63,6 @@ open class TicketServiceImpl @Inject constructor(
             parentTicket = tickets.findOne(createTicket.partenTicket)
         }
         var newTicket = Ticket.create(number,createTime,title,open,storyPoints,initialEstimatedTime,currentEstimatedTime,dueDate,parentTicket,project,user)
-
         tickets.insert(newTicket)
 
         //Comment
@@ -70,6 +71,7 @@ open class TicketServiceImpl @Inject constructor(
         val newComment = Comment.create(creationTime, text, user, newTicket)
         comments.insert(newComment)
         newTicket.descriptionComment= newComment
+
         //SubTickets
         var newSubs = createTicket.subTickets.map ({ sub -> createTicket(sub,principal,projectId).id }).toMutableList()
         newSubs.addAll(createTicket.existingSubTicketIds)
@@ -78,9 +80,10 @@ open class TicketServiceImpl @Inject constructor(
             subTicket.parentTicket = newTicket
         }
 
-        newTicket = tickets.findOne(newTicket.id)?:throw NotFoundException()
-
-        return TicketResult(newTicket)
+        //newTicket = tickets.findOne(newTicket.id)?:throw NotFoundException()
+        var ticketResult = TicketResult(newTicket) //Weder EM noch via UPDATECASCADE kann das ticket neu geladen werden
+        ticketResult.subTicketIds = newSubs
+        return ticketResult
     }
 
     //TODO: Log Changes in History

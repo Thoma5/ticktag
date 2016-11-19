@@ -7,7 +7,6 @@ import java.util.*
 import javax.validation.constraints.Size
 
 data class CreateTicket(
-        val number:Int,
         val title: String,
         val open:Boolean,
         val storyPoints:Int?,
@@ -20,7 +19,7 @@ data class CreateTicket(
         val existingSubTicketIds: List<UUID>,
         val partenTicket: UUID?
 ){constructor(req:CreateTicketRequestJson) : this (
-        req.number,req.title,req.open,req.storyPoints,req.initialEstimatedTime,
+        req.title,req.open,req.storyPoints,req.initialEstimatedTime,
         req.currentEstimatedTime,req.dueDate,req.description,req.projectId,req.subTickets.map { s->CreateTicket(s) },req.existingSubTicketIds,req.partenTicket)
 
 

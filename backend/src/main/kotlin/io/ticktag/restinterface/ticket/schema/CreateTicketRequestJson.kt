@@ -6,7 +6,6 @@ import java.time.Instant
 import java.util.*
 
 data class CreateTicketRequestJson(
-        val number:Int,
         val title: String,
         val open:Boolean,
         val storyPoints:Int?,

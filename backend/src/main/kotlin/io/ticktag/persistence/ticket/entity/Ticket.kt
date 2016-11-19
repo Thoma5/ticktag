@@ -2,6 +2,7 @@ package io.ticktag.persistence.ticket.entity
 
 import io.ticktag.persistence.project.entity.Project
 import io.ticktag.persistence.user.entity.User
+import org.hibernate.annotations.Cascade
 import java.time.Duration
 import java.time.Instant
 import java.util.*
@@ -70,7 +71,8 @@ open class Ticket protected constructor() {
     @Column(name = "due_date", nullable = true)
     open var dueDate: Instant? = null
 
-    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @ManyToOne(optional = true, fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.REFRESH))
+    @Cascade(org.hibernate.annotations.CascadeType.REFRESH)
     @JoinColumn(name = "parent_ticket_id", referencedColumnName = "id", nullable = true)
     open var parentTicket: Ticket? = null
 
