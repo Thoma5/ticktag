@@ -10,7 +10,7 @@ import java.util.*
 interface UserService {
     fun checkPassword(mail: String, password: String): UserResult?
     fun createUser(createUser: CreateUser): UserResult
-    fun getUser(id: UUID): UserResult?
+    fun getUser(id: UUID): UserResult
     fun getUser(mail: String): UserResult?
     fun listUsers(): List<UserResult>
     fun listRoles(): List<RoleResult>

@@ -37,6 +37,11 @@ open class UserController @Inject constructor(
         return UserResultJson(user)
     }
 
+    @GetMapping(value = "/{id}")
+    open fun getUser(@PathVariable(name = "id") id: UUID): UserResultJson {
+        return UserResultJson(userService.getUser(id))
+    }
+
     @GetMapping
     open fun listUsers(): List<UserResultJson> {
         return userService.listUsers().map(::UserResultJson)
