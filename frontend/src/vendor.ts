@@ -15,3 +15,4 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'angular2-data-table/release/datatable.css';
 import 'angular2-data-table/release/material.css';
 import '@angular/material/core/theming/prebuilt/deeppurple-amber.css';
+import 'font-awesome/css/font-awesome.css';

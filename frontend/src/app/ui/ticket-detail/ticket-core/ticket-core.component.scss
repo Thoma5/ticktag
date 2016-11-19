@@ -11,6 +11,7 @@
 }
 
 .title {
+    @extend %title;
     flex-grow: 1;
 }
 

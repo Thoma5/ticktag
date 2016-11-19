@@ -3,33 +3,47 @@
 // Conversion of a pixel to a (r)em at standard zoom and standard font size.
 $px: (1 / 16);
 
-// Layout stuff (font-size independent)
+// Base fonts
+$base-font: "Roboto", sans-serif;
+$base-pt: 10.5pt;
+$base-line-height: 1.5;
+
+%title {
+    font-size: ($base-pt * 2.25);
+}
+
+%subtitle {
+    font-size: ($base-pt * 1.5);
+}
+
+// Layout stuff
 $card-background: palette(White, 500);
 $card-shadow: 0 ($px * 1rem) ($px * 3rem) rgba(0,0,0,0.12);
 $card-padding: 1rem;
-$thin-line: ($px * 1rem);
-
-// Inner spacings and sizes (font-size dependent)
-$internal-space: 1ex;
+$thin-line: ($px * 1rem);  // Use whenever you want to use "one pixel"
+$small-gap: 1rem;   // Use for margins between seperate complex elements in a "section"
+$medium-gap: 2rem;  // Use for seperation of sections or subsections
+$large-gap: 4rem;   // Use for seperation of section oif medium does not cut it.
+$internal-gap: 1ex; // Use for internal spacing, like in tables or if you need a larger space character.
 
 // Colors
-$text-color: #000;  // TODO this is not the truth at the moment!
-$edit-text-color: #aaa;
-$edit-text-color-focus: #444;
+$font-color: palette(Black, Primary);
+$edit-font-color: palette(Black, Disabled);
+$edit-font-color-focus: palette(Black, Secondary);
 
 // Other stuff :)
 $fast-transition: 75ms ease-in-out;
 
 // Edit link/button
 %edit-a {
-    color: $edit-text-color;
+    color: $edit-font-color;
     transition: color $fast-transition;
     text-transform: uppercase;
-    font-size: 75%;
-    font-weight: bolder;
+    font-size: ($base-pt * 0.75);
+    font-weight: 500;
 
     &:hover, &:focus {
-        color: $edit-text-color-focus;
+        color: $edit-font-color-focus;
         transition: color $fast-transition;
     }
 }

@@ -1,6 +1,6 @@
 <div class='sidebar'>
     <div class='assigned-users'>
-        <h3>Ticket Users</h3>
+        <h2 class="first">Ticket Users</h2>
         <div class="assigned-user" *ngFor="let a of assigned">
             <tt-assigned-user [user]="a.user" [tags]="a.tags" [allTags]="allTags"></tt-assigned-user>
         </div>
@@ -13,7 +13,7 @@
     </div>
 
     <div class='references'>
-        <h3>Referenced Tickets</h3>
+        <h2>Referenced Tickets</h2>
         <ul class="ticket-refs">
             <li *ngFor="let ticket of referencedTickets" class="ticket-ref">
                 <span class="number"><a href="">#{{ ticket.number }}</a></span>
@@ -23,7 +23,7 @@
     </div>
 
     <div class='referenced-by'>
-        <h3>Referenced by</h3>
+        <h2>Referenced by</h2>
         <ul class="ticket-refs">
             <li *ngFor="let ticket of referencedByTickets" class="ticket-ref">
                 <span class="number"><a href="">#{{ ticket.number }}</a></span>

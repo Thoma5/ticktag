@@ -6,7 +6,7 @@
 }
 
 .tags {
-  margin-left: -$internal-space;
+  margin-left: -$internal-gap;
 }
 
 .tag {
@@ -15,7 +15,7 @@
   padding-left: 0.25em;
   padding-right: 0.25em;
   box-shadow: 0 ($px * 1em) 0 rgba(0,0,0,0.12);
-  margin-left: $internal-space;
+  margin-left: $internal-gap;
   margin-bottom: 0.25em;
 
   .delete {
@@ -25,7 +25,7 @@
 
 .add-button {
   display: inline-block;
-  margin-left: $internal-space;
+  margin-left: $internal-gap;
 
   a {
     @extend %edit-a;

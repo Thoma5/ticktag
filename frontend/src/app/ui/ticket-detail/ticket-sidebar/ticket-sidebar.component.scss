@@ -1,12 +1,22 @@
 @import '../../../../style/constants.scss';
 
+h2 {
+    @extend %subtitle;
+    margin-top: $medium-gap;
+    margin-bottom: $small-gap;
+
+    &.first {
+        margin-top: 0;
+    }
+}
+
 .sidebar {
     @extend %card;
     overflow: hidden;
 }
 
 .assigned-user {
-    margin-bottom: $internal-space;
+    margin-bottom: $small-gap;
 }
 
 .add-assigned-user {
@@ -19,7 +29,7 @@
     padding: 0;
     display: table;
     border-collapse: separate;
-    border-spacing: $internal-space;
+    border-spacing: $internal-gap;
 }
 
 .ticket-ref {
