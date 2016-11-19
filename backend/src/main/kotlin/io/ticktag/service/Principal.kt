@@ -3,6 +3,9 @@ package io.ticktag.service
 import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.member.MemberRepository
 import io.ticktag.persistence.member.entity.ProjectRole
+import io.ticktag.persistence.ticket.AssignmentTagRepository
+import io.ticktag.persistence.ticket.entity.AssignmentTag
+import io.ticktag.persistence.ticket.entity.TicketRepository
 import io.ticktag.persistence.user.entity.Role
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
@@ -12,10 +15,11 @@ data class Principal(
         val id: UUID,
         val role: Role?,
         private val members: MemberRepository?,
-        private val comments: CommentRepository?
+        private val comments: CommentRepository?,
+        private val assignmenttags: AssignmentTagRepository?
 ) {
     companion object {
-        val INTERNAL = Principal(UUID(-1, -1), null, null, null)
+        val INTERNAL = Principal(UUID(-1, -1), null, null, null, null)
     }
 
     fun isInternal(): Boolean = members == null
@@ -55,6 +59,13 @@ data class Principal(
         val comment = comments.findOne(commentId) ?: return UUID.fromString("invalid")
         return comment.user.id
 
+    }
+
+    fun hasProjectRoleForAssignmentTag(assignmentTagId: UUID, roleString: String): Boolean {
+        if (assignmenttags == null) return false
+        val assignmenttag = assignmenttags.findOne(assignmentTagId)
+        if (assignmenttag == null) return false
+        return hasProjectRole(assignmenttag.project.id, roleString)
     }
 
 
@@ -99,8 +110,10 @@ class AuthExpr private constructor() {
         const val CREATE_TICKET_TAG = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicketTagGroup(#authTicketTagGroupId, 'ADMIN')"
         const val EDIT_TICKET_TAG = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicketTag(#authTicketTagId, 'ADMIN')"
 
-        const val ADMIN_OR_SELF = "principal.hasRole('ADMIN') || principal.isId(#userId)"
+        const val READ_ASSIGNMENTTAG = "principal.hasRole('ADMIN') || principal.hasProjectRoleForAssignmentTag(#authAssignmentTagId, 'OBSERVER')"
+        const val EDIT_ASSIGNMENTTAG = "principal.hasRole('ADMIN') || principal.hasProjectRoleForAssignmentTag(#authAssignmentTagId, 'USER')"
 
+        const val ADMIN_OR_SELF = "principal.hasRole('ADMIN') || principal.isId(#userId)"
 
     }
 }
