@@ -70,7 +70,7 @@ class UserApiTest : ApiBaseTest() {
                 assertEquals(user.mail, mail)
                 assertEquals(user.role.name, Role.ADMIN.name)
 
-                val result = authController.login(LoginRequestJson(name, newPassword))
+                val result = authController.login(LoginRequestJson(mail, newPassword))
                 assertNotNull(result.token)
                 assertThat(result.token, `is`(not("")))
             }
@@ -96,7 +96,7 @@ class UserApiTest : ApiBaseTest() {
                 assertEquals(user.mail, mail)
                 assertEquals(user.role.name, Role.OBSERVER.name) //Can't change own role!
 
-                val result = authController.login(LoginRequestJson(name, newPassword))
+                val result = authController.login(LoginRequestJson(mail, newPassword))
                 assertNotNull(result.token)
                 assertThat(result.token, `is`(not("")))
             }
