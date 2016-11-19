@@ -71,8 +71,7 @@ open class Ticket protected constructor() {
     @Column(name = "due_date", nullable = true)
     open var dueDate: Instant? = null
 
-    @ManyToOne(optional = true, fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.REFRESH))
-    @Cascade(org.hibernate.annotations.CascadeType.REFRESH)
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_ticket_id", referencedColumnName = "id", nullable = true)
     open var parentTicket: Ticket? = null
 
