@@ -1,27 +1,29 @@
 @import '../../../../style/constants.scss';
 
-$story-points-background: palette(Blue, 500);
+$points-font-size: 2em;
 
 .points-container {
-    width: 2em;
-    height: 2em;
-    font-size: 2em;
-    background-color: $story-points-background;
+    width: 4em;
+    height: 4em;
     display: flex;
     justify-content: center;
-    text-align: center;
     align-content: center;
     flex-direction: column;
-    border-radius: 50%;
 
     input {
+        font-size: $points-font-size;
         outline: none;
-        background: none;
+        background: #aaa;
         border: none;
         text-align: center;
     }
-}
 
-.points {
-    cursor: pointer;
+    .points {
+        font-size: $points-font-size;
+        text-align: center;
+    }
+
+    tt-edit-button {
+        float: right;
+    }
 }

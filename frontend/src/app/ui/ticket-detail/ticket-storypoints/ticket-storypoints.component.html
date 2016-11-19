@@ -1,4 +1,9 @@
 <div class='points-container'>
-    <div *ngIf='!editing' class='points' (click)='beginEdit()'>{{points}}</div>
-    <input *ngIf='editing' [ttFocus]='editing' [(ngModel)]='currentEditingPoints' (keydown.enter)='saveEdit()' (blur)='abortEdit()'>
+    <div *ngIf='!editing' class='reading'>
+        <tt-edit-button (click)='beginEdit()'></tt-edit-button>
+        <div class='points'>
+            {{points}}
+        </div>
+    </div>
+    <input *ngIf='editing' [ttSelectAll] [ttFocus]='editing' [(ngModel)]='currentEditingPoints' (keydown.enter)='saveEdit()' (blur)='abortEdit()'>
 </div>

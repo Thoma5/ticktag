@@ -21,11 +21,6 @@
     flex-wrap: nowrap;
 }
 
-.edit-button {
-    @extend %reset-button;
-    @extend %edit-a;
-}
-
 .sub-header-row {
     display: flex;
     flex-direction: row;
@@ -38,7 +33,7 @@
 .description-container {
     margin-top: 2rem;
 
-    .edit-button {
+    tt-edit-button {
         float: right;
     }
 }
