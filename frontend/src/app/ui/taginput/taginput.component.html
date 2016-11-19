@@ -7,5 +7,5 @@
 </div>
 
 <div *ngIf="editing" class="add-form">
-    <input type="text" [(ngModel)]="newTagName" (keydown.enter)="onAdd()" (focusout)="onHideAdd()" ttFocus>
+    <input type="text" [(ngModel)]="newTagName" (keydown.enter)="onAdd()" (blur)="onHideAdd()" ttFocus ttSelectAll>
 </div>

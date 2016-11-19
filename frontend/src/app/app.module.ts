@@ -36,6 +36,7 @@ import { FormatMomentPipe } from './util/format-moment.pipe';
 import { AutosizeTextareaDirective } from './util/autosize-textarea.directive';
 import { FocusDirective } from './util/focus.directive';
 import { TaginputComponent } from './ui/taginput/taginput.component';
+import { SelectAllDirective } from './util/select-all.directive';
 
 
 @NgModule({
@@ -73,6 +74,7 @@ import { TaginputComponent } from './ui/taginput/taginput.component';
     FormatMomentPipe,
     AutosizeTextareaDirective,
     FocusDirective,
+    SelectAllDirective,
   ],
   providers: [
     AuthApi,
