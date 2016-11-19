@@ -11,9 +11,7 @@
                 </button>
             </div>
         </h3>
-        <div class='story-points'>
-            <input [(ngModel)]='ticket.storyPoints'>
-        </div>
+        <tt-ticket-storypoints [(points)]='ticket.storyPoints'></tt-ticket-storypoints>
     </div>
     <div class='sub-header-row'>
         <div class='open-container'>

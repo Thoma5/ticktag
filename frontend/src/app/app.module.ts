@@ -26,6 +26,7 @@ import { EditableTextviewComponent } from './ui/ticket-detail/editable-textview/
 import { OpenClosedButtonComponent } from './ui/ticket-detail/open-closed-button/open-closed-button.component';
 import { TicketCommentsComponent } from './ui/ticket-detail/ticket-comments/ticket-comments.component';
 import { TicketCommentComponent } from './ui/ticket-detail/ticket-comment/ticket-comment.component';
+import { TicketStorypointsComponent } from './ui/ticket-detail/ticket-storypoints/ticket-storypoints.component';
 import { AssignedUserComponent } from './ui/ticket-detail/assigned-user/assigned-user.component';
 import { Ng2BootstrapModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { Angular2DataTableModule } from 'angular2-data-table';
@@ -62,6 +63,7 @@ import { TaginputComponent } from './ui/taginput/taginput.component';
     TicketCoreComponent,
     EditableTextviewComponent,
     OpenClosedButtonComponent,
+    TicketStorypointsComponent,
     AssignedUserComponent,
     TaginputComponent,
     TicketCommentsComponent,
