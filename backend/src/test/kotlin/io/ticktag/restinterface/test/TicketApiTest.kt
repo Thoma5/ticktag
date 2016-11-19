@@ -18,24 +18,24 @@ import javax.inject.Inject
 /**
  * Created by stefandraskovits on 18/11/2016.
  */
-class TicketApiTest : ApiBaseTest(){
+class TicketApiTest : ApiBaseTest() {
     @Inject
-    lateinit var ticketController : TicketController
+    lateinit var ticketController: TicketController
 
     @Test
     fun `createTicket positiv`() {
         withUser(ADMIN_ID) { principal ->
             val now = Instant.now()
             val req = CreateTicketRequestJson("test", true, 4, Duration.ofDays(1), Duration.ofDays(1),
-                    now,"description",UUID.fromString("00000000-0002-0000-0000-000000000001"), emptyList(), emptyList(),null)
+                    now, "description", UUID.fromString("00000000-0002-0000-0000-000000000001"), emptyList(), emptyList(), null)
 
-            val result = ticketController.createTicket(req,principal)
+            val result = ticketController.createTicket(req, principal)
             assert(result.title.equals("test"))
             assert(result.open == true)
             assert(result.storyPoints == 4)
-            assert(result.initialEstimatedTime?.equals(Duration.ofDays(1))?:false)
-            assert(result.currentEstimatedTime?.equals(Duration.ofDays(1))?:false)
-            assert(result.dueDate?.equals(now)?:false)
+            assert(result.initialEstimatedTime?.equals(Duration.ofDays(1)) ?: false)
+            assert(result.currentEstimatedTime?.equals(Duration.ofDays(1)) ?: false)
+            assert(result.dueDate?.equals(now) ?: false)
             assert(result.description.equals("description"))
             assert(result.projectId.equals(UUID.fromString("00000000-0002-0000-0000-000000000001")))
 
@@ -72,27 +72,25 @@ class TicketApiTest : ApiBaseTest(){
         withUser(ADMIN_ID) { principal ->
             val now = Instant.now()
             val req = CreateTicketRequestJson("test", true, 4, Duration.ofDays(1), Duration.ofDays(1),
-                    now,"description",UUID.fromString("00000000-0002-0000-0000-000000000001"), emptyList(), emptyList(),null)
+                    now, "description", UUID.fromString("00000000-0002-0000-0000-000000000001"), emptyList(), emptyList(), null)
 
             val req2 = CreateTicketRequestJson("test", true, 4, Duration.ofDays(1), Duration.ofDays(1),
-                    now,"description",UUID.fromString("00000000-0002-0000-0000-000000000001"), listOf(req), listOf(UUID.fromString("00000000-0003-0000-0000-000000000001")),null)
+                    now, "description", UUID.fromString("00000000-0002-0000-0000-000000000001"), listOf(req), listOf(UUID.fromString("00000000-0003-0000-0000-000000000001")), null)
 
-            val result = ticketController.createTicket(req2,principal)
+            val result = ticketController.createTicket(req2, principal)
             assert(result.title.equals("test"))
             assert(result.open == true)
             assert(result.storyPoints == 4)
-            assert(result.initialEstimatedTime?.equals(Duration.ofDays(1))?:false)
-            assert(result.currentEstimatedTime?.equals(Duration.ofDays(1))?:false)
-            assert(result.dueDate?.equals(now)?:false)
+            assert(result.initialEstimatedTime?.equals(Duration.ofDays(1)) ?: false)
+            assert(result.currentEstimatedTime?.equals(Duration.ofDays(1)) ?: false)
+            assert(result.dueDate?.equals(now) ?: false)
             assert(result.description.equals("description"))
             assert(result.projectId.equals(UUID.fromString("00000000-0002-0000-0000-000000000001")))
-            assert(result.subTicketIds.size==2)
+            assert(result.subTicketIds.size == 2)
             assert(result.subTicketIds.contains(UUID.fromString("00000000-0003-0000-0000-000000000001")))
 
         }
     }
-
-
 
 
     @Test(expected = TicktagValidationException::class)
@@ -100,12 +98,12 @@ class TicketApiTest : ApiBaseTest(){
         withUser(ADMIN_ID) { principal ->
             val now = Instant.now()
             val req = CreateTicketRequestJson("test", true, 4, Duration.ofDays(1), Duration.ofDays(1),
-                    now,"description",UUID.fromString("00000000-0002-0000-0000-000000000001"), emptyList(), emptyList(),null)
+                    now, "description", UUID.fromString("00000000-0002-0000-0000-000000000001"), emptyList(), emptyList(), null)
 
             val req2 = CreateTicketRequestJson("test", true, 4, Duration.ofDays(1), Duration.ofDays(1),
-                    now,"description",UUID.fromString("00000000-0002-0000-0000-000000000001"), listOf(req), listOf(UUID.fromString("00000000-0003-0000-0000-000000000001")),UUID.fromString("00000000-0003-0000-0000-000000000001"))
+                    now, "description", UUID.fromString("00000000-0002-0000-0000-000000000001"), listOf(req), listOf(UUID.fromString("00000000-0003-0000-0000-000000000001")), UUID.fromString("00000000-0003-0000-0000-000000000001"))
 
-            ticketController.createTicket(req2,principal)
+            ticketController.createTicket(req2, principal)
         }
     }
 
@@ -114,30 +112,29 @@ class TicketApiTest : ApiBaseTest(){
         withUser(ADMIN_ID) { principal ->
             val now = Instant.now()
             val req = CreateTicketRequestJson("test", true, 4, Duration.ofDays(1), Duration.ofDays(1),
-                    now,"description",UUID.fromString("00000000-0002-0000-0000-000000000001"), emptyList(), listOf(UUID.fromString("00000000-0003-0000-0000-000000000003")),null)
+                    now, "description", UUID.fromString("00000000-0002-0000-0000-000000000001"), emptyList(), listOf(UUID.fromString("00000000-0003-0000-0000-000000000003")), null)
 
             val req2 = CreateTicketRequestJson("test", true, 4, Duration.ofDays(1), Duration.ofDays(1),
-                    now,"description",UUID.fromString("00000000-0002-0000-0000-000000000001"), listOf(req), listOf(UUID.fromString("00000000-0003-0000-0000-000000000001")),null)
+                    now, "description", UUID.fromString("00000000-0002-0000-0000-000000000001"), listOf(req), listOf(UUID.fromString("00000000-0003-0000-0000-000000000001")), null)
 
-            ticketController.createTicket(req2,principal)
+            ticketController.createTicket(req2, principal)
         }
     }
-
 
 
     @Test
     fun `updateTicket positiv`() {
         withUser(ADMIN_ID) { principal ->
             val now = Instant.now()
-            val req = UpdateTicketRequestJson("test", true, 4,  Duration.ofDays(1),
-                    now,"description", emptyList(), emptyList(),null)
+            val req = UpdateTicketRequestJson("test", true, 4, Duration.ofDays(1),
+                    now, "description", emptyList(), emptyList(), null)
 
-            val result = ticketController.updateTicket(req,UUID.fromString("00000000-0003-0000-0000-000000000001"),principal)
+            val result = ticketController.updateTicket(req, UUID.fromString("00000000-0003-0000-0000-000000000001"), principal)
             assert(result.title.equals("test"))
             assert(result.open == true)
             assert(result.storyPoints == 4)
-            assert(result.currentEstimatedTime?.equals(Duration.ofDays(1))?:false)
-            assert(result.dueDate?.equals(now)?:false)
+            assert(result.currentEstimatedTime?.equals(Duration.ofDays(1)) ?: false)
+            assert(result.dueDate?.equals(now) ?: false)
             assert(result.description.equals("description"))
 
         }
@@ -149,19 +146,19 @@ class TicketApiTest : ApiBaseTest(){
         withUser(ADMIN_ID) { principal ->
             val now = Instant.now()
             val req2 = CreateTicketRequestJson("test", true, 4, Duration.ofDays(1), Duration.ofDays(1),
-                    now,"description",UUID.fromString("00000000-0002-0000-0000-000000000001"), emptyList(), emptyList(),null)
+                    now, "description", UUID.fromString("00000000-0002-0000-0000-000000000001"), emptyList(), emptyList(), null)
 
-            val req = UpdateTicketRequestJson("test", true, 4,  Duration.ofDays(1),
-                    now,"description", listOf(req2), listOf(UUID.fromString("00000000-0003-0000-0000-000000000001")),null)
-            val result = ticketController.updateTicket(req,UUID.fromString("00000000-0003-0000-0000-000000000002"),principal)
+            val req = UpdateTicketRequestJson("test", true, 4, Duration.ofDays(1),
+                    now, "description", listOf(req2), listOf(UUID.fromString("00000000-0003-0000-0000-000000000001")), null)
+            val result = ticketController.updateTicket(req, UUID.fromString("00000000-0003-0000-0000-000000000002"), principal)
             assert(result.title.equals("test"))
             assert(result.open == true)
             assert(result.storyPoints == 4)
-            assert(result.currentEstimatedTime?.equals(Duration.ofDays(1))?:false)
-            assert(result.dueDate?.equals(now)?:false)
+            assert(result.currentEstimatedTime?.equals(Duration.ofDays(1)) ?: false)
+            assert(result.dueDate?.equals(now) ?: false)
             assert(result.description.equals("description"))
 
-            assert(result.subTicketIds.size==2)
+            assert(result.subTicketIds.size == 2)
             assert(result.subTicketIds.contains(UUID.fromString("00000000-0003-0000-0000-000000000001")))
 
         }
@@ -172,16 +169,14 @@ class TicketApiTest : ApiBaseTest(){
         withUser(ADMIN_ID) { principal ->
             val now = Instant.now()
             val req2 = CreateTicketRequestJson("test", true, 4, Duration.ofDays(1), Duration.ofDays(1),
-                    now,"description",UUID.fromString("00000000-0002-0000-0000-000000000001"), emptyList(), emptyList(),null)
+                    now, "description", UUID.fromString("00000000-0002-0000-0000-000000000001"), emptyList(), emptyList(), null)
 
-            val req = UpdateTicketRequestJson("test", true, 4,  Duration.ofDays(1),
-                    now,"description", listOf(req2), listOf(UUID.fromString("00000000-0003-0000-0000-000000000001")),UUID.fromString("00000000-0003-0000-0000-000000000002"))
-            val result = ticketController.updateTicket(req,UUID.fromString("00000000-0003-0000-0000-000000000002"),principal)
+            val req = UpdateTicketRequestJson("test", true, 4, Duration.ofDays(1),
+                    now, "description", listOf(req2), listOf(UUID.fromString("00000000-0003-0000-0000-000000000001")), UUID.fromString("00000000-0003-0000-0000-000000000002"))
+            val result = ticketController.updateTicket(req, UUID.fromString("00000000-0003-0000-0000-000000000002"), principal)
 
         }
     }
-
-
 
 
     @Test(expected = AccessDeniedException::class)
@@ -189,9 +184,9 @@ class TicketApiTest : ApiBaseTest(){
         withUser(USER_ID) { principal ->
             val now = Instant.now()
             val req = CreateTicketRequestJson("test", true, 4, Duration.ofDays(1), Duration.ofDays(1),
-                    now,"description",UUID.fromString("00000000-0002-0000-0000-000000000004"), emptyList(), emptyList(),null)
+                    now, "description", UUID.fromString("00000000-0002-0000-0000-000000000004"), emptyList(), emptyList(), null)
 
-            val result = ticketController.createTicket(req,principal)
+            val result = ticketController.createTicket(req, principal)
 
 
         }

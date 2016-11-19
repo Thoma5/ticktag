@@ -7,8 +7,8 @@ import java.util.*
 
 data class CreateTicketRequestJson(
         val title: String,
-        val open:Boolean,
-        val storyPoints:Int?,
+        val open: Boolean,
+        val storyPoints: Int?,
         val initialEstimatedTime: Duration?,
         val currentEstimatedTime: Duration?,
         val dueDate: Instant?,

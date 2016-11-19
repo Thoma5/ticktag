@@ -70,7 +70,7 @@ abstract class BaseTest {
             throw RuntimeException("Called withUser even though the security context is already set")
 
         val user = users.findOne(userId) ?: throw RuntimeException("Called withUser with an unknown user UUID")
-        val principal = Principal(user.id, user.role, members,comments)
+        val principal = Principal(user.id, user.role, members, comments)
         SecurityContextHolder.getContext().authentication = PreAuthenticatedAuthenticationToken(principal, null, emptySet())
         try {
             return proc(principal)

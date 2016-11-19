@@ -8,8 +8,8 @@ import java.util.*
 
 @TicktagRepository
 interface TicketRepository : TicktagCrudRepository<Ticket, UUID> {
-    fun findByProjectId(projectId: UUID):List<Ticket>
+    fun findByProjectId(projectId: UUID): List<Ticket>
 
     @Query("Select max(t.number) from Ticket t where project.id = :projectId ")
-    fun findNewTicketNumber(@Param("projectId")projectId: UUID):Int?
+    fun findNewTicketNumber(@Param("projectId") projectId: UUID): Int?
 }

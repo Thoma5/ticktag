@@ -20,7 +20,7 @@ import javax.inject.Inject
 @TicktagRestInterface
 @RequestMapping("/tickets")
 @Api(tags = arrayOf("ticket"), description = "ticket manager")
-open class TicketController@Inject constructor(
+open class TicketController @Inject constructor(
         private val ticketService: TicketService,
         private val commentService: CommentService
 ) {
@@ -30,33 +30,33 @@ open class TicketController@Inject constructor(
         return ticketService.listTickets(req).map(::TicketResultJson)
     }
 
-    @GetMapping(value= "/{id}/comments")
+    @GetMapping(value = "/{id}/comments")
     open fun listComments(@PathVariable(name = "id") req: UUID): List<CommentResultJson> {
         return commentService.listCommentsForTicket(req).map(::CommentResultJson)
     }
 
     @GetMapping(value = "/{id}")
-    open fun getTicket(@PathVariable(name = "id") id: UUID ):TicketResultJson {
+    open fun getTicket(@PathVariable(name = "id") id: UUID): TicketResultJson {
         return TicketResultJson(ticketService.getTicket(id))
     }
 
     @PostMapping
     open fun createTicket(@RequestBody req: CreateTicketRequestJson,
                           @AuthenticationPrincipal principal: Principal): TicketResultJson {
-        val ticket = ticketService.createTicket(CreateTicket(req),principal,req.projectId)
+        val ticket = ticketService.createTicket(CreateTicket(req), principal, req.projectId)
         return TicketResultJson(ticket)
     }
 
-    @PutMapping(value ="/{id}")
+    @PutMapping(value = "/{id}")
     open fun updateTicket(@RequestBody req: UpdateTicketRequestJson,
                           @PathVariable(name = "id") id: UUID,
                           @AuthenticationPrincipal principal: Principal): TicketResultJson {
-        val ticket = ticketService.updateTicket(UpdateTicket(req),id,principal)
+        val ticket = ticketService.updateTicket(UpdateTicket(req), id, principal)
         return TicketResultJson(ticket)
     }
 
     @DeleteMapping(value = "/{id}")
-    open fun deleteTicket(@PathVariable(name = "id") id: UUID){
+    open fun deleteTicket(@PathVariable(name = "id") id: UUID) {
         ticketService.deleteTicket(id)
     }
 

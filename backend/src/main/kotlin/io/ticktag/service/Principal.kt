@@ -74,8 +74,8 @@ class AuthExpr private constructor() {
         const val PROJECT_OBSERVER = "principal.hasRole('OBSERVER') || principal.hasProjectRole(#authProjectId, 'OBSERVER')"
         const val PROJECT_USER = "principal.hasRole('ADMIN') || principal.hasProjectRole(#authProjectId, 'USER')"
         const val PROJECT_ADMIN = "principal.hasRole('ADMIN') || principal.hasProjectRole(#authProjectId, 'ADMIN')"
-        const val READ_TICKET =  "principal.hasRole('OBSERVER') || principal.hasProjectRoleForTicket(#authTicketId, 'OBSERVER')"
-        const val WRITE_TICKET =  "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicket(#authTicketId, 'USER')"
+        const val READ_TICKET = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForTicket(#authTicketId, 'OBSERVER')"
+        const val WRITE_TICKET = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicket(#authTicketId, 'USER')"
 
         const val READ_COMMENT = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForComment(#authCommentId, 'OBSERVER')"
         const val CREATE_COMMENT = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicket(#authTicketId, 'USER') "
