@@ -18,10 +18,8 @@
         <tt-ticket-storypoints [(points)]='ticket.storyPoints'></tt-ticket-storypoints>
     </div>
     <div class='sub-header-row'>
-        <div class='open-container'>
-            <tt-open-closed-button [(open)]='ticket.open'></tt-open-closed-button>
-        </div>
         <div class='tags'>
+            <tt-taginput [(tags)]='ticket.tagIds' [allTags]='ticketTags'></tt-taginput>
         </div>
     </div>
     <div class='description-container'>

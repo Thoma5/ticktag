@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { Response, ResponseContentType } from '@angular/http';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ApiCallService } from '../../service';
 import {
-  TicketApi, TicketResultJson, CommentsApi, AssignmenttagApi, AssignmentTagResultJson,
-  CommentResultJson
+  TicketApi, TicketResultJson, CommentsApi, AssignmenttagApi,
+  AssignmentTagResultJson, CommentResultJson, TicketTagResultJson,
 } from '../../api';
 import { Observable } from 'rxjs';
 
@@ -15,9 +14,10 @@ import { Observable } from 'rxjs';
 })
 export class TicketDetailComponent implements OnInit {
   private loading = true;
-  private ticket: TicketResultJson | null;
-  private comments: CommentResultJson[] | null;
-  private assignmentTags: AssignmentTagResultJson[] | null;
+  private ticket: TicketResultJson | null = null;
+  private comments: CommentResultJson[] | null = null;
+  private assignmentTags: AssignmentTagResultJson[] | null = null;
+  private ticketTags: TicketTagResultJson[] | null = null;
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(
@@ -26,13 +26,14 @@ export class TicketDetailComponent implements OnInit {
     private apiCallService: ApiCallService,
     private ticketApi: TicketApi,
     private commentsApi: CommentsApi,
-    private assigmentTagsApi: AssignmenttagApi) {
+    private assigmentTagsApi: AssignmenttagApi,
+    ) {
   }
 
   ngOnInit(): void {
     this.route.params
       .do(() => { this.loading = true; })
-      .flatMap(params => {
+      .switchMap(params => {
         let ticketId = '' + params['ticketNumber'];
         let projectId = '' + params['projectId'];
 
@@ -42,14 +43,18 @@ export class TicketDetailComponent implements OnInit {
           .callNoError<CommentResultJson[]>(p => this.ticketApi.listCommentsUsingGET1WithHttpInfo(ticketId, p));
         let assignmentTagsObs = this.apiCallService
           .callNoError<AssignmentTagResultJson[]>(p => this.assigmentTagsApi.listAssignmentTagsUsingGETWithHttpInfo(projectId, p));
+        let ticketTagsObs = Observable.of([]);
 
-        return Observable.zip(ticketObs, commentsObs, assignmentTagsObs);
+        return Observable.zip(ticketObs, commentsObs, assignmentTagsObs, ticketTagsObs);
       })
       .subscribe(tuple => {
-        let [ticket, comments, assignmentTags] = tuple;
+        let [ticket, comments, assignmentTags, ticketTags] = tuple;
         this.ticket = ticket;
+        // TODO remove this when we can actually use ticket tags
+        this.ticket.tagIds = [];
         this.comments = comments;
         this.assignmentTags = assignmentTags;
+        this.ticketTags = ticketTags;
         this.loading = false;
       });
   }

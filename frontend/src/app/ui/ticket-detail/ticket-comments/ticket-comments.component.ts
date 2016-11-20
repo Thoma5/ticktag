@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Comment } from '../ticket-detail.component';
+import { CommentResultJson } from '../../../api';
 
 @Component({
     selector: 'tt-ticket-comments',
@@ -7,5 +7,5 @@ import { Comment } from '../ticket-detail.component';
     styleUrls: ['./ticket-comments.component.scss']
 })
 export class TicketCommentsComponent {
-    @Input() comments: Comment[];
+    @Input() comments: CommentResultJson[];
 }

@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { TicketResultJson } from '../ticket-detail.component';
-import { UserResultJson } from '../../../api';
+import { UserResultJson, TicketResultJson } from '../../../api';
 import { AssignmentTagResultJson } from '../assigned-user/assigned-user.component';
 
 let userMock1: UserResultJson = {
