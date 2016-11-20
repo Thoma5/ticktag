@@ -22,18 +22,6 @@
             <tt-taginput [(tags)]='ticket.tagIds' [allTags]='ticketTags'></tt-taginput>
         </div>
     </div>
-    <div class='description-container'>
-        <tt-edit-button [visible]='!editingDescription' (click)='editingDescription=true'></tt-edit-button>
-        <div class='description-wrapper'>
-            <tt-edit-textview [(editing)]='editingDescription' [(content)]='ticket.description'>
-                <!-- TODO duplication, get rid of it -->
-                <tt-markdown-textview-read #read class='textview-read'>
-                </tt-markdown-textview-read>
-                <tt-markdown-textview-edit #edit class='textview-edit'>
-                </tt-markdown-textview-edit>
-            </tt-edit-textview>
-        </div>
-    </div>
     <div class='subtickets'>Subtickets</div>
     <div class='status'>
         <div class='initial-estimation'>
@@ -47,6 +35,18 @@
         </div>
         <div class='due-date'>
             Due date: {{ticket.dueDate | ttFormatMoment}}
+        </div>
+    </div>
+    <div class='description-container'>
+        <tt-edit-button [visible]='!editingDescription' (click)='editingDescription=true'></tt-edit-button>
+        <div class='description-wrapper'>
+            <tt-edit-textview [(editing)]='editingDescription' [(content)]='ticket.description'>
+                <!-- TODO duplication, get rid of it -->
+                <tt-markdown-textview-read #read class='textview-read'>
+                </tt-markdown-textview-read>
+                <tt-markdown-textview-edit #edit class='textview-edit'>
+                </tt-markdown-textview-edit>
+            </tt-edit-textview>
         </div>
     </div>
     <div class='footer-row'>
