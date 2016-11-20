@@ -3,7 +3,7 @@ import * as moment from 'moment';
 
 @Pipe({ name: 'ttHumanizeDuration' })
 export class HumanizeDurationPipe implements PipeTransform {
-    transform(value: moment.Duration): string {
-        return value.humanize();
+    transform(value: number): string {
+        return moment.duration(value * 1000, 'ms').humanize();
     }
 }

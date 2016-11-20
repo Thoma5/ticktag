@@ -11,14 +11,15 @@ import { AuthService, ApiCallService, MarkdownService } from './service';
 import { LoginComponent } from './ui/login/login.component';
 import { WhoamiComponent } from './ui/whoami/whoami.component';
 import { HomeComponent } from './ui/home/home.component';
-import { AuthApi } from './api/api/AuthApi';
 import { Ng2Webstorage } from 'ng2-webstorage/dist/app';
 import { UsersComponent } from './ui/users/users.component';
 import { UserCreateComponent } from './ui/users/user-create.component';
-import { UserApi } from './api/api/UserApi';
 import { ProjectsComponent } from './ui/projects/projects.component';
 import { ProjectCreateComponent } from './ui/projects/project-create.component';
-import { ProjectApi } from './api/api/ProjectApi';
+import {
+  ProjectApi, AuthApi, UserApi, AssignmenttagApi, CommentsApi, MemberApi,
+  TimecategoryApi, TicketApi, TickettagApi, TickettaggroupApi
+} from './api';
 import { TicketDetailComponent } from './ui/ticket-detail/ticket-detail.component';
 import { TicketSidebarComponent } from './ui/ticket-detail/ticket-sidebar/ticket-sidebar.component';
 import { TicketCoreComponent } from './ui/ticket-detail/ticket-core/ticket-core.component';
@@ -99,9 +100,17 @@ import { LoadingComponent } from './util/loading/loading.component';
     LoadingComponent,
   ],
   providers: [
+    ProjectApi,
     AuthApi,
     UserApi,
-    ProjectApi,
+    AssignmenttagApi,
+    CommentsApi,
+    MemberApi,
+    TimecategoryApi,
+    TicketApi,
+    TickettagApi,
+    TickettaggroupApi,
+
     ApiCallService,
     AuthService,
     MarkdownService,

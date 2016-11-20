@@ -39,7 +39,7 @@ import { Configuration }                                     from '../configurat
 
 
 @Injectable()
-export class ProjectApi {
+export class AssignmenttagApi {
     protected basePath = 'http://localhost:8080/';
     public defaultHeaders: Headers = new Headers();
     public configuration: Configuration = new Configuration();
@@ -69,12 +69,12 @@ export class ProjectApi {
     }
 
     /**
-     * createProject
+     * createAssignmentTag
      * 
      * @param req req
      */
-    public createProjectUsingPOST(req: models.CreateProjectRequestJson, extraHttpRequestParams?: any): Observable<models.ProjectResultJson> {
-        return this.createProjectUsingPOSTWithHttpInfo(req, extraHttpRequestParams)
+    public createAssignmentTagUsingPOST(req: models.CreateAssignmentTagRequestJson, extraHttpRequestParams?: any): Observable<models.AssignmentTagResultJson> {
+        return this.createAssignmentTagUsingPOSTWithHttpInfo(req, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -85,12 +85,12 @@ export class ProjectApi {
     }
 
     /**
-     * deleteProject
+     * getAssignmentTag
      * 
      * @param id id
      */
-    public deleteProjectUsingDELETE(id: string, extraHttpRequestParams?: any): Observable<{}> {
-        return this.deleteProjectUsingDELETEWithHttpInfo(id, extraHttpRequestParams)
+    public getAssignmentTagUsingGET(id: string, extraHttpRequestParams?: any): Observable<models.AssignmentTagResultJson> {
+        return this.getAssignmentTagUsingGETWithHttpInfo(id, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -101,12 +101,12 @@ export class ProjectApi {
     }
 
     /**
-     * getProjectsCount
+     * listAssignmentTags
      * 
-     * @param all all
+     * @param projectId projectId
      */
-    public getProjectsCountUsingGET(all?: boolean, extraHttpRequestParams?: any): Observable<models.CountJson> {
-        return this.getProjectsCountUsingGETWithHttpInfo(all, extraHttpRequestParams)
+    public listAssignmentTagsUsingGET(projectId: string, extraHttpRequestParams?: any): Observable<Array<models.AssignmentTagResultJson>> {
+        return this.listAssignmentTagsUsingGETWithHttpInfo(projectId, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -117,17 +117,13 @@ export class ProjectApi {
     }
 
     /**
-     * listProjectTimeCategories
+     * searchAssignmentTags
      * 
-     * @param id id
-     * @param page page
-     * @param size size
-     * @param order order
-     * @param asc asc
+     * @param projectId projectId
      * @param name name
      */
-    public listProjectTimeCategoriesUsingGET(id: string, page?: number, size?: number, order?: string, asc?: boolean, name?: string, extraHttpRequestParams?: any): Observable<Array<models.TimeCategoryJson>> {
-        return this.listProjectTimeCategoriesUsingGETWithHttpInfo(id, page, size, order, asc, name, extraHttpRequestParams)
+    public searchAssignmentTagsUsingGET(projectId: string, name: string, extraHttpRequestParams?: any): Observable<Array<models.AssignmentTagResultJson>> {
+        return this.searchAssignmentTagsUsingGETWithHttpInfo(projectId, name, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -138,50 +134,13 @@ export class ProjectApi {
     }
 
     /**
-     * listProjects
-     * 
-     * @param page page
-     * @param size size
-     * @param order order
-     * @param asc asc
-     * @param name name
-     * @param all all
-     */
-    public listProjectsUsingGET(page?: number, size?: number, order?: string, asc?: boolean, name?: string, all?: boolean, extraHttpRequestParams?: any): Observable<Array<models.ProjectResultJson>> {
-        return this.listProjectsUsingGETWithHttpInfo(page, size, order, asc, name, all, extraHttpRequestParams)
-            .map((response: Response) => {
-                if (response.status === 204) {
-                    return undefined;
-                } else {
-                    return response.json();
-                }
-            });
-    }
-
-    /**
-     * listTicketTagGroups
-     * 
-     * @param id id
-     */
-    public listTicketTagGroupsUsingGET(id: string, extraHttpRequestParams?: any): Observable<Array<models.TicketTagGroupResultJson>> {
-        return this.listTicketTagGroupsUsingGETWithHttpInfo(id, extraHttpRequestParams)
-            .map((response: Response) => {
-                if (response.status === 204) {
-                    return undefined;
-                } else {
-                    return response.json();
-                }
-            });
-    }
-
-    /**
-     * updateProject
+     * updateAssignmentTag
      * 
      * @param id id
      * @param req req
      */
-    public updateProjectUsingPUT(id: string, req: models.UpdateProjectRequestJson, extraHttpRequestParams?: any): Observable<models.ProjectResultJson> {
-        return this.updateProjectUsingPUTWithHttpInfo(id, req, extraHttpRequestParams)
+    public updateAssignmentTagUsingPUT(id: string, req: models.UpdateAssignmentRequestJson, extraHttpRequestParams?: any): Observable<models.AssignmentTagResultJson> {
+        return this.updateAssignmentTagUsingPUTWithHttpInfo(id, req, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -193,18 +152,18 @@ export class ProjectApi {
 
 
     /**
-     * createProject
+     * createAssignmentTag
      * 
      * @param req req
      */
-    public createProjectUsingPOSTWithHttpInfo(req: models.CreateProjectRequestJson, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/project`;
+    public createAssignmentTagUsingPOSTWithHttpInfo(req: models.CreateAssignmentTagRequestJson, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/assignmenttag`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         // verify required parameter 'req' is not null or undefined
         if (req === null || req === undefined) {
-            throw new Error('Required parameter req was null or undefined when calling createProjectUsingPOST.');
+            throw new Error('Required parameter req was null or undefined when calling createAssignmentTagUsingPOST.');
         }
 
 
@@ -239,61 +198,18 @@ export class ProjectApi {
     }
 
     /**
-     * deleteProject
+     * getAssignmentTag
      * 
      * @param id id
      */
-    public deleteProjectUsingDELETEWithHttpInfo(id: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/project/${id}`;
+    public getAssignmentTagUsingGETWithHttpInfo(id: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/assignmenttag/${id}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling deleteProjectUsingDELETE.');
-        }
-
-
-        // to determine the Content-Type header
-        let consumes: string[] = [
-            'application/json'
-        ];
-
-        // to determine the Accept header
-        let produces: string[] = [
-            'application/json'
-        ];
-        
-            
-
-
-
-        let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Delete,
-            headers: headers,
-            search: queryParameters
-        });
-        
-        // https://github.com/swagger-api/swagger-codegen/issues/4037
-        if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
-        }
-
-        return this.http.request(path, requestOptions);
-    }
-
-    /**
-     * getProjectsCount
-     * 
-     * @param all all
-     */
-    public getProjectsCountUsingGETWithHttpInfo(all?: boolean, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/project/count`;
-
-        let queryParameters = new URLSearchParams();
-        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        if (all !== undefined) {
-            queryParameters.set('all', <any>all);
+            throw new Error('Required parameter id was null or undefined when calling getAssignmentTagUsingGET.');
         }
 
 
@@ -326,35 +242,73 @@ export class ProjectApi {
     }
 
     /**
-     * listProjectTimeCategories
+     * listAssignmentTags
      * 
-     * @param id id
-     * @param page page
-     * @param size size
-     * @param order order
-     * @param asc asc
-     * @param name name
+     * @param projectId projectId
      */
-    public listProjectTimeCategoriesUsingGETWithHttpInfo(id: string, page?: number, size?: number, order?: string, asc?: boolean, name?: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/project/${id}/timecategories`;
+    public listAssignmentTagsUsingGETWithHttpInfo(projectId: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/assignmenttag/project/${projectId}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'id' is not null or undefined
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling listProjectTimeCategoriesUsingGET.');
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling listAssignmentTagsUsingGET.');
         }
-        if (page !== undefined) {
-            queryParameters.set('page', <any>page);
+        if (projectId !== undefined) {
+            queryParameters.set('projectId', <any>projectId);
         }
-        if (size !== undefined) {
-            queryParameters.set('size', <any>size);
+
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json'
+        ];
+        
+            
+
+
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Get,
+            headers: headers,
+            search: queryParameters
+        });
+        
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
         }
-        if (order !== undefined) {
-            queryParameters.set('order', <any>order);
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * searchAssignmentTags
+     * 
+     * @param projectId projectId
+     * @param name name
+     */
+    public searchAssignmentTagsUsingGETWithHttpInfo(projectId: string, name: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/assignmenttag/project/${projectId}/search/${name}`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling searchAssignmentTagsUsingGET.');
         }
-        if (asc !== undefined) {
-            queryParameters.set('asc', <any>asc);
+        // verify required parameter 'name' is not null or undefined
+        if (name === null || name === undefined) {
+            throw new Error('Required parameter name was null or undefined when calling searchAssignmentTagsUsingGET.');
+        }
+        if (projectId !== undefined) {
+            queryParameters.set('projectId', <any>projectId);
         }
         if (name !== undefined) {
             queryParameters.set('name', <any>name);
@@ -390,130 +344,23 @@ export class ProjectApi {
     }
 
     /**
-     * listProjects
-     * 
-     * @param page page
-     * @param size size
-     * @param order order
-     * @param asc asc
-     * @param name name
-     * @param all all
-     */
-    public listProjectsUsingGETWithHttpInfo(page?: number, size?: number, order?: string, asc?: boolean, name?: string, all?: boolean, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/project`;
-
-        let queryParameters = new URLSearchParams();
-        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        if (page !== undefined) {
-            queryParameters.set('page', <any>page);
-        }
-        if (size !== undefined) {
-            queryParameters.set('size', <any>size);
-        }
-        if (order !== undefined) {
-            queryParameters.set('order', <any>order);
-        }
-        if (asc !== undefined) {
-            queryParameters.set('asc', <any>asc);
-        }
-        if (name !== undefined) {
-            queryParameters.set('name', <any>name);
-        }
-        if (all !== undefined) {
-            queryParameters.set('all', <any>all);
-        }
-
-
-        // to determine the Content-Type header
-        let consumes: string[] = [
-            'application/json'
-        ];
-
-        // to determine the Accept header
-        let produces: string[] = [
-            'application/json'
-        ];
-        
-            
-
-
-
-        let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Get,
-            headers: headers,
-            search: queryParameters
-        });
-        
-        // https://github.com/swagger-api/swagger-codegen/issues/4037
-        if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
-        }
-
-        return this.http.request(path, requestOptions);
-    }
-
-    /**
-     * listTicketTagGroups
-     * 
-     * @param id id
-     */
-    public listTicketTagGroupsUsingGETWithHttpInfo(id: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/project/${id}/tickettaggroups`;
-
-        let queryParameters = new URLSearchParams();
-        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'id' is not null or undefined
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling listTicketTagGroupsUsingGET.');
-        }
-
-
-        // to determine the Content-Type header
-        let consumes: string[] = [
-            'application/json'
-        ];
-
-        // to determine the Accept header
-        let produces: string[] = [
-            'application/json'
-        ];
-        
-            
-
-
-
-        let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Get,
-            headers: headers,
-            search: queryParameters
-        });
-        
-        // https://github.com/swagger-api/swagger-codegen/issues/4037
-        if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
-        }
-
-        return this.http.request(path, requestOptions);
-    }
-
-    /**
-     * updateProject
+     * updateAssignmentTag
      * 
      * @param id id
      * @param req req
      */
-    public updateProjectUsingPUTWithHttpInfo(id: string, req: models.UpdateProjectRequestJson, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/project/${id}`;
+    public updateAssignmentTagUsingPUTWithHttpInfo(id: string, req: models.UpdateAssignmentRequestJson, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/assignmenttag/${id}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling updateProjectUsingPUT.');
+            throw new Error('Required parameter id was null or undefined when calling updateAssignmentTagUsingPUT.');
         }
         // verify required parameter 'req' is not null or undefined
         if (req === null || req === undefined) {
-            throw new Error('Required parameter req was null or undefined when calling updateProjectUsingPUT.');
+            throw new Error('Required parameter req was null or undefined when calling updateAssignmentTagUsingPUT.');
         }
 
 
