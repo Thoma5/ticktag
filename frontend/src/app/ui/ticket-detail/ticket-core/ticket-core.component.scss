@@ -6,12 +6,17 @@
     position: relative;
 }
 
+.card-content * {
+    z-index: 1;
+}
+
 .closed {
     width: 16rem;
     height: 16rem;
     position: absolute;
     top: -5rem;
     right: -5rem;
+    z-index: 0;
 
     img {
         width: 100%;
