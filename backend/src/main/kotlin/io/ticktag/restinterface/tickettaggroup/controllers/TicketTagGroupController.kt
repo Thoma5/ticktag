@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @TicktagRestInterface
 @RequestMapping("/tickettaggroup")
-@Api(tags = arrayOf("ticketTagGroup"), description = "ticketTagGroup management")
+@Api(tags = arrayOf("tickettaggroup"), description = "tickettaggroup management")
 open class TicketTagGroupController @Inject constructor(
         private val ticketTagGroupService: TicketTagGroupService,
         private val ticketTagService: TicketTagService
@@ -47,6 +47,6 @@ open class TicketTagGroupController @Inject constructor(
 
     @GetMapping(value = "/{id}/tickettag")
     open fun listTicketTags(@PathVariable(name = "id") id: UUID): List<TicketTagResultJson> {
-        return ticketTagService.listTicketTags(id).map(::TicketTagResultJson)
+        return ticketTagService.listTicketTagsInGroup(id).map(::TicketTagResultJson)
     }
 }

@@ -19,6 +19,8 @@ open class TicketTag protected constructor() {
             o.tagRemovedEvents = mutableListOf()
             return o
         }
+
+        const val COLOR_REGEX = "^(?:[0-9a-fA-F]{3}){1,2}$"
     }
 
     @Id

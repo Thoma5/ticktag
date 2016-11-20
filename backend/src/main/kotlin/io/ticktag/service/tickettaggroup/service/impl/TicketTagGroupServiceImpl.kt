@@ -60,7 +60,7 @@ open class TicketTagGroupServiceImpl @Inject constructor(
         if (ticketTagGroup.default_ticket_tag_id != null) {
             val ticketTag = ticketTags.findOne(ticketTagGroup.default_ticket_tag_id) ?: throw NotFoundException()
             if (ticketTagGroupToUpdate.id != ticketTag.ticketTagGroup.id) {
-                throw TicktagValidationException(listOf(ValidationError("updateTicketTagGroup.defaultTicketTag", ValidationErrorDetail.Other("not in group"))))
+                throw TicktagValidationException(listOf(ValidationError("updateTicketTagGroup.defaultTicketTag", ValidationErrorDetail.Other("not_in_group"))))
             }
             ticketTagGroupToUpdate.defaultTicketTag = ticketTag
         }

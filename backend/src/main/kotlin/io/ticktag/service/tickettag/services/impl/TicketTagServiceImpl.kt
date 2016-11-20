@@ -28,8 +28,8 @@ open class TicketTagServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.READ_TICKET_TAG_FOR_GROUP)
-    override fun listTicketTags(@P("authTicketTagGroupId") ticketTagGroupID: UUID): List<TicketTagResult> {
-        val ticketTagGroup = ticketTagGroups.findOne(ticketTagGroupID) ?: throw NotFoundException()
+    override fun listTicketTagsInGroup(@P("authTicketTagGroupId") ticketTagGroupId: UUID): List<TicketTagResult> {
+        val ticketTagGroup = ticketTagGroups.findOne(ticketTagGroupId) ?: throw NotFoundException()
         return ticketTagGroup.ticketTags.map(::TicketTagResult)
     }
 
