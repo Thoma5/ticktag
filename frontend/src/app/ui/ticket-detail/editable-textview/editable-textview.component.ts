@@ -4,6 +4,7 @@ export interface TextviewReadComponent {
     text: string;
 }
 export interface TextviewEditComponent {
+    active: boolean;
     text: string;
     textChange: EventEmitter<string>;
     abort: EventEmitter<void>;
@@ -38,6 +39,11 @@ export class EditableTextviewComponent implements AfterContentInit {
         }
         if (this.editComponent != null) {
             this.editComponent.text = this.currentlyEditingText;
+            this.editComponent.active = this.editing;
+            this.editingChange
+                .subscribe((value: boolean) => {
+                    this.editComponent.active = value;
+                }, null, null);
             this.currentlyEditingTextChange
                 .subscribe((txt: string) => {
                     this.editComponent.text = txt;
@@ -88,6 +94,7 @@ export class EditableTextviewComponent implements AfterContentInit {
     saveEdit(): void {
         this.text = this.currentlyEditingText;
         this.textChange.emit(this.text);
+        this.editComponent.active = false;
         this.updateEditing(false);
     }
 

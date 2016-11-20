@@ -15,6 +15,7 @@ export class TitleTextviewReadComponent implements TextviewReadComponent {
     styleUrls: ['./ticket-title-textview-edit.component.scss']
 })
 export class TitleTextviewEditComponent implements TextviewEditComponent {
+    @Input() active: boolean;
     @Input() text: string;
     @Output() textChange: EventEmitter<string> = new EventEmitter<string>();
     @Output() abort: EventEmitter<void> = new EventEmitter<void>();
