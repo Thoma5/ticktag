@@ -12,11 +12,14 @@
 .tag {
   display: inline-block;
   border-radius: 0.25em;
-  padding-left: 0.25em;
-  padding-right: 0.25em;
+  padding-left: 0.4em;
+  padding-right: 0.4em;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
   box-shadow: 0 ($px * 1em) 0 rgba(0,0,0,0.12);
   margin-left: $internal-gap;
   margin-bottom: 0.25em;
+  font-weight: bold;
 
   .delete {
     @extend %edit-a;
