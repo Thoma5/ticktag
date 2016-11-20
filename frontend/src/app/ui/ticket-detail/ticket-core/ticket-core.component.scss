@@ -20,6 +20,14 @@
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
+
+    .title-text-wrapper {
+        margin-left: $internal-gap;
+    }
+
+    tt-edit-button {
+        margin-left: $internal-gap;
+    }
 }
 
 .sub-header-row {
