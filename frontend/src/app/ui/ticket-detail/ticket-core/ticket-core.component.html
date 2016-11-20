@@ -1,4 +1,7 @@
 <div class='core'>
+    <div *ngIf='!ticket.open' class='closed'>
+        <img src='/img/checkmark_circle.svg' />
+    </div>
     <div class='header-row'>
         <h3 class='title'>
             <div class='title-container'>
