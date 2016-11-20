@@ -1,56 +1,56 @@
 import { Component, Input, Output, EventEmitter, ContentChild, AfterContentInit } from '@angular/core';
 
-export interface TextviewReadComponent {
-    text: string;
+export interface TextviewReadComponent<T> {
+    content: T;
 }
-export interface TextviewEditComponent {
+export interface TextviewEditComponent<T> {
     active: boolean;
-    text: string;
-    textChange: EventEmitter<string>;
+    content: T;
+    contentChange: EventEmitter<T>;
     abort: EventEmitter<void>;
     save: EventEmitter<void>;
 }
 
 
 @Component({
-    selector: 'tt-editable-textview',
-    templateUrl: './editable-textview.component.html',
-    styleUrls: ['./editable-textview.component.scss']
+    selector: 'tt-edit-textview',
+    templateUrl: './edit-textview.component.html',
+    styleUrls: ['./edit-textview.component.scss']
 })
-export class EditableTextviewComponent implements AfterContentInit {
-    @Input() text: string;
+export class EditableTextviewComponent<T> implements AfterContentInit {
+    @Input() content: T;
     _editing: boolean;
-    _currentlyEditingText: string;
-    currentlyEditingTextChange: EventEmitter<string> = new EventEmitter<string>();
-    @Output() textChange: EventEmitter<string> = new EventEmitter<string>();
+    _currentlyEditingContent: T;
+    currentlyEditingContentChange: EventEmitter<T> = new EventEmitter<T>();
+    @Output() contentChange: EventEmitter<T> = new EventEmitter<T>();
     @Output() editingChange: EventEmitter<boolean> = new EventEmitter<boolean>();
-    @ContentChild('read') readComponent: TextviewReadComponent;
-    @ContentChild('edit') editComponent: TextviewEditComponent;
+    @ContentChild('read') readComponent: TextviewReadComponent<T>;
+    @ContentChild('edit') editComponent: TextviewEditComponent<T>;
 
     ngAfterContentInit() {
         if (this.readComponent != null) {
-            this.readComponent.text = this.text;
-            this.textChange
+            this.readComponent.content = this.content;
+            this.contentChange
                 .subscribe(() => {
-                    this.readComponent.text = this.text;
+                    this.readComponent.content = this.content;
                 }, null, null);
         } else {
             console.log('Read component undefined');
         }
         if (this.editComponent != null) {
-            this.editComponent.text = this.currentlyEditingText;
+            this.editComponent.content = this.currentlyEditingContent;
             this.editComponent.active = this.editing;
             this.editingChange
                 .subscribe((value: boolean) => {
                     this.editComponent.active = value;
                 }, null, null);
-            this.currentlyEditingTextChange
-                .subscribe((txt: string) => {
-                    this.editComponent.text = txt;
+            this.currentlyEditingContentChange
+                .subscribe((val: T) => {
+                    this.editComponent.content = val;
                 }, null, null);
-            this.editComponent.textChange
-                .subscribe((txt: string) => {
-                    this.currentlyEditingText = txt;
+            this.editComponent.contentChange
+                .subscribe((val: T) => {
+                    this.currentlyEditingContent = val;
                 }, null, null);
             this.editComponent.abort
                 .subscribe(() => {
@@ -77,13 +77,13 @@ export class EditableTextviewComponent implements AfterContentInit {
         return this._editing;
     }
 
-    set currentlyEditingText(text: string) {
-      this._currentlyEditingText = text;
-      this.currentlyEditingTextChange.emit(this._currentlyEditingText);
+    set currentlyEditingContent(value: T) {
+      this._currentlyEditingContent = value;
+      this.currentlyEditingContentChange.emit(this._currentlyEditingContent);
     }
 
-    get currentlyEditingText() {
-      return this._currentlyEditingText;
+    get currentlyEditingContent() {
+      return this._currentlyEditingContent;
     }
 
     updateEditing(editing: boolean): void {
@@ -92,21 +92,21 @@ export class EditableTextviewComponent implements AfterContentInit {
     }
 
     saveEdit(): void {
-        this.text = this.currentlyEditingText;
-        this.textChange.emit(this.text);
+        this.content = this.currentlyEditingContent;
+        this.contentChange.emit(this.content);
         this.editComponent.active = false;
         this.updateEditing(false);
     }
 
     abortEdit(): void {
-        if (this.currentlyEditingText !== this.text) {
+        if (this.currentlyEditingContent !== this.content) {
             // TODO request confirmation due to unsaved changes?
         }
         this.updateEditing(false);
     }
 
     initEdit(): void {
-        this.currentlyEditingText = this.text;
-        this.editComponent.text = this.currentlyEditingText;
+        this.currentlyEditingContent = this.content;
+        this.editComponent.content = this.currentlyEditingContent;
     }
 }

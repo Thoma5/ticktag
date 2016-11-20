@@ -1,12 +1,12 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { TextviewEditComponent, TextviewReadComponent } from '../editable-textview/editable-textview.component';
+import { TextviewEditComponent, TextviewReadComponent } from '../../../util/edit-textview/edit-textview.component';
 
 @Component({
     selector: 'tt-title-textview-read',
-    template: '{{text}}',
+    template: '{{content}}',
 })
-export class TitleTextviewReadComponent implements TextviewReadComponent {
-    @Input() text: string;
+export class TitleTextviewReadComponent implements TextviewReadComponent<string> {
+    @Input() content: string;
 }
 
 @Component({
@@ -14,10 +14,10 @@ export class TitleTextviewReadComponent implements TextviewReadComponent {
     templateUrl: './ticket-title-textview-edit.component.html',
     styleUrls: ['./ticket-title-textview-edit.component.scss']
 })
-export class TitleTextviewEditComponent implements TextviewEditComponent {
+export class TitleTextviewEditComponent implements TextviewEditComponent<string> {
     @Input() active: boolean;
-    @Input() text: string;
-    @Output() textChange: EventEmitter<string> = new EventEmitter<string>();
+    @Input() content: string;
+    @Output() contentChange: EventEmitter<string> = new EventEmitter<string>();
     @Output() abort: EventEmitter<void> = new EventEmitter<void>();
     @Output() save: EventEmitter<void> = new EventEmitter<void>();
 }

@@ -4,13 +4,13 @@
             <div class='title-container'>
                 <span class='number'>#{{ticket.number}}</span>
                 <span class='title-text-wrapper'>
-                    <tt-editable-textview [(editing)]='editingTitle' [(text)]='ticket.title'>
+                    <tt-edit-textview [(editing)]='editingTitle' [(content)]='ticket.title'>
                         <!-- TODO duplication, get rid of it -->
                         <tt-title-textview-read #read class='textview-read'>
                         </tt-title-textview-read>
                         <tt-title-textview-edit #edit class='textview-edit'>
                         </tt-title-textview-edit>
-                    </tt-editable-textview>
+                    </tt-edit-textview>
                 </span>
                 <tt-edit-button [visible]='!editingTitle' (click)='editingTitle=true'></tt-edit-button>
             </div>
@@ -27,13 +27,13 @@
     <div class='description-container'>
         <tt-edit-button [visible]='!editingDescription' (click)='editingDescription=true'></tt-edit-button>
         <div class='description-wrapper'>
-            <tt-editable-textview [(editing)]='editingDescription' [(text)]='ticket.description'>
+            <tt-edit-textview [(editing)]='editingDescription' [(content)]='ticket.description'>
                 <!-- TODO duplication, get rid of it -->
                 <tt-markdown-textview-read #read class='textview-read'>
                 </tt-markdown-textview-read>
                 <tt-markdown-textview-edit #edit class='textview-edit'>
                 </tt-markdown-textview-edit>
-            </tt-editable-textview>
+            </tt-edit-textview>
         </div>
     </div>
     <div class='subtickets'>Subtickets</div>

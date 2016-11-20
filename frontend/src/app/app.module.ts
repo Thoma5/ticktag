@@ -22,13 +22,13 @@ import { ProjectApi } from './api/api/ProjectApi';
 import { TicketDetailComponent } from './ui/ticket-detail/ticket-detail.component';
 import { TicketSidebarComponent } from './ui/ticket-detail/ticket-sidebar/ticket-sidebar.component';
 import { TicketCoreComponent } from './ui/ticket-detail/ticket-core/ticket-core.component';
-import { EditableTextviewComponent } from './ui/ticket-detail/editable-textview/editable-textview.component';
+import { EditableTextviewComponent } from './util/edit-textview/edit-textview.component';
 import {
   TitleTextviewReadComponent,
   TitleTextviewEditComponent
 } from './ui/ticket-detail/ticket-title-textview/ticket-title-textview.component';
-import { MarkdownTextviewEditComponent } from './ui/ticket-detail/ticket-markdown-textview/ticket-markdown-textview-edit.component';
-import { MarkdownTextviewReadComponent } from './ui/ticket-detail/ticket-markdown-textview/ticket-markdown-textview-read.component';
+import { MarkdownTextviewEditComponent } from './util/markdown-textview/markdown-textview-edit.component';
+import { MarkdownTextviewReadComponent } from './util/markdown-textview/markdown-textview-read.component';
 import { OpenClosedButtonComponent } from './ui/ticket-detail/open-closed-button/open-closed-button.component';
 import { TicketCommentsComponent } from './ui/ticket-detail/ticket-comments/ticket-comments.component';
 import { TicketCommentComponent } from './ui/ticket-detail/ticket-comment/ticket-comment.component';
