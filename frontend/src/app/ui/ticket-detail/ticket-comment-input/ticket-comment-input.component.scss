@@ -1,0 +1,11 @@
+@import '../../../../style/constants.scss';
+
+.comment-input {
+    @extend %card;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row-reverse;
+    flex-wrap: nowrap;
+}

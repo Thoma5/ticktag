@@ -33,6 +33,7 @@ import { MarkdownTextviewReadComponent } from './util/markdown-textview/markdown
 import { OpenClosedButtonComponent } from './ui/ticket-detail/open-closed-button/open-closed-button.component';
 import { TicketCommentsComponent } from './ui/ticket-detail/ticket-comments/ticket-comments.component';
 import { TicketCommentComponent } from './ui/ticket-detail/ticket-comment/ticket-comment.component';
+import { TicketCommentInputComponent } from './ui/ticket-detail/ticket-comment-input/ticket-comment-input.component';
 import {
   TicketStorypointsComponent,
   StorypointsTextviewEditComponent,
@@ -89,6 +90,7 @@ import { LoadingComponent } from './util/loading/loading.component';
     TaginputComponent,
     TicketCommentsComponent,
     TicketCommentComponent,
+    TicketCommentInputComponent,
     EditButtonComponent,
 
     HumanizeDurationPipe,
