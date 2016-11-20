@@ -1,7 +1,11 @@
 package io.ticktag.service
 
+import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.member.MemberRepository
 import io.ticktag.persistence.member.entity.ProjectRole
+import io.ticktag.persistence.ticket.AssignmentTagRepository
+import io.ticktag.persistence.ticket.entity.AssignmentTag
+import io.ticktag.persistence.ticket.entity.TicketRepository
 import io.ticktag.persistence.user.entity.Role
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
@@ -10,10 +14,12 @@ import java.util.*
 data class Principal(
         val id: UUID,
         val role: Role?,
-        private val members: MemberRepository?
+        private val members: MemberRepository?,
+        private val comments: CommentRepository?,
+        private val assignmenttags: AssignmentTagRepository?
 ) {
     companion object {
-        val INTERNAL = Principal(UUID(-1, -1), null, null)
+        val INTERNAL = Principal(UUID(-1, -1), null, null, null, null)
     }
 
     fun isInternal(): Boolean = members == null
@@ -29,9 +35,52 @@ data class Principal(
 
     fun hasProjectRole(projectId: UUID, roleString: String): Boolean {
         if (members == null) return false
+
         val member = members.findByUserIdAndProjectId(id, projectId) ?: return false
         return member.role.includesRole(ProjectRole.valueOf(roleString))
     }
+
+    fun hasProjectRoleForTicket(ticketId: UUID, roleString: String): Boolean {
+        if (members == null) return false
+        val member = members.findByUserIdAndTicketId(this.id, ticketId) ?: return false
+        return member.role.includesRole(ProjectRole.valueOf(roleString))
+
+    }
+
+    fun hasProjectRoleForComment(commentId: UUID, roleString: String): Boolean {
+        if (members == null) return false
+        val member = members.findByUserIdAndCommentId(this.id, commentId) ?: return false
+        return member.role.includesRole(ProjectRole.valueOf(roleString))
+
+    }
+
+    fun userIdForCommentId(commentId: UUID): UUID {
+        if (comments == null) return UUID.fromString("invalid")
+        val comment = comments.findOne(commentId) ?: return UUID.fromString("invalid")
+        return comment.user.id
+
+    }
+
+    fun hasProjectRoleForAssignmentTag(assignmentTagId: UUID, roleString: String): Boolean {
+        if (assignmenttags == null) return false
+        val assignmenttag = assignmenttags.findOne(assignmentTagId)
+        if (assignmenttag == null) return false
+        return hasProjectRole(assignmenttag.project.id, roleString)
+    }
+
+
+    fun hasProjectRoleForTicketTagGroup(ticketTagGroupId: UUID, roleString: String): Boolean {
+        if (members == null) return false
+        val member = members.findByUserIdAndTicketTagGroupId(this.id, ticketTagGroupId) ?: return false
+        return member.role.includesRole(ProjectRole.valueOf(roleString))
+    }
+
+    fun hasProjectRoleForTicketTag(ticketTagId: UUID, roleString: String): Boolean {
+        if (members == null) return false
+        val member = members.findByUserIdAndTicketTagId(this.id, ticketTagId) ?: return false
+        return member.role.includesRole(ProjectRole.valueOf(roleString))
+    }
+
 }
 
 class AuthExpr private constructor() {
@@ -47,8 +96,27 @@ class AuthExpr private constructor() {
         const val PROJECT_OBSERVER = "principal.hasRole('OBSERVER') || principal.hasProjectRole(#authProjectId, 'OBSERVER')"
         const val PROJECT_USER = "principal.hasRole('ADMIN') || principal.hasProjectRole(#authProjectId, 'USER')"
         const val PROJECT_ADMIN = "principal.hasRole('ADMIN') || principal.hasProjectRole(#authProjectId, 'ADMIN')"
+        const val READ_TICKET = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForTicket(#authTicketId, 'OBSERVER')"
+        const val WRITE_TICKET = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicket(#authTicketId, 'USER')"
+
+        const val READ_COMMENT = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForComment(#authCommentId, 'OBSERVER')"
+        const val CREATE_COMMENT = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicket(#authTicketId, 'USER') "
+        const val EDIT_COMMENT = "principal.hasRole('ADMIN') || principal.hasProjectRoleForComment(#authCommentId, 'ADMIN') || principal.isId(principal.userIdForCommentId(#authCommentId))"
+
+        const val READ_TICKET_TAG_GROUP = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForTicketTagGroup(#authTicketTagGroupId, 'OBSERVER')"
+        const val CREATE_TICKET_TAG_GROUP = "principal.hasRole('ADMIN') || principal.hasProjectRole(#authProjectId, 'ADMIN')"
+        const val EDIT_TICKET_TAG_GROUP = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicketTagGroup(#authTicketTagGroupId, 'ADMIN')"
+
+        const val READ_TICKET_TAG = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForTicketTag(#authTicketTagId, 'OBSERVER')"
+        const val READ_TICKET_TAG_FOR_GROUP = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForTicketTagGroup(#authTicketTagGroupId, 'OBSERVER')"
+        const val CREATE_TICKET_TAG = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicketTagGroup(#authTicketTagGroupId, 'ADMIN')"
+        const val EDIT_TICKET_TAG = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicketTag(#authTicketTagId, 'ADMIN')"
+
+        const val READ_ASSIGNMENTTAG = "principal.hasRole('ADMIN') || principal.hasProjectRoleForAssignmentTag(#authAssignmentTagId, 'OBSERVER')"
+        const val EDIT_ASSIGNMENTTAG = "principal.hasRole('ADMIN') || principal.hasProjectRoleForAssignmentTag(#authAssignmentTagId, 'USER')"
 
         const val ADMIN_OR_SELF = "principal.hasRole('ADMIN') || principal.isId(#userId)"
+
     }
 }
 
