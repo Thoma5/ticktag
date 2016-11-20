@@ -12,7 +12,7 @@ export class StorypointsTextviewReadComponent implements TextviewReadComponent<n
 
 @Component({
     selector: 'tt-storypoints-textview-edit',
-    template: `<input [ttSelectAll] [ttFocus]='active' [ngModel]='content' (ngModelChange)='contentChange.emit($event)'
+    template: `<input type='number' [ttSelectAll] [ttFocus]='active' [ngModel]='content' (ngModelChange)='contentChange.emit($event)'
     (keydown.enter)='save.emit()'(blur)='abort.emit()'>`,
     styleUrls: ['./ticket-storypoints.component.scss']
 })
