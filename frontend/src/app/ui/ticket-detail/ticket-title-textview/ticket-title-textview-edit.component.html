@@ -1,2 +1,1 @@
-<textarea [ttFocus]='active' ttAutosize [ngModel]='content' (ngModelChange)='contentChange.emit($event)' (keydown.control.enter)='save.emit()' (blur)='abort.emit()'>
-</textarea>
+<input type='text' [ttFocus]='active' [ngModel]='content' (ngModelChange)='contentChange.emit($event)' (keydown.enter)='save.emit()' (blur)='abort.emit()'>
