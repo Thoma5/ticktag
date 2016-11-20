@@ -1,5 +1,12 @@
 package io.ticktag.restinterface
 
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.MapperFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule
 import io.ticktag.service.NotFoundException
 import io.ticktag.service.TicktagValidationException
 import io.ticktag.service.ValidationErrorDetail
@@ -15,16 +22,38 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageConverter
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.servlet.config.annotation.EnableWebMvc
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 @Configuration
 @ComponentScan("io.ticktag.restinterface")
 @EnableWebMvc
-open class RestConfig {
+open class RestConfig : WebMvcConfigurerAdapter() {
     @Bean
     open fun restRequestLoggingAspect() = RestRequestLoggingAspect()
+
+    @Bean
+    open fun objectMapper(): ObjectMapper {
+        val jacksonMessageConverter = MappingJackson2HttpMessageConverter()
+
+        val mapper = jacksonMessageConverter.objectMapper
+                .registerModule(ParameterNamesModule())
+                .registerModule(Jdk8Module())
+                .registerModule(JavaTimeModule())
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true)
+                .configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true)
+                .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true)
+                .configure(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false)
+        return mapper
+    }
+
+    override fun configureMessageConverters(converters: MutableList<HttpMessageConverter<*>>?) {
+        converters?.add(MappingJackson2HttpMessageConverter(objectMapper()))
+    }
 }
 
 @ControllerAdvice
