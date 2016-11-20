@@ -32,9 +32,9 @@ export interface UpdateTicketRequestJson {
 
     storyPoints: number;
 
-    currentEstimatedTime: models.Duration;
+    currentEstimatedTime: number;
 
-    dueDate: models.Instant;
+    dueDate: number;
 
     description: string;
 

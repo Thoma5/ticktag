@@ -190,7 +190,7 @@ INSERT INTO public.ticket (id, number, parent_ticket_id, project_id, created_by,
 VALUES ('00000000-0003-0000-0000-000000000006', 6, NULL, '00000000-0002-0000-0000-000000000001',
                                                 '93ef43d9-20b7-461a-b960-2d1e89ba099f',
                                                 NULL, '2016-11-16 18:06:07.221000',
-                                                'Set UP CI', FALSE, 20, 20, 49, '2016-11-20 17:07:05.554000');
+                                                'Set UP CI', FALSE, 20, 3.6e+13, 5.4e+13, '2016-11-20 17:07:05.554000');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
   ('00000000-0004-0000-0000-000000000007', '93ef43d9-20b7-461a-b960-2d1e89ba099f',
    '00000000-0003-0000-0000-000000000006', '2016-11-16 17:09:59.019000', 'CI is very importnat');
