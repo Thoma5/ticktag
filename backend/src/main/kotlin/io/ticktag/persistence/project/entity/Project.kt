@@ -3,7 +3,7 @@ package io.ticktag.persistence.project.entity
 import io.ticktag.persistence.member.entity.Member
 import io.ticktag.persistence.ticket.entity.AssignmentTag
 import io.ticktag.persistence.ticket.entity.Ticket
-import io.ticktag.persistence.ticket.entity.TicketTag
+import io.ticktag.persistence.ticket.entity.TicketTagGroup
 import io.ticktag.persistence.ticket.entity.TimeCategory
 import java.util.*
 import javax.persistence.*
@@ -21,7 +21,7 @@ open class Project protected constructor() {
             p.icon = icon
             p.members = mutableListOf()
             p.tickets = mutableListOf()
-            p.ticketTags = mutableListOf()
+            p.ticketTagGroups = mutableListOf()
             p.assignmentTags = mutableListOf()
             p.timeCategories = mutableListOf()
             return p
@@ -54,7 +54,7 @@ open class Project protected constructor() {
         protected set
 
     @OneToMany(mappedBy = "project")
-    lateinit open var ticketTags: MutableList<TicketTag>
+    lateinit open var ticketTagGroups: MutableList<TicketTagGroup>
         protected set
 
     @OneToMany(mappedBy = "project")

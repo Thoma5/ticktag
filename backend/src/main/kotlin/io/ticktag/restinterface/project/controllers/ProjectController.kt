@@ -7,12 +7,14 @@ import io.ticktag.restinterface.project.schema.CreateProjectRequestJson
 import io.ticktag.restinterface.project.schema.ProjectResultJson
 import io.ticktag.restinterface.project.schema.ProjectSort
 import io.ticktag.restinterface.project.schema.UpdateProjectRequestJson
+import io.ticktag.restinterface.tickettaggroup.schema.TicketTagGroupResultJson
 import io.ticktag.restinterface.timecategory.schema.TimeCategoryJson
 import io.ticktag.restinterface.timecategory.schema.TimeCategorySort
 import io.ticktag.service.Principal
 import io.ticktag.service.project.dto.CreateProject
 import io.ticktag.service.project.dto.UpdateProject
 import io.ticktag.service.project.services.ProjectService
+import io.ticktag.service.tickettaggroup.service.TicketTagGroupService
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -24,8 +26,9 @@ import javax.inject.Inject
 @RequestMapping("/project")
 @Api(tags = arrayOf("project"), description = "project management")
 open class ProjectController @Inject constructor(
-        private val projectService: ProjectService
-) {
+        private val projectService: ProjectService,
+        private val ticketTagGroupService: TicketTagGroupService
+        ) {
     //TODO: adjust default values
     @GetMapping
     open fun listProjects(@RequestParam(name = "page", defaultValue = "0", required = false) page: Int,
@@ -65,6 +68,11 @@ open class ProjectController @Inject constructor(
         return ProjectResultJson(project)
     }
 
+    @GetMapping(value = "/{id}/tickettaggroups")
+    open fun listTicketTagGroups(@PathVariable(name = "id") id: UUID): List<TicketTagGroupResultJson> {
+        return ticketTagGroupService.listTicketTagGroups(id).map(::TicketTagGroupResultJson)
+    }
+
     @GetMapping(value = "/{id}/timecategories")
     open fun listProjectTimeCategories(@PathVariable(name = "id") projectId: UUID,
                                        @RequestParam(name = "page", defaultValue = "0", required = false) page: Int,
@@ -88,6 +96,5 @@ open class ProjectController @Inject constructor(
         } else {
             CountJson(projectService.getUserProjectCount(principal))
         }
-
     }
 }
