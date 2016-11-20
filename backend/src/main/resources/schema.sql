@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS "ticket" (
   "parent_ticket_id"       UUID        NULL REFERENCES "ticket",
   "project_id"             UUID        NOT NULL REFERENCES "project",
   "created_by"             UUID        NOT NULL REFERENCES "user",
-  "description_comment_id" UUID UNIQUE NOT NULL,  -- REFERENCES "comment", added below due to circular references
+  "description_comment_id" UUID UNIQUE NULL ,  -- REFERENCES "comment", added below due to circular references
   "create_time"            TIMESTAMP   NOT NULL,
   "title"                  TEXT        NOT NULL,
   "open"                   BOOLEAN     NOT NULL,
@@ -59,7 +59,7 @@ CREATE INDEX ON "comment" ("ticket_id");
 
 -- Circular comment reference resolved here
 ALTER TABLE "ticket"
-  ADD FOREIGN KEY ("description_comment_id") REFERENCES "comment" DEFERRABLE INITIALLY DEFERRED;
+  ADD FOREIGN KEY ("description_comment_id") REFERENCES "comment" ;
 
 
 CREATE TABLE IF NOT EXISTS "ticket_tag_group" (
@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS "time_category" (
 CREATE INDEX ON "time_category" ("project_id");
 
 CREATE TABLE IF NOT EXISTS "assigned_ticket_tag" (
-  "ticket_id"     UUID REFERENCES "ticket",
+  "ticket_id"     UUID REFERENCES "ticket" ON DELETE CASCADE,
   "ticket_tag_id" UUID REFERENCES "ticket_tag" ON DELETE CASCADE,
   PRIMARY KEY ("ticket_id", "ticket_tag_id")
 );
