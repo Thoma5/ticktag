@@ -10,21 +10,29 @@ $points-font-size: 2em;
     justify-content: center;
     align-content: center;
     flex-direction: column;
+    position: relative;
+}
 
-    input {
-        font-size: $points-font-size;
-        outline: none;
-        background: $edit-background-color;
-        border: none;
-        text-align: center;
-    }
+.points-textview {
+    float: left;
+}
 
-    .points {
-        font-size: $points-font-size;
-        text-align: center;
-    }
+tt-edit-button {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
 
-    tt-edit-button {
-        float: right;
-    }
+.points {
+    font-size: $points-font-size;
+    text-align: center;
+}
+
+input {
+    width: 100%;
+    font-size: $points-font-size;
+    outline: none;
+    background: $edit-background-color;
+    border: none;
+    text-align: center;
 }

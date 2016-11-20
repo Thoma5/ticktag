@@ -1,4 +1,4 @@
-<div class='container'>
+<div class='ticket-detail-container'>
     <div *ngIf="loading" class='loading'>
         <div class="sk-folding-cube">
             <div class="sk-cube1 sk-cube"></div>
@@ -19,4 +19,7 @@
             <tt-ticket-sidebar [ticket]="ticket"></tt-ticket-sidebar>
         </div>
     </div>
+
+    <pre>{{ticket | json}}</pre>
+    <pre>{{comments | json}}</pre>
 </div>

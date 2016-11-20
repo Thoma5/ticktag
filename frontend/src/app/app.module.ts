@@ -32,7 +32,11 @@ import { MarkdownTextviewReadComponent } from './util/markdown-textview/markdown
 import { OpenClosedButtonComponent } from './ui/ticket-detail/open-closed-button/open-closed-button.component';
 import { TicketCommentsComponent } from './ui/ticket-detail/ticket-comments/ticket-comments.component';
 import { TicketCommentComponent } from './ui/ticket-detail/ticket-comment/ticket-comment.component';
-import { TicketStorypointsComponent } from './ui/ticket-detail/ticket-storypoints/ticket-storypoints.component';
+import {
+  TicketStorypointsComponent,
+  StorypointsTextviewEditComponent,
+  StorypointsTextviewReadComponent
+} from './ui/ticket-detail/ticket-storypoints/ticket-storypoints.component';
 import { AssignedUserComponent } from './ui/ticket-detail/assigned-user/assigned-user.component';
 import { Ng2BootstrapModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { Angular2DataTableModule } from 'angular2-data-table';
@@ -77,6 +81,8 @@ import { EditButtonComponent } from './util/edit-button/edit-button.component';
     MarkdownTextviewEditComponent,
     OpenClosedButtonComponent,
     TicketStorypointsComponent,
+    StorypointsTextviewEditComponent,
+    StorypointsTextviewReadComponent,
     AssignedUserComponent,
     TaginputComponent,
     TicketCommentsComponent,
