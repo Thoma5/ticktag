@@ -1,11 +1,6 @@
 <div class='ticket-detail-container'>
     <div *ngIf="loading" class='loading'>
-        <div class="sk-folding-cube">
-            <div class="sk-cube1 sk-cube"></div>
-            <div class="sk-cube2 sk-cube"></div>
-            <div class="sk-cube4 sk-cube"></div>
-            <div class="sk-cube3 sk-cube"></div>
-        </div>
+        <tt-loading></tt-loading>
     </div>
     <div *ngIf="!loading" class='content row'>
         <div class='left col-md-8'>

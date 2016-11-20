@@ -49,6 +49,7 @@ import { FocusDirective } from './util/focus.directive';
 import { TaginputComponent } from './util/taginput/taginput.component';
 import { SelectAllDirective } from './util/select-all.directive';
 import { EditButtonComponent } from './util/edit-button/edit-button.component';
+import { LoadingComponent } from './util/loading/loading.component';
 
 
 @NgModule({
@@ -95,6 +96,7 @@ import { EditButtonComponent } from './util/edit-button/edit-button.component';
     AutosizeTextareaDirective,
     FocusDirective,
     SelectAllDirective,
+    LoadingComponent,
   ],
   providers: [
     AuthApi,
