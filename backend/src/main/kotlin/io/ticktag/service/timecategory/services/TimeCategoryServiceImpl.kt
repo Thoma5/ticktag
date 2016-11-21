@@ -10,9 +10,6 @@ import io.ticktag.service.timecategory.TimeCategoryService
 import io.ticktag.service.timecategory.dto.CreateTimeCategory
 import io.ticktag.service.timecategory.dto.TimeCategoryResult
 import io.ticktag.service.timecategory.dto.UpdateTimeCategory
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageImpl
-import org.springframework.data.domain.Pageable
 import org.springframework.security.access.prepost.PreAuthorize
 import java.util.*
 import javax.inject.Inject
@@ -36,10 +33,8 @@ open class TimeCategoryServiceImpl @Inject constructor(
 
 
     @PreAuthorize(AuthExpr.ADMIN)
-    override fun listTimeCategories(name: String, pageable: Pageable): Page<TimeCategoryResult> {
-        val page = timeCategories.findByNameContainingIgnoreCase(name, pageable)
-        val content = page.content.map(::TimeCategoryResult)
-        return PageImpl(content, pageable, page.totalElements)
+    override fun listProjectTimeCategories(projectId: UUID): List<TimeCategoryResult> {
+        return timeCategories.findByProjectId(projectId).map(::TimeCategoryResult)
     }
 
     @PreAuthorize(AuthExpr.PROJECT_ADMIN)

@@ -10,7 +10,6 @@ import io.ticktag.service.project.dto.CreateProject
 import io.ticktag.service.project.dto.ProjectResult
 import io.ticktag.service.project.dto.UpdateProject
 import io.ticktag.service.project.services.ProjectService
-import io.ticktag.service.timecategory.dto.TimeCategoryResult
 import org.springframework.data.domain.Pageable
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
@@ -72,11 +71,6 @@ open class ProjectServiceImpl @Inject constructor(
             projectToUpdate.icon = project.icon
         }
         return ProjectResult(projectToUpdate)
-    }
-
-    @PreAuthorize(AuthExpr.PROJECT_USER)
-    override fun listProjectTimeCategories(projectId: UUID, name: String, pageable: Pageable): List<TimeCategoryResult> {
-        return timeCategories.findByProjectIdAndNameContainingIgnoreCase(projectId, name, pageable).content.map(::TimeCategoryResult)
     }
 
     @PreAuthorize(AuthExpr.ADMIN)
