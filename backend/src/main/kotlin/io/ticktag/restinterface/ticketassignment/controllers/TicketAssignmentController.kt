@@ -17,27 +17,27 @@ open class TicketAssignmentController @Inject constructor(
     @GetMapping(value = "{ticketId}/tag/{assignmentTagId}/user/{userId}")
     open fun getTicketAssignment(
             @PathVariable ticketId: UUID,
-            @PathVariable tagId: UUID,
+            @PathVariable assignmentTagId: UUID,
             @PathVariable userId: UUID): TicketAssignmentResultJson {
-        val ticketAssignment = ticketAssignmentService.getTicketAssignment(ticketId, tagId, userId)
+        val ticketAssignment = ticketAssignmentService.getTicketAssignment(ticketId, assignmentTagId, userId)
         return TicketAssignmentResultJson(ticketAssignment)
     }
 
     @PostMapping(value = "{ticketId}/tag/{assignmentTagId}/user/{userId}")
     open fun createTicketAssignment(
             @PathVariable ticketId: UUID,
-            @PathVariable tagId: UUID,
+            @PathVariable assignmentTagId: UUID,
             @PathVariable userId: UUID): TicketAssignmentResultJson {
-        val ticketAssignment = ticketAssignmentService.createTicketAssignment(ticketId, tagId, userId)
+        val ticketAssignment = ticketAssignmentService.createTicketAssignment(ticketId, assignmentTagId, userId)
         return TicketAssignmentResultJson(ticketAssignment)
     }
 
     @DeleteMapping(value = "{ticketId}/tag/{assignmentTagId}/user/{userId}")
     open fun deleteTicketAssignment(
             @PathVariable ticketId: UUID,
-            @PathVariable tagId: UUID,
+            @PathVariable assignmentTagId: UUID,
             @PathVariable userId: UUID) {
-        ticketAssignmentService.deleteTicketAssignment(ticketId, tagId, userId)
+        ticketAssignmentService.deleteTicketAssignment(ticketId, assignmentTagId, userId)
     }
 
 }

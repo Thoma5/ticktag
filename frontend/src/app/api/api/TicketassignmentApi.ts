@@ -72,11 +72,11 @@ export class TicketassignmentApi {
      * createTicketAssignment
      * 
      * @param ticketId ticketId
-     * @param tagId tagId
+     * @param assignmentTagId assignmentTagId
      * @param userId userId
      */
-    public createTicketAssignmentUsingPOST(ticketId: string, tagId: string, userId: string, extraHttpRequestParams?: any): Observable<models.TicketAssignmentResultJson> {
-        return this.createTicketAssignmentUsingPOSTWithHttpInfo(ticketId, tagId, userId, extraHttpRequestParams)
+    public createTicketAssignmentUsingPOST(ticketId: string, assignmentTagId: string, userId: string, extraHttpRequestParams?: any): Observable<models.TicketAssignmentResultJson> {
+        return this.createTicketAssignmentUsingPOSTWithHttpInfo(ticketId, assignmentTagId, userId, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -90,11 +90,11 @@ export class TicketassignmentApi {
      * deleteTicketAssignment
      * 
      * @param ticketId ticketId
-     * @param tagId tagId
+     * @param assignmentTagId assignmentTagId
      * @param userId userId
      */
-    public deleteTicketAssignmentUsingDELETE(ticketId: string, tagId: string, userId: string, extraHttpRequestParams?: any): Observable<{}> {
-        return this.deleteTicketAssignmentUsingDELETEWithHttpInfo(ticketId, tagId, userId, extraHttpRequestParams)
+    public deleteTicketAssignmentUsingDELETE(ticketId: string, assignmentTagId: string, userId: string, extraHttpRequestParams?: any): Observable<{}> {
+        return this.deleteTicketAssignmentUsingDELETEWithHttpInfo(ticketId, assignmentTagId, userId, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -108,11 +108,11 @@ export class TicketassignmentApi {
      * getTicketAssignment
      * 
      * @param ticketId ticketId
-     * @param tagId tagId
+     * @param assignmentTagId assignmentTagId
      * @param userId userId
      */
-    public getTicketAssignmentUsingGET(ticketId: string, tagId: string, userId: string, extraHttpRequestParams?: any): Observable<models.TicketAssignmentResultJson> {
-        return this.getTicketAssignmentUsingGETWithHttpInfo(ticketId, tagId, userId, extraHttpRequestParams)
+    public getTicketAssignmentUsingGET(ticketId: string, assignmentTagId: string, userId: string, extraHttpRequestParams?: any): Observable<models.TicketAssignmentResultJson> {
+        return this.getTicketAssignmentUsingGETWithHttpInfo(ticketId, assignmentTagId, userId, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -127,10 +127,10 @@ export class TicketassignmentApi {
      * createTicketAssignment
      * 
      * @param ticketId ticketId
-     * @param tagId tagId
+     * @param assignmentTagId assignmentTagId
      * @param userId userId
      */
-    public createTicketAssignmentUsingPOSTWithHttpInfo(ticketId: string, tagId: string, userId: string, extraHttpRequestParams?: any): Observable<Response> {
+    public createTicketAssignmentUsingPOSTWithHttpInfo(ticketId: string, assignmentTagId: string, userId: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/ticket/${ticketId}/tag/${assignmentTagId}/user/${userId}`;
 
         let queryParameters = new URLSearchParams();
@@ -139,9 +139,9 @@ export class TicketassignmentApi {
         if (ticketId === null || ticketId === undefined) {
             throw new Error('Required parameter ticketId was null or undefined when calling createTicketAssignmentUsingPOST.');
         }
-        // verify required parameter 'tagId' is not null or undefined
-        if (tagId === null || tagId === undefined) {
-            throw new Error('Required parameter tagId was null or undefined when calling createTicketAssignmentUsingPOST.');
+        // verify required parameter 'assignmentTagId' is not null or undefined
+        if (assignmentTagId === null || assignmentTagId === undefined) {
+            throw new Error('Required parameter assignmentTagId was null or undefined when calling createTicketAssignmentUsingPOST.');
         }
         // verify required parameter 'userId' is not null or undefined
         if (userId === null || userId === undefined) {
@@ -181,10 +181,10 @@ export class TicketassignmentApi {
      * deleteTicketAssignment
      * 
      * @param ticketId ticketId
-     * @param tagId tagId
+     * @param assignmentTagId assignmentTagId
      * @param userId userId
      */
-    public deleteTicketAssignmentUsingDELETEWithHttpInfo(ticketId: string, tagId: string, userId: string, extraHttpRequestParams?: any): Observable<Response> {
+    public deleteTicketAssignmentUsingDELETEWithHttpInfo(ticketId: string, assignmentTagId: string, userId: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/ticket/${ticketId}/tag/${assignmentTagId}/user/${userId}`;
 
         let queryParameters = new URLSearchParams();
@@ -193,9 +193,9 @@ export class TicketassignmentApi {
         if (ticketId === null || ticketId === undefined) {
             throw new Error('Required parameter ticketId was null or undefined when calling deleteTicketAssignmentUsingDELETE.');
         }
-        // verify required parameter 'tagId' is not null or undefined
-        if (tagId === null || tagId === undefined) {
-            throw new Error('Required parameter tagId was null or undefined when calling deleteTicketAssignmentUsingDELETE.');
+        // verify required parameter 'assignmentTagId' is not null or undefined
+        if (assignmentTagId === null || assignmentTagId === undefined) {
+            throw new Error('Required parameter assignmentTagId was null or undefined when calling deleteTicketAssignmentUsingDELETE.');
         }
         // verify required parameter 'userId' is not null or undefined
         if (userId === null || userId === undefined) {
@@ -235,10 +235,10 @@ export class TicketassignmentApi {
      * getTicketAssignment
      * 
      * @param ticketId ticketId
-     * @param tagId tagId
+     * @param assignmentTagId assignmentTagId
      * @param userId userId
      */
-    public getTicketAssignmentUsingGETWithHttpInfo(ticketId: string, tagId: string, userId: string, extraHttpRequestParams?: any): Observable<Response> {
+    public getTicketAssignmentUsingGETWithHttpInfo(ticketId: string, assignmentTagId: string, userId: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/ticket/${ticketId}/tag/${assignmentTagId}/user/${userId}`;
 
         let queryParameters = new URLSearchParams();
@@ -247,9 +247,9 @@ export class TicketassignmentApi {
         if (ticketId === null || ticketId === undefined) {
             throw new Error('Required parameter ticketId was null or undefined when calling getTicketAssignmentUsingGET.');
         }
-        // verify required parameter 'tagId' is not null or undefined
-        if (tagId === null || tagId === undefined) {
-            throw new Error('Required parameter tagId was null or undefined when calling getTicketAssignmentUsingGET.');
+        // verify required parameter 'assignmentTagId' is not null or undefined
+        if (assignmentTagId === null || assignmentTagId === undefined) {
+            throw new Error('Required parameter assignmentTagId was null or undefined when calling getTicketAssignmentUsingGET.');
         }
         // verify required parameter 'userId' is not null or undefined
         if (userId === null || userId === undefined) {
