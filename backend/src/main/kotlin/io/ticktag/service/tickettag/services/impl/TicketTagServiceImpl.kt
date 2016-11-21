@@ -1,11 +1,11 @@
 package io.ticktag.service.tickettag.services.impl
 
 import io.ticktag.TicktagService
+import io.ticktag.library.unicode.NameNormalizationLibrary
 import io.ticktag.persistence.ticket.entity.TicketTag
 import io.ticktag.persistence.tickettag.TicketTagRepository
 import io.ticktag.persistence.tickettaggroup.TicketTagGroupRepository
-import io.ticktag.service.AuthExpr
-import io.ticktag.service.NotFoundException
+import io.ticktag.service.*
 import io.ticktag.service.tickettag.dto.CreateTicketTag
 import io.ticktag.service.tickettag.dto.TicketTagResult
 import io.ticktag.service.tickettag.dto.UpdateTicketTag
@@ -19,7 +19,8 @@ import javax.validation.Valid
 @TicktagService
 open class TicketTagServiceImpl @Inject constructor(
         private val ticketTagGroups: TicketTagGroupRepository,
-        private val ticketTags: TicketTagRepository
+        private val ticketTags: TicketTagRepository,
+        private val nameNormalizationLibrary: NameNormalizationLibrary
 ) : TicketTagService {
 
     @PreAuthorize(AuthExpr.READ_TICKET_TAG)
@@ -36,7 +37,13 @@ open class TicketTagServiceImpl @Inject constructor(
     @PreAuthorize(AuthExpr.CREATE_TICKET_TAG)
     override fun createTicketTag(@Valid ticketTag: CreateTicketTag, @P("authTicketTagGroupId") ticketTagGroupId: UUID): TicketTagResult {
         val ticketTagGroup = ticketTagGroups.findOne(ticketTagGroupId) ?: throw NotFoundException()
-        val newTicketTag = TicketTag.create(ticketTag.name, ticketTag.color, ticketTag.order, ticketTagGroup)
+
+        val normalizedName = nameNormalizationLibrary.normalize(ticketTag.name)
+        if (ticketTags.findByNameAndProjectId(normalizedName, ticketTagGroup.project.id) != null) {
+            throw TicktagValidationException(listOf(ValidationError("createTicketTag.name", ValidationErrorDetail.Other("inuse"))))
+        }
+
+        val newTicketTag = TicketTag.create(normalizedName, ticketTag.color, ticketTag.order, ticketTagGroup)
         ticketTags.insert(newTicketTag)
         return TicketTagResult(newTicketTag)
     }

@@ -21,6 +21,7 @@ open class TicketTag protected constructor() {
         }
 
         const val COLOR_REGEX = "^(?:[0-9a-fA-F]{3}){1,2}$"
+        const val NAME_REGEX = "^[a-zA-Z0-9_]{3,30}$"
     }
 
     @Id
