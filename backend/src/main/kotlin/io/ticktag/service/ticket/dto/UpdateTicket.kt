@@ -21,5 +21,5 @@ data class UpdateTicket(
 ) {
     constructor(req: UpdateTicketRequestJson) : this(
             req.title, req.open, req.storyPoints, req.currentEstimatedTime, req.dueDate,
-            req.description, req.subTickets?.map { s -> CreateTicket(s) }, req.existingSubTicketIds, req.partenTicket)
+            req.description, req.subTickets?.map { s -> CreateTicket(s) }, req.existingSubTicketIds, req.partenTicketId)
 }

@@ -23,7 +23,7 @@ data class CreateTicket(
 ) {
     constructor(req: CreateTicketRequestJson) : this(
             req.title, req.open, req.storyPoints, req.initialEstimatedTime,
-            req.currentEstimatedTime, req.dueDate, req.description, req.projectId, req.subTickets?.map { s -> CreateTicket(s) }, req.existingSubTicketIds, req.partenTicket)
+            req.currentEstimatedTime, req.dueDate, req.description, req.projectId, req.subTickets?.map { s -> CreateTicket(s) }, req.existingSubTicketIds, req.partenTicketId)
 
 
 }
