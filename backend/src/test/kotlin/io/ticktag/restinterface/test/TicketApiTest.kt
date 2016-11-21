@@ -50,14 +50,6 @@ class TicketApiTest : ApiBaseTest() {
     }
 
 
-    @Test
-    fun `listComments positiv`() {
-        withUser(ADMIN_ID) { principal ->
-            ticketController.listComments(UUID.fromString("00000000-0003-0000-0000-000000000001"))
-        }
-    }
-
-
     @Test(expected = NotFoundException::class)
     fun `deleteTicket positiv`() {
         withUser(ADMIN_ID) { principal ->
@@ -94,7 +86,7 @@ class TicketApiTest : ApiBaseTest() {
 
 
     @Test(expected = TicktagValidationException::class)
-    fun `createTicketWithSubTasks negative`() {
+    fun `createTicket negative because of Parent and SubTasks`() {
         withUser(ADMIN_ID) { principal ->
             val now = Instant.now()
             val req = CreateTicketRequestJson("test", true, 4, Duration.ofDays(1), Duration.ofDays(1),
@@ -108,7 +100,7 @@ class TicketApiTest : ApiBaseTest() {
     }
 
     @Test(expected = TicktagValidationException::class)
-    fun `createTicketWithNegativSubTasks negative`() {
+    fun `createTicketWithInvalidSubTasks negative`() {
         withUser(ADMIN_ID) { principal ->
             val now = Instant.now()
             val req = CreateTicketRequestJson("test", true, 4, Duration.ofDays(1), Duration.ofDays(1),
@@ -128,7 +120,6 @@ class TicketApiTest : ApiBaseTest() {
             val now = Instant.now()
             val req = UpdateTicketRequestJson("test", true, 4, Duration.ofDays(1),
                     now, "description", emptyList(), emptyList(), emptyList(), null)
-
             val result = ticketController.updateTicket(req, UUID.fromString("00000000-0003-0000-0000-000000000001"), principal)
             assert(result.title.equals("test"))
             assert(result.open == true)
@@ -157,7 +148,6 @@ class TicketApiTest : ApiBaseTest() {
             assert(result.currentEstimatedTime?.equals(Duration.ofDays(1)) ?: false)
             assert(result.dueDate?.equals(now) ?: false)
             assert(result.description.equals("description"))
-
             assert(result.subTicketIds.size == 2)
             assert(result.subTicketIds.contains(UUID.fromString("00000000-0003-0000-0000-000000000001")))
 
@@ -165,12 +155,11 @@ class TicketApiTest : ApiBaseTest() {
     }
 
     @Test(expected = TicktagValidationException::class)
-    fun `updateTicket with SubTickets negativ`() {
+    fun `updateTicket with invalid SubTickets negativ`() {
         withUser(ADMIN_ID) { principal ->
             val now = Instant.now()
             val req2 = CreateTicketRequestJson("test", true, 4, Duration.ofDays(1), Duration.ofDays(1),
                     now, "description", UUID.fromString("00000000-0002-0000-0000-000000000001"), emptyList(), emptyList(), emptyList(), null)
-
             val req = UpdateTicketRequestJson("test", true, 4, Duration.ofDays(1),
                     now, "description", emptyList(), listOf(req2), listOf(UUID.fromString("00000000-0003-0000-0000-000000000001")), UUID.fromString("00000000-0003-0000-0000-000000000002"))
             val result = ticketController.updateTicket(req, UUID.fromString("00000000-0003-0000-0000-000000000002"), principal)
@@ -185,10 +174,7 @@ class TicketApiTest : ApiBaseTest() {
             val now = Instant.now()
             val req = CreateTicketRequestJson("test", true, 4, Duration.ofDays(1), Duration.ofDays(1),
                     now, "description", UUID.fromString("00000000-0002-0000-0000-000000000004"), emptyList(), emptyList(), emptyList(), null)
-
             val result = ticketController.createTicket(req, principal)
-
-
         }
     }
 

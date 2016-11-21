@@ -1,14 +1,10 @@
 package io.ticktag.service.comments
 
-import io.ticktag.BaseTest
-import io.ticktag.restinterface.comment.controllers.CommentController
 import io.ticktag.service.NotFoundException
 import io.ticktag.service.ServiceBaseTest
-import io.ticktag.service.TicktagValidationException
 import io.ticktag.service.comment.dto.UpdateComment
 import io.ticktag.service.comment.service.CommentService
 import org.junit.Test
-import org.springframework.test.context.web.WebAppConfiguration
 import java.util.*
 import javax.inject.Inject
 
@@ -17,15 +13,6 @@ class CommentTest : ServiceBaseTest() {
 
     @Inject lateinit private var commentService: CommentService
 
-
-    @Test
-    fun test_check_getList() {
-        val id = UUID.fromString("00000000-0001-0000-0000-000000000001")
-        val pid = UUID.fromString("00000000-0002-0000-0000-000000000001")
-        withUser(id) { principal ->
-            commentService.listComments(pid)
-        }
-    }
 
     @Test
     fun test_check_updateComment() {

@@ -7,10 +7,12 @@ import io.ticktag.restinterface.project.schema.CreateProjectRequestJson
 import io.ticktag.restinterface.project.schema.ProjectResultJson
 import io.ticktag.restinterface.project.schema.ProjectSort
 import io.ticktag.restinterface.project.schema.UpdateProjectRequestJson
+import io.ticktag.restinterface.tickettaggroup.schema.TicketTagGroupResultJson
 import io.ticktag.service.Principal
 import io.ticktag.service.project.dto.CreateProject
 import io.ticktag.service.project.dto.UpdateProject
 import io.ticktag.service.project.services.ProjectService
+import io.ticktag.service.tickettaggroup.service.TicketTagGroupService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
@@ -24,7 +26,8 @@ import javax.inject.Inject
 @RequestMapping("/project")
 @Api(tags = arrayOf("project"), description = "project management")
 open class ProjectController @Inject constructor(
-        private val projectService: ProjectService
+        private val projectService: ProjectService,
+        private val ticketTagGroupService: TicketTagGroupService
 ) {
     //TODO: adjust default values
     @GetMapping
@@ -69,6 +72,11 @@ open class ProjectController @Inject constructor(
         return ProjectResultJson(project)
     }
 
+    @GetMapping(value = "/{id}/tickettaggroups")
+    open fun listTicketTagGroups(@PathVariable(name = "id") id: UUID): List<TicketTagGroupResultJson> {
+        return ticketTagGroupService.listTicketTagGroups(id).map(::TicketTagGroupResultJson)
+    }
+
     @GetMapping(value = "/count")
     open fun getProjectsCount(@RequestParam(name = "all", defaultValue = "false", required = false) all: Boolean,
                               @AuthenticationPrincipal principal: Principal): CountJson {
@@ -77,6 +85,5 @@ open class ProjectController @Inject constructor(
         } else {
             CountJson(projectService.getUserProjectCount(principal.id))
         }
-
     }
 }

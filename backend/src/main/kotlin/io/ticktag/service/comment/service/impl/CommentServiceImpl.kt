@@ -8,15 +8,12 @@ import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.AuthExpr
 import io.ticktag.service.NotFoundException
 import io.ticktag.service.Principal
-import io.ticktag.service.ValidationError
 import io.ticktag.service.comment.dto.CommentResult
 import io.ticktag.service.comment.dto.CreateComment
-
 import io.ticktag.service.comment.dto.UpdateComment
 import io.ticktag.service.comment.service.CommentService
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
-import org.springframework.security.core.annotation.AuthenticationPrincipal
 import java.time.Instant
 import java.util.*
 import javax.inject.Inject
@@ -30,14 +27,9 @@ open class CommentServiceImpl @Inject constructor(
 
 ) : CommentService {
 
-    @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
-    override fun listComments(@P("authProjectId") pId: UUID): List<CommentResult> {
-        return comments.findByTicketProjectId(pId).map(::CommentResult)
-    }
-
     @PreAuthorize(AuthExpr.READ_TICKET)
-    override fun listCommentsForTicket(@P("authTicketId") tId: UUID): List<CommentResult> {
-        val ticket = tickets.findOne(tId) ?: throw NotFoundException()
+    override fun listCommentsForTicket(@P("authTicketId") ticketId: UUID): List<CommentResult> {
+        val ticket = tickets.findOne(ticketId) ?: throw NotFoundException()
         return ticket.comments.filter { c -> c.describedTicket == null }.map(::CommentResult)
     }
 

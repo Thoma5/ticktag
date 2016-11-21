@@ -2,7 +2,6 @@ package io.ticktag.restinterface.ticket.controllers
 
 import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
-import io.ticktag.restinterface.comment.schema.CommentResultJson
 import io.ticktag.restinterface.ticket.schema.TicketResultJson
 import io.ticktag.restinterface.user.schema.CreateTicketRequestJson
 import io.ticktag.restinterface.user.schema.UpdateTicketRequestJson
@@ -29,10 +28,6 @@ open class TicketController @Inject constructor(
         return ticketService.listTickets(req).map(::TicketResultJson)
     }
 
-    @GetMapping(value = "/{id}/comments")
-    open fun listComments(@PathVariable(name = "id") req: UUID): List<CommentResultJson> {
-        return commentService.listCommentsForTicket(req).map(::CommentResultJson)
-    }
 
     @GetMapping(value = "/{id}")
     open fun getTicket(@PathVariable(name = "id") id: UUID): TicketResultJson {
