@@ -25,21 +25,6 @@
 
 import * as models from './models';
 
-export interface MemberResultJson {
-    joinDate: Date;
-
-    projectId: string;
-
-    projectRole: MemberResultJson.ProjectRoleEnum;
-
-    userId: string;
-
-}
-export namespace MemberResultJson {
-    export enum ProjectRoleEnum {
-        OBSERVER = <any> 'OBSERVER',
-        USER = <any> 'USER',
-        ADMIN = <any> 'ADMIN'
-    }
+export interface Sort {
 }
 

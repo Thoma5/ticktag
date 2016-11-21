@@ -29,6 +29,6 @@ export class ProjectsComponent implements OnInit {
   getProjects(page?: number, size?: number, order?: string, asc?: boolean, name?: string): void {
     this.apiCallService
       .callNoError<ProjectResultJson[]>(h => this.projectApi.listProjectsUsingGETWithHttpInfo(page, size, order, asc, name, true, h))
-      .subscribe(projects => { this.projects = projects; });
+      .subscribe(projects => { this.projects = projects.content; });
   }
 }

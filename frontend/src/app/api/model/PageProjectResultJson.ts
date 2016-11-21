@@ -25,21 +25,24 @@
 
 import * as models from './models';
 
-export interface MemberResultJson {
-    joinDate: Date;
+export interface PageProjectResultJson {
+    content?: Array<models.ProjectResultJson>;
 
-    projectId: string;
+    first?: boolean;
 
-    projectRole: MemberResultJson.ProjectRoleEnum;
+    last?: boolean;
 
-    userId: string;
+    number?: number;
 
-}
-export namespace MemberResultJson {
-    export enum ProjectRoleEnum {
-        OBSERVER = <any> 'OBSERVER',
-        USER = <any> 'USER',
-        ADMIN = <any> 'ADMIN'
-    }
+    numberOfElements?: number;
+
+    size?: number;
+
+    sort?: models.Sort;
+
+    totalElements?: number;
+
+    totalPages?: number;
+
 }
 

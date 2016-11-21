@@ -25,21 +25,14 @@
 
 import * as models from './models';
 
-export interface MemberResultJson {
-    joinDate: Date;
+export interface TemporalUnit {
+    dateBased?: boolean;
 
-    projectId: string;
+    duration?: models.Duration;
 
-    projectRole: MemberResultJson.ProjectRoleEnum;
+    durationEstimated?: boolean;
 
-    userId: string;
+    timeBased?: boolean;
 
-}
-export namespace MemberResultJson {
-    export enum ProjectRoleEnum {
-        OBSERVER = <any> 'OBSERVER',
-        USER = <any> 'USER',
-        ADMIN = <any> 'ADMIN'
-    }
 }
 

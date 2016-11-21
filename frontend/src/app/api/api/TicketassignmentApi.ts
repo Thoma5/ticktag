@@ -39,7 +39,7 @@ import { Configuration }                                     from '../configurat
 
 
 @Injectable()
-export class MemberApi {
+export class TicketassignmentApi {
     protected basePath = 'http://localhost:8080/';
     public defaultHeaders: Headers = new Headers();
     public configuration: Configuration = new Configuration();
@@ -69,14 +69,14 @@ export class MemberApi {
     }
 
     /**
-     * createMember
+     * createTicketAssignment
      * 
+     * @param ticketId ticketId
+     * @param tagId tagId
      * @param userId userId
-     * @param projectId projectId
-     * @param req req
      */
-    public createMemberUsingPOST(userId: string, projectId: string, req: models.CreateMemberRequestJson, extraHttpRequestParams?: any): Observable<models.MemberResultJson> {
-        return this.createMemberUsingPOSTWithHttpInfo(userId, projectId, req, extraHttpRequestParams)
+    public createTicketAssignmentUsingPOST(ticketId: string, tagId: string, userId: string, extraHttpRequestParams?: any): Observable<models.TicketAssignmentResultJson> {
+        return this.createTicketAssignmentUsingPOSTWithHttpInfo(ticketId, tagId, userId, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -87,13 +87,14 @@ export class MemberApi {
     }
 
     /**
-     * deleteMember
+     * deleteTicketAssignment
      * 
+     * @param ticketId ticketId
+     * @param tagId tagId
      * @param userId userId
-     * @param projectId projectId
      */
-    public deleteMemberUsingDELETE(userId: string, projectId: string, extraHttpRequestParams?: any): Observable<{}> {
-        return this.deleteMemberUsingDELETEWithHttpInfo(userId, projectId, extraHttpRequestParams)
+    public deleteTicketAssignmentUsingDELETE(ticketId: string, tagId: string, userId: string, extraHttpRequestParams?: any): Observable<{}> {
+        return this.deleteTicketAssignmentUsingDELETEWithHttpInfo(ticketId, tagId, userId, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -104,31 +105,14 @@ export class MemberApi {
     }
 
     /**
-     * getMember
+     * getTicketAssignment
      * 
+     * @param ticketId ticketId
+     * @param tagId tagId
      * @param userId userId
-     * @param projectId projectId
      */
-    public getMemberUsingGET(userId: string, projectId: string, extraHttpRequestParams?: any): Observable<models.MemberResultJson> {
-        return this.getMemberUsingGETWithHttpInfo(userId, projectId, extraHttpRequestParams)
-            .map((response: Response) => {
-                if (response.status === 204) {
-                    return undefined;
-                } else {
-                    return response.json();
-                }
-            });
-    }
-
-    /**
-     * updateMember
-     * 
-     * @param userId userId
-     * @param projectId projectId
-     * @param req req
-     */
-    public updateMemberUsingPUT(userId: string, projectId: string, req: models.UpdateMemberRequestJson, extraHttpRequestParams?: any): Observable<models.MemberResultJson> {
-        return this.updateMemberUsingPUTWithHttpInfo(userId, projectId, req, extraHttpRequestParams)
+    public getTicketAssignmentUsingGET(ticketId: string, tagId: string, userId: string, extraHttpRequestParams?: any): Observable<models.TicketAssignmentResultJson> {
+        return this.getTicketAssignmentUsingGETWithHttpInfo(ticketId, tagId, userId, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -140,28 +124,28 @@ export class MemberApi {
 
 
     /**
-     * createMember
+     * createTicketAssignment
      * 
+     * @param ticketId ticketId
+     * @param tagId tagId
      * @param userId userId
-     * @param projectId projectId
-     * @param req req
      */
-    public createMemberUsingPOSTWithHttpInfo(userId: string, projectId: string, req: models.CreateMemberRequestJson, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/project/${projectId}/member/${userId}`;
+    public createTicketAssignmentUsingPOSTWithHttpInfo(ticketId: string, tagId: string, userId: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/ticket/${ticketId}/tag/${assignmentTagId}/user/${userId}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'ticketId' is not null or undefined
+        if (ticketId === null || ticketId === undefined) {
+            throw new Error('Required parameter ticketId was null or undefined when calling createTicketAssignmentUsingPOST.');
+        }
+        // verify required parameter 'tagId' is not null or undefined
+        if (tagId === null || tagId === undefined) {
+            throw new Error('Required parameter tagId was null or undefined when calling createTicketAssignmentUsingPOST.');
+        }
         // verify required parameter 'userId' is not null or undefined
         if (userId === null || userId === undefined) {
-            throw new Error('Required parameter userId was null or undefined when calling createMemberUsingPOST.');
-        }
-        // verify required parameter 'projectId' is not null or undefined
-        if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling createMemberUsingPOST.');
-        }
-        // verify required parameter 'req' is not null or undefined
-        if (req === null || req === undefined) {
-            throw new Error('Required parameter req was null or undefined when calling createMemberUsingPOST.');
+            throw new Error('Required parameter userId was null or undefined when calling createTicketAssignmentUsingPOST.');
         }
 
 
@@ -177,13 +161,11 @@ export class MemberApi {
         
             
 
-        headers.set('Content-Type', 'application/json');
 
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Post,
             headers: headers,
-            body: req == null ? '' : JSON.stringify(req), // https://github.com/angular/angular/issues/10612
             search: queryParameters
         });
         
@@ -196,23 +178,28 @@ export class MemberApi {
     }
 
     /**
-     * deleteMember
+     * deleteTicketAssignment
      * 
+     * @param ticketId ticketId
+     * @param tagId tagId
      * @param userId userId
-     * @param projectId projectId
      */
-    public deleteMemberUsingDELETEWithHttpInfo(userId: string, projectId: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/project/${projectId}/member/${userId}`;
+    public deleteTicketAssignmentUsingDELETEWithHttpInfo(ticketId: string, tagId: string, userId: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/ticket/${ticketId}/tag/${assignmentTagId}/user/${userId}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'ticketId' is not null or undefined
+        if (ticketId === null || ticketId === undefined) {
+            throw new Error('Required parameter ticketId was null or undefined when calling deleteTicketAssignmentUsingDELETE.');
+        }
+        // verify required parameter 'tagId' is not null or undefined
+        if (tagId === null || tagId === undefined) {
+            throw new Error('Required parameter tagId was null or undefined when calling deleteTicketAssignmentUsingDELETE.');
+        }
         // verify required parameter 'userId' is not null or undefined
         if (userId === null || userId === undefined) {
-            throw new Error('Required parameter userId was null or undefined when calling deleteMemberUsingDELETE.');
-        }
-        // verify required parameter 'projectId' is not null or undefined
-        if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling deleteMemberUsingDELETE.');
+            throw new Error('Required parameter userId was null or undefined when calling deleteTicketAssignmentUsingDELETE.');
         }
 
 
@@ -245,23 +232,28 @@ export class MemberApi {
     }
 
     /**
-     * getMember
+     * getTicketAssignment
      * 
+     * @param ticketId ticketId
+     * @param tagId tagId
      * @param userId userId
-     * @param projectId projectId
      */
-    public getMemberUsingGETWithHttpInfo(userId: string, projectId: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/project/${projectId}/member/${userId}`;
+    public getTicketAssignmentUsingGETWithHttpInfo(ticketId: string, tagId: string, userId: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/ticket/${ticketId}/tag/${assignmentTagId}/user/${userId}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'ticketId' is not null or undefined
+        if (ticketId === null || ticketId === undefined) {
+            throw new Error('Required parameter ticketId was null or undefined when calling getTicketAssignmentUsingGET.');
+        }
+        // verify required parameter 'tagId' is not null or undefined
+        if (tagId === null || tagId === undefined) {
+            throw new Error('Required parameter tagId was null or undefined when calling getTicketAssignmentUsingGET.');
+        }
         // verify required parameter 'userId' is not null or undefined
         if (userId === null || userId === undefined) {
-            throw new Error('Required parameter userId was null or undefined when calling getMemberUsingGET.');
-        }
-        // verify required parameter 'projectId' is not null or undefined
-        if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling getMemberUsingGET.');
+            throw new Error('Required parameter userId was null or undefined when calling getTicketAssignmentUsingGET.');
         }
 
 
@@ -282,62 +274,6 @@ export class MemberApi {
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
-            search: queryParameters
-        });
-        
-        // https://github.com/swagger-api/swagger-codegen/issues/4037
-        if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
-        }
-
-        return this.http.request(path, requestOptions);
-    }
-
-    /**
-     * updateMember
-     * 
-     * @param userId userId
-     * @param projectId projectId
-     * @param req req
-     */
-    public updateMemberUsingPUTWithHttpInfo(userId: string, projectId: string, req: models.UpdateMemberRequestJson, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/project/${projectId}/member/${userId}`;
-
-        let queryParameters = new URLSearchParams();
-        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'userId' is not null or undefined
-        if (userId === null || userId === undefined) {
-            throw new Error('Required parameter userId was null or undefined when calling updateMemberUsingPUT.');
-        }
-        // verify required parameter 'projectId' is not null or undefined
-        if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling updateMemberUsingPUT.');
-        }
-        // verify required parameter 'req' is not null or undefined
-        if (req === null || req === undefined) {
-            throw new Error('Required parameter req was null or undefined when calling updateMemberUsingPUT.');
-        }
-
-
-        // to determine the Content-Type header
-        let consumes: string[] = [
-            'application/json'
-        ];
-
-        // to determine the Accept header
-        let produces: string[] = [
-            'application/json'
-        ];
-        
-            
-
-        headers.set('Content-Type', 'application/json');
-
-
-        let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Put,
-            headers: headers,
-            body: req == null ? '' : JSON.stringify(req), // https://github.com/angular/angular/issues/10612
             search: queryParameters
         });
         

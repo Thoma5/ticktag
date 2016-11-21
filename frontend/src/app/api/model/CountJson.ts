@@ -25,21 +25,8 @@
 
 import * as models from './models';
 
-export interface MemberResultJson {
-    joinDate: Date;
+export interface CountJson {
+    count: number;
 
-    projectId: string;
-
-    projectRole: MemberResultJson.ProjectRoleEnum;
-
-    userId: string;
-
-}
-export namespace MemberResultJson {
-    export enum ProjectRoleEnum {
-        OBSERVER = <any> 'OBSERVER',
-        USER = <any> 'USER',
-        ADMIN = <any> 'ADMIN'
-    }
 }
 

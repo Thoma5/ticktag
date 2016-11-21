@@ -25,21 +25,10 @@
 
 import * as models from './models';
 
-export interface MemberResultJson {
-    joinDate: Date;
+export interface CreateCommentRequestJson {
+    text: string;
 
-    projectId: string;
+    ticketID: string;
 
-    projectRole: MemberResultJson.ProjectRoleEnum;
-
-    userId: string;
-
-}
-export namespace MemberResultJson {
-    export enum ProjectRoleEnum {
-        OBSERVER = <any> 'OBSERVER',
-        USER = <any> 'USER',
-        ADMIN = <any> 'ADMIN'
-    }
 }
 

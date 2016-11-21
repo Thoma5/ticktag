@@ -25,21 +25,12 @@
 
 import * as models from './models';
 
-export interface MemberResultJson {
-    joinDate: Date;
-
+export interface CreateAssignmentTagRequestJson {
     projectId: string;
 
-    projectRole: MemberResultJson.ProjectRoleEnum;
+    name: string;
 
-    userId: string;
+    color: string;
 
-}
-export namespace MemberResultJson {
-    export enum ProjectRoleEnum {
-        OBSERVER = <any> 'OBSERVER',
-        USER = <any> 'USER',
-        ADMIN = <any> 'ADMIN'
-    }
 }
 

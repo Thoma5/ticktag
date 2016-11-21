@@ -25,21 +25,30 @@
 
 import * as models from './models';
 
-export interface MemberResultJson {
-    joinDate: Date;
+export interface CreateTicketRequestJson {
+    title: string;
+
+    open: boolean;
+
+    storyPoints: number;
+
+    initialEstimatedTime: models.Duration;
+
+    currentEstimatedTime: models.Duration;
+
+    dueDate: models.Instant;
+
+    description: string;
 
     projectId: string;
 
-    projectRole: MemberResultJson.ProjectRoleEnum;
+    ticketAssignments: Array<models.TicketAssignmentJson>;
 
-    userId: string;
+    subTickets: Array<models.CreateTicketRequestJson>;
 
-}
-export namespace MemberResultJson {
-    export enum ProjectRoleEnum {
-        OBSERVER = <any> 'OBSERVER',
-        USER = <any> 'USER',
-        ADMIN = <any> 'ADMIN'
-    }
+    existingSubTicketIds: Array<string>;
+
+    parentTicket: string;
+
 }
 

@@ -11,6 +11,8 @@ import io.ticktag.service.Principal
 import io.ticktag.service.project.dto.CreateProject
 import io.ticktag.service.project.dto.UpdateProject
 import io.ticktag.service.project.services.ProjectService
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -33,16 +35,20 @@ open class ProjectController @Inject constructor(
                           @RequestParam(name = "name", defaultValue = "", required = false) name: String,
                           @RequestParam(name = "all", defaultValue = "false", required = false) all: Boolean,
                           @AuthenticationPrincipal principal: Principal
-    ): List<ProjectResultJson> {
+    ): Page<ProjectResultJson> {
         val ascOrder = if (asc) Sort.Direction.ASC else Sort.Direction.DESC
         val sortOrder = Sort.Order(ascOrder, order.fieldName).ignoreCase()
         val pageRequest = PageRequest(page, size, Sort(sortOrder))
 
         return if (all) {
-            projectService.listAllProjects(name, pageRequest)
+            val page = projectService.listAllProjects(name, pageRequest)
+            val content = page.content.map(::ProjectResultJson)
+            PageImpl(content, pageRequest, page.totalElements)
         } else {
-            projectService.listUserProjects(principal.id, name, pageRequest)
-        }.map(::ProjectResultJson)
+            val page = projectService.listUserProjects(principal.id, name, pageRequest)
+            val content = page.content.map(::ProjectResultJson)
+            PageImpl(content, pageRequest, page.totalElements)
+        }
     }
 
     @PostMapping
