@@ -2,7 +2,9 @@ package io.ticktag.restinterface.ticketevent.controllers
 
 import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
-import io.ticktag.persistence.ticket.entity.TicketEvent
+import io.ticktag.restinterface.ticketevent.schema.TicketEventResultJson
+import io.ticktag.restinterface.ticketevent.schema.TicketEventTitleChangedResultJson
+import io.ticktag.service.ticketevent.dto.TicketEventTitleChangedResult
 import io.ticktag.service.ticketevent.services.TicketEventService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -18,8 +20,13 @@ open class TicketEventController @Inject constructor(
 ) {
 
     @GetMapping
-    open fun listTicketEvents(@RequestParam(name = "ticketId") ticketId: UUID) : List<TicketEvent> {
-        return ticketEventService.listTicketEvents(ticketId)
+    open fun listTicketEvents(@RequestParam(name = "ticketId") ticketId: UUID) : List<TicketEventResultJson> {
+        return ticketEventService.listTicketEvents(ticketId).map { e ->
+            when (e) {
+                is TicketEventTitleChangedResult -> TicketEventTitleChangedResultJson(e)
+                else -> TicketEventResultJson(e)
+            }
+        }
     }
 
 }

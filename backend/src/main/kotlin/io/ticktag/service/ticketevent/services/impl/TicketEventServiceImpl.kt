@@ -2,8 +2,10 @@ package io.ticktag.service.ticketevent.services.impl
 
 import io.ticktag.TicktagService
 import io.ticktag.persistence.ticket.TicketEventRepository
-import io.ticktag.persistence.ticket.entity.TicketEvent
+import io.ticktag.persistence.ticket.entity.TicketEventTitleChanged
 import io.ticktag.service.AuthExpr
+import io.ticktag.service.ticketevent.dto.TicketEventResult
+import io.ticktag.service.ticketevent.dto.TicketEventTitleChangedResult
 import io.ticktag.service.ticketevent.services.TicketEventService
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
@@ -16,7 +18,12 @@ open class TicketEventServiceImpl @Inject constructor(
 ) : TicketEventService {
 
     @PreAuthorize(AuthExpr.READ_TICKET)
-    override fun listTicketEvents(@P("authTicketId") ticketId: UUID): List<TicketEvent> {
-        return ticketEvents.findByTicketId(ticketId)
+    override fun listTicketEvents(@P("authTicketId") ticketId: UUID): List<TicketEventResult> {
+        return ticketEvents.findByTicketId(ticketId).map { e ->
+            when (e) {
+                is TicketEventTitleChanged -> TicketEventTitleChangedResult(e)
+                else -> TicketEventResult(e)
+            }
+        }
     }
 }
