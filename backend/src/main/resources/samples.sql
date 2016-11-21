@@ -270,23 +270,23 @@ COMMIT;
 BEGIN;
 --Assignment-Tag
 
-INSERT INTO public.assignment_tag (id, project_id, name, color)
-VALUES ('00000000-0006-0000-0000-000000000001', '00000000-0002-0000-0000-000000000001', 'implementing', '0000ff');
+INSERT INTO public.assignment_tag (id, project_id, name, normalized_name, color)
+VALUES ('00000000-0006-0000-0000-000000000001', '00000000-0002-0000-0000-000000000001', 'Implementing', 'implementing', '0000ff');
 
-INSERT INTO public.assignment_tag (id, project_id, name, color)
-VALUES ('00000000-0006-0000-0000-000000000002', '00000000-0002-0000-0000-000000000001', 'testing', '00ff00');
+INSERT INTO public.assignment_tag (id, project_id, name, normalized_name, color)
+VALUES ('00000000-0006-0000-0000-000000000002', '00000000-0002-0000-0000-000000000001', 'Testing', 'testing', '00ff00');
 
-INSERT INTO public.assignment_tag (id, project_id, name, color)
-VALUES ('00000000-0006-0000-0000-000000000003', '00000000-0002-0000-0000-000000000001', 'bugfixing', 'ff0000');
+INSERT INTO public.assignment_tag (id, project_id, name, normalized_name, color)
+VALUES ('00000000-0006-0000-0000-000000000003', '00000000-0002-0000-0000-000000000001', 'Bug Fixing', 'bugfixing', 'ff0000');
 
-INSERT INTO public.assignment_tag (id, project_id, name, color)
-VALUES ('00000000-0006-0000-0000-000000000004', '00000000-0002-0000-0000-000000000001', 'Ticket Owner', 'ff0000');
+INSERT INTO public.assignment_tag (id, project_id, name, normalized_name, color)
+VALUES ('00000000-0006-0000-0000-000000000004', '00000000-0002-0000-0000-000000000001', 'Ticket Owner', 'ticketowner', 'ff0000');
 
-INSERT INTO public.assignment_tag (id, project_id, name, color)
-VALUES ('00000000-0006-0000-0000-000000000005', '00000000-0002-0000-0000-000000000001', 'document', 'ff0000');
+INSERT INTO public.assignment_tag (id, project_id, name, normalized_name, color)
+VALUES ('00000000-0006-0000-0000-000000000005', '00000000-0002-0000-0000-000000000001', 'Document', 'document', 'ff0000');
 
-INSERT INTO public.assignment_tag (id, project_id, name, color)
-VALUES ('00000000-0006-0000-0000-000000000006', '00000000-0002-0000-0000-000000000001', 'review', 'ff0000');
+INSERT INTO public.assignment_tag (id, project_id, name, normalized_name, color)
+VALUES ('00000000-0006-0000-0000-000000000006', '00000000-0002-0000-0000-000000000001', 'Review', 'review', 'ff0000');
 
 
 --TICKET USER
