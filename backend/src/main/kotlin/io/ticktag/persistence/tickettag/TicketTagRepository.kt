@@ -12,6 +12,6 @@ interface TicketTagRepository : TicktagCrudRepository<TicketTag, UUID> {
 
     @Query("SELECT t from TicketTag t " +
             "JOIN t.ticketTagGroup g JOIN g.project p " +
-            "WHERE t.name = :name AND p.id = :projectId")
-    fun findByNameAndProjectId(@Param("name") name: String, @Param("projectId") projectId: UUID) : TicketTag?
+            "WHERE t.normalizedName = :normalizedName AND p.id = :projectId")
+    fun findByNormalizedNameAndProjectId(@Param("normalizedName") normalizedName: String, @Param("projectId") projectId: UUID) : TicketTag?
 }

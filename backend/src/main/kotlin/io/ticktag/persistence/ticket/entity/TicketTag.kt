@@ -7,10 +7,11 @@ import javax.persistence.*
 @Table(name = "ticket_tag")
 open class TicketTag protected constructor() {
     companion object {
-        fun create(name: String, color: String, order: Int, ticketTagGroup: TicketTagGroup): TicketTag {
+        fun create(name: String, normalizedName: String, color: String, order: Int, ticketTagGroup: TicketTagGroup): TicketTag {
             val o = TicketTag()
             o.id = UUID.randomUUID()
             o.name = name
+            o.normalizedName = normalizedName
             o.color = color
             o.order = order
             o.ticketTagGroup = ticketTagGroup
@@ -30,6 +31,9 @@ open class TicketTag protected constructor() {
 
     @Column(name = "name", nullable = false)
     lateinit open var name: String
+
+    @Column(name = "normalized_name", nullable = false)
+    lateinit open var normalizedName: String
 
     @Column(name = "color", nullable = false)
     lateinit open var color: String

@@ -75,6 +75,7 @@ CREATE TABLE IF NOT EXISTS "ticket_tag" (
   "id"                  UUID PRIMARY KEY,
   "ticket_tag_group_id" UUID REFERENCES "ticket_tag_group",
   "name"                TEXT    NOT NULL,
+  "normalized_name"     TEXT    NOT NULL,
   "color"               TEXT    NOT NULL, -- RRGGBB
   "order"               INTEGER NOT NULL
 );

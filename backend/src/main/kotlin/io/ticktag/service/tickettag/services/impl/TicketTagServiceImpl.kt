@@ -39,11 +39,11 @@ open class TicketTagServiceImpl @Inject constructor(
         val ticketTagGroup = ticketTagGroups.findOne(ticketTagGroupId) ?: throw NotFoundException()
 
         val normalizedName = nameNormalizationLibrary.normalize(ticketTag.name)
-        if (ticketTags.findByNameAndProjectId(normalizedName, ticketTagGroup.project.id) != null) {
+        if (ticketTags.findByNormalizedNameAndProjectId(normalizedName, ticketTagGroup.project.id) != null) {
             throw TicktagValidationException(listOf(ValidationError("createTicketTag.name", ValidationErrorDetail.Other("inuse"))))
         }
 
-        val newTicketTag = TicketTag.create(normalizedName, ticketTag.color, ticketTag.order, ticketTagGroup)
+        val newTicketTag = TicketTag.create(ticketTag.name, normalizedName, ticketTag.color, ticketTag.order, ticketTagGroup)
         ticketTags.insert(newTicketTag)
         return TicketTagResult(newTicketTag)
     }
@@ -59,10 +59,11 @@ open class TicketTagServiceImpl @Inject constructor(
         val ticketTagToUpdate = ticketTags.findOne(id) ?: throw NotFoundException()
         if (ticketTag.name != null) {
             val normalizedName = nameNormalizationLibrary.normalize(ticketTag.name)
-            if (ticketTags.findByNameAndProjectId(normalizedName, ticketTagToUpdate.ticketTagGroup.project.id) != null) {
+            if (ticketTags.findByNormalizedNameAndProjectId(normalizedName, ticketTagToUpdate.ticketTagGroup.project.id) != null) {
                 throw TicktagValidationException(listOf(ValidationError("updateTicketTag.name", ValidationErrorDetail.Other("inuse"))))
             }
-            ticketTagToUpdate.name = normalizedName
+            ticketTagToUpdate.name = ticketTag.name
+            ticketTagToUpdate.normalizedName = normalizedName
         }
         if (ticketTag.color != null) {
             ticketTagToUpdate.color = ticketTag.color
