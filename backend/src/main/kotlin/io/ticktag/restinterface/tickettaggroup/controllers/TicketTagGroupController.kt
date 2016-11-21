@@ -45,7 +45,7 @@ open class TicketTagGroupController @Inject constructor(
     }
 
     @GetMapping(value = "/")
-    open fun listTicketTagGroups(@RequestParam(name = "project_id", required = true) projectId: UUID): List<TicketTagGroupResultJson> {
+    open fun listTicketTagGroups(@RequestParam(name = "projectId", required = true) projectId: UUID): List<TicketTagGroupResultJson> {
         return ticketTagGroupService.listTicketTagGroups(projectId).map(::TicketTagGroupResultJson)
     }
 

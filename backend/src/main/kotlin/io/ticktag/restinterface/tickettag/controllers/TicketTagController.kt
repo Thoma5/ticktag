@@ -44,8 +44,8 @@ open class TicketTagController @Inject constructor(
     }
 
     @GetMapping(value = "/")
-    open fun listTicketTags(@RequestParam(name = "ticket_tag_group_id", required = false) ticketTagGroupId: UUID?,
-                            @RequestParam(name = "project_id", required = false) projectId: UUID?): ResponseEntity<List<TicketTagResultJson>> {
+    open fun listTicketTags(@RequestParam(name = "ticketTagGroupId", required = false) ticketTagGroupId: UUID?,
+                            @RequestParam(name = "projectId", required = false) projectId: UUID?): ResponseEntity<List<TicketTagResultJson>> {
         val bothParamSet = projectId != null && ticketTagGroupId != null
         val noParamSet = projectId == null && ticketTagGroupId == null
         if (bothParamSet || noParamSet) {
