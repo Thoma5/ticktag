@@ -28,6 +28,13 @@ open class TicketEvent protected constructor() {
 
     @Column(name = "time", nullable = false)
     lateinit open var time: Instant
+
+    fun setSuperValues(ticket: Ticket, user: User) {
+        this.id = UUID.randomUUID()
+        this.ticket = ticket
+        this.user = user
+        this.time = Instant.now()
+    }
 }
 
 @Entity
@@ -51,6 +58,13 @@ open class TicketEventParentChanged protected constructor() : TicketEvent() {
 @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
 open class TicketEventTitleChanged protected constructor() : TicketEvent() {
     companion object {
+        fun create(ticket: Ticket, user: User, srcTitle: String, dstTitle: String) : TicketEventTitleChanged {
+            val o = TicketEventTitleChanged()
+            o.setSuperValues(ticket, user)
+            o.srcTitle = srcTitle
+            o.dstTitle = dstTitle
+            return o
+        }
     }
 
     @Column(name = "src_title", nullable = false)

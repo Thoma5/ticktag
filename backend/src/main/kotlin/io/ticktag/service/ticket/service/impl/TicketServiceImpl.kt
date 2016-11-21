@@ -1,11 +1,12 @@
 package io.ticktag.service.ticket.service.impl
 
-import com.sun.org.apache.xml.internal.utils.MutableAttrListImpl
 import io.ticktag.TicktagService
 import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.project.ProjectRepository
+import io.ticktag.persistence.ticket.TicketEventRepository
 import io.ticktag.persistence.ticket.entity.Comment
 import io.ticktag.persistence.ticket.entity.Ticket
+import io.ticktag.persistence.ticket.entity.TicketEventTitleChanged
 import io.ticktag.persistence.ticket.entity.TicketRepository
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.*
@@ -15,7 +16,6 @@ import io.ticktag.service.ticket.dto.TicketResult
 import io.ticktag.service.ticket.service.TicketService
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
-import java.time.Duration
 import java.time.Instant
 import java.util.*
 import javax.inject.Inject
@@ -28,6 +28,7 @@ open class TicketServiceImpl @Inject constructor(
         private val projects: ProjectRepository,
         private val users: UserRepository,
         private val comments: CommentRepository,
+        private val ticketEvents: TicketEventRepository,
         private val em: EntityManager
 
 ) : TicketService {
@@ -110,7 +111,7 @@ open class TicketServiceImpl @Inject constructor(
     //TODO: Log Changes in History
     @PreAuthorize(AuthExpr.WRITE_TICKET)
     override fun updateTicket(@Valid updateTicket: UpdateTicket, @P("authTicketId") ticketId: UUID, principal: Principal): TicketResult {
-
+        val user = users.findOne(principal.id) ?: throw NotFoundException()
         val ticket = tickets.findOne(ticketId) ?: throw NotFoundException()
 
         if (!(!(updateTicket.partenTicket != null) ||
@@ -125,6 +126,7 @@ open class TicketServiceImpl @Inject constructor(
 
 
         if (updateTicket.title != null) {
+            if (ticket.title != updateTicket.title) ticketEvents.insert(TicketEventTitleChanged.create(ticket, user, ticket.title, updateTicket.title))
             ticket.title = updateTicket.title
         }
         if (updateTicket.open != null) {
