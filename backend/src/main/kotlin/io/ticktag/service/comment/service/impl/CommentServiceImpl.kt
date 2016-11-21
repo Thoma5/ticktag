@@ -30,14 +30,9 @@ open class CommentServiceImpl @Inject constructor(
 
 ) : CommentService {
 
-    @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
-    override fun listComments(@P("authProjectId") pId: UUID): List<CommentResult> {
-        return comments.findByTicketProjectId(pId).map(::CommentResult)
-    }
-
     @PreAuthorize(AuthExpr.READ_TICKET)
-    override fun listCommentsForTicket(@P("authTicketId") tId: UUID): List<CommentResult> {
-        val ticket = tickets.findOne(tId) ?: throw NotFoundException()
+    override fun listCommentsForTicket(@P("authTicketId") ticketId: UUID): List<CommentResult> {
+        val ticket = tickets.findOne(ticketId) ?: throw NotFoundException()
         return ticket.comments.filter { c -> c.describedTicket == null }.map(::CommentResult)
     }
 

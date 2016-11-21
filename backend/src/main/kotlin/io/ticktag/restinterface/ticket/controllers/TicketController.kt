@@ -30,10 +30,6 @@ open class TicketController @Inject constructor(
         return ticketService.listTickets(req).map(::TicketResultJson)
     }
 
-    @GetMapping(value = "/{id}/comments")
-    open fun listComments(@PathVariable(name = "id") req: UUID): List<CommentResultJson> {
-        return commentService.listCommentsForTicket(req).map(::CommentResultJson)
-    }
 
     @GetMapping(value = "/{id}")
     open fun getTicket(@PathVariable(name = "id") id: UUID): TicketResultJson {
