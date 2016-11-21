@@ -34,7 +34,7 @@ open class User protected constructor() {
             return u
         }
 
-        const val USERNAME_REGEX = "^[a-zA-Z0-9_]{3,30}$"
+        const val USERNAME_REGEX = "^[a-z0-9_]{3,30}$"
     }
 
     @Id
