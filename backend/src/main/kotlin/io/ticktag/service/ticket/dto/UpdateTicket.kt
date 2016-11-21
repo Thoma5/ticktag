@@ -8,7 +8,7 @@ import javax.validation.constraints.Size
 import javax.validation.constraints.DecimalMin
 
 data class UpdateTicket(
-        @field:Size(min=1,max = 100) val title: String?,
+        @field:Size(min = 1, max = 100) val title: String?,
         val open: Boolean?,
         @field:DecimalMin("0") val storyPoints: Int?,
         val currentEstimatedTime: Duration?,
@@ -16,7 +16,7 @@ data class UpdateTicket(
         @field:Size(min = 1, max = 5000) val description: String?,
         val subTickets: List<CreateTicket>?,
         val existingSubTicketIds: List<UUID>?,
-        val partenTicket: UUID?
+        val parentTicket: UUID?
 
 ) {
     constructor(req: UpdateTicketRequestJson) : this(
