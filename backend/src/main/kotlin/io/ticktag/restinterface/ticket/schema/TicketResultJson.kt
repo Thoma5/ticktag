@@ -1,9 +1,6 @@
 package io.ticktag.restinterface.ticket.schema
 
-import io.ticktag.persistence.project.entity.Project
-import io.ticktag.persistence.ticket.entity.AssignedTicketUser
-import io.ticktag.persistence.ticket.entity.Ticket
-import io.ticktag.persistence.user.entity.User
+import io.ticktag.service.member.dto.TicketAssignmentResultJson
 import io.ticktag.service.ticket.dto.TicketResult
 import java.time.Duration
 import java.time.Instant
@@ -21,7 +18,7 @@ class TicketResultJson(
         val dueDate: Instant?,
         val description: String,
         val projectId: UUID,
-
+        val ticketAssignments: List<TicketAssignmentResultJson>?,
         val subTicketIds: List<UUID>,
         val parentTicketId: UUID?,
         val createdBy: UUID,
@@ -32,6 +29,6 @@ class TicketResultJson(
 ) {
     constructor(t: TicketResult) : this(id = t.id, number = t.number, createTime = t.createTime, title = t.title,
             open = t.open, storyPoints = t.storyPoints, initialEstimatedTime = t.initialEstimatedTime, currentEstimatedTime = t.currentEstimatedTime,
-            dueDate = t.dueDate, description = t.description, projectId = t.projectId, subTicketIds = t.subTicketIds, parentTicketId = t.parentTicketId,
+            dueDate = t.dueDate, description = t.description, projectId = t.projectId, ticketAssignments = t.ticketAssignments?.map { s -> TicketAssignmentResultJson(s) }, subTicketIds = t.subTicketIds, parentTicketId = t.parentTicketId,
             createdBy = t.createdBy, tagIds = t.tagIds, mentoningCommentIds = t.mentoningCommentIds, commentIds = t.commentIds)
 }
