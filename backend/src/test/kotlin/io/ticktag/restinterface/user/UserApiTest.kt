@@ -6,8 +6,9 @@ import io.ticktag.persistence.user.entity.Role
 import io.ticktag.restinterface.ApiBaseTest
 import io.ticktag.restinterface.user.controllers.UserController
 import io.ticktag.restinterface.user.schema.CreateUserRequestJson
-import org.hamcrest.CoreMatchers.*
-import org.junit.Assert.*
+import org.hamcrest.CoreMatchers.`is`
+import org.junit.Assert.assertThat
+import org.junit.Assert.fail
 import org.junit.Test
 import org.springframework.security.access.AccessDeniedException
 import javax.inject.Inject
@@ -19,7 +20,7 @@ class UserApiTest : ApiBaseTest() {
     @Test(expected = AccessDeniedException::class)
     fun `createUser by non-admin should fail`() {
         withUser(OBSERVER_ID) { ->
-            val req = CreateUserRequestJson("a@b.com", "name", "password", Role.USER, null)
+            val req = CreateUserRequestJson("a@b.com", "name", "password", "unique_test_user", Role.USER, null)
             userController.createUser(req)
         }
     }
@@ -27,7 +28,7 @@ class UserApiTest : ApiBaseTest() {
     @Test
     fun `createUser by admin should create new user`() {
         withUser(ADMIN_ID) { ->
-            val req = CreateUserRequestJson("a@b.com", "name", "password", Role.USER, null)
+            val req = CreateUserRequestJson("a@b.com", "name", "password", "unique_test_user", Role.USER, null)
             val res = userController.createUser(req)
 
             val userId = res.id

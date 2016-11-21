@@ -19,28 +19,28 @@ COMMIT;
 
 
 BEGIN;
-INSERT INTO public."user" (id, mail, name, password_hash, role, current_token, profile_pic) VALUES
-  ('00000000-0001-0000-0000-000000000001', 'a@a.a', 'Mr. A',
+INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, profile_pic) VALUES
+  ('00000000-0001-0000-0000-000000000001', 'user_a', 'a@a.a', 'Mr. A',
    '$2a$10$mTEkiQq2Wo./aqfekJHPk.5sG8JLWqWYbtMODwk9xQwQp0GtkCiM.', 'ADMIN', '00000000-0001-0000-0000-abcdef123641',
    NULL); --aaaa
-INSERT INTO public."user" (id, mail, name, password_hash, role, current_token, profile_pic) VALUES
-  ('00000000-0001-0000-0000-000000000002', 'b@b.b', 'Berta Berta',
+INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, profile_pic) VALUES
+  ('00000000-0001-0000-0000-000000000002', 'user_b', 'b@b.b', 'Berta Berta',
    '$2a$10$Ydzo0FR5x8ZweeaeIQS2gevmLqsZuS37.bWRYy.f.u62NG00MAOcS', 'USER', '00000000-0001-0000-2343-abcdef123641',
    NULL); --bbbb
-INSERT INTO public."user" (id, mail, name, password_hash, role, current_token, profile_pic) VALUES
-  ('00000000-0001-0000-0000-000000000003', 'c@c.c', 'Gaius Iulius Caesar',
+INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, profile_pic) VALUES
+  ('00000000-0001-0000-0000-000000000003', 'user_c', 'c@c.c', 'Gaius Iulius Caesar',
    '$2a$10$OgvbSbiDxizgC/6K3dhVwO8iY6.QFS6f2PvE1AyJS1Vmo6Rnb3Gve', 'OBSERVER', '00000000-0001-8676-0000-abcdef123641',
    NULL); --cccc
-INSERT INTO public."user" (id, mail, name, password_hash, role, current_token, profile_pic) VALUES
-  ('00000000-0000-0000-0000-000000000000', 'admin@admin.invalid', 'Admin',
+INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, profile_pic) VALUES
+  ('00000000-0000-0000-0000-000000000000', 'admin', 'admin@admin.invalid', 'Admin',
    '$2a$10$dXjkyD704.vNyYWrsmEbrewcMeWIz1fDcjVVuggUyLmExGQQD3RGC', 'ADMIN', '9a030c2e-b2c7-4d98-825b-92c148897f4a',
    NULL);
-INSERT INTO public."user" (id, mail, name, password_hash, role, current_token, profile_pic) VALUES
-  ('660f2968-aa46-4870-bcc5-a3805366cff2', 'stefan.draskovits@test.at', 'Stefan Draskovits',
+INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, profile_pic) VALUES
+  ('660f2968-aa46-4870-bcc5-a3805366cff2', 'drasko', 'stefan.draskovits@test.at', 'Stefan Draskovits',
    '$2a$10$NuX1RqGiFg38qjF75b88J.oWw271xVYhsPvLRxHAQHnS2V9i0nNza', 'ADMIN', '4aa33174-bdf2-4d33-b80f-d7fb8d121923',
    E'\\x'); --stefan-supersecure
-INSERT INTO public."user" (id, mail, name, password_hash, role, current_token, profile_pic) VALUES
-  ('93ef43d9-20b7-461a-b960-2d1e89ba099f', 'michael.heinzl@test.de', 'Michael Heinzl',
+INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, profile_pic) VALUES
+  ('93ef43d9-20b7-461a-b960-2d1e89ba099f', 'heinzl', 'michael.heinzl@test.de', 'Michael Heinzl',
    '$2a$10$.dLg4Vgt7JrP.564p/tPQOm.TLoy3HieFP1ZpnyWVPkJDYrG6r.Ce', 'OBSERVER', '370f4e86-1ebf-4b70-a113-add96d0905e1',
    E'\\x'); --michael-supersecure
 

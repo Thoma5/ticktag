@@ -37,11 +37,14 @@ open class UserServiceImpl @Inject constructor(
         if (users.findByMailIgnoreCase(createUser.mail) != null) {
             throw TicktagValidationException(listOf(ValidationError("createUser.mail", ValidationErrorDetail.Other("inuse"))))
         }
+        if (users.findByUsername(createUser.username) != null) {
+            throw TicktagValidationException(listOf(ValidationError("createUser.username", ValidationErrorDetail.Other("inuse"))))
+        }
 
         val mail = createUser.mail
         val name = createUser.name
         val passwordHash = hashing.hashPassword(createUser.password)
-        val user = User.create(mail, passwordHash, name, createUser.role, UUID.randomUUID(), createUser.profilePic)
+        val user = User.create(mail, passwordHash, name, createUser.username, createUser.role, UUID.randomUUID(), createUser.profilePic)
         users.insert(user)
 
         return UserResult(user)
