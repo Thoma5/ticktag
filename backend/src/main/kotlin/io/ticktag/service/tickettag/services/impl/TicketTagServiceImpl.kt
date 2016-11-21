@@ -58,7 +58,11 @@ open class TicketTagServiceImpl @Inject constructor(
     override fun updateTicketTag(@P("authTicketTagId") id: UUID, @Valid ticketTag: UpdateTicketTag): TicketTagResult {
         val ticketTagToUpdate = ticketTags.findOne(id) ?: throw NotFoundException()
         if (ticketTag.name != null) {
-            ticketTagToUpdate.name = ticketTag.name
+            val normalizedName = nameNormalizationLibrary.normalize(ticketTag.name)
+            if (ticketTags.findByNameAndProjectId(normalizedName, ticketTagToUpdate.ticketTagGroup.project.id) != null) {
+                throw TicktagValidationException(listOf(ValidationError("updateTicketTag.name", ValidationErrorDetail.Other("inuse"))))
+            }
+            ticketTagToUpdate.name = normalizedName
         }
         if (ticketTag.color != null) {
             ticketTagToUpdate.color = ticketTag.color
