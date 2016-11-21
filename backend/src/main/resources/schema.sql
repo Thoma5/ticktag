@@ -86,10 +86,11 @@ ALTER TABLE "ticket_tag_group"
   ADD FOREIGN KEY ("default_ticket_tag_id") REFERENCES "ticket_tag";
 
 CREATE TABLE IF NOT EXISTS "assignment_tag" (
-  "id"         UUID PRIMARY KEY,
-  "project_id" UUID REFERENCES "project",
-  "name"       TEXT NOT NULL,
-  "color"      TEXT NOT NULL -- RRGGBB
+  "id"              UUID PRIMARY KEY,
+  "project_id"      UUID REFERENCES "project",
+  "name"            TEXT NOT NULL,
+  "normalized_name" TEXT NOT NULL,
+  "color"           TEXT NOT NULL -- RRGGBB
 );
 CREATE INDEX ON "assignment_tag" ("project_id");
 
