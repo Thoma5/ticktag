@@ -6,7 +6,9 @@ import io.ticktag.persistence.ticket.AssignmentTagRepository
 import io.ticktag.persistence.ticket.entity.AssignmentTag
 import io.ticktag.service.AuthExpr
 import io.ticktag.service.NotFoundException
-import io.ticktag.service.assignmenttag.dto.*
+import io.ticktag.service.assignmenttag.dto.AssignmentTagResult
+import io.ticktag.service.assignmenttag.dto.CreateAssignmentTag
+import io.ticktag.service.assignmenttag.dto.UpdateAssignmentTag
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
 import java.util.*
@@ -20,13 +22,13 @@ open class AssignmentTagServiceImpl @Inject constructor(
 ) : AssignmentTagService {
 
     @PreAuthorize(AuthExpr.PROJECT_USER)
-    override fun searchAssignmentTags(@P("authProjectId") pid: UUID, name: String): List<AssignmentTagResult> {
-        return assignmentTags.findByProjectIdAndNameLikeIgnoreCase(pid, name).map(::AssignmentTagResult)
+    override fun searchAssignmentTags(@P("authProjectId") projectId: UUID, name: String): List<AssignmentTagResult> {
+        return assignmentTags.findByProjectIdAndNameLikeIgnoreCase(projectId, name).map(::AssignmentTagResult)
     }
 
     @PreAuthorize(AuthExpr.PROJECT_USER)
-    override fun listAssignmentTags(@P("authProjectId") pid: UUID): List<AssignmentTagResult> {
-        return assignmentTags.findByProjectId(pid).map(::AssignmentTagResult)
+    override fun listAssignmentTags(@P("authProjectId") projectId: UUID): List<AssignmentTagResult> {
+        return assignmentTags.findByProjectId(projectId).map(::AssignmentTagResult)
     }
 
     @PreAuthorize(AuthExpr.READ_ASSIGNMENTTAG)
@@ -37,7 +39,7 @@ open class AssignmentTagServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.PROJECT_USER)
     override fun createAssignmentTag(@P("authProjectId") projectId: UUID, @Valid assignmentTag: CreateAssignmentTag): AssignmentTagResult {
-        val project = projects.findOne(assignmentTag.pID) ?: throw NotFoundException()
+        val project = projects.findOne(assignmentTag.projectId) ?: throw NotFoundException()
         val assignmentTag = AssignmentTag.create(assignmentTag.name, assignmentTag.color, project)
         assignmentTags.insert(assignmentTag)
         return AssignmentTagResult(assignmentTag)

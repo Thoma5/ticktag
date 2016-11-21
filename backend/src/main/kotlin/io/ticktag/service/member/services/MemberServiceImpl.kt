@@ -23,34 +23,34 @@ open class MemberServiceImpl @Inject constructor(
         private val projects: ProjectRepository
 ) : MemberService {
     @PreAuthorize(AuthExpr.ADMIN)
-    override fun getMember(uID: UUID, pID: UUID): MemberResult {
-        val user = users.findOne(uID) ?: throw NotFoundException()
-        val project = projects.findOne(pID) ?: throw NotFoundException()
+    override fun getMember(userId: UUID, projectId: UUID): MemberResult {
+        val user = users.findOne(userId) ?: throw NotFoundException()
+        val project = projects.findOne(projectId) ?: throw NotFoundException()
         val member = members.findOne(MemberKey.create(user, project)) ?: throw NotFoundException()
         return MemberResult(member)
     }
 
     @PreAuthorize(AuthExpr.ADMIN)
-    override fun createMember(uID: UUID, pID: UUID, member: CreateMember): MemberResult {
-        val user = users.findOne(uID) ?: throw NotFoundException()
-        val project = projects.findOne(pID) ?: throw NotFoundException()
+    override fun createMember(userId: UUID, projectId: UUID, member: CreateMember): MemberResult {
+        val user = users.findOne(userId) ?: throw NotFoundException()
+        val project = projects.findOne(projectId) ?: throw NotFoundException()
         val member = Member.create(user, project, member.role, Date())
         members.insert(member)
         return MemberResult(member)
     }
 
     @PreAuthorize(AuthExpr.ADMIN)
-    override fun deleteMember(uID: UUID, pID: UUID) {
-        val user = users.findOne(uID) ?: throw NotFoundException()
-        val project = projects.findOne(pID) ?: throw NotFoundException()
+    override fun deleteMember(userId: UUID, projectId: UUID) {
+        val user = users.findOne(userId) ?: throw NotFoundException()
+        val project = projects.findOne(projectId) ?: throw NotFoundException()
         val memberToDelete = members.findOne(MemberKey.create(user, project)) ?: throw NotFoundException()
         members.delete(memberToDelete)
     }
 
     @PreAuthorize(AuthExpr.ADMIN)
-    override fun updateMember(uID: UUID, pID: UUID, member: UpdateMember): MemberResult {
-        val user = users.findOne(uID) ?: throw NotFoundException()
-        val project = projects.findOne(pID) ?: throw NotFoundException()
+    override fun updateMember(userId: UUID, projectId: UUID, member: UpdateMember): MemberResult {
+        val user = users.findOne(userId) ?: throw NotFoundException()
+        val project = projects.findOne(projectId) ?: throw NotFoundException()
         val memberToUpdate = members.findOne(MemberKey.create(user, project)) ?: throw NotFoundException()
         if (member.role != null) {
             memberToUpdate.role = member.role
