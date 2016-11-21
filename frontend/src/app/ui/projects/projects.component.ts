@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiCallService } from '../../service';
-import { ProjectApi, ProjectResultJson } from '../../api';
+import { ProjectApi, PageProjectResultJson } from '../../api';
 
 @Component({
   selector: 'tt-projects',
   templateUrl: './projects.component.html',
 })
 export class ProjectsComponent implements OnInit {
-  projects: ProjectResultJson[];
+  projects: PageProjectResultJson;
   columns = [
     { name: 'ID' },
     { name: 'Name' },
@@ -28,7 +28,7 @@ export class ProjectsComponent implements OnInit {
 
   getProjects(page?: number, size?: number, order?: string, asc?: boolean, name?: string): void {
     this.apiCallService
-      .callNoError<ProjectResultJson[]>(h => this.projectApi.listProjectsUsingGETWithHttpInfo(page, size, order, asc, name, true, h))
-      .subscribe(projects => { this.projects = projects.content; });
+      .callNoError<PageProjectResultJson>(h => this.projectApi.listProjectsUsingGETWithHttpInfo(page, size, order, asc, name, true, h))
+      .subscribe(projects => { this.projects = projects; });
   }
 }
