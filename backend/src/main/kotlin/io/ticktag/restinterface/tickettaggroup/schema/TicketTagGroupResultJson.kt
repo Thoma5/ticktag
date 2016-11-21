@@ -8,7 +8,8 @@ data class TicketTagGroupResultJson(
         val name: String,
         val exclusive: Boolean,
         val projectId: UUID,
-        val defaultTicketTagId: UUID?
+        val defaultTicketTagId: UUID?,
+        val required: Boolean
 ) {
-    constructor(g: TicketTagGroupResult) : this(id = g.id, name = g.name, exclusive = g.exclusive, projectId = g.project_id, defaultTicketTagId = g.default_ticket_tag_id)
+    constructor(g: TicketTagGroupResult) : this(id = g.id, name = g.name, exclusive = g.exclusive, projectId = g.project_id, defaultTicketTagId = g.default_ticket_tag_id, required = g.required)
 }
