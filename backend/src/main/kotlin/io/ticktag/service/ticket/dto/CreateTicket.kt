@@ -9,7 +9,7 @@ import javax.validation.constraints.DecimalMin
 import javax.validation.constraints.Size
 
 data class CreateTicket(
-        @field:Size(min=1,max = 100) val title: String,
+        @field:Size(min = 1, max = 100) val title: String,
         val open: Boolean,
         @field:DecimalMin("0") val storyPoints: Int?,
         val initialEstimatedTime: Duration?,
@@ -19,11 +19,11 @@ data class CreateTicket(
         val projectID: UUID,
         val subTickets: List<CreateTicket>?,
         val existingSubTicketIds: List<UUID>?,
-        var partenTicket: UUID?
+        var parentTicket: UUID?
 ) {
     constructor(req: CreateTicketRequestJson) : this(
             req.title, req.open, req.storyPoints, req.initialEstimatedTime,
-            req.currentEstimatedTime, req.dueDate, req.description, req.projectId, req.subTickets?.map { s -> CreateTicket(s) }, req.existingSubTicketIds, req.partenTicket)
+            req.currentEstimatedTime, req.dueDate, req.description, req.projectId, req.subTickets?.map { s -> CreateTicket(s) }, req.existingSubTicketIds, req.partenTicketId)
 
 
 }

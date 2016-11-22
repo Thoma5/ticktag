@@ -16,5 +16,5 @@ data class CreateTicketRequestJson(
         val projectId: UUID,
         val subTickets: List<CreateTicketRequestJson>?,
         val existingSubTicketIds: List<UUID>?,
-        val partenTicket: UUID?
+        val partenTicketId: UUID?
 )

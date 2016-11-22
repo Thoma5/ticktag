@@ -1,6 +1,7 @@
 package io.ticktag.persistence.ticket.entity
 
 import io.ticktag.persistence.project.entity.Project
+import org.hibernate.annotations.Formula
 import java.util.*
 import javax.persistence.*
 
@@ -38,6 +39,10 @@ open class TicketTagGroup protected constructor() {
     @OneToOne(optional = true, fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.REMOVE))
     @JoinColumn(name = "default_ticket_tag_id", referencedColumnName = "id", nullable = true)
     open var defaultTicketTag: TicketTag? = null
+
+    @Formula("default_ticket_tag_id IS NOT NULL")
+    open var required: Boolean = false
+        protected set
 
     @OneToMany(mappedBy = "ticketTagGroup", cascade = arrayOf(CascadeType.REMOVE))
     lateinit open var ticketTags: MutableList<TicketTag>
