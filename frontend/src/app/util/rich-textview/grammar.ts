@@ -5,9 +5,14 @@ function r(s: string): string {
   return String.raw`(?:${s})`;
 }
 
+export const SEPERATOR_FRONT_REGEX = r(String.raw`[^\w\d]|^`);
+export const SEPERATOR_BACK_REGEX = r(String.raw`[^\w\d]|$`);
+export const TAG_LETTER = r(String.raw`[a-z0-9_]`);
+export const USER_LETTER = r(String.raw`[a-z0-9_]`);
+
 export const TIME_REGEX = r(String.raw`(?:[0-9]+h?:?[0-9]+(?:m(?:in)?)?)|(?:[0-9]+(?:h|(?:m(?:in)?))?)`);
-export const TAG_REGEX = r(String.raw`[a-z0-9_]+`);
-export const USER_REGEX = r(String.raw`[a-z0-9_]+`);
+export const TAG_REGEX = r(String.raw`${TAG_LETTER}+`);
+export const USER_REGEX = r(String.raw`${USER_LETTER}+`);
 
 export const TIME_CMD_REGEX = r(String.raw`time:${TIME_REGEX}@${TAG_REGEX}`);
 export const ASSIGN_CMD_REGEX = r(String.raw`assign:${USER_REGEX}@${TAG_REGEX}`);
@@ -25,7 +30,9 @@ export const COMMAND_REGEX = r(
   String.raw`)`
 );
 export const TICKET_REF_REGEX = r(String.raw`#[0-9]+`);
-export const EXPR_REGEX = r(String.raw`(?:\s|^)(${COMMAND_REGEX}|${TICKET_REF_REGEX})(?=\s|$)`);
+export const EXPR_REGEX = r(String.raw`${SEPERATOR_FRONT_REGEX}(${COMMAND_REGEX}|${TICKET_REF_REGEX})(?=${SEPERATOR_BACK_REGEX})`);
+
+export const COMMAND_STRINGS = ['time', 'assign', '-assign', 'close', 'reopen', 'tag', '-tag', 'est'];
 
 console.log('EXPR_REGEX = ' + EXPR_REGEX);
 
