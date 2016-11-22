@@ -7,9 +7,8 @@ import java.util.*
 
 interface TimeCategoryService {
     fun getTimeCategory(id: UUID): TimeCategoryResult
-    fun getTimeCategoryCount(): Int
     fun listProjectTimeCategories(projectId: UUID): List<TimeCategoryResult>
-    fun createTimeCategory(timeCategory: CreateTimeCategory): TimeCategoryResult
+    fun createTimeCategory(projectId: UUID, timeCategory: CreateTimeCategory): TimeCategoryResult
     fun deleteTimeCategory(id: UUID)
     fun updateTimeCategory(id: UUID, timeCategory: UpdateTimeCategory): TimeCategoryResult
 }

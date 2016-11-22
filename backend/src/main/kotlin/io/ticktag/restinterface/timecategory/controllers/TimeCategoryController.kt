@@ -33,7 +33,7 @@ open class TimeCategoryController @Inject constructor(
 
     @PostMapping
     open fun createTimeCategory(@RequestBody req: CreateTimeCategoryRequestJson): TimeCategoryJson {
-        val timeCategory = timeCategoryService.createTimeCategory(CreateTimeCategory(req.projectId, req.name))
+        val timeCategory = timeCategoryService.createTimeCategory(req.projectId, CreateTimeCategory(req.projectId, req.name))
         return TimeCategoryJson(timeCategory)
     }
 

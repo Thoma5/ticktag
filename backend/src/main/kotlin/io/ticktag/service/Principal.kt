@@ -4,6 +4,7 @@ import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.member.MemberRepository
 import io.ticktag.persistence.member.entity.ProjectRole
 import io.ticktag.persistence.ticket.AssignmentTagRepository
+import io.ticktag.persistence.timecategory.TimeCategoryRepository
 import io.ticktag.persistence.user.entity.Role
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
@@ -14,10 +15,11 @@ data class Principal(
         val role: Role?,
         private val members: MemberRepository?,
         private val comments: CommentRepository?,
-        private val assignmenttags: AssignmentTagRepository?
+        private val assignmenttags: AssignmentTagRepository?,
+        private val timeCategories: TimeCategoryRepository?
 ) {
     companion object {
-        val INTERNAL = Principal(UUID(-1, -1), null, null, null, null)
+        val INTERNAL = Principal(UUID(-1, -1), null, null, null, null, null)
     }
 
     fun isInternal(): Boolean = members == null
@@ -66,6 +68,18 @@ data class Principal(
         return hasProjectRole(assignmenttag.project.id, roleString)
     }
 
+    fun hasProjectRoleForTimeCategory(timeCategoryId: UUID, roleString: String): Boolean {
+        timeCategories ?: return false
+        val timeCategory = timeCategories.findOne(timeCategoryId) ?: return false
+        return hasProjectRole(timeCategory.project.id, roleString)
+    }
+
+    fun hasProjectRoleForTicketAssignment(ticketId: UUID, roleString: String): Boolean {
+        if (members == null) return false
+        val member = members.findByUserIdAndTicketId(this.id, ticketId) ?: return false
+        return member.role.includesRole(ProjectRole.valueOf(roleString))
+    }
+
 
     fun hasProjectRoleForTicketTagGroup(ticketTagGroupId: UUID, roleString: String): Boolean {
         if (members == null) return false
@@ -112,6 +126,12 @@ class AuthExpr private constructor() {
 
         const val READ_ASSIGNMENTTAG = "principal.hasRole('ADMIN') || principal.hasProjectRoleForAssignmentTag(#authAssignmentTagId, 'OBSERVER')"
         const val EDIT_ASSIGNMENTTAG = "principal.hasRole('ADMIN') || principal.hasProjectRoleForAssignmentTag(#authAssignmentTagId, 'USER')"
+
+        const val READ_TIMECATEGORY = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTimeCategory(#authTimeCategoryId, 'OBSERVER')"
+        const val WRITE_TIMECATEGORY = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTimeCategory(#authTimeCategoryId, 'ADMIN')"
+
+        const val READ_TICKET_ASSIGNMENT = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicketAssignment(#authTicketId, 'OBSERVER')"
+        const val WRITE_TICKET_ASSIGNMENT = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicketAssignment(#authTicketId, 'USER')"
 
         const val ADMIN_OR_SELF = "principal.hasRole('ADMIN') || principal.isId(#userId)"
 
