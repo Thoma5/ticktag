@@ -16,6 +16,7 @@ export * from './LoginResultJson';
 export * from './MemberResultJson';
 export * from './ProjectResultJson';
 export * from './RoleResultJson';
+export * from './TicketEventResultJson';
 export * from './TicketResultJson';
 export * from './TicketTagGroupResultJson';
 export * from './TicketTagResultJson';

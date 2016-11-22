@@ -52,6 +52,9 @@ import { TaginputComponent } from './util/taginput/taginput.component';
 import { SelectAllDirective } from './util/select-all.directive';
 import { EditButtonComponent } from './util/edit-button/edit-button.component';
 import { LoadingComponent } from './util/loading/loading.component';
+import {TicketEventsComponent} from './ui/ticket-detail/ticket-events/ticket-events.component';
+import {TicketEventComponent} from './ui/ticket-detail/ticket-event/ticket-event.component';
+import {TicketeventApi} from './api/api/TicketeventApi';
 
 
 @NgModule({
@@ -90,6 +93,8 @@ import { LoadingComponent } from './util/loading/loading.component';
     TaginputComponent,
     TicketCommentsComponent,
     TicketCommentComponent,
+    TicketEventsComponent,
+    TicketEventComponent,
     TicketCommentInputComponent,
     EditButtonComponent,
 
@@ -112,6 +117,7 @@ import { LoadingComponent } from './util/loading/loading.component';
     TicketApi,
     TickettagApi,
     TickettaggroupApi,
+    TicketeventApi,
 
     ApiCallService,
     AuthService,

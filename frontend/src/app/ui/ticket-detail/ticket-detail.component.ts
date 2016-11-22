@@ -6,6 +6,8 @@ import {
   AssignmentTagResultJson, CommentResultJson, TicketTagResultJson,
 } from '../../api';
 import { Observable } from 'rxjs';
+import {TicketEventResultJson} from '../../api/model/TicketEventResultJson';
+import {TicketeventApi} from '../../api/api/TicketeventApi';
 
 @Component({
   selector: 'tt-ticket-detail',
@@ -18,6 +20,7 @@ export class TicketDetailComponent implements OnInit {
   private comments: CommentResultJson[] | null = null;
   private assignmentTags: AssignmentTagResultJson[] | null = null;
   private ticketTags: TicketTagResultJson[] | null = null;
+  private ticketEvents: TicketEventResultJson[] | null = null;
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(
@@ -27,6 +30,7 @@ export class TicketDetailComponent implements OnInit {
     private ticketApi: TicketApi,
     private commentsApi: CommentsApi,
     private assigmentTagsApi: AssignmenttagApi,
+    private ticketEventApi: TicketeventApi,
     ) {
   }
 
@@ -43,18 +47,24 @@ export class TicketDetailComponent implements OnInit {
           .callNoError<CommentResultJson[]>(p => this.commentsApi.listCommentsUsingGETWithHttpInfo(ticketId, p));
         let assignmentTagsObs = this.apiCallService
           .callNoError<AssignmentTagResultJson[]>(p => this.assigmentTagsApi.listAssignmentTagsUsingGETWithHttpInfo(projectId, p));
+        let ticketEvents = this.apiCallService
+          .callNoError<TicketEventResultJson[]>(p => this.ticketEventApi.listTicketEventsUsingGETWithHttpInfo(ticketId, p));
+
         let ticketTagsObs = Observable.of([]);
 
-        return Observable.zip(ticketObs, commentsObs, assignmentTagsObs, ticketTagsObs);
+        return Observable.zip(ticketObs, commentsObs, assignmentTagsObs, ticketTagsObs, ticketEvents);
       })
       .subscribe(tuple => {
-        let [ticket, comments, assignmentTags, ticketTags] = tuple;
+        let [ticket, comments, assignmentTags, ticketTags, ticketEvents] = tuple;
         this.ticket = ticket;
         // TODO remove this when we can actually use ticket tags
         this.ticket.tagIds = [];
         this.comments = comments;
         this.assignmentTags = assignmentTags;
         this.ticketTags = ticketTags;
+        this.ticketEvents = ticketEvents;
+        console.log(ticketEvents);
+        console.log(comments);
         this.loading = false;
       });
   }
