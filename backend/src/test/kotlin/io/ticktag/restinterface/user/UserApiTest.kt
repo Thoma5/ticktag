@@ -11,8 +11,8 @@ import io.ticktag.restinterface.user.controllers.UserController
 import io.ticktag.restinterface.user.schema.CreateUserRequestJson
 import io.ticktag.restinterface.user.schema.UpdateUserRequestJson
 import io.ticktag.service.TicktagValidationException
-import io.ticktag.service.user.dto.UpdateUser
-import org.hamcrest.CoreMatchers.*
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.CoreMatchers.not
 import org.junit.Assert.*
 import org.junit.Test
 import org.springframework.security.access.AccessDeniedException
@@ -25,7 +25,7 @@ class UserApiTest : ApiBaseTest() {
     @Test(expected = AccessDeniedException::class)
     fun test_createUser_negative() {
         withUser(OBSERVER_ID) { ->
-            val req = CreateUserRequestJson("a@b.com", "name", "password", Role.USER, null)
+            val req = CreateUserRequestJson("a@b.com", "name", "password", "unique_test_user", Role.USER, null)
             userController.createUser(req)
         }
     }
@@ -33,7 +33,7 @@ class UserApiTest : ApiBaseTest() {
     @Test
     fun test_createUser_positive() {
         withUser(ADMIN_ID) { ->
-            val req = CreateUserRequestJson("a@b.com", "name", "password", Role.USER, null)
+            val req = CreateUserRequestJson("a@b.com", "name", "password", "unique_test_user", Role.USER, null)
             val res = userController.createUser(req)
 
             val userId = res.id

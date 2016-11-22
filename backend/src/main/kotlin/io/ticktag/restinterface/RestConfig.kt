@@ -64,6 +64,8 @@ open class RestExceptionHandlers {
             when (it.detail) {
                 is ValidationErrorDetail.Size ->
                     ValidationErrorJson(it.field, "size", sizeInfo = ValidationErrorSizeJson(it.detail.min, it.detail.max))
+                is ValidationErrorDetail.Pattern ->
+                    ValidationErrorJson(it.field, "pattern", patternInfo = ValidationErrorPatternJson(it.detail.regex))
                 is ValidationErrorDetail.Other ->
                     ValidationErrorJson(it.field, "other", otherInfo = ValidationErrorOtherJson(it.detail.name))
                 is ValidationErrorDetail.Unknown ->

@@ -8,6 +8,7 @@ data class ValidationError(val field: String, val detail: ValidationErrorDetail)
 
 sealed class ValidationErrorDetail {
     class Size(val min: Int, val max: Int) : ValidationErrorDetail()
+    class Pattern(val regex: String) : ValidationErrorDetail()
     class Other(val name: String) : ValidationErrorDetail()
     object Unknown : ValidationErrorDetail()
 }

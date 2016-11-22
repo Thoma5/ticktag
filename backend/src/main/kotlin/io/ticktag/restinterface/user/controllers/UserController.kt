@@ -24,7 +24,7 @@ open class UserController @Inject constructor(
 
     @PostMapping
     open fun createUser(@RequestBody req: CreateUserRequestJson): UserResultJson {
-        val user = userService.createUser(CreateUser(mail = req.mail, name = req.name, password = req.password, role = req.role, profilePic = req.profilePic))
+        val user = userService.createUser(CreateUser(mail = req.mail, name = req.name, password = req.password, role = req.role, profilePic = req.profilePic, username = req.username))
         return UserResultJson(user)
     }
 
