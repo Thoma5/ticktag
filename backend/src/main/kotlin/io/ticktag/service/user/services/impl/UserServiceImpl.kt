@@ -47,12 +47,12 @@ open class UserServiceImpl @Inject constructor(
         return UserResult(user)
     }
 
-    @PreAuthorize(AuthExpr.USER)  // TODO is this correct?
-    override fun getUser(id: UUID): UserResult? {
-        return UserResult(users.findOne(id) ?: return null)
+    @PreAuthorize(AuthExpr.USER)
+    override fun getUser(id: UUID): UserResult {
+        return UserResult(users.findOne(id) ?: throw NotFoundException())
     }
 
-    @PreAuthorize(AuthExpr.USER)  // TODO is this correct?
+    @PreAuthorize(AuthExpr.USER)
     override fun getUser(mail: String): UserResult? {
         return UserResult(users.findByMailIgnoreCase(mail) ?: return null)
     }
