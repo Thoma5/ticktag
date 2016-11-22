@@ -48,15 +48,23 @@ open class TicketServiceImpl @Inject constructor(
     @PreAuthorize(AuthExpr.PROJECT_USER)
     override fun createTicket(@Valid createTicket: CreateTicket, principal: Principal, @P("authProjectId") projectId: UUID): TicketResult {
 
-        if (!(!(createTicket.partenTicket != null) || (createTicket.subTickets != null && createTicket.subTickets.size == 0 &&
-                createTicket.existingSubTicketIds != null && createTicket.existingSubTicketIds.size == 0))) {
+        val wantToSetParentTicket = createTicket.parentTicket != null
+        val dontWantToCreateSubTicketsInThisUpdate = createTicket.subTickets == null || (createTicket.subTickets != null && createTicket.subTickets.size == 0)
+        val dontWantToReferenceSubTicketsInThisUpdate = createTicket.existingSubTicketIds == null || (createTicket.existingSubTicketIds != null && createTicket.existingSubTicketIds.size == 0)
+
+        //implies(q,p) is only false if q is true and p is false
+        if (!(implies(wantToSetParentTicket, (dontWantToCreateSubTicketsInThisUpdate && dontWantToReferenceSubTicketsInThisUpdate)))) {
             throw TicktagValidationException(listOf(ValidationError("updateUser.parentTicket", ValidationErrorDetail.Other("subTickets are Set"))))
         }
-        //Implies == !p||q
-        if (!(!(createTicket.subTickets != null && createTicket.subTickets.size != 0 || createTicket.existingSubTicketIds != null && createTicket.existingSubTicketIds.size != 0) ||
-                (createTicket.partenTicket == null))) {
+
+        val wantToSetSubTickets = (createTicket.subTickets != null && createTicket.subTickets.size != 0) || //creates New SubTickets
+                (createTicket.existingSubTicketIds != null && createTicket.existingSubTicketIds.size != 0) // references SubTickets
+        val dontWantToSetParentTicket = createTicket.parentTicket == null
+
+        if (!(implies(wantToSetSubTickets, dontWantToSetParentTicket))) {
             throw TicktagValidationException(listOf(ValidationError("updateUser.subTickets", ValidationErrorDetail.Other("tickets are Set"))))
         }
+
 
         val number = tickets.findNewTicketNumber(createTicket.projectID) ?: 1
         val createTime = Instant.now()
@@ -71,7 +79,7 @@ open class TicketServiceImpl @Inject constructor(
 
 
         var parentTicket: Ticket? = null
-        var parentTicketCopy = createTicket.partenTicket
+        var parentTicketCopy = createTicket.parentTicket
         if ((parentTicketCopy != null)) {
             parentTicket = tickets.findOne(parentTicketCopy)
         }
@@ -89,7 +97,7 @@ open class TicketServiceImpl @Inject constructor(
         val newSubs: MutableList<UUID> = emptyList<UUID>().toMutableList()
         if (createTicket.subTickets != null) {
             newSubs.addAll(createTicket.subTickets.map({ sub ->
-                sub.partenTicket = newTicket.id
+                sub.parentTicket = newTicket.id
                 createTicket(sub, principal, projectId).id
             }))
         }
@@ -108,19 +116,33 @@ open class TicketServiceImpl @Inject constructor(
         return ticketResult
     }
 
+    fun implies(p: Boolean, q: Boolean): Boolean {
+        return !p || q
+    }
+
     //TODO: Log Changes in History
     @PreAuthorize(AuthExpr.WRITE_TICKET)
     override fun updateTicket(@Valid updateTicket: UpdateTicket, @P("authTicketId") ticketId: UUID, principal: Principal): TicketResult {
         val user = users.findOne(principal.id) ?: throw NotFoundException()
         val ticket = tickets.findOne(ticketId) ?: throw NotFoundException()
 
-        if (!(!(updateTicket.partenTicket != null) ||
-                (ticket.subTickets.size == 0 || (updateTicket.subTickets != null && updateTicket.subTickets.size == 0)))) {
+        val wantToSetParentTicket = updateTicket.parentTicket != null
+        val dontWantToCreateSubTicketsInThisUpdate = updateTicket.subTickets == null || (updateTicket.subTickets != null && updateTicket.subTickets.size == 0)
+        val dontWantToReferenceSubTicketsInThisUpdate = updateTicket.existingSubTicketIds == null || (updateTicket.existingSubTicketIds != null && updateTicket.existingSubTicketIds.size == 0)
+
+        val noSubTicketsArePresentBeforeUpdate = (ticket.subTickets.size == 0)
+
+        //implies(q,p) is only false if q is true and p is false
+        if (!(implies(wantToSetParentTicket, (noSubTicketsArePresentBeforeUpdate || (dontWantToCreateSubTicketsInThisUpdate && dontWantToReferenceSubTicketsInThisUpdate))))) {
             throw TicktagValidationException(listOf(ValidationError("updateUser.parentTicket", ValidationErrorDetail.Other("subTickets are Set"))))
         }
 
-        if (!(!(updateTicket.subTickets != null && updateTicket.subTickets.size != 0) ||
-                (ticket.parentTicket == null || updateTicket.partenTicket == null))) {
+        val wantToSetSubTickets = (updateTicket.subTickets != null && updateTicket.subTickets.size != 0) || //creates New SubTickets
+                (updateTicket.existingSubTicketIds != null && updateTicket.existingSubTicketIds.size != 0)  // references SubTickets
+        val dontWantToSetParentTicket = updateTicket.parentTicket == null
+        val noPartentTicketIsPresentBeforeUpdate = ticket.parentTicket == null
+
+        if (!(implies(wantToSetSubTickets, (dontWantToSetParentTicket || noPartentTicketIsPresentBeforeUpdate)))) {
             throw TicktagValidationException(listOf(ValidationError("updateUser.subTickets", ValidationErrorDetail.Other("tickets are Set"))))
         }
 
@@ -142,8 +164,8 @@ open class TicketServiceImpl @Inject constructor(
             ticket.dueDate = updateTicket.dueDate
         }
 
-        if (updateTicket.partenTicket != null) {
-            ticket.parentTicket = tickets.findOne(updateTicket.partenTicket)
+        if (updateTicket.parentTicket != null) {
+            ticket.parentTicket = tickets.findOne(updateTicket.parentTicket)
         }
 
         //Comment
@@ -157,7 +179,7 @@ open class TicketServiceImpl @Inject constructor(
             val newSubs: MutableList<UUID> = emptyList<UUID>().toMutableList()
             if (updateTicket.subTickets != null) {
                 newSubs.addAll(updateTicket.subTickets.map({ sub ->
-                    sub.partenTicket = ticket.id
+                    sub.parentTicket = ticket.id
                     createTicket(sub, principal, ticket.project.id).id
                 }))
             }

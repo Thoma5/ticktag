@@ -1,11 +1,11 @@
 package io.ticktag.service.timecategory.services
 
 import io.ticktag.TicktagService
+import io.ticktag.library.unicode.NameNormalizationLibrary
 import io.ticktag.persistence.project.ProjectRepository
 import io.ticktag.persistence.ticket.entity.TimeCategory
 import io.ticktag.persistence.timecategory.TimeCategoryRepository
-import io.ticktag.service.AuthExpr
-import io.ticktag.service.NotFoundException
+import io.ticktag.service.*
 import io.ticktag.service.timecategory.TimeCategoryService
 import io.ticktag.service.timecategory.dto.CreateTimeCategory
 import io.ticktag.service.timecategory.dto.TimeCategoryResult
@@ -18,7 +18,8 @@ import javax.inject.Inject
 @TicktagService
 open class TimeCategoryServiceImpl @Inject constructor(
         private val timeCategories: TimeCategoryRepository,
-        private val projects: ProjectRepository
+        private val projects: ProjectRepository,
+        private val nameNormalizationLibrary: NameNormalizationLibrary
 ) : TimeCategoryService {
 
     @PreAuthorize(AuthExpr.PROJECT_USER)
@@ -41,7 +42,13 @@ open class TimeCategoryServiceImpl @Inject constructor(
     @PreAuthorize(AuthExpr.PROJECT_ADMIN)
     override fun createTimeCategory(timeCategory: CreateTimeCategory): TimeCategoryResult {
         val project = projects.findOne(timeCategory.projectId) ?: throw NotFoundException()
-        val newTimeCategory = TimeCategory.create(timeCategory.name, project)
+
+        val normalizedName = nameNormalizationLibrary.normalize(timeCategory.name)
+        if (timeCategories.findByNormalizedNameAndProjectId(normalizedName, project.id) != null) {
+            throw TicktagValidationException(listOf(ValidationError("createTimeCategory.name", ValidationErrorDetail.Other("inuse"))))
+        }
+
+        val newTimeCategory = TimeCategory.create(timeCategory.name, normalizedName, project)
         timeCategories.insert(newTimeCategory)
         return TimeCategoryResult(newTimeCategory)
     }
@@ -56,7 +63,13 @@ open class TimeCategoryServiceImpl @Inject constructor(
     override fun updateTimeCategory(id: UUID, timeCategory: UpdateTimeCategory): TimeCategoryResult {
         val timeCategoryToUpdate = timeCategories.findOne(id) ?: throw NotFoundException()
         if (timeCategory.name != null) {
+            val normalizedName = nameNormalizationLibrary.normalize(timeCategory.name)
+            val foundTag = timeCategories.findByNormalizedNameAndProjectId(normalizedName, timeCategoryToUpdate.project.id)
+            if (foundTag != null && foundTag.id != timeCategoryToUpdate.id) {
+                throw TicktagValidationException(listOf(ValidationError("updateTimeCategory.name", ValidationErrorDetail.Other("inuse"))))
+            }
             timeCategoryToUpdate.name = timeCategory.name
+            timeCategoryToUpdate.normalizedName = normalizedName
         }
         return TimeCategoryResult(timeCategoryToUpdate)
     }

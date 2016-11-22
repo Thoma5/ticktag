@@ -1,0 +1,17 @@
+<div class='textview-container'>
+    <div *ngIf="!editing" class='reading'>
+        <ng-content select='.textview-read'></ng-content>
+        <!--
+        <div class='reading-content'>
+            {{text}}
+        </div>
+        -->
+    </div>
+    <div *ngIf="editing" class='editing'>
+        <ng-content select='.textview-edit'></ng-content>
+        <!--
+        <textarea [ttFocus]='editing' ttAutosize [(ngModel)]="currentlyEditingText" (keydown.control.enter)='saveEdit()' (blur)='abortEdit()'>
+        </textarea>
+        -->
+    </div>
+</div>
