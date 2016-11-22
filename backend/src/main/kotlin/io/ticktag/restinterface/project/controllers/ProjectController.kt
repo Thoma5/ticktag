@@ -13,6 +13,7 @@ import io.ticktag.service.Principal
 import io.ticktag.service.project.dto.CreateProject
 import io.ticktag.service.project.dto.UpdateProject
 import io.ticktag.service.project.services.ProjectService
+import io.ticktag.service.tickettaggroup.service.TicketTagGroupService
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -24,8 +25,9 @@ import javax.inject.Inject
 @RequestMapping("/project")
 @Api(tags = arrayOf("project"), description = "project management")
 open class ProjectController @Inject constructor(
-        private val projectService: ProjectService
-) {
+        private val projectService: ProjectService,
+        private val ticketTagGroupService: TicketTagGroupService
+        ) {
     //TODO: adjust default values
     @GetMapping
     open fun listProjects(@RequestParam(name = "page", defaultValue = "0", required = false) page: Int,
@@ -88,6 +90,5 @@ open class ProjectController @Inject constructor(
         } else {
             CountJson(projectService.getUserProjectCount(principal))
         }
-
     }
 }

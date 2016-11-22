@@ -1,0 +1,93 @@
+@import '../../../../style/constants.scss';
+
+.core {
+    @extend %card;
+    overflow: hidden;
+    position: relative;
+}
+
+.card-content * {
+    z-index: 1;
+}
+
+.closed {
+    width: 16rem;
+    height: 16rem;
+    position: absolute;
+    top: -5rem;
+    right: -5rem;
+    z-index: 0;
+
+    img {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.header-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.title {
+    @extend %title;
+    flex-grow: 1;
+}
+
+.title-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+
+    .title-text-wrapper {
+        margin-left: $internal-gap;
+    }
+
+    tt-edit-button {
+        margin-left: $internal-gap;
+    }
+}
+
+.sub-header-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.tags {
+    flex-grow: 1;
+}
+
+.description-container {
+    margin-top: 2rem;
+
+    tt-edit-button {
+        float: right;
+    }
+}
+
+.subtickets {
+    margin-top: 2rem;
+}
+
+.status {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    margin-top: 2rem;
+
+    div {
+        flex-basis: 50%;
+        text-align: left;
+    }
+}
+
+.footer-row {
+    display: flex;
+    flex-direction: row;
+    margin-top: 2rem;
+
+    .filler {
+        flex-grow: 1;
+    }
+}

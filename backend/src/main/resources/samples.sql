@@ -1,14 +1,17 @@
 BEGIN;
-SET CONSTRAINTS ALL DEFERRED;
 
 DELETE FROM "logged_time";
 DELETE FROM "time_category";
 DELETE FROM "assigned_ticket_user";
 DELETE FROM "assignment_tag";
 DELETE FROM "assigned_ticket_tag";
+UPDATE TICKET
+SET description_comment_id = NULL;
 DELETE FROM "comment";
 DELETE FROM "ticket";
+UPDATE public.ticket_tag_group SET default_ticket_tag_id = NULL;
 DELETE FROM "ticket_tag";
+DELETE FROM "ticket_tag_group";
 DELETE FROM "member";
 DELETE FROM "project";
 DELETE FROM "user";
@@ -107,38 +110,50 @@ COMMIT;
 --TICKETS
 
 
-BEGIN;
-SET CONSTRAINTS ALL DEFERRED;
-
 INSERT INTO public.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, open, story_points, initial_estimated_time, current_estimated_time, due_date)
 VALUES ('00000000-0003-0000-0000-000000000001', 1, NULL, '00000000-0002-0000-0000-000000000001',
                                                 '660f2968-aa46-4870-bcc5-a3805366cff2',
-                                                '00000000-0004-0000-0000-000000000001', '2016-11-16 17:06:07.221000',
+                                                NULL,
+                                                '2016-11-16 17:06:07.221000',
                                                 'Added Models to Layout', TRUE, 10, 20, 25,
         '2016-11-20 17:07:05.554000');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text)
 VALUES ('00000000-0004-0000-0000-000000000001', '660f2968-aa46-4870-bcc5-a3805366cff2',
         '00000000-0003-0000-0000-000000000001', '2016-11-16 17:09:59.019000', 'Hello World');
 
+UPDATE public.ticket
+SET description_comment_id = '00000000-0004-0000-0000-000000000001'
+WHERE id = '00000000-0003-0000-0000-000000000001';
+
+
 INSERT INTO public.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, open, story_points, initial_estimated_time, current_estimated_time, due_date)
 VALUES ('00000000-0003-0000-0000-000000000002', 2, NULL, '00000000-0002-0000-0000-000000000001',
                                                 '660f2968-aa46-4870-bcc5-a3805366cff2',
-                                                '00000000-0004-0000-0000-000000000002', '2016-11-16 18:06:07.221000',
+                                                NULL, '2016-11-16 18:06:07.221000',
                                                 'Create Users View', TRUE, 10, 20, 25, '2016-11-20 17:07:05.554000');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text)
 VALUES ('00000000-0004-0000-0000-000000000002', '660f2968-aa46-4870-bcc5-a3805366cff2',
         '00000000-0003-0000-0000-000000000002', '2016-11-16 17:09:59.019000', 'You have to do 3 sub Tasks');
+UPDATE public.ticket
+SET description_comment_id = '00000000-0004-0000-0000-000000000002'
+WHERE id = '00000000-0003-0000-0000-000000000002';
+
 
 INSERT INTO public.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, open, story_points, initial_estimated_time, current_estimated_time, due_date)
 VALUES ('00000000-0003-0000-0000-000000000003', 3, '00000000-0003-0000-0000-000000000002',
                                                 '00000000-0002-0000-0000-000000000001',
                                                 '660f2968-aa46-4870-bcc5-a3805366cff2',
-                                                '00000000-0004-0000-0000-000000000003', '2016-11-16 18:06:07.221000',
+                                                NULL, '2016-11-16 18:06:07.221000',
                                                 'UI Users View', FALSE, 10, 10, 10, '2016-11-20 17:07:05.554000');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
   ('00000000-0004-0000-0000-000000000003', '660f2968-aa46-4870-bcc5-a3805366cff2',
    '00000000-0003-0000-0000-000000000003', '2016-11-16 17:09:59.019000',
    'Design UI --Comment there is no Closed Event atm');
+UPDATE public.ticket
+SET description_comment_id = '00000000-0004-0000-0000-000000000003'
+WHERE id = '00000000-0003-0000-0000-000000000003';
+
+
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
   ('00000000-0004-0000-0000-000000000006', '660f2968-aa46-4870-bcc5-a3805366cff2',
    '00000000-0003-0000-0000-000000000003', '2016-11-16 18:09:59.019000', 'Finished');
@@ -147,53 +162,180 @@ INSERT INTO public.ticket (id, number, parent_ticket_id, project_id, created_by,
 VALUES ('00000000-0003-0000-0000-000000000004', 4, '00000000-0003-0000-0000-000000000002',
                                                 '00000000-0002-0000-0000-000000000001',
                                                 '660f2968-aa46-4870-bcc5-a3805366cff2',
-                                                '00000000-0004-0000-0000-000000000004', '2016-11-16 18:06:07.221000',
+                                                NULL, '2016-11-16 18:06:07.221000',
                                                 'Implement Users View', TRUE, 4, 25, 25, '2016-11-20 17:07:05.554000');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
   ('00000000-0004-0000-0000-000000000004', '660f2968-aa46-4870-bcc5-a3805366cff2',
    '00000000-0003-0000-0000-000000000004', '2016-11-16 17:09:59.019000', 'Implement Users View');
+UPDATE public.ticket
+SET description_comment_id = '00000000-0004-0000-0000-000000000004'
+WHERE id = '00000000-0003-0000-0000-000000000004';
+
 
 INSERT INTO public.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, open, story_points, initial_estimated_time, current_estimated_time, due_date)
 VALUES ('00000000-0003-0000-0000-000000000005', 5, '00000000-0003-0000-0000-000000000002',
                                                 '00000000-0002-0000-0000-000000000001',
                                                 '660f2968-aa46-4870-bcc5-a3805366cff2',
-                                                '00000000-0004-0000-0000-000000000005', '2016-11-16 18:06:07.221000',
+                                                NULL, '2016-11-16 18:06:07.221000',
                                                 'Test Users View', FALSE, 20, 20, 25, '2016-11-20 17:07:05.554000');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
   ('00000000-0004-0000-0000-000000000005', '660f2968-aa46-4870-bcc5-a3805366cff2',
    '00000000-0003-0000-0000-000000000005', '2016-11-16 17:09:59.019000', 'Test Users View');
+UPDATE public.ticket
+SET description_comment_id = '00000000-0004-0000-0000-000000000005'
+WHERE id = '00000000-0003-0000-0000-000000000005';
+
 
 INSERT INTO public.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, open, story_points, initial_estimated_time, current_estimated_time, due_date)
 VALUES ('00000000-0003-0000-0000-000000000006', 6, NULL, '00000000-0002-0000-0000-000000000001',
                                                 '93ef43d9-20b7-461a-b960-2d1e89ba099f',
-                                                '00000000-0004-0000-0000-000000000007', '2016-11-16 18:06:07.221000',
-                                                'Set UP CI', FALSE, 20, 20, 49, '2016-11-20 17:07:05.554000');
+                                                NULL, '2016-11-16 18:06:07.221000',
+                                                'Set UP CI', FALSE, 20, 3.6e+13, 5.4e+13, '2016-11-20 17:07:05.554000');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
   ('00000000-0004-0000-0000-000000000007', '93ef43d9-20b7-461a-b960-2d1e89ba099f',
-   '00000000-0003-0000-0000-000000000006', '2016-11-16 17:09:59.019000', 'CI is very importnat');
+   '00000000-0003-0000-0000-000000000006', '2016-11-16 17:09:59.019', '# An exhibit of Markdown
+
+This note demonstrates some of what [Markdown][1] is capable of doing.
+
+*Note: Feel free to play with this page. Unlike regular notes, this doesn''t automatically save itself.*
+
+## Basic formatting
+
+Paragraphs can be written like so. A paragraph is the basic block of Markdown. A paragraph is what text will turn into when there is no reason it should become anything else.
+
+Paragraphs must be separated by a blank line. Basic formatting of *italics* and **bold** is supported. This *can be **nested** like* so.
+
+## Lists
+
+### Ordered list
+
+1. Item 1
+2. A second item
+3. Number 3
+4. Ⅳ
+
+*Note: the fourth item uses the Unicode character for [Roman numeral four][2].*
+
+### Unordered list
+
+* An item
+* Another item
+* Yet another item
+* And there''s more...
+
+## Paragraph modifiers
+
+### Code block
+
+    Code blocks are very useful for developers and other people who look at code or other things that are written in plain text. As you can see, it uses a fixed-width font.
+
+You can also make `inline code` to add code into other things.
+
+### Quote
+
+> Here is a quote. What this is should be self explanatory. Quotes are automatically indented when they are used.
+
+## Headings
+
+There are six levels of headings. They correspond with the six levels of HTML headings. You''ve probably noticed them already in the page. Each level down uses one more hash character.
+
+### Headings *can* also contain **formatting**
+
+### They can even contain `inline code`
+
+Of course, demonstrating what headings look like messes up the structure of the page.
+
+I don''t recommend using more than three or four levels of headings here, because, when you''re smallest heading isn''t too small, and you''re largest heading isn''t too big, and you want each size up to look noticeably larger and more important, there there are only so many sizes that you can use.
+
+## URLs
+
+URLs can be made in a handful of ways:
+
+* A named link to [MarkItDown][3]. The easiest way to do these is to select what you want to make a link and hit `Ctrl+L`.
+* Another named link to [MarkItDown](http://www.markitdown.net/)
+* Sometimes you just want a URL like <http://www.markitdown.net/>.
+
+## Horizontal rule
+
+A horizontal rule is a line that goes across the middle of the page.
+
+---
+
+It''s sometimes handy for breaking things up.
+
+## Images
+
+Markdown can also contain images. I''ll need to add something here sometime.
+
+## Finally
+
+There''s actually a lot more to Markdown than this. See the official [introduction][4] and [syntax][5] for more information. However, be aware that this is not using the official implementation, and this might work subtly differently in some of the little things.
+
+
+  [1]: http://daringfireball.net/projects/markdown/
+  [2]: http://www.fileformat.info/info/unicode/char/2163/index.htm
+  [3]: http://www.markitdown.net/
+  [4]: http://daringfireball.net/projects/markdown/basics
+  [5]: http://daringfireball.net/projects/markdown/syntax
+');
+
+UPDATE public.ticket
+SET description_comment_id = '00000000-0004-0000-0000-000000000007'
+WHERE id = '00000000-0003-0000-0000-000000000006';
+
+
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
   ('00000000-0004-0000-0000-000000000008', '660f2968-aa46-4870-bcc5-a3805366cff2',
    '00000000-0003-0000-0000-000000000006', '2016-11-16 20:09:59.019000', 'There is still so much todo');
 
 COMMIT;
---TAGS
 
+
+--TICKET TAG GROUPS
 BEGIN;
-INSERT INTO public.ticket_tag (id, project_id, group_id, name, color, "order")
-VALUES ('00000000-0005-0000-0000-000000000001', '00000000-0002-0000-0000-000000000001',
-        '00000000-0006-0000-0000-000000000001', 'Feature', 'blue', 1);
 
-INSERT INTO public.ticket_tag (id, project_id, group_id, name, color, "order")
-VALUES ('00000000-0005-0000-0000-000000000002', '00000000-0002-0000-0000-000000000001',
-        '00000000-0006-0000-0000-000000000002', 'Bug', 'red', 1);
+INSERT INTO public.ticket_tag_group (id, project_id, default_ticket_tag_id, name, exclusive)
+VALUES ('00000000-0009-0000-0000-000000000001', '00000000-0002-0000-0000-000000000001', NULL, 'Agile', TRUE );
+INSERT INTO public.ticket_tag_group (id, project_id, default_ticket_tag_id, name, exclusive)
+VALUES ('00000000-0009-0000-0000-000000000002', '00000000-0002-0000-0000-000000000001', NULL, 'Priority', TRUE );
+INSERT INTO public.ticket_tag_group (id, project_id, default_ticket_tag_id, name, exclusive)
+VALUES ('00000000-0009-0000-0000-000000000003', '00000000-0002-0000-0000-000000000002', NULL, 'Test', FALSE );
 
-INSERT INTO public.ticket_tag (id, project_id, group_id, name, color, "order")
-VALUES ('00000000-0005-0000-0000-000000000003', '00000000-0002-0000-0000-000000000001',
-        '00000000-0006-0000-0000-000000000003', 'Implementing', 'red', 1);
+--TICKET TAGS
 
-INSERT INTO public.ticket_tag (id, project_id, group_id, name, color, "order")
-VALUES ('00000000-0005-0000-0000-000000000004', '00000000-0002-0000-0000-000000000001',
-        '00000000-0006-0000-0000-000000000003', 'Review', 'red', 1);
+INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, color, "order")
+VALUES ('00000000-0005-0000-0000-000000000001', '00000000-0009-0000-0000-000000000001', 'Feature', '008000', 1);
+
+INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, color, "order")
+VALUES ('00000000-0005-0000-0000-000000000002', '00000000-0009-0000-0000-000000000001', 'Bug', 'FF0000', 2);
+
+INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, color, "order")
+VALUES ('00000000-0005-0000-0000-000000000003', '00000000-0009-0000-0000-000000000001', 'Implementing', 'FFA500', 3);
+
+INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, color, "order")
+VALUES ('00000000-0005-0000-0000-000000000004', '00000000-0009-0000-0000-000000000001', 'Review', '008000', 4);
+
+
+INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, color, "order")
+VALUES ('00000000-0005-0000-0001-000000000001', '00000000-0009-0000-0000-000000000002', 'Low', '008000', 5);
+
+INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, color, "order")
+VALUES ('00000000-0005-0000-0001-000000000002', '00000000-0009-0000-0000-000000000002', 'Medium', 'FFA500', 6);
+
+INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, color, "order")
+VALUES ('00000000-0005-0000-0001-000000000003', '00000000-0009-0000-0000-000000000002', 'High', 'FF0000', 7);
+
+
+INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, color, "order")
+VALUES ('00000000-0005-0000-0002-000000000001', '00000000-0009-0000-0000-000000000003', 'Blue', 'FF0000', 7);
+
+INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, color, "order")
+VALUES ('00000000-0005-0000-0002-000000000002', '00000000-0009-0000-0000-000000000003', 'Red', 'FFFF00', 8);
+
+UPDATE public.ticket_tag_group SET default_ticket_tag_id = '00000000-0005-0000-0000-000000000001'
+WHERE id = '00000000-0009-0000-0000-000000000001';
+UPDATE public.ticket_tag_group SET default_ticket_tag_id = '00000000-0005-0000-0001-000000000001'
+WHERE id = '00000000-0009-0000-0000-000000000002';
 
 --TICKET TAG TICKET
 INSERT INTO public.assigned_ticket_tag (ticket_id, ticket_tag_id)
@@ -217,6 +359,9 @@ VALUES ('00000000-0003-0000-0000-000000000003', '00000000-0005-0000-0000-0000000
 INSERT INTO public.assigned_ticket_tag (ticket_id, ticket_tag_id)
 VALUES ('00000000-0003-0000-0000-000000000004', '00000000-0005-0000-0000-000000000001');
 
+COMMIT;
+
+BEGIN;
 --Assignment-Tag
 
 INSERT INTO public.assignment_tag (id, project_id, name, color)
