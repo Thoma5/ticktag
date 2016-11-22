@@ -59,7 +59,8 @@ open class TicketTagServiceImpl @Inject constructor(
         val ticketTagToUpdate = ticketTags.findOne(id) ?: throw NotFoundException()
         if (ticketTag.name != null) {
             val normalizedName = nameNormalizationLibrary.normalize(ticketTag.name)
-            if (ticketTags.findByNormalizedNameAndProjectId(normalizedName, ticketTagToUpdate.ticketTagGroup.project.id) != null) {
+            val foundTag = ticketTags.findByNormalizedNameAndProjectId(normalizedName, ticketTagToUpdate.ticketTagGroup.project.id)
+            if (foundTag != null && foundTag.id != ticketTagToUpdate.id) {
                 throw TicktagValidationException(listOf(ValidationError("updateTicketTag.name", ValidationErrorDetail.Other("inuse"))))
             }
             ticketTagToUpdate.name = ticketTag.name

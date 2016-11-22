@@ -57,7 +57,8 @@ open class AssignmentTagServiceImpl @Inject constructor(
         val assignmentTag = assignmentTags.findOne(id) ?: throw NotFoundException()
         if (updateAssignmentTag.name != null) {
             val normalizedName = nameNormalizationLibrary.normalize(updateAssignmentTag.name)
-            if (assignmentTags.findByNormalizedNameAndProjectId(normalizedName, assignmentTag.project.id) != null) {
+            val fountTag = assignmentTags.findByNormalizedNameAndProjectId(normalizedName, assignmentTag.project.id)
+            if (fountTag != null && fountTag.id != assignmentTag.id) {
                 throw TicktagValidationException(listOf(ValidationError("updateAssignmentTag.name", ValidationErrorDetail.Other("inuse"))))
             }
             assignmentTag.name = updateAssignmentTag.name
