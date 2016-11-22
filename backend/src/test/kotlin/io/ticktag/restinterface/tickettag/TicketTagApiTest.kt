@@ -1,7 +1,9 @@
 package io.ticktag.restinterface.tickettag
 
 import io.ticktag.USER_ID
+import io.ticktag.persistence.project.ProjectRepository
 import io.ticktag.persistence.tickettag.TicketTagRepository
+import io.ticktag.persistence.tickettaggroup.TicketTagGroupRepository
 import io.ticktag.restinterface.ApiBaseTest
 import io.ticktag.restinterface.tickettag.controllers.TicketTagController
 import io.ticktag.restinterface.tickettag.schema.CreateTicketTagRequestJson
@@ -9,6 +11,7 @@ import io.ticktag.restinterface.tickettag.schema.UpdateTicketTagRequestJson
 import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import org.springframework.http.HttpStatus
 import org.springframework.security.access.AccessDeniedException
 import java.util.*
 import javax.inject.Inject
@@ -16,6 +19,8 @@ import javax.inject.Inject
 class TicketTagApiTest : ApiBaseTest() {
     @Inject lateinit var ticketTagController: TicketTagController
     @Inject lateinit var ticketTagRepo: TicketTagRepository
+    @Inject lateinit var ticketTagGroupRepo: TicketTagGroupRepository
+    @Inject lateinit var projectRepo: ProjectRepository
 
     @Test
     fun getTicketTag_positive() {
@@ -100,4 +105,37 @@ class TicketTagApiTest : ApiBaseTest() {
         }
     }
 
+    @Test
+    fun `listTicketTags should return BadRequest with two parameters`() {
+        withUser(USER_ID) { ->
+            val result = ticketTagController.listTicketTags(ticketTagGroupId = UUID.randomUUID(), projectId = UUID.randomUUID())
+            assertEquals(result.statusCode, HttpStatus.BAD_REQUEST)
+        }
+    }
+
+    @Test
+    fun `listTicketTags should return BadRequest with no parameters`() {
+        withUser(USER_ID) { ->
+            val result = ticketTagController.listTicketTags(ticketTagGroupId = null, projectId = null)
+            assertEquals(result.statusCode, HttpStatus.BAD_REQUEST)
+        }
+    }
+
+    @Test
+    fun `listTicketTags should pass with ticketTagGroupId parameter`() {
+        withUser(USER_ID) { ->
+            val group = ticketTagGroupRepo.findAll().first()
+            val result = ticketTagController.listTicketTags(ticketTagGroupId = group.id, projectId = null)
+            assertEquals(result.statusCode, HttpStatus.OK)
+        }
+    }
+
+    @Test
+    fun `listTicketTags should pass with projectId parameter`() {
+        withUser(USER_ID) { ->
+            val project = projectRepo.findAll().first()
+            val result = ticketTagController.listTicketTags(ticketTagGroupId = null, projectId = project.id)
+            assertEquals(result.statusCode, HttpStatus.OK)
+        }
+    }
 }
