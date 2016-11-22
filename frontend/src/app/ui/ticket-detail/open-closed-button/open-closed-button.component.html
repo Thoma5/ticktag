@@ -1,0 +1,5 @@
+<button type='button' [ngClass]='{"open": open, "closed": !open}' class='btn btn-circle open-button' [ngModel]='buttonState' (ngModelChange)='toggle($event)' btnCheckbox
+    btnCheckboxTrue='1' btnCheckboxFalse='0'>
+    <div *ngIf='open'>Open</div>
+    <div *ngIf='!open'>Closed</div>
+</button>

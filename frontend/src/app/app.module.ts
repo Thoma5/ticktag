@@ -7,21 +7,54 @@ import { AppComponent } from './app.component';
 import { routing } from './app.routing';
 
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
-import {AuthService, ApiCallService} from './service';
-import {LoginComponent} from './ui/login/login.component';
-import {WhoamiComponent} from './ui/whoami/whoami.component';
-import {HomeComponent} from './ui/home/home.component';
-import {AuthApi} from './api/api/AuthApi';
-import {Ng2Webstorage} from 'ng2-webstorage/dist/app';
-import {UsersComponent} from './ui/users/users.component';
-import {UserCreateComponent} from './ui/users/user-create.component';
-import {UserApi} from './api/api/UserApi';
-import {ProjectsComponent} from './ui/projects/projects.component';
-import {ProjectCreateComponent} from './ui/projects/project-create.component';
-import {ProjectApi} from './api/api/ProjectApi';
+import { AuthService, ApiCallService, MarkdownService } from './service';
+import { LoginComponent } from './ui/login/login.component';
+import { WhoamiComponent } from './ui/whoami/whoami.component';
+import { HomeComponent } from './ui/home/home.component';
+import { Ng2Webstorage } from 'ng2-webstorage/dist/app';
+import { UsersComponent } from './ui/users/users.component';
+import { UserCreateComponent } from './ui/users/user-create.component';
+import { ProjectsComponent } from './ui/projects/projects.component';
+import { ProjectCreateComponent } from './ui/projects/project-create.component';
+import {
+  ProjectApi, AuthApi, UserApi, AssignmenttagApi, CommentsApi, MemberApi,
+  TimecategoryApi, TicketApi, TickettagApi, TickettaggroupApi
+} from './api';
+import { TicketDetailComponent } from './ui/ticket-detail/ticket-detail.component';
+import { TicketSidebarComponent } from './ui/ticket-detail/ticket-sidebar/ticket-sidebar.component';
+import { TicketCoreComponent } from './ui/ticket-detail/ticket-core/ticket-core.component';
+import { EditableTextviewComponent } from './util/edit-textview/edit-textview.component';
+import {
+  TitleTextviewReadComponent,
+  TitleTextviewEditComponent
+} from './ui/ticket-detail/ticket-title-textview/ticket-title-textview.component';
+import { MarkdownTextviewEditComponent } from './util/markdown-textview/markdown-textview-edit.component';
+import { MarkdownTextviewReadComponent } from './util/markdown-textview/markdown-textview-read.component';
+import { OpenClosedButtonComponent } from './ui/ticket-detail/open-closed-button/open-closed-button.component';
+import { TicketCommentsComponent } from './ui/ticket-detail/ticket-comments/ticket-comments.component';
+import { TicketCommentComponent } from './ui/ticket-detail/ticket-comment/ticket-comment.component';
+import { TicketCommentInputComponent } from './ui/ticket-detail/ticket-comment-input/ticket-comment-input.component';
+import {
+  TicketStorypointsComponent,
+  StorypointsTextviewEditComponent,
+  StorypointsTextviewReadComponent
+} from './ui/ticket-detail/ticket-storypoints/ticket-storypoints.component';
+import { AssignedUserComponent } from './ui/ticket-detail/assigned-user/assigned-user.component';
 import { Ng2BootstrapModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { Angular2DataTableModule } from 'angular2-data-table';
 import { MaterialModule } from '@angular/material';
+import { HumanizeDurationPipe } from './util/humanize-duration.pipe';
+import { FormatMomentPipe } from './util/format-moment.pipe';
+import { MarkdownToHtmlPipe } from './util/markdown-to-html.pipe';
+import { AutosizeTextareaDirective } from './util/autosize-textarea.directive';
+import { FocusDirective } from './util/focus.directive';
+import { TaginputComponent } from './util/taginput/taginput.component';
+import { SelectAllDirective } from './util/select-all.directive';
+import { EditButtonComponent } from './util/edit-button/edit-button.component';
+import { LoadingComponent } from './util/loading/loading.component';
+import {TicketEventsComponent} from './ui/ticket-detail/ticket-events/ticket-events.component';
+import {TicketEventComponent} from './ui/ticket-detail/ticket-event/ticket-event.component';
+import {TicketeventApi} from './api/api/TicketeventApi';
 
 
 @NgModule({
@@ -33,7 +66,7 @@ import { MaterialModule } from '@angular/material';
     routing,
     Angular2DataTableModule,
     Ng2BootstrapModule,
-    MaterialModule.forRoot()
+    MaterialModule.forRoot(),
   ],
   declarations: [
     AppComponent,
@@ -43,19 +76,57 @@ import { MaterialModule } from '@angular/material';
     UsersComponent,
     UserCreateComponent,
     ProjectsComponent,
-    ProjectCreateComponent
+    ProjectCreateComponent,
+    TicketDetailComponent,
+    TicketSidebarComponent,
+    TicketCoreComponent,
+    EditableTextviewComponent,
+    TitleTextviewReadComponent,
+    TitleTextviewEditComponent,
+    MarkdownTextviewReadComponent,
+    MarkdownTextviewEditComponent,
+    OpenClosedButtonComponent,
+    TicketStorypointsComponent,
+    StorypointsTextviewEditComponent,
+    StorypointsTextviewReadComponent,
+    AssignedUserComponent,
+    TaginputComponent,
+    TicketCommentsComponent,
+    TicketCommentComponent,
+    TicketEventsComponent,
+    TicketEventComponent,
+    TicketCommentInputComponent,
+    EditButtonComponent,
+
+    HumanizeDurationPipe,
+    FormatMomentPipe,
+    MarkdownToHtmlPipe,
+    AutosizeTextareaDirective,
+    FocusDirective,
+    SelectAllDirective,
+    LoadingComponent,
   ],
   providers: [
+    ProjectApi,
     AuthApi,
     UserApi,
-    ProjectApi,
+    AssignmenttagApi,
+    CommentsApi,
+    MemberApi,
+    TimecategoryApi,
+    TicketApi,
+    TickettagApi,
+    TickettaggroupApi,
+    TicketeventApi,
+
     ApiCallService,
-    AuthService
+    AuthService,
+    MarkdownService,
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(public appRef: ApplicationRef) {}
+  constructor(public appRef: ApplicationRef) { }
   hmrOnInit(store: any) {
     console.log('HMR store', store);
   }

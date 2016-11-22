@@ -1,0 +1,28 @@
+@import '../../../../style/constants.scss';
+$open-color: palette(Green, 500);
+$closed-color: palette(Red, 500);
+
+.open-button {
+    width: 4em;
+    height: 4em;
+
+    &.open {
+        background-color: $open-color;
+        transition: background-color $fast-transition;
+    }
+    
+    &.closed {
+        background-color: $closed-color;
+        transition: background-color $fast-transition;
+    }
+}
+
+.btn-circle {
+    padding: 0;
+    border-radius: 50%;
+
+    div {
+        width: 100%;
+        text-align: center;
+    }
+}

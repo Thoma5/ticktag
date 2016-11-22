@@ -26,10 +26,9 @@ open class CommentController @Inject constructor(
 ) {
 
     @GetMapping
-    open fun listComments(@RequestParam(name = "projectId") req: UUID): List<CommentResultJson> {
-        return commentService.listComments(req).map(::CommentResultJson)
+    open fun listComments(@RequestParam(name = "ticketId") req: UUID): List<CommentResultJson> {
+        return commentService.listCommentsForTicket(req).map(::CommentResultJson)
     }
-
 
     @GetMapping(value = "/{id}")
     open fun getComment(@PathVariable(name = "id") id: UUID): CommentResultJson {
@@ -40,7 +39,7 @@ open class CommentController @Inject constructor(
     @PostMapping
     open fun createComment(@RequestBody req: CreateCommentRequestJson,
                            @AuthenticationPrincipal principal: Principal): CommentResultJson {
-        val comment = commentService.createComment(createComment = CreateComment(req.text, req.ticketID), principal = principal, ticketId = req.ticketID)
+        val comment = commentService.createComment(createComment = CreateComment(req.text, req.ticketId), principal = principal, ticketId = req.ticketId)
         return CommentResultJson(comment)
     }
 

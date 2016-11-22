@@ -35,14 +35,9 @@ open class CommentServiceImpl @Inject constructor(
 
 ) : CommentService {
 
-    @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
-    override fun listComments(@P("authProjectId") pId: UUID): List<CommentResult> {
-        return comments.findByTicketProjectId(pId).map(::CommentResult)
-    }
-
     @PreAuthorize(AuthExpr.READ_TICKET)
-    override fun listCommentsForTicket(@P("authTicketId") tId: UUID): List<CommentResult> {
-        val ticket = tickets.findOne(tId) ?: throw NotFoundException()
+    override fun listCommentsForTicket(@P("authTicketId") ticketId: UUID): List<CommentResult> {
+        val ticket = tickets.findOne(ticketId) ?: throw NotFoundException()
         return ticket.comments.filter { c -> c.describedTicket == null }.map(::CommentResult)
     }
 
@@ -61,7 +56,7 @@ open class CommentServiceImpl @Inject constructor(
     @PreAuthorize(AuthExpr.READ_COMMENT)
     override fun getComment(@P("authCommentId") commentId: UUID): CommentResult? {
         val comment = comments.findOne(commentId) ?: throw NotFoundException()
-        if (comment.describedTicket == null) {
+        if (comment.describedTicket != null) {
             throw NotFoundException()
         }
         return CommentResult(comment)
@@ -71,10 +66,12 @@ open class CommentServiceImpl @Inject constructor(
     override fun updateComment(@P("authCommentId") commentId: UUID, @Valid updateComment: UpdateComment, principal: Principal): CommentResult? {
         val user = users.findOne(principal.id) ?: throw NotFoundException()
         val comment = comments.findOne(commentId) ?: throw NotFoundException()
-        val ticket = comment.describedTicket ?: throw NotFoundException()
+        if (comment.describedTicket != null) {
+            throw NotFoundException()
+        }
 
         if (comment.text != updateComment.text)
-            ticketEvents.insert(TicketEventCommentTextChanged.create(ticket, user, comment, comment.text, updateComment.text))
+            ticketEvents.insert(TicketEventCommentTextChanged.create(comment.ticket, user, comment, comment.text, updateComment.text))
         comment.text = updateComment.text
 
         return CommentResult(comment)
@@ -83,7 +80,7 @@ open class CommentServiceImpl @Inject constructor(
     @PreAuthorize(AuthExpr.EDIT_COMMENT)
     override fun deleteComment(@P("authCommentId") commentId: UUID) {
         val comment = comments.findOne(commentId) ?: throw NotFoundException()
-        if (comment.describedTicket == null) {
+        if (comment.describedTicket != null) {
             throw NotFoundException()
         }
         comments.delete(comment)

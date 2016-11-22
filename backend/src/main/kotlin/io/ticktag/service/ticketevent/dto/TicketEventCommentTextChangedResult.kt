@@ -1,17 +1,15 @@
 package io.ticktag.service.ticketevent.dto
 
-import io.ticktag.persistence.ticket.entity.Comment
 import io.ticktag.persistence.ticket.entity.TicketEventCommentTextChanged
-import io.ticktag.persistence.ticket.entity.TicketEventTitleChanged
 import java.util.*
 
 class TicketEventCommentTextChangedResult(e: TicketEventCommentTextChanged) : TicketEventResult(e) {
-    val comment: Comment
+    val comment_id: UUID
     val srcText: String
     val dstText: String
 
     init {
-        comment = e.comment
+        comment_id = e.comment.id
         srcText = e.srcText
         dstText = e.dstText
     }

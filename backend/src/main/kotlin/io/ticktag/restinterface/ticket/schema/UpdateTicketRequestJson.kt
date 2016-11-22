@@ -14,5 +14,5 @@ data class UpdateTicketRequestJson(
         val description: String?,
         val subTickets: List<CreateTicketRequestJson>?,
         val existingSubTicketIds: List<UUID>?,
-        val partenTicket: UUID?
+        val partenTicketId: UUID?
 )

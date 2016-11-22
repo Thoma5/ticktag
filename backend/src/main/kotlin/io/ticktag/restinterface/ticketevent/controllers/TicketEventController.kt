@@ -2,8 +2,10 @@ package io.ticktag.restinterface.ticketevent.controllers
 
 import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
+import io.ticktag.restinterface.ticketevent.schema.TicketEventCommentTextChangedResultJson
 import io.ticktag.restinterface.ticketevent.schema.TicketEventResultJson
 import io.ticktag.restinterface.ticketevent.schema.TicketEventTitleChangedResultJson
+import io.ticktag.service.ticketevent.dto.TicketEventCommentTextChangedResult
 import io.ticktag.service.ticketevent.dto.TicketEventTitleChangedResult
 import io.ticktag.service.ticketevent.services.TicketEventService
 import org.springframework.web.bind.annotation.GetMapping
@@ -24,6 +26,7 @@ open class TicketEventController @Inject constructor(
         return ticketEventService.listTicketEvents(ticketId).map { e ->
             when (e) {
                 is TicketEventTitleChangedResult -> TicketEventTitleChangedResultJson(e)
+                is TicketEventCommentTextChangedResult -> TicketEventCommentTextChangedResultJson(e)
                 else -> TicketEventResultJson(e)
             }
         }
