@@ -42,7 +42,7 @@ export interface UpdateTicketRequestJson {
 
     existingSubTicketIds: Array<string>;
 
-    partenTicket: string;
+    partenTicketId: string;
 
 }
 

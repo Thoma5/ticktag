@@ -34,6 +34,8 @@ export interface UserResultJson {
 
     role: UserResultJson.RoleEnum;
 
+    username: string;
+
 }
 export namespace UserResultJson {
     export enum RoleEnum {

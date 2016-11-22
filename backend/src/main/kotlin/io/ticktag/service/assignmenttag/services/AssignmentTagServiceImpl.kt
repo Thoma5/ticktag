@@ -23,11 +23,6 @@ open class AssignmentTagServiceImpl @Inject constructor(
 ) : AssignmentTagService {
 
     @PreAuthorize(AuthExpr.PROJECT_USER)
-    override fun searchAssignmentTags(@P("authProjectId") pid: UUID, name: String): List<AssignmentTagResult> {
-        return assignmentTags.findByProjectIdAndNameLikeIgnoreCase(pid, name).map(::AssignmentTagResult)
-    }
-
-    @PreAuthorize(AuthExpr.PROJECT_USER)
     override fun listAssignmentTags(@P("authProjectId") pid: UUID): List<AssignmentTagResult> {
         return assignmentTags.findByProjectId(pid).map(::AssignmentTagResult)
     }
@@ -70,10 +65,16 @@ open class AssignmentTagServiceImpl @Inject constructor(
         return AssignmentTagResult(assignmentTag)
     }
 
+    /** No server side search
+    @PreAuthorize(AuthExpr.PROJECT_USER)
+    override fun searchAssignmentTags(@P("authProjectId") pid: UUID, name: String): List<AssignmentTagResult> {
+        return assignmentTags.findByProjectIdAndNameLikeIgnoreCase(pid, name).map(::AssignmentTagResult)
+    }*/
+
     /** Implement it when needed, makes no sense right now
     @PreAuthorize(AuthExpr.DELETE_ASSIGNMENTTAGS)
     override fun deleteAssignmentTag(id: UUID, @P("authProjectId") projectId: UUID) {
-        val assignmentTag = assignmentTags.findOne(id) ?: throw NotFoundException()
-        assignmentTags.delete(assignmentTag)
+    val assignmentTag = assignmentTags.findOne(id) ?: throw NotFoundException()
+    assignmentTags.delete(assignmentTag)
     }**/
 }
