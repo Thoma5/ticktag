@@ -2,7 +2,8 @@ import {
     Component, Input, Output, EventEmitter, ElementRef, AfterViewInit, OnInit,
     NgZone, ViewChild, OnChanges, SimpleChanges, OnDestroy
 } from '@angular/core';
-import { TicketTagResultJson, UserResultJson } from '../../api';
+import { TicketTagResultJson, UserResultJson, TimeCategoryJson, UserApi } from '../../api';
+import { ApiCallService } from '../../service';
 import * as grammar from './grammar';
 
 const codemirror = require('codemirror');
@@ -24,7 +25,7 @@ function using<T>(getKey: (obj: T) => any): (a: T, b: T) => number {
 
 const COMMAND_COMPLETIONS = grammar.COMMAND_STRINGS.map(c => {
     if (c === 'close' || c === 'reopen') {
-        return `!${c}`;
+        return `!${c} `;
     } else {
         return `!${c}:`;
     }
@@ -36,14 +37,20 @@ const COMMAND_COMPLETIONS = grammar.COMMAND_STRINGS.map(c => {
     styleUrls: ['./rich-textview.component.scss']
 })
 export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestroy {
-    @Input() initialContent: string = '';
-    @Input() allTicketTags: TicketTagResultJson[] = [];
+    @Input() projectId: string;
+    @Input() initialContent = '';
+    @Input() allTicketTags = new Array<TicketTagResultJson>();
+    @Input() ticketTags = new Array<TicketTagResultJson>();
+    @Input() allTimeCategories = new Array<TimeCategoryJson>();
 
     private content: string;
     private instance: any;
     private commands: grammar.Cmd[];
 
-    constructor(private element: ElementRef) {
+    constructor(
+        private element: ElementRef,
+        private userApi: UserApi,
+        private apiCallService: ApiCallService) {
     }
 
     ngAfterViewInit(): void {
@@ -83,36 +90,72 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
         let isCommand = new RegExp(String.raw`${grammar.SEPERATOR_FRONT_REGEX}(![a-z-]{0,10})$`, 'ui').exec(text);
         if (isCommand) {
             this.instance.showHint({
+                hint: () => ({
+                    list: COMMAND_COMPLETIONS,
+                    from: {line: cursor.line, ch: cursor.ch - isCommand[0].length + 1},
+                    to: cursor,
+                    selectedHint: COMMAND_COMPLETIONS.findIndex(c => c.startsWith(isCommand[1])),
+                }),
+            });
+            return;
+        }
+
+        let isAddRemoveTag = new RegExp(String.raw`${grammar.SEPERATOR_FRONT_REGEX}!(-?)tag:(${grammar.TAG_LETTER}*)$`, 'ui').exec(text);
+        if (isAddRemoveTag) {
+            let tags = (isAddRemoveTag[1] ? this.ticketTags : this.allTicketTags).slice();
+            tags.sort(using<TicketTagResultJson>(tag => tag.normalizedName));
+            this.instance.showHint({
+                hint: () => ({
+                    list: tags.map(tt => tt.normalizedName + ' '),
+                    from: {line: cursor.line, ch: cursor.ch - isAddRemoveTag[2].length},
+                    to: cursor,
+                    selectedHint: tags.findIndex(tt => tt.normalizedName.startsWith(isAddRemoveTag[2])),
+                }),
+            });
+            return;
+        }
+
+        let isTimeTag = new RegExp(
+            String.raw`${grammar.SEPERATOR_FRONT_REGEX}!time:${grammar.TIME_REGEX}@(${grammar.TAG_LETTER}*)$`, 'ui'
+        ).exec(text);
+        if (isTimeTag) {
+            let cats = this.allTimeCategories.slice();
+            cats.sort(using<TimeCategoryJson>(cat => cat.normalizedName));
+            this.instance.showHint({
+                hint: () => ({
+                    list: cats.map(cat => cat.normalizedName + ' '),
+                    from: {line: cursor.line, ch: cursor.ch - isTimeTag[1].length},
+                    to: cursor,
+                    selectedHint: cats.findIndex(cat => cat.normalizedName.startsWith(isTimeTag[1])),
+                }),
+            });
+            return;
+        }
+
+        let isAssign = new RegExp(String.raw`${grammar.SEPERATOR_FRONT_REGEX}!assign:(${grammar.USER_LETTER}*)$`, 'ui').exec(text);
+        if (isAssign) {
+            this.instance.showHint({
                 hint: () => {
-                    return {
-                        list: COMMAND_COMPLETIONS,
-                        from: {line: cursor.line, ch: cursor.ch - isCommand[0].length + 1},
-                        to: cursor,
-                        selectedHint: COMMAND_COMPLETIONS.findIndex(c => c.startsWith(isCommand[1])),
-                    };
+                    let projectId = this.projectId;
+                    return this.apiCallService
+                        .callNoError<UserResultJson[]>(p => this.userApi.listUsersFuzzyUsingGETWithHttpInfo(
+                            projectId,
+                            isAssign[1],
+                            ['USERNAME_ASC', 'NAME_ASC', 'MAIL_ASC'],
+                            p))
+                        .map(users => ({
+                            list: users.map(user => ({text: user.username, displayText: `${user.username} (${user.name} <${user.mail}>)`})),
+                            from: {line: cursor.line, ch: cursor.ch - isAssign[1].length},
+                            to: cursor,
+                            selectedHint: 0,
+                        }))
+                        .toPromise();
                 },
             });
             return;
         }
 
-        let isAddTag = new RegExp(String.raw`${grammar.SEPERATOR_FRONT_REGEX}!tag:(${grammar.TAG_LETTER}*)$`, 'ui').exec(text);
-        if (isAddTag) {
-            this.instance.showHint({
-                hint: () => {
-                    return {
-                        list: this.allTicketTags.map(tt => {
-                            return tt.name;
-                        }),
-                        from: {line: cursor.line, ch: cursor.ch - isAddTag[1].length},
-                        to: cursor,
-                        selectedHint: this.allTicketTags.findIndex(tt => {
-                            return tt.name.startsWith(isAddTag[1]);
-                        }),
-                    };
-                }
-            });
-        }
-
+        // Hide hints
         this.instance.showHint({
             hint: () => {
                 return { list: new Array<string>() };

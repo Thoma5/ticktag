@@ -35,7 +35,7 @@ export class TaginputComponent implements OnChanges {
       this.allTagsMap[tag.id] = tag;
     }
 
-    this.sortedTags = this.tags.map(id => this.allTagsMap[id]);
+    this.sortedTags = this.tags.map(id => this.allTagsMap[id]).filter(tag => tag);
     this.sortedTags.sort((a, b) => {
       return (a.order < b.order) ? -1 : (a.order === b.order ? 0 : 1);
     });

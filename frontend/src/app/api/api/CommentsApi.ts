@@ -119,10 +119,10 @@ export class CommentsApi {
     /**
      * listComments
      * 
-     * @param projectId projectId
+     * @param ticketId ticketId
      */
-    public listCommentsUsingGET(projectId: string, extraHttpRequestParams?: any): Observable<Array<models.CommentResultJson>> {
-        return this.listCommentsUsingGETWithHttpInfo(projectId, extraHttpRequestParams)
+    public listCommentsUsingGET(ticketId: string, extraHttpRequestParams?: any): Observable<Array<models.CommentResultJson>> {
+        return this.listCommentsUsingGETWithHttpInfo(ticketId, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -287,19 +287,19 @@ export class CommentsApi {
     /**
      * listComments
      * 
-     * @param projectId projectId
+     * @param ticketId ticketId
      */
-    public listCommentsUsingGETWithHttpInfo(projectId: string, extraHttpRequestParams?: any): Observable<Response> {
+    public listCommentsUsingGETWithHttpInfo(ticketId: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/comments`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'projectId' is not null or undefined
-        if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling listCommentsUsingGET.');
+        // verify required parameter 'ticketId' is not null or undefined
+        if (ticketId === null || ticketId === undefined) {
+            throw new Error('Required parameter ticketId was null or undefined when calling listCommentsUsingGET.');
         }
-        if (projectId !== undefined) {
-            queryParameters.set('projectId', <any>projectId);
+        if (ticketId !== undefined) {
+            queryParameters.set('ticketId', <any>ticketId);
         }
 
 

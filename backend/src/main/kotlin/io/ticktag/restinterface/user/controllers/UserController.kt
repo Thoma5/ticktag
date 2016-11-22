@@ -2,14 +2,13 @@ package io.ticktag.restinterface.user.controllers
 
 import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
-import io.ticktag.restinterface.user.schema.CreateUserRequestJson
-import io.ticktag.restinterface.user.schema.RoleResultJson
-import io.ticktag.restinterface.user.schema.UpdateUserRequestJson
-import io.ticktag.restinterface.user.schema.UserResultJson
+import io.ticktag.restinterface.user.schema.*
 import io.ticktag.service.Principal
 import io.ticktag.service.user.dto.CreateUser
 import io.ticktag.service.user.dto.UpdateUser
 import io.ticktag.service.user.services.UserService
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -42,11 +41,20 @@ open class UserController @Inject constructor(
         return UserResultJson(userService.getUser(id))
     }
 
+    // TODO paging, filter, sorting
     @GetMapping
     open fun listUsers(): List<UserResultJson> {
         return userService.listUsers().map(::UserResultJson)
     }
 
+    @GetMapping("/fuzzy")
+    open fun listUsersFuzzy(
+            @RequestParam(name="projectId", required = true) projectId: UUID,
+            @RequestParam(name="q", required = true) query: String,
+            @RequestParam(name="order", required = true) order: Array<UserSort>): List<UserResultJson> {
+        val result = userService.listUsersFuzzy(projectId, query, PageRequest(0, 15, Sort(order.map { it.order })))
+        return result.map(::UserResultJson)
+    }
 
     @GetMapping(value = "/roles")
     open fun listRoles(): List<RoleResultJson> {

@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import {
+  TicketTagResultJson, AssignmentTagResultJson, TicketResultJson, TimeCategoryJson
+} from '../../../api';
 
 @Component({
   selector: 'tt-ticket-comment-input',
@@ -6,10 +9,12 @@ import { Component } from '@angular/core';
   styleUrls: ['./ticket-comment-input.component.scss']
 })
 export class TicketCommentInputComponent {
-  private text: string;
+  @Input() ticket: TicketResultJson;
+  @Input() allTicketTags = new Array<TicketTagResultJson>();
+  @Input() allAssignmentTags = new Array<AssignmentTagResultJson>();
+  @Input() allTimeCategories = new Array<TimeCategoryJson>();
 
-  submit(): void {
-    // TODO
-    console.log('Submitted: ' + this.text);
+  get ticketTags(): TicketTagResultJson[] {
+    return this.ticket.tagIds.map(tid => this.allTicketTags.find(tt => tt.id === tid)).filter(tt => tt);
   }
 }

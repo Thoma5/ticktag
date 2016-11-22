@@ -6,7 +6,7 @@
   <div class="help">
     <div class="itwill">
       <p *ngFor="let command of commands" [ngSwitch]="command.cmd">
-        <span *ngSwitchCase="'time'">This comment will <code>book {{ command.minutes }} minutes</code> of <code>{{ command.category }}</code> time.</span>
+        <span *ngSwitchCase="'time'">This comment will <code>log {{ command.minutes }} minutes</code> of <code>{{ command.category }}</code> time.</span>
         <span *ngSwitchCase="'assign'">This comment will <code>assign {{ command.user }}</code> with the tag {{ command.tag }}.</span>
         <span *ngSwitchCase="'unassign'">
           <span *ngIf="command.tag">This comment will <code>unassign {{ command.user }}</code> with the tag {{ command.tag }}.</span>
@@ -24,7 +24,7 @@
     <div class="commands">
       <p><code>!tag:example</code>, <code>!-tag:example</code>: add or remove a tag</p>
       <p><code>!close</code>, <code>!reopen</code>: close or reopen this ticket</p>
-      <p><code>!time:2h5min</code>: log time</p>
+      <p><code>!time:2h5min@develop</code>: log time with the given category</p>
       <p><code>!assign:dave@owner</code>, <code>!-assign:dave@owner</code>: assign or unassign a user with the given tag to this ticket</p>
       <p><code>!-assign:user</code>: unassign a user completely from this ticket</p>
       <p><code>!est:2h5min</code>: change the estimated time</p>

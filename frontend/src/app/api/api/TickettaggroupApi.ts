@@ -117,12 +117,12 @@ export class TickettaggroupApi {
     }
 
     /**
-     * listTicketTags
+     * listTicketTagGroups
      * 
-     * @param id id
+     * @param projectId projectId
      */
-    public listTicketTagsUsingGET(id: string, extraHttpRequestParams?: any): Observable<Array<models.TicketTagResultJson>> {
-        return this.listTicketTagsUsingGETWithHttpInfo(id, extraHttpRequestParams)
+    public listTicketTagGroupsUsingGET(projectId: string, extraHttpRequestParams?: any): Observable<Array<models.TicketTagGroupResultJson>> {
+        return this.listTicketTagGroupsUsingGETWithHttpInfo(projectId, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -285,18 +285,21 @@ export class TickettaggroupApi {
     }
 
     /**
-     * listTicketTags
+     * listTicketTagGroups
      * 
-     * @param id id
+     * @param projectId projectId
      */
-    public listTicketTagsUsingGETWithHttpInfo(id: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/tickettaggroup/${id}/tickettag`;
+    public listTicketTagGroupsUsingGETWithHttpInfo(projectId: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/tickettaggroup/`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'id' is not null or undefined
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling listTicketTagsUsingGET.');
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling listTicketTagGroupsUsingGET.');
+        }
+        if (projectId !== undefined) {
+            queryParameters.set('projectId', <any>projectId);
         }
 
 

@@ -32,6 +32,8 @@ export interface AssignmentTagResultJson {
 
     name: string;
 
+    normalizedName: string;
+
     projectId: string;
 
 }

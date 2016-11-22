@@ -25,10 +25,8 @@
 
 import * as models from './models';
 
-export interface CreateCommentRequestJson {
-    text: string;
-
-    ticketId: string;
+export interface ValidationErrorPatternJson {
+    pattern: string;
 
 }
 

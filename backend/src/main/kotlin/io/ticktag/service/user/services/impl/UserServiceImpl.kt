@@ -2,6 +2,7 @@ package io.ticktag.service.user.services.impl
 
 import io.ticktag.TicktagService
 import io.ticktag.library.hashing.HashingLibrary
+import io.ticktag.library.unicode.NameNormalizationLibrary
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.persistence.user.entity.Role
 import io.ticktag.persistence.user.entity.User
@@ -11,6 +12,7 @@ import io.ticktag.service.user.dto.RoleResult
 import io.ticktag.service.user.dto.UpdateUser
 import io.ticktag.service.user.dto.UserResult
 import io.ticktag.service.user.services.UserService
+import org.springframework.data.domain.Pageable
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
 import java.util.*
@@ -20,8 +22,14 @@ import javax.validation.Valid
 @TicktagService
 open class UserServiceImpl @Inject constructor(
         private val users: UserRepository,
-        private val hashing: HashingLibrary
+        private val hashing: HashingLibrary,
+        private val nn: NameNormalizationLibrary
 ) : UserService {
+
+    @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
+    override fun listUsersFuzzy(@P("#authProjectId") projectId: UUID, query: String, pageable: Pageable): List<UserResult> {
+        return users.findByProjectIdAndFuzzy(projectId, "%$query%", "%$query%", "%${nn.normalize(query)}%", pageable).map(::UserResult)
+    }
 
     @PreAuthorize(AuthExpr.ANONYMOUS)
     override fun checkPassword(mail: String, password: String): UserResult? {
