@@ -36,5 +36,7 @@ export interface TicketTagGroupResultJson {
 
     projectId: string;
 
+    required: boolean;
+
 }
 

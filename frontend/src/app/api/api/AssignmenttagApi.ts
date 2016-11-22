@@ -117,23 +117,6 @@ export class AssignmenttagApi {
     }
 
     /**
-     * searchAssignmentTags
-     * 
-     * @param projectId projectId
-     * @param name name
-     */
-    public searchAssignmentTagsUsingGET(projectId: string, name: string, extraHttpRequestParams?: any): Observable<Array<models.AssignmentTagResultJson>> {
-        return this.searchAssignmentTagsUsingGETWithHttpInfo(projectId, name, extraHttpRequestParams)
-            .map((response: Response) => {
-                if (response.status === 204) {
-                    return undefined;
-                } else {
-                    return response.json();
-                }
-            });
-    }
-
-    /**
      * updateAssignmentTag
      * 
      * @param id id
@@ -247,7 +230,7 @@ export class AssignmenttagApi {
      * @param projectId projectId
      */
     public listAssignmentTagsUsingGETWithHttpInfo(projectId: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/assignmenttag/project/${projectId}`;
+        const path = this.basePath + `/assignmenttag/`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -257,61 +240,6 @@ export class AssignmenttagApi {
         }
         if (projectId !== undefined) {
             queryParameters.set('projectId', <any>projectId);
-        }
-
-
-        // to determine the Content-Type header
-        let consumes: string[] = [
-            'application/json'
-        ];
-
-        // to determine the Accept header
-        let produces: string[] = [
-            'application/json'
-        ];
-        
-            
-
-
-
-        let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Get,
-            headers: headers,
-            search: queryParameters
-        });
-        
-        // https://github.com/swagger-api/swagger-codegen/issues/4037
-        if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
-        }
-
-        return this.http.request(path, requestOptions);
-    }
-
-    /**
-     * searchAssignmentTags
-     * 
-     * @param projectId projectId
-     * @param name name
-     */
-    public searchAssignmentTagsUsingGETWithHttpInfo(projectId: string, name: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/assignmenttag/project/${projectId}/search/${name}`;
-
-        let queryParameters = new URLSearchParams();
-        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'projectId' is not null or undefined
-        if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling searchAssignmentTagsUsingGET.');
-        }
-        // verify required parameter 'name' is not null or undefined
-        if (name === null || name === undefined) {
-            throw new Error('Required parameter name was null or undefined when calling searchAssignmentTagsUsingGET.');
-        }
-        if (projectId !== undefined) {
-            queryParameters.set('projectId', <any>projectId);
-        }
-        if (name !== undefined) {
-            queryParameters.set('name', <any>name);
         }
 
 

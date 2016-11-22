@@ -32,6 +32,8 @@ export interface TicketTagResultJson {
 
     name: string;
 
+    normalizedName: string;
+
     order: number;
 
     ticketTagGroupId: string;
