@@ -114,7 +114,7 @@ INSERT INTO public.ticket (id, number, parent_ticket_id, project_id, created_by,
 VALUES ('00000000-0003-0000-0000-000000000001', 1, NULL, '00000000-0002-0000-0000-000000000001',
                                                 '660f2968-aa46-4870-bcc5-a3805366cff2',
                                                 NULL,
-                                                '2016-11-16 17:06:07.221000',
+                                                '2016-11-16 17:00:00.000000',
                                                 'Added Models to Layout', TRUE, 10, 20, 25,
         '2016-11-20 17:07:05.554000');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text)
