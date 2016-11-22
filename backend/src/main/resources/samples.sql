@@ -45,6 +45,7 @@ INSERT INTO public."user" (id, mail, name, password_hash, role, current_token, p
    '$2a$10$.dLg4Vgt7JrP.564p/tPQOm.TLoy3HieFP1ZpnyWVPkJDYrG6r.Ce', 'OBSERVER', '370f4e86-1ebf-4b70-a113-add96d0905e1',
    E'\\x'); --michael-supersecure
 
+
 -- BEGIN all role/project role member permutations DO NOT ALTER
 INSERT INTO public."user" (id, mail, name, password_hash, role, current_token, profile_pic) VALUES
   ('00000000-0001-0000-0000-000000000101', 'admin@ticktag.a', 'Admiral Admin',
@@ -59,6 +60,8 @@ INSERT INTO public."user" (id, mail, name, password_hash, role, current_token, p
    '$2a$10$OgvbSbiDxizgC/6K3dhVwO8iY6.QFS6f2PvE1AyJS1Vmo6Rnb3Gve', 'USER', '00000000-0001-8676-0000-abcdef123641',
    NULL); --cccc
 -- END all role/project role member permutations DO NOT ALTER
+
+
 INSERT INTO "project" VALUES
   ('00000000-0002-0000-0000-000000000001', 'Bitchip', 'Pfizer Consumer Healthcare', '2016-07-03 08:49:05', NULL),
   ('00000000-0002-0000-0000-000000000002', 'Veribet', 'H E B', '2016-08-26 21:57:39', NULL),
@@ -249,6 +252,56 @@ INSERT INTO PUBLIC.comment (id, user_id, ticket_id, create_time, TEXT) VALUES
 
 COMMIT;
 
+-- BEGIN Role Based Ticket Testdata DO NOT ALTER
+INSERT INTO PUBLIC.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, OPEN, story_points, initial_estimated_time, current_estimated_time, due_date)
+VALUES ('00000000-0003-0000-0000-000000000101', 1, NULL, '00000000-0002-0000-0000-000000000101',
+                                                '00000000-0001-0000-0000-000000000101', NULL,
+                                                '2016-11-16 17:06:07.221000', 'Project 1 Ticket One', TRUE, 10, 20, 25,
+        '2016-11-20 17:07:05.554000');
+INSERT INTO PUBLIC.comment (id, user_id, ticket_id, create_time, TEXT)
+VALUES ('00000000-0004-0000-0000-000000000101', '00000000-0001-0000-0000-000000000101',
+        '00000000-0003-0000-0000-000000000101', '2016-11-16 17:09:59.019000', 'Description Project1 Ticket1');
+UPDATE PUBLIC.ticket
+SET description_comment_id = '00000000-0004-0000-0000-000000000101'
+WHERE id = '00000000-0003-0000-0000-000000000101';
+
+
+INSERT INTO PUBLIC.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, OPEN, story_points, initial_estimated_time, current_estimated_time, due_date)
+VALUES ('00000000-0003-0000-0000-000000000102', 1, NULL, '00000000-0002-0000-0000-000000000102',
+                                                '00000000-0001-0000-0000-000000000101', NULL,
+                                                '2016-11-16 17:06:07.221000', 'Project 2 Ticket One', TRUE, 10, 20, 25,
+        '2016-11-20 17:07:05.554000');
+INSERT INTO PUBLIC.comment (id, user_id, ticket_id, create_time, TEXT)
+VALUES ('00000000-0004-0000-0000-000000000102', '00000000-0001-0000-0000-000000000101',
+        '00000000-0003-0000-0000-000000000102', '2016-11-16 17:09:59.019000', 'Description Project2 Ticket1');
+UPDATE PUBLIC.ticket
+SET description_comment_id = '00000000-0004-0000-0000-000000000102'
+WHERE id = '00000000-0003-0000-0000-000000000102';
+
+INSERT INTO PUBLIC.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, OPEN, story_points, initial_estimated_time, current_estimated_time, due_date)
+VALUES ('00000000-0003-0000-0000-000000000103', 1, NULL, '00000000-0002-0000-0000-000000000103',
+                                                '00000000-0001-0000-0000-000000000101', NULL,
+                                                '2016-11-16 17:06:07.221000', 'Project 3 Ticket One', TRUE, 10, 20, 25,
+        '2016-11-20 17:07:05.554000');
+INSERT INTO PUBLIC.comment (id, user_id, ticket_id, create_time, TEXT)
+VALUES ('00000000-0004-0000-0000-000000000103', '00000000-0001-0000-0000-000000000101',
+        '00000000-0003-0000-0000-000000000103', '2016-11-16 17:09:59.019000', 'Description Project3 Ticket1');
+UPDATE PUBLIC.ticket
+SET description_comment_id = '00000000-0004-0000-0000-000000000103'
+WHERE id = '00000000-0003-0000-0000-000000000103';
+INSERT INTO PUBLIC.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, OPEN, story_points, initial_estimated_time, current_estimated_time, due_date)
+VALUES ('00000000-0003-0000-0000-000000000104', 1, NULL, '00000000-0002-0000-0000-000000000104',
+                                                '00000000-0001-0000-0000-000000000101', NULL,
+                                                '2016-11-16 17:06:07.221000', 'Project 4 Ticket One', TRUE, 10, 20, 25,
+        '2016-11-20 17:07:05.554000');
+INSERT INTO PUBLIC.comment (id, user_id, ticket_id, create_time, TEXT)
+VALUES ('00000000-0004-0000-0000-000000000104', '00000000-0001-0000-0000-000000000101',
+        '00000000-0003-0000-0000-000000000104', '2016-11-16 17:09:59.019000', 'Description Project4 Ticket1');
+UPDATE PUBLIC.ticket
+SET description_comment_id = '00000000-0004-0000-0000-000000000104'
+WHERE id = '00000000-0003-0000-0000-000000000104';
+-- END Role Based Ticket Testdata DO NOT ALTER
+
 --TICKET TAG GROUPS
 BEGIN;
 
@@ -333,6 +386,33 @@ VALUES ('00000000-0006-0000-0000-000000000005', '00000000-0002-0000-0000-0000000
 INSERT INTO PUBLIC.assignment_tag (id, project_id, NAME, color)
 VALUES ('00000000-0006-0000-0000-000000000006', '00000000-0002-0000-0000-000000000001', 'review', 'ff0000');
 
+--BEGIN Assignment-Tag Data for rolebased testing DO NOT ALTER
+INSERT INTO PUBLIC.assignment_tag (id, project_id, NAME, color)
+VALUES ('00000000-0006-0000-0000-000000000101', '00000000-0002-0000-0000-000000000101', 'dev', 'ff0000');
+INSERT INTO PUBLIC.assignment_tag (id, project_id, NAME, color)
+VALUES ('00000000-0006-0000-0000-000000000102', '00000000-0002-0000-0000-000000000101', 'test', '0000ff');
+INSERT INTO PUBLIC.assignment_tag (id, project_id, NAME, color)
+VALUES ('00000000-0006-0000-0000-000000000103', '00000000-0002-0000-0000-000000000101', 'rev', 'ff000f');
+INSERT INTO PUBLIC.assignment_tag (id, project_id, NAME, color)
+VALUES ('00000000-0006-0000-0000-000000000104', '00000000-0002-0000-0000-000000000102', 'dev', 'ff0000');
+INSERT INTO PUBLIC.assignment_tag (id, project_id, NAME, color)
+VALUES ('00000000-0006-0000-0000-000000000105', '00000000-0002-0000-0000-000000000102', 'test', '0000ff');
+INSERT INTO PUBLIC.assignment_tag (id, project_id, NAME, color)
+VALUES ('00000000-0006-0000-0000-000000000106', '00000000-0002-0000-0000-000000000102', 'rev', 'ff000f');
+INSERT INTO PUBLIC.assignment_tag (id, project_id, NAME, color)
+VALUES ('00000000-0006-0000-0000-000000000107', '00000000-0002-0000-0000-000000000103', 'dev', 'ff0000');
+INSERT INTO PUBLIC.assignment_tag (id, project_id, NAME, color)
+VALUES ('00000000-0006-0000-0000-000000000108', '00000000-0002-0000-0000-000000000103', 'test', '0000ff');
+INSERT INTO PUBLIC.assignment_tag (id, project_id, NAME, color)
+VALUES ('00000000-0006-0000-0000-000000000109', '00000000-0002-0000-0000-000000000103', 'rev', 'ff000f');
+INSERT INTO PUBLIC.assignment_tag (id, project_id, NAME, color)
+VALUES ('00000000-0006-0000-0000-000000000110', '00000000-0002-0000-0000-000000000104', 'dev', 'ff0000');
+INSERT INTO PUBLIC.assignment_tag (id, project_id, NAME, color)
+VALUES ('00000000-0006-0000-0000-000000000111', '00000000-0002-0000-0000-000000000104', 'test', '0000ff');
+INSERT INTO PUBLIC.assignment_tag (id, project_id, NAME, color)
+VALUES ('00000000-0006-0000-0000-000000000112', '00000000-0002-0000-0000-000000000104', 'rev', 'ff000f');
+--END Assignment-Tag Data for rolebased testing DO NOT ALTER
+
 --TICKET USER
 INSERT INTO PUBLIC.assigned_ticket_user (ticket_id, assignment_tag_id, user_id)
 VALUES ('00000000-0003-0000-0000-000000000001', '00000000-0006-0000-0000-000000000001',
@@ -363,6 +443,36 @@ VALUES ('00000000-0003-0000-0000-000000000006', '00000000-0006-0000-0000-0000000
 INSERT INTO PUBLIC.assigned_ticket_user (ticket_id, assignment_tag_id, user_id)
 VALUES ('00000000-0003-0000-0000-000000000006', '00000000-0006-0000-0000-000000000002',
         '93ef43d9-20b7-461a-b960-2d1e89ba099f');
+
+--BEGIN ASSIGNED TICKET USERS role based Test data DO NOT ALTER
+INSERT INTO PUBLIC.assigned_ticket_user (ticket_id, assignment_tag_id, user_id)
+VALUES ('00000000-0003-0000-0000-000000000101', '00000000-0006-0000-0000-000000000101',
+        '00000000-0001-0000-0000-000000000101');
+INSERT INTO PUBLIC.assigned_ticket_user (ticket_id, assignment_tag_id, user_id)
+VALUES ('00000000-0003-0000-0000-000000000101', '00000000-0006-0000-0000-000000000102',
+        '00000000-0001-0000-0000-000000000102');
+INSERT INTO PUBLIC.assigned_ticket_user (ticket_id, assignment_tag_id, user_id)
+VALUES ('00000000-0003-0000-0000-000000000101', '00000000-0006-0000-0000-000000000103',
+        '00000000-0001-0000-0000-000000000103');
+INSERT INTO PUBLIC.assigned_ticket_user (ticket_id, assignment_tag_id, user_id)
+VALUES ('00000000-0003-0000-0000-000000000102', '00000000-0006-0000-0000-000000000104',
+        '00000000-0001-0000-0000-000000000102');
+INSERT INTO PUBLIC.assigned_ticket_user (ticket_id, assignment_tag_id, user_id)
+VALUES ('00000000-0003-0000-0000-000000000102', '00000000-0006-0000-0000-000000000105',
+        '00000000-0001-0000-0000-000000000103');
+INSERT INTO PUBLIC.assigned_ticket_user (ticket_id, assignment_tag_id, user_id)
+VALUES ('00000000-0003-0000-0000-000000000102', '00000000-0006-0000-0000-000000000106',
+        '00000000-0001-0000-0000-000000000101');
+INSERT INTO PUBLIC.assigned_ticket_user (ticket_id, assignment_tag_id, user_id)
+VALUES ('00000000-0003-0000-0000-000000000103', '00000000-0006-0000-0000-000000000107',
+        '00000000-0001-0000-0000-000000000103');
+INSERT INTO PUBLIC.assigned_ticket_user (ticket_id, assignment_tag_id, user_id)
+VALUES ('00000000-0003-0000-0000-000000000103', '00000000-0006-0000-0000-000000000108',
+        '00000000-0001-0000-0000-000000000101');
+INSERT INTO PUBLIC.assigned_ticket_user (ticket_id, assignment_tag_id, user_id)
+VALUES ('00000000-0003-0000-0000-000000000103', '00000000-0006-0000-0000-000000000109',
+        '00000000-0001-0000-0000-000000000102');
+--END ASSIGNED TICKET USERS role based Test data DO NOT ALTER
 
 --Time Category
 

@@ -198,7 +198,7 @@ open class TicketServiceImpl @Inject constructor(
             for ((assignmentTagId, userId) in updateTicket.ticketAssignments) {
                 val user = users.findOne(userId) ?: throw NotFoundException()
                 val assignmentTag = ticketAssignmentTags.findOne(assignmentTagId) ?: throw NotFoundException()
-                val project = members.findByUserIdAndProjectId(user.id, ticket.project.id) ?: throw NotFoundException()
+                members.findByUserIdAndProjectId(user.id, ticket.project.id) ?: throw NotFoundException()
                 if (projectsTicketAssignmentTags.contains(assignmentTag)) {
                     var existing = ticketAssignments.findOne(AssignedTicketUserKey.create(ticket, assignmentTag, user))
                     if (existing == null) {
@@ -206,7 +206,7 @@ open class TicketServiceImpl @Inject constructor(
                         ticketAssignments.insert(existing)
                     }
                     ticketAssignmentList.add(existing)
-                } else throw NotFoundException() //TODO: Message?
+                } else throw NotFoundException()
             }
             val ticketAssignmentDtos = ticket.assignedTicketUsers.map(::TicketAssignment)
             for ((assignmentTagId, userId) in ticketAssignmentDtos) {
