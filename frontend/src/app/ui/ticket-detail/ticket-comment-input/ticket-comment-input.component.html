@@ -1,6 +1,3 @@
 <div class='comment-input'>
-    <tt-markdown-textview-edit [(content)]='text' (save)='submit()'></tt-markdown-textview-edit>
-    <div class='buttons'>
-        <input type='button' class='btn btn-primary button-submit' value='Submit' (click)='submit()'>
-    </div>
+    <tt-rich-textview [initialContent]="'Type a comment here...'"></tt-rich-textview>
 </div>
