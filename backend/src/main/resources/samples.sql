@@ -322,14 +322,14 @@ VALUES ('00000000-0003-0000-0000-000000000006', '00000000-0006-0000-0000-0000000
 
 --Time Category
 
-INSERT INTO public.time_category (id, project_id, name)
-VALUES ('00000000-0007-0000-0000-000000000001', '00000000-0002-0000-0000-000000000001', 'implementing');
+INSERT INTO public.time_category (id, project_id, name, normalized_name)
+VALUES ('00000000-0007-0000-0000-000000000001', '00000000-0002-0000-0000-000000000001', 'Implementing', 'implementing');
 
-INSERT INTO public.time_category (id, project_id, name)
-VALUES ('00000000-0007-0000-0000-000000000002', '00000000-0002-0000-0000-000000000001', 'meeting');
+INSERT INTO public.time_category (id, project_id, name, normalized_name)
+VALUES ('00000000-0007-0000-0000-000000000002', '00000000-0002-0000-0000-000000000001', 'Meeting', 'meeting');
 
-INSERT INTO public.time_category (id, project_id, name)
-VALUES ('00000000-0007-0000-0000-000000000003', '00000000-0002-0000-0000-000000000001', 'testing');
+INSERT INTO public.time_category (id, project_id, name, normalized_name)
+VALUES ('00000000-0007-0000-0000-000000000003', '00000000-0002-0000-0000-000000000001', 'Testing', 'testing');
 
 --Time
 
