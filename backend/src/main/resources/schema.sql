@@ -125,8 +125,8 @@ CREATE INDEX ON "logged_time" ("comment_id");
 CREATE INDEX ON "logged_time" ("category_id");
 
 CREATE TABLE IF NOT EXISTS "mentioned_ticket" (
-  "comment_id"          UUID REFERENCES "comment",
-  "mentioned_ticket_id" UUID REFERENCES "ticket",
+  "comment_id"          UUID REFERENCES "comment" ON DELETE CASCADE,
+  "mentioned_ticket_id" UUID REFERENCES "ticket" ON DELETE CASCADE,
   PRIMARY KEY ("comment_id", "mentioned_ticket_id")
 );
 CREATE INDEX ON "mentioned_ticket" ("mentioned_ticket_id");
