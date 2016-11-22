@@ -127,10 +127,10 @@ class AuthExpr private constructor() {
         const val READ_ASSIGNMENTTAG = "principal.hasRole('ADMIN') || principal.hasProjectRoleForAssignmentTag(#authAssignmentTagId, 'OBSERVER')"
         const val EDIT_ASSIGNMENTTAG = "principal.hasRole('ADMIN') || principal.hasProjectRoleForAssignmentTag(#authAssignmentTagId, 'USER')"
 
-        const val READ_TIMECATEGORY = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTimeCategory(#authTimeCategoryId, 'OBSERVER')"
+        const val READ_TIMECATEGORY = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForTimeCategory(#authTimeCategoryId, 'OBSERVER')"
         const val WRITE_TIMECATEGORY = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTimeCategory(#authTimeCategoryId, 'ADMIN')"
 
-        const val READ_TICKET_ASSIGNMENT = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicketAssignment(#authTicketId, 'OBSERVER')"
+        const val READ_TICKET_ASSIGNMENT = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForTicketAssignment(#authTicketId, 'OBSERVER')"
         const val WRITE_TICKET_ASSIGNMENT = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicketAssignment(#authTicketId, 'USER')"
 
         const val ADMIN_OR_SELF = "principal.hasRole('ADMIN') || principal.isId(#userId)"

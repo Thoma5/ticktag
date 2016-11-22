@@ -14,6 +14,7 @@ import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
 import java.util.*
 import javax.inject.Inject
+import javax.validation.Valid
 
 @TicktagService
 open class TimeCategoryServiceImpl @Inject constructor(
@@ -33,7 +34,7 @@ open class TimeCategoryServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.PROJECT_ADMIN)
-    override fun createTimeCategory(@P("authProjectId") projectId: UUID, timeCategory: CreateTimeCategory): TimeCategoryResult {
+    override fun createTimeCategory(@P("authProjectId") projectId: UUID, @Valid timeCategory: CreateTimeCategory): TimeCategoryResult {
         val project = projects.findOne(timeCategory.projectId) ?: throw NotFoundException()
         val newTimeCategory = TimeCategory.create(timeCategory.name, project)
         timeCategories.insert(newTimeCategory)
@@ -47,7 +48,7 @@ open class TimeCategoryServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.WRITE_TIMECATEGORY)
-    override fun updateTimeCategory(@P("authTimeCategoryId") id: UUID, timeCategory: UpdateTimeCategory): TimeCategoryResult {
+    override fun updateTimeCategory(@P("authTimeCategoryId") id: UUID, @Valid timeCategory: UpdateTimeCategory): TimeCategoryResult {
         val timeCategoryToUpdate = timeCategories.findOne(id) ?: throw NotFoundException()
         if (timeCategory.name != null) {
             timeCategoryToUpdate.name = timeCategory.name
