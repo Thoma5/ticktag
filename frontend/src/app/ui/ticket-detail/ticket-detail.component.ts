@@ -40,7 +40,7 @@ export class TicketDetailComponent implements OnInit {
         let ticketObs = this.apiCallService
           .callNoError<TicketResultJson>(p => this.ticketApi.getTicketUsingGETWithHttpInfo(ticketId, p));
         let commentsObs = this.apiCallService
-          .callNoError<CommentResultJson[]>(p => this.ticketApi.listCommentsUsingGET1WithHttpInfo(ticketId, p));
+          .callNoError<CommentResultJson[]>(p => this.commentsApi.listCommentsUsingGETWithHttpInfo(ticketId, p));
         let assignmentTagsObs = this.apiCallService
           .callNoError<AssignmentTagResultJson[]>(p => this.assigmentTagsApi.listAssignmentTagsUsingGETWithHttpInfo(projectId, p));
         let ticketTagsObs = Observable.of([]);
