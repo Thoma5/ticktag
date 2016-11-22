@@ -1,0 +1,12 @@
+<div class='assigned-user'>
+    <div class='image'>
+        <img src="img/angular.png" alt="" width="100%" height="100%" />
+    </div>
+    <div class='info'>
+        <div class='name'>{{ user.name }}</div>
+        <div class='tags'>
+          <tt-taginput [(tags)]="tags" [allTags]="allTags"></tt-taginput>
+        </div>
+        <span *ngFor="let tag of tags">{{ tag.name }}</span>
+    </div>
+</div>
