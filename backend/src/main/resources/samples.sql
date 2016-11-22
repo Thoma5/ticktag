@@ -1,5 +1,6 @@
 BEGIN;
-
+DELETE FROM "ticket_event_title_changed";
+DELETE FROM "ticket_event";
 DELETE FROM "logged_time";
 DELETE FROM "time_category";
 DELETE FROM "assigned_ticket_user";
