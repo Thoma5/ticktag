@@ -56,7 +56,7 @@ class AssignmentTagApiTest : ApiBaseTest() {
             val assignmentTag = assignmentTagController.getAssignmentTag(assignmentTagId)
 
             if (assignmentTag != null) {
-                assertEquals(assignmentTag.name, "implementing")
+                assertEquals(assignmentTag.name, "Implementing")
                 assertEquals(assignmentTag.color, "0000ff")
             } else {
                 fail()
