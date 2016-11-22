@@ -5,7 +5,8 @@ import java.util.*
 
 data class CreateCommentRequestJson(
         val text: String,
-        val ticketId: UUID
+        val ticketId: UUID,
+        val mentionedTicketIds: List<UUID>?
 ) {
 
 }

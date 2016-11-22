@@ -28,6 +28,7 @@ data class TicketResult(
         val createdBy: UUID,
         val tagIds: List<UUID>?,
         val mentoningCommentIds: List<UUID>,
+        //TODO: Do, we want mentioningTickets?(computed)
         val commentIds: List<UUID>
 
 

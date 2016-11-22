@@ -45,6 +45,12 @@ open class CommentServiceImpl @Inject constructor(
         val creationTime = Instant.now()
         val newComment = Comment.create(creationTime, text, user, ticket)
         comments.insert(newComment)
+        if (createComment.mentionedTicketIds != null) {
+            for (ticketId:UUID in createComment.mentionedTicketIds){
+                val ticket = tickets.findOne(ticketId)?:throw NotFoundException()
+                newComment.mentionedTickets.add(ticket)
+            }
+        }
         return CommentResult(newComment)
     }
 
@@ -65,6 +71,14 @@ open class CommentServiceImpl @Inject constructor(
             throw NotFoundException()
         }
         comment.text = updateComment.text
+        if (updateComment.mentionedTicketIds != null) {
+            comment.mentionedTickets.clear()
+            for (ticketId:UUID in updateComment.mentionedTicketIds){
+                val ticket = tickets.findOne(ticketId)?:throw NotFoundException()
+                comment.mentionedTickets.add(ticket)
+            }
+        }
+
 
         return CommentResult(comment)
     }

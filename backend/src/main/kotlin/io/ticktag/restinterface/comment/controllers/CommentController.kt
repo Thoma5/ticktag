@@ -39,14 +39,14 @@ open class CommentController @Inject constructor(
     @PostMapping
     open fun createComment(@RequestBody req: CreateCommentRequestJson,
                            @AuthenticationPrincipal principal: Principal): CommentResultJson {
-        val comment = commentService.createComment(createComment = CreateComment(req.text, req.ticketId), principal = principal, ticketId = req.ticketId)
+        val comment = commentService.createComment(createComment = CreateComment(req.text, req.ticketId,req.mentionedTicketIds), principal = principal, ticketId = req.ticketId)
         return CommentResultJson(comment)
     }
 
     @PutMapping(value = "/{id}")
     open fun updateComment(@RequestBody req: UpdateCommentRequestJson,
                            @PathVariable(name = "id") id: UUID): CommentResultJson {
-        return CommentResultJson(commentService.updateComment(updateComment = UpdateComment(req.text), commentId = id) ?: throw NotFoundException())
+        return CommentResultJson(commentService.updateComment(updateComment = UpdateComment(req.text,req.mentionedTicketIds), commentId = id) ?: throw NotFoundException())
     }
 
     @DeleteMapping(value = "/{id}")
