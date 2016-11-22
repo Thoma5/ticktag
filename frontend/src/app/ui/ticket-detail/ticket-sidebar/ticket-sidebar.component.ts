@@ -60,9 +60,11 @@ export class TicketSidebarComponent {
     }
 
     onAdd() {
+      // TODO username
       // TODO database checks and so on
       this.assigned.push({
         user: {
+          username: "todo",
           id: Math.random() + '',
           mail: 'aa.aaa',
           name: this.newUserName,
