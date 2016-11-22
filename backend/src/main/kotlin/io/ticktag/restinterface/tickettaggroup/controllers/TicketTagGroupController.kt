@@ -2,7 +2,6 @@ package io.ticktag.restinterface.tickettaggroup.controllers
 
 import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
-import io.ticktag.restinterface.tickettag.schema.TicketTagResultJson
 import io.ticktag.restinterface.tickettaggroup.schema.CreateTicketTagGroupRequestJson
 import io.ticktag.restinterface.tickettaggroup.schema.TicketTagGroupResultJson
 import io.ticktag.restinterface.tickettaggroup.schema.UpdateTicketTagGroupRequestJson
@@ -45,8 +44,9 @@ open class TicketTagGroupController @Inject constructor(
         ticketTagGroupService.deleteTicketTagGroup(id)
     }
 
-    @GetMapping(value = "/{id}/tickettag")
-    open fun listTicketTags(@PathVariable(name = "id") id: UUID): List<TicketTagResultJson> {
-        return ticketTagService.listTicketTagsInGroup(id).map(::TicketTagResultJson)
+    @GetMapping(value = "/")
+    open fun listTicketTagGroups(@RequestParam(name = "projectId", required = true) projectId: UUID): List<TicketTagGroupResultJson> {
+        return ticketTagGroupService.listTicketTagGroups(projectId).map(::TicketTagGroupResultJson)
     }
+
 }
