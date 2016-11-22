@@ -46,7 +46,7 @@ export interface CreateTicketRequestJson {
 
     existingSubTicketIds: Array<string>;
 
-    partenTicket: string;
+    partenTicketId: string;
 
 }
 
