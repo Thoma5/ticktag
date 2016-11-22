@@ -326,11 +326,11 @@ INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, normalized_name, c
 VALUES ('00000000-0005-0000-0001-000000000003', '00000000-0009-0000-0000-000000000002', 'High', 'high', 'FF0000', 7);
 
 
-INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, color, "order")
-VALUES ('00000000-0005-0000-0002-000000000001', '00000000-0009-0000-0000-000000000003', 'Blue', 'FF0000', 7);
+INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, normalized_name, color, "order")
+VALUES ('00000000-0005-0000-0002-000000000001', '00000000-0009-0000-0000-000000000003', 'Blue', 'blue', 'FF0000', 7);
 
-INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, color, "order")
-VALUES ('00000000-0005-0000-0002-000000000002', '00000000-0009-0000-0000-000000000003', 'Red', 'FFFF00', 8);
+INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, normalized_name, color, "order")
+VALUES ('00000000-0005-0000-0002-000000000002', '00000000-0009-0000-0000-000000000003', 'Red', 'red', 'FFFF00', 8);
 
 UPDATE public.ticket_tag_group SET default_ticket_tag_id = '00000000-0005-0000-0000-000000000001'
 WHERE id = '00000000-0009-0000-0000-000000000001';
