@@ -58,7 +58,7 @@ open class TicketEventParentChanged protected constructor() : TicketEvent() {
 @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
 open class TicketEventTitleChanged protected constructor() : TicketEvent() {
     companion object {
-        fun create(ticket: Ticket, user: User, srcTitle: String, dstTitle: String) : TicketEventTitleChanged {
+        fun create(ticket: Ticket, user: User, srcTitle: String, dstTitle: String): TicketEventTitleChanged {
             val o = TicketEventTitleChanged()
             o.setSuperValues(ticket, user)
             o.srcTitle = srcTitle
@@ -106,8 +106,7 @@ open class TicketEventStoryPointsChanged protected constructor() : TicketEvent()
 @Table(name = "ticket_event_initial_estimated_time_changed")
 @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
 open class TicketEventInitialEstimatedTimeChanged protected constructor() : TicketEvent() {
-    companion object {
-    }
+
 
     @Column(name = "src_initial_estimated_time", nullable = true)
     open var srcInitialEstimatedTime: Duration? = null
@@ -150,6 +149,14 @@ open class TicketEventDueDateChanged protected constructor() : TicketEvent() {
 @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
 open class TicketEventCommentTextChanged protected constructor() : TicketEvent() {
     companion object {
+        fun create(ticket: Ticket, user: User, comment: Comment, srcText: String, dstText: String): TicketEventCommentTextChanged {
+            val o = TicketEventCommentTextChanged()
+            o.setSuperValues(ticket, user)
+            o.comment = comment
+            o.srcText = srcText
+            o.dstText = dstText
+            return o
+        }
     }
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
