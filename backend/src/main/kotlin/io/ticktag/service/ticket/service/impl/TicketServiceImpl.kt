@@ -8,6 +8,7 @@ import io.ticktag.persistence.ticket.AssignmentTagRepository
 import io.ticktag.persistence.ticket.entity.*
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.*
+import io.ticktag.service.member.dto.TicketAssignmentResult
 import io.ticktag.service.ticket.dto.CreateTicket
 import io.ticktag.service.ticket.dto.TicketAssignment
 import io.ticktag.service.ticket.dto.TicketResult
@@ -94,16 +95,20 @@ open class TicketServiceImpl @Inject constructor(
 
         //Assignee
         if (createTicket.ticketAssignments != null) {
+            var ticketAssignmentList = ArrayList<AssignedTicketUser>()
             val projectsTicketAssignmentTags = ticketAssignmentTags.findByProjectId(newTicket.project.id)
             for ((assignmentTagId, userId) in createTicket.ticketAssignments) {
                 val user = users.findOne(userId) ?: throw NotFoundException()
                 val assignmentTag = ticketAssignmentTags.findOne(assignmentTagId) ?: throw NotFoundException()
                 val project = members.findByUserIdAndProjectId(user.id, project.id) ?: throw NotFoundException()
                 if (projectsTicketAssignmentTags.contains(assignmentTag)) {
-                    ticketAssignments.insert(AssignedTicketUser.create(newTicket, assignmentTag, user))
+                    val assignedTicketUser = AssignedTicketUser.create(newTicket, assignmentTag, user)
+                    ticketAssignments.insert(assignedTicketUser)
+                    ticketAssignmentList.add(assignedTicketUser)
                 } else throw NotFoundException() //TODO: Message?
 
             }
+            newTicket.assignedTicketUsers = ticketAssignmentList;
         }
 
         //SubTickets
@@ -153,9 +158,9 @@ open class TicketServiceImpl @Inject constructor(
         val wantToSetSubTickets = (updateTicket.subTickets != null && updateTicket.subTickets.size != 0) || //creates New SubTickets
                 (updateTicket.existingSubTicketIds != null && updateTicket.existingSubTicketIds.size != 0)  // references SubTickets
         val dontWantToSetParentTicket = updateTicket.parentTicket == null
-        val noPartentTicketIsPresentBeforeUpdate = ticket.parentTicket == null
+        val noParentTicketIsPresentBeforeUpdate = ticket.parentTicket == null
 
-        if (!(implies(wantToSetSubTickets, (dontWantToSetParentTicket || noPartentTicketIsPresentBeforeUpdate)))) {
+        if (!(implies(wantToSetSubTickets, (dontWantToSetParentTicket || noParentTicketIsPresentBeforeUpdate)))) {
             throw TicktagValidationException(listOf(ValidationError("updateUser.subTickets", ValidationErrorDetail.Other("tickets are Set"))))
         }
 
@@ -184,27 +189,36 @@ open class TicketServiceImpl @Inject constructor(
         if (updateTicket.description != null) {
             ticket.descriptionComment.text = updateTicket.description
         }
+        var ticketResult = TicketResult(ticket)
 
         //Assignee
         if (updateTicket.ticketAssignments != null) {
+            var ticketAssignmentList = emptyList<AssignedTicketUser>().toMutableList()
             val projectsTicketAssignmentTags = ticketAssignmentTags.findByProjectId(ticket.project.id)
             for ((assignmentTagId, userId) in updateTicket.ticketAssignments) {
                 val user = users.findOne(userId) ?: throw NotFoundException()
                 val assignmentTag = ticketAssignmentTags.findOne(assignmentTagId) ?: throw NotFoundException()
                 val project = members.findByUserIdAndProjectId(user.id, ticket.project.id) ?: throw NotFoundException()
                 if (projectsTicketAssignmentTags.contains(assignmentTag)) {
-                    val toCreate = ticketAssignments.findOne(AssignedTicketUserKey.create(ticket, assignmentTag, user))
-                    toCreate ?: ticketAssignments.insert(AssignedTicketUser.create(ticket, assignmentTag, user))
+                    var existing = ticketAssignments.findOne(AssignedTicketUserKey.create(ticket, assignmentTag, user))
+                    if (existing == null) {
+                        existing = AssignedTicketUser.create(ticket, assignmentTag, user)
+                        ticketAssignments.insert(existing)
+                    }
+                    ticketAssignmentList.add(existing)
                 } else throw NotFoundException() //TODO: Message?
             }
             val ticketAssignmentDtos = ticket.assignedTicketUsers.map(::TicketAssignment)
             for ((assignmentTagId, userId) in ticketAssignmentDtos) {
                 val user = users.findOne(userId) ?: throw NotFoundException()
                 val assignmentTag = ticketAssignmentTags.findOne(assignmentTagId) ?: throw NotFoundException()
-                ticketAssignments.delete(AssignedTicketUser.create(ticket, assignmentTag, user))
+                val toDelete = ticketAssignments.findOne(AssignedTicketUserKey.create(ticket, assignmentTag, user)) ?: throw NotFoundException()
+                if (!ticketAssignmentList.contains(toDelete)) {
+                    ticketAssignments.delete(toDelete)
+                }
             }
+            ticketResult.ticketAssignments = ticketAssignmentList.map(::TicketAssignmentResult)
         }
-        var ticketResult = TicketResult(ticket)
 
         //SubTickets
         if (updateTicket.subTickets != null || updateTicket.existingSubTicketIds != null) {

@@ -19,7 +19,7 @@ data class TicketResult(
         val dueDate: Instant?,
         val description: String,
         val projectId: UUID,
-        val ticketAssignments: List<TicketAssignmentResult>?,
+        var ticketAssignments: List<TicketAssignmentResult>?,
         var subTicketIds: List<UUID>,
         val parentTicketId: UUID?,
         val createdBy: UUID,

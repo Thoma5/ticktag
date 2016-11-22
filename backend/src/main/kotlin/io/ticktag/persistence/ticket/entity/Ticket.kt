@@ -2,7 +2,6 @@ package io.ticktag.persistence.ticket.entity
 
 import io.ticktag.persistence.project.entity.Project
 import io.ticktag.persistence.user.entity.User
-import org.hibernate.annotations.Cascade
 import java.time.Duration
 import java.time.Instant
 import java.util.*
@@ -111,7 +110,6 @@ open class Ticket protected constructor() {
 
     @OneToMany(mappedBy = "ticket", cascade = arrayOf(CascadeType.REMOVE))
     lateinit open var assignedTicketUsers: MutableList<AssignedTicketUser>
-        protected set
 
     @OneToMany(mappedBy = "ticket")
     lateinit open var events: MutableList<TicketEvent>
