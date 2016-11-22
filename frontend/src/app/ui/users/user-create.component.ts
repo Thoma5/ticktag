@@ -12,6 +12,7 @@ import RoleEnum = CreateUserRequestJson.RoleEnum;
 
 export class UserCreateComponent implements OnInit {
   request: CreateUserRequestJson = {
+    username:'',
     mail: '',
     name: '',
     password: '',
