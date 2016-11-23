@@ -100,6 +100,7 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
                     to: cursor,
                     selectedHint: COMMAND_COMPLETIONS.findIndex(c => c.startsWith(isCommand[1])),
                 }),
+                completeSingle: false,
             });
             return;
         }
@@ -115,6 +116,7 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
                     to: cursor,
                     selectedHint: tags.findIndex(tt => tt.normalizedName.startsWith(isAddRemoveTag[2])),
                 }),
+                completeSingle: false,
             });
             return;
         }
@@ -132,6 +134,7 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
                     to: cursor,
                     selectedHint: cats.findIndex(cat => cat.normalizedName.startsWith(isTimeTag[1])),
                 }),
+                completeSingle: false,
             });
             return;
         }
@@ -158,6 +161,7 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
                         }))
                         .toPromise();
                 },
+                completeSingle: false,
             });
             return;
         }
@@ -176,6 +180,7 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
                     to: cursor,
                     selectedHint: tags.findIndex(tag => tag.normalizedName.startsWith(isAssignTag[1])),
                 }),
+                completeSingle: false,
             });
             return;
         }
