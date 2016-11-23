@@ -1,6 +1,6 @@
 import {
     Component, Input, ElementRef, AfterViewInit, OnChanges, SimpleChanges,
-    OnDestroy, NgZone
+    OnDestroy
 } from '@angular/core';
 import {
     TicketTagResultJson, UserResultJson, TimeCategoryJson, UserApi,
@@ -56,8 +56,7 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
     constructor(
         private element: ElementRef,
         private userApi: UserApi,
-        private apiCallService: ApiCallService,
-        private zone: NgZone) {
+        private apiCallService: ApiCallService) {
     }
 
     ngAfterViewInit(): void {
@@ -70,16 +69,14 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
             autofocus: false,
         });
         this.instance.on('changes', () => {
-            this.zone.run(() => {
-                this.content = this.instance.getValue();
-                if (this.refreshTimeout === null) {
-                    this.refreshTimeout = window.setTimeout(() => {
-                        this.refreshTimeout = null;
-                        this.updateCommands();
-                        this.showHints();
-                    }, 100);
-                }
-            });
+            this.content = this.instance.getValue();
+            if (this.refreshTimeout === null) {
+                this.refreshTimeout = window.setTimeout(() => {
+                    this.refreshTimeout = null;
+                    this.updateCommands();
+                    this.showHints();
+                }, 100);
+            }
         });
     }
 
@@ -110,7 +107,7 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
                     list: COMMAND_COMPLETIONS,
                     from: {line: cursor.line, ch: cursor.ch - isCommand[1].length},
                     to: cursor,
-                    selectedHint: COMMAND_COMPLETIONS.findIndex(c => c.startsWith(isCommand[1])),
+                    selectedHint: Math.max(0, COMMAND_COMPLETIONS.findIndex(c => c.startsWith(isCommand[1]))),
                 }),
                 completeSingle: false,
             });
@@ -119,14 +116,16 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
 
         let isAddRemoveTag = new RegExp(String.raw`${grammar.SEPERATOR_FRONT_REGEX}!(-?)tag:(${grammar.TAG_LETTER}*)$`, 'ui').exec(text);
         if (isAddRemoveTag) {
-            let tags = (isAddRemoveTag[1] ? this.ticketTags : this.allTicketTags).slice();
+            let tags = isAddRemoveTag[1] ? this.ticketTags : this.allTicketTags;
+            if (tags.length === 0) { return; }
+            tags = tags.slice();
             tags.sort(using<TicketTagResultJson>(tag => tag.normalizedName));
             this.instance.showHint({
                 hint: () => ({
                     list: tags.map(tt => tt.normalizedName + ' '),
                     from: {line: cursor.line, ch: cursor.ch - isAddRemoveTag[2].length},
                     to: cursor,
-                    selectedHint: tags.findIndex(tt => tt.normalizedName.startsWith(isAddRemoveTag[2])),
+                    selectedHint: Math.max(0, tags.findIndex(tt => tt.normalizedName.startsWith(isAddRemoveTag[2]))),
                 }),
                 completeSingle: false,
             });
@@ -137,6 +136,7 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
             String.raw`${grammar.SEPERATOR_FRONT_REGEX}!time:${grammar.TIME_REGEX}@(${grammar.TAG_LETTER}*)$`, 'ui'
         ).exec(text);
         if (isTimeTag) {
+            if (this.allTimeCategories.length === 0) { return; }
             let cats = this.allTimeCategories.slice();
             cats.sort(using<TimeCategoryJson>(cat => cat.normalizedName));
             this.instance.showHint({
@@ -144,7 +144,7 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
                     list: cats.map(cat => cat.normalizedName + ' '),
                     from: {line: cursor.line, ch: cursor.ch - isTimeTag[1].length},
                     to: cursor,
-                    selectedHint: cats.findIndex(cat => cat.normalizedName.startsWith(isTimeTag[1])),
+                    selectedHint: Math.max(0, cats.findIndex(cat => cat.normalizedName.startsWith(isTimeTag[1]))),
                 }),
                 completeSingle: false,
             });
@@ -169,7 +169,7 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
                             })),
                             from: {line: cursor.line, ch: cursor.ch - isAssign[1].length},
                             to: cursor,
-                            selectedHint: 0,
+                            selectedHint: Math.max(0, users.findIndex(user => user.username.startsWith(isAssign[1]))),
                         }))
                         .toPromise();
                 },
@@ -183,6 +183,7 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
             'ui'
         ).exec(text);
         if (isAssignTag) {
+            if (this.allAssignmentTags.length === 0) { return; }
             let tags = this.allAssignmentTags.slice();
             tags.sort(using<AssignmentTagResultJson>(tag => tag.normalizedName));
             this.instance.showHint({
@@ -190,14 +191,11 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
                     list: tags.map(tag => tag.normalizedName + ' '),
                     from: {line: cursor.line, ch: cursor.ch - isAssignTag[1].length},
                     to: cursor,
-                    selectedHint: tags.findIndex(tag => tag.normalizedName.startsWith(isAssignTag[1])),
+                    selectedHint: Math.max(0, tags.findIndex(tag => tag.normalizedName.startsWith(isAssignTag[1]))),
                 }),
                 completeSingle: false,
             });
             return;
         }
-
-        // Hide hints
-        this.instance.showHint({ hint: () => ({ list: new Array<string>() }) });
     }
 }
