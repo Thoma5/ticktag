@@ -6,6 +6,7 @@ import io.ticktag.restinterface.loggedTime.controller.LoggedTimeController
 import io.ticktag.restinterface.loggedTime.schema.UpdateLoggedTimeJson
 import io.ticktag.service.NotFoundException
 import io.ticktag.service.comment.dto.CreateLoggedTimeJson
+import junit.framework.Assert.assertEquals
 import org.junit.Test
 import java.time.Duration
 import java.util.*
@@ -26,9 +27,9 @@ class LoggTimeTest : ApiBaseTest() {
                     categoryId)
 
             val result = loggedTimeController.createLoggedTime(req = req)
-            assert(result.commentId.equals(commentId))
-            assert(result.time.equals(duration))
-            assert(result.categoryId.equals(categoryId))
+            assertEquals(result.commentId,(commentId))
+            assertEquals(result.time,(duration))
+            assertEquals(result.categoryId,(categoryId))
 
         }
     }
@@ -41,8 +42,8 @@ class LoggTimeTest : ApiBaseTest() {
             val loggTimeId = UUID.fromString("00000000-0008-0000-0000-000000000001")
             val req = UpdateLoggedTimeJson(duration, categoryId)
             val result = loggedTimeController.updateLoggedTime(req = req, loggedTimeId = loggTimeId)
-            assert(result.time.equals(duration))
-            assert(result.categoryId.equals(categoryId))
+            assertEquals(result.time,(duration))
+            assertEquals(result.categoryId,(categoryId))
         }
     }
 

@@ -8,10 +8,13 @@ import io.ticktag.service.comment.dto.CreateComment
 import io.ticktag.service.comment.dto.UpdateComment
 import io.ticktag.service.comment.service.CommentService
 import io.ticktag.service.ticket.service.TicketService
+import org.junit.Assert
 import org.junit.Test
 import java.util.*
 import javax.inject.Inject
-
+import org.junit.Assert.assertThat
+import org.junit.Assert.assertEquals
+import org.hamcrest.CoreMatchers.*
 
 class CommentTest : ServiceBaseTest() {
 
@@ -27,7 +30,7 @@ class CommentTest : ServiceBaseTest() {
         withUser(id) { principal ->
             commentService.updateComment(comment_id, UpdateComment("test",null,null))
             val comment = commentService.getComment(comment_id) ?: throw NotFoundException()
-            assert(comment.text == "test")
+            assertEquals(comment.text, "test")
         }
     }
 
@@ -37,7 +40,7 @@ class CommentTest : ServiceBaseTest() {
         val comment_id = UUID.fromString("00000000-0004-0000-0000-000000000006")
         withUser(id) { principal ->
             val comment = commentService.getComment(comment_id) ?: throw NotFoundException()
-            assert(comment.id == comment_id)
+            assertEquals(comment.id, comment_id)
         }
     }
 
@@ -89,10 +92,10 @@ class CommentTest : ServiceBaseTest() {
         withUser(id) { principal ->
             val createComment = CreateComment("test",ownerTicketId, listOf(referenceTicketId),null)
             val createResult = commentService.createComment(createComment,principal,ownerTicketId)
-            assert(createResult.mentionedTicketIds.size==1)
-            assert(createResult.mentionedTicketIds.contains(referenceTicketId))
+            assertEquals(createResult.mentionedTicketIds.size,1)
+            assertThat(createResult.mentionedTicketIds, `hasItem`(referenceTicketId))
             val referenceTicket = ticketService.getTicket(referenceTicketId)
-            assert(referenceTicket.mentoningCommentIds.contains(createResult.id))//check if Comment ID is referencedTicket Test may fail if Tickets were reworked
+            assertThat(referenceTicket.mentoningCommentIds, `hasItem`(createResult.id))//check if Comment ID is referencedTicket Test may fail if Tickets were reworked
         }
     }
 }
