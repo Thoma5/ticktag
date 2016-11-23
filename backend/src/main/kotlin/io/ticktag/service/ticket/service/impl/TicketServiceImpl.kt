@@ -5,7 +5,10 @@ import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.member.MemberRepository
 import io.ticktag.persistence.project.ProjectRepository
 import io.ticktag.persistence.ticket.AssignmentTagRepository
-import io.ticktag.persistence.ticket.entity.*
+import io.ticktag.persistence.ticket.entity.Comment
+import io.ticktag.persistence.ticket.entity.Ticket
+import io.ticktag.persistence.ticket.entity.TicketAssignmentRepository
+import io.ticktag.persistence.ticket.entity.TicketRepository
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.*
 import io.ticktag.service.ticket.dto.CreateTicket
@@ -96,21 +99,12 @@ open class TicketServiceImpl @Inject constructor(
         newTicket.descriptionComment = newComment
 
         //Assignee
+        val ticketAssignmentList: MutableList<TicketAssignmentResult>? = ArrayList() // Attach this list after the conversion of newTicket to ticketResult to avoid code duplication
         if (createTicket.ticketAssignments != null) {
-            var ticketAssignmentList = ArrayList<AssignedTicketUser>()
-            val projectsTicketAssignmentTags = ticketAssignmentTags.findByProjectId(newTicket.project.id)
             for ((assignmentTagId, userId) in createTicket.ticketAssignments) {
-                val user = users.findOne(userId) ?: throw NotFoundException()
-                val assignmentTag = ticketAssignmentTags.findOne(assignmentTagId) ?: throw NotFoundException()
-                val project = members.findByUserIdAndProjectId(user.id, project.id) ?: throw NotFoundException()
-                if (projectsTicketAssignmentTags.contains(assignmentTag)) {
-                    val assignedTicketUser = AssignedTicketUser.create(newTicket, assignmentTag, user)
-                    ticketAssignments.insert(assignedTicketUser)
-                    ticketAssignmentList.add(assignedTicketUser)
-                } else throw NotFoundException()
-
+                val ticketAssignmentResult = ticketAssignmentService.createTicketAssignment(newTicket.id, assignmentTagId, userId)
+                ticketAssignmentList?.add(ticketAssignmentResult)
             }
-            newTicket.assignedTicketUsers = ticketAssignmentList
         }
 
         //SubTickets
@@ -133,6 +127,7 @@ open class TicketServiceImpl @Inject constructor(
 
         var ticketResult = TicketResult(newTicket) //Weder EM noch via UPDATECASCADE kann das ticket neu geladen werden
         ticketResult.subTicketIds = newSubs
+        ticketResult.ticketAssignments = ticketAssignmentList
         return ticketResult
     }
 
