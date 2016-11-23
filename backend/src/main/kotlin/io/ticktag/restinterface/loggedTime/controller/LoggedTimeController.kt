@@ -35,30 +35,30 @@ open class LoggedTimeController @Inject constructor(
         return loggedTime.map(::LoggedTimeResultJson)
     }
 
-    @GetMapping(value="/search")
+    @GetMapping(value = "/search")
     open fun getLoggedTimesForProjectAndUserAndCategory(
             @RequestParam(required = false) projectId: UUID?,
             @RequestParam(required = false) userId: UUID?,
             @RequestParam(required = false) categoryId: UUID?): List<LoggedTimeResultJson> {
-        val loggedTime = loggedTimeService.listLoggedTimeForProjectAndUserAndCategory(projectId,userId,categoryId)
+        val loggedTime = loggedTimeService.listLoggedTimeForProjectAndUserAndCategory(projectId, userId, categoryId)
         return loggedTime.map(::LoggedTimeResultJson)
     }
 
     @PostMapping
-    open fun createLoggedTime(@RequestBody req: CreateLoggedTimeJson):LoggedTimeResultJson{
-        val newLoggedTime = loggedTimeService.createLoggedTime(CreateLoggedTime(req.time,req.commentId,req.categoryId), req.commentId?:throw NotFoundException())
+    open fun createLoggedTime(@RequestBody req: CreateLoggedTimeJson): LoggedTimeResultJson {
+        val newLoggedTime = loggedTimeService.createLoggedTime(CreateLoggedTime(req.time, req.commentId, req.categoryId), req.commentId ?: throw NotFoundException())
         return LoggedTimeResultJson(newLoggedTime)
     }
 
     @PutMapping(value = "/{id}")
     open fun updateLoggedTime(@RequestBody req: UpdateLoggedTimeJson,
-                              @RequestParam loggedTimeId: UUID):LoggedTimeResultJson{
-        val newLoggedTime = loggedTimeService.updateLoggedTime(UpdateLoggedTime(req.time,req.categoryId),loggedTimeId)
+                              @RequestParam loggedTimeId: UUID): LoggedTimeResultJson {
+        val newLoggedTime = loggedTimeService.updateLoggedTime(UpdateLoggedTime(req.time, req.categoryId), loggedTimeId)
         return LoggedTimeResultJson(newLoggedTime)
     }
 
     @DeleteMapping(value = "/{id}")
-    open fun deleteLoggedTime(@RequestParam loggedTimeId: UUID){
+    open fun deleteLoggedTime(@RequestParam loggedTimeId: UUID) {
         loggedTimeService.deleteLoggedTime(loggedTimeId)
     }
 }

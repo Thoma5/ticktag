@@ -7,4 +7,4 @@ data class UpdateComment(
         @field:Size(min = 1, max = 500) val text: String?,
         val mentionedTicketIds: List<UUID>?,
         val loggedTime: List<CreateLoggedTime>?
-        ) {}
+) {}

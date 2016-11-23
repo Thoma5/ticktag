@@ -51,15 +51,15 @@ open class CommentServiceImpl @Inject constructor(
         val newComment = Comment.create(creationTime, text, user, ticket)
         comments.insert(newComment)
         if (createComment.mentionedTicketIds != null) {
-            for (ticketId:UUID in createComment.mentionedTicketIds){
-                val ticket = tickets.findOne(ticketId)?:throw NotFoundException()
+            for (ticketId: UUID in createComment.mentionedTicketIds) {
+                val ticket = tickets.findOne(ticketId) ?: throw NotFoundException()
                 newComment.mentionedTickets.add(ticket)
             }
         }
 
-        if (createComment.loggedTime != null){
-            for (createLoggedTime:CreateLoggedTime in createComment.loggedTime){
-                val result =  loggedTimeService.createLoggedTime(createLoggedTime,newComment.id)
+        if (createComment.loggedTime != null) {
+            for (createLoggedTime: CreateLoggedTime in createComment.loggedTime) {
+                val result = loggedTimeService.createLoggedTime(createLoggedTime, newComment.id)
                 val loggedTime = loggedTimes.findOne(result.id) ?: throw NotFoundException()
                 newComment.loggedTimes.add(loggedTime)
             }
@@ -88,20 +88,20 @@ open class CommentServiceImpl @Inject constructor(
         }
         if (updateComment.mentionedTicketIds != null) {
             comment.mentionedTickets.clear()
-            for (ticketId:UUID in updateComment.mentionedTicketIds){
-                val ticket = tickets.findOne(ticketId)?:throw NotFoundException()
+            for (ticketId: UUID in updateComment.mentionedTicketIds) {
+                val ticket = tickets.findOne(ticketId) ?: throw NotFoundException()
                 comment.mentionedTickets.add(ticket)
             }
         }
-        if (updateComment.loggedTime != null){
-            for (loggeTime in comment.loggedTimes){
+        if (updateComment.loggedTime != null) {
+            for (loggeTime in comment.loggedTimes) {
                 loggedTimes.delete(loggeTime)
 
             }
             comment.loggedTimes.clear()
-            for (createLoggedTime:CreateLoggedTime in updateComment.loggedTime){
+            for (createLoggedTime: CreateLoggedTime in updateComment.loggedTime) {
                 createLoggedTime.commentId = comment.id
-                val result =  loggedTimeService.createLoggedTime(createLoggedTime, comment.id)
+                val result = loggedTimeService.createLoggedTime(createLoggedTime, comment.id)
                 val loggedTime = loggedTimes.findOne(result.id) ?: throw NotFoundException()
                 comment.loggedTimes.add(loggedTime)
             }

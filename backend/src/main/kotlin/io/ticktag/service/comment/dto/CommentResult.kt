@@ -14,8 +14,8 @@ data class CommentResult(
         val userId: UUID,
         val ticketId: UUID,
         val mentionedTicketIds: List<UUID>,
-        val loggedTimeIds:List<UUID>
+        val loggedTimeIds: List<UUID>
 ) {
     constructor(c: Comment) : this(id = c.id, createTime = c.createTime, text = c.text, userId = c.user.id, ticketId = c.ticket.id,
-            mentionedTicketIds = c.mentionedTickets.map { t-> t.id },loggedTimeIds = c.loggedTimes.map { time -> time.id })
+            mentionedTicketIds = c.mentionedTickets.map { t -> t.id }, loggedTimeIds = c.loggedTimes.map { time -> time.id })
 }

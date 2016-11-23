@@ -28,7 +28,7 @@ data class Principal(
 
     fun isId(otherId: UUID?): Boolean {
 
-        return this.id == otherId?: return false
+        return this.id == otherId ?: return false
     }
 
     fun hasRole(roleString: String): Boolean {

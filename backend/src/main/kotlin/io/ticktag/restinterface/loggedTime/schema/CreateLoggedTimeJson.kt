@@ -8,7 +8,7 @@ import java.util.*
 import javax.validation.constraints.Size
 
 data class CreateLoggedTimeJson(
-        val time:Duration,
+        val time: Duration,
         val commentId: UUID?,
         val categoryId: UUID
 ) {

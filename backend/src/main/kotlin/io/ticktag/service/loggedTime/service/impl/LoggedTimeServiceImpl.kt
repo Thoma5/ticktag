@@ -19,32 +19,32 @@ import javax.xml.bind.ValidationException
 
 @TicktagService
 open class LoggedTimeServiceImpl @Inject constructor(
-        private val loggedTimes:LoggedTimeRepository,
-        private val comments:CommentRepository,
+        private val loggedTimes: LoggedTimeRepository,
+        private val comments: CommentRepository,
         private val timeCategorys: TimeCategoryRepository
-) :LoggedTimeService{
+) : LoggedTimeService {
     @PreAuthorize(AuthExpr.READ_COMMENT)
-    override fun listLoggedTimeForComment(@P("authCommentId") commentId: UUID): List<LoggedTimeResult>{
-        return loggedTimes.findAll().map( ::LoggedTimeResult )
+    override fun listLoggedTimeForComment(@P("authCommentId") commentId: UUID): List<LoggedTimeResult> {
+        return loggedTimes.findAll().map(::LoggedTimeResult)
     }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
-    override fun listLoggedTimeForProjectAndUserAndCategory(@P("authProjectId") projedId: UUID?, userId: UUID?, categoryId: UUID?): List<LoggedTimeResult>{
-        return loggedTimes.findByProjectIdOrUserIdOrCategoryId(projedId,userId,categoryId).map(::LoggedTimeResult)
+    override fun listLoggedTimeForProjectAndUserAndCategory(@P("authProjectId") projedId: UUID?, userId: UUID?, categoryId: UUID?): List<LoggedTimeResult> {
+        return loggedTimes.findByProjectIdOrUserIdOrCategoryId(projedId, userId, categoryId).map(::LoggedTimeResult)
     }
 
     @PreAuthorize(AuthExpr.READ_TIME_LOG)
-    override fun getLoggedTime( @P("loggedTimeId") loggedTimeId: UUID): LoggedTimeResult {
+    override fun getLoggedTime(@P("loggedTimeId") loggedTimeId: UUID): LoggedTimeResult {
         return LoggedTimeResult(loggedTimes.findOne(loggedTimeId) ?: throw NotFoundException())
     }
 
     @PreAuthorize(AuthExpr.EDIT_COMMENT)
-    override fun createLoggedTime(createLoggedTime: CreateLoggedTime, @P("authCommentId")commentId: UUID): LoggedTimeResult {
+    override fun createLoggedTime(createLoggedTime: CreateLoggedTime, @P("authCommentId") commentId: UUID): LoggedTimeResult {
         val duration = createLoggedTime.time
         val commentId = createLoggedTime.commentId ?: throw  TicktagValidationException(listOf(ValidationError("createLoggedTime.commentId", ValidationErrorDetail.Other("commentId is null"))))
-        val comment = comments.findOne(commentId)?:throw NotFoundException()
-        val category = timeCategorys.findOne(createLoggedTime.categoryId)?:throw NotFoundException()
-        val newLoggedTime = LoggedTime.create(duration,comment,category)
+        val comment = comments.findOne(commentId) ?: throw NotFoundException()
+        val category = timeCategorys.findOne(createLoggedTime.categoryId) ?: throw NotFoundException()
+        val newLoggedTime = LoggedTime.create(duration, comment, category)
         loggedTimes.insert(newLoggedTime)
         return LoggedTimeResult(newLoggedTime)
     }
@@ -52,11 +52,11 @@ open class LoggedTimeServiceImpl @Inject constructor(
     @PreAuthorize(AuthExpr.EDIT_TIME_LOG)
     override fun updateLoggedTime(updateLoggedTime: UpdateLoggedTime, @P("authLoggedTimeId") loggedTimeId: UUID): LoggedTimeResult {
         val loggedTime = loggedTimes.findOne(loggedTimeId) ?: throw NotFoundException()
-        if (updateLoggedTime.time != null){
+        if (updateLoggedTime.time != null) {
             loggedTime.time = updateLoggedTime.time
         }
 
-        if (updateLoggedTime.categoryId != null){
+        if (updateLoggedTime.categoryId != null) {
             val category = timeCategorys.findOne(updateLoggedTime.categoryId) ?: throw NotFoundException()
             loggedTime.category = category
         }
@@ -64,8 +64,8 @@ open class LoggedTimeServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.EDIT_TIME_LOG)
-    override fun deleteLoggedTime( @P("authLoggedTimeId") loggedTimeId: UUID) {
-       val loggedTimeToDelete = loggedTimes.findOne(loggedTimeId) ?: throw NotFoundException()
+    override fun deleteLoggedTime(@P("authLoggedTimeId") loggedTimeId: UUID) {
+        val loggedTimeToDelete = loggedTimes.findOne(loggedTimeId) ?: throw NotFoundException()
         loggedTimes.delete(loggedTimeToDelete)
     }
 }
