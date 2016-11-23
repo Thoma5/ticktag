@@ -312,18 +312,20 @@ It''s sometimes handy for breaking things up.
 
 ## Images
 
-Markdown can also contain images. I''ll need to add something here sometime.
+![Cat](http://lorempixel.com/400/400/cats)
 
 ## Finally
 
-There''s actually a lot more to Markdown than this. See the official [introduction][4] and [syntax][5] for more information. However, be aware that this is not using the official implementation, and this might work subtly differently in some of the little things.
+
+  This is the XSS test:
+  <script>alert("xss")</script>
+  [XSS](javascript&#58this;alert(1&#41;)
+  [XSS](javascript&#58;alert(1&#41;)
+  ![XSS](javascript:alert())
 
 
-  [1]: http://daringfireball.net/projects/markdown/
-  [2]: http://www.fileformat.info/info/unicode/char/2163/index.htm
-  [3]: http://www.markitdown.net/
-  [4]: http://daringfireball.net/projects/markdown/basics
-  [5]: http://daringfireball.net/projects/markdown/syntax
+  This is the linkify test: https://www.google.com
+  And this is the normal link test: [Link](https://www.google.com)
 ');
 
 UPDATE public.ticket
