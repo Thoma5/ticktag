@@ -42,6 +42,13 @@ open class TicketEvent protected constructor() {
 @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
 open class TicketEventParentChanged protected constructor() : TicketEvent() {
     companion object {
+        fun create(ticket: Ticket, user: User, srcParent: Ticket?, dstParent: Ticket?): TicketEventParentChanged {
+            val o = TicketEventParentChanged()
+            o.setSuperValues(ticket, user)
+            o.srcParent = srcParent
+            o.dstParent = dstParent
+            return o
+        }
     }
 
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
@@ -79,6 +86,13 @@ open class TicketEventTitleChanged protected constructor() : TicketEvent() {
 @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
 open class TicketEventStateChanged protected constructor() : TicketEvent() {
     companion object {
+        fun create(ticket: Ticket, user: User, srcState: Boolean, dstState: Boolean): TicketEventStateChanged {
+            val o = TicketEventStateChanged()
+            o.setSuperValues(ticket, user)
+            o.srcState = srcState
+            o.dstState = dstState
+            return o
+        }
     }
 
     @Column(name = "src_state", nullable = false)
@@ -93,6 +107,13 @@ open class TicketEventStateChanged protected constructor() : TicketEvent() {
 @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
 open class TicketEventStoryPointsChanged protected constructor() : TicketEvent() {
     companion object {
+        fun create(ticket: Ticket, user: User, srcStoryPoints: Int?, dstStoryPoints: Int?): TicketEventStoryPointsChanged {
+            val o = TicketEventStoryPointsChanged()
+            o.setSuperValues(ticket, user)
+            o.srcStoryPoints = srcStoryPoints
+            o.dstStoryPoints = dstStoryPoints
+            return o
+        }
     }
 
     @Column(name = "src_story_points", nullable = true)
@@ -106,7 +127,15 @@ open class TicketEventStoryPointsChanged protected constructor() : TicketEvent()
 @Table(name = "ticket_event_initial_estimated_time_changed")
 @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
 open class TicketEventInitialEstimatedTimeChanged protected constructor() : TicketEvent() {
-
+    companion object {
+        fun create(ticket: Ticket, user: User, srcInitialEstimatedTime: Duration?, dstInitialEstimatedTime: Duration?): TicketEventInitialEstimatedTimeChanged {
+            val o = TicketEventInitialEstimatedTimeChanged()
+            o.setSuperValues(ticket, user)
+            o.srcInitialEstimatedTime = srcInitialEstimatedTime
+            o.dstInitialEstimatedTime = dstInitialEstimatedTime
+            return o
+        }
+    }
 
     @Column(name = "src_initial_estimated_time", nullable = true)
     open var srcInitialEstimatedTime: Duration? = null
@@ -120,6 +149,13 @@ open class TicketEventInitialEstimatedTimeChanged protected constructor() : Tick
 @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
 open class TicketEventCurrentEstimatedTimeChanged protected constructor() : TicketEvent() {
     companion object {
+        fun create(ticket: Ticket, user: User, srcCurrentEstimatedTime: Duration?, dstCurrentEstimatedTime: Duration?): TicketEventCurrentEstimatedTimeChanged {
+            val o = TicketEventCurrentEstimatedTimeChanged()
+            o.setSuperValues(ticket, user)
+            o.srcCurrentEstimatedTime = srcCurrentEstimatedTime
+            o.dstCurrentEstimatedTime = dstCurrentEstimatedTime
+            return o
+        }
     }
 
     @Column(name = "src_current_estimated_time", nullable = true)
@@ -135,6 +171,13 @@ open class TicketEventCurrentEstimatedTimeChanged protected constructor() : Tick
 @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
 open class TicketEventDueDateChanged protected constructor() : TicketEvent() {
     companion object {
+        fun create(ticket: Ticket, user: User, srcDueDate: Instant?, dstDueDate: Instant?): TicketEventDueDateChanged {
+            val o = TicketEventDueDateChanged()
+            o.setSuperValues(ticket, user)
+            o.srcDueDate = srcDueDate
+            o.dstDueDate = dstDueDate
+            return o
+        }
     }
 
     @Column(name = "src_due_date", nullable = true)
@@ -175,6 +218,12 @@ open class TicketEventCommentTextChanged protected constructor() : TicketEvent()
 @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
 open class TicketEventTagAdded protected constructor() : TicketEvent() {
     companion object {
+        fun create(ticket: Ticket, user: User, tag: TicketTag): TicketEventTagAdded {
+            val o = TicketEventTagAdded()
+            o.setSuperValues(ticket, user)
+            o.tag = tag
+            return o
+        }
     }
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -187,6 +236,12 @@ open class TicketEventTagAdded protected constructor() : TicketEvent() {
 @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
 open class TicketEventTagRemoved protected constructor() : TicketEvent() {
     companion object {
+        fun create(ticket: Ticket, user: User, tag: TicketTag): TicketEventTagRemoved {
+            val o = TicketEventTagRemoved()
+            o.setSuperValues(ticket, user)
+            o.tag = tag
+            return o
+        }
     }
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -199,6 +254,13 @@ open class TicketEventTagRemoved protected constructor() : TicketEvent() {
 @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
 open class TicketEventUserAdded protected constructor() : TicketEvent() {
     companion object {
+        fun create(ticket: Ticket, user: User, addedUser: User, tag: AssignmentTag): TicketEventUserAdded {
+            val o = TicketEventUserAdded()
+            o.setSuperValues(ticket, user)
+            o.addedUser = addedUser
+            o.tag = tag
+            return o
+        }
     }
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -215,6 +277,13 @@ open class TicketEventUserAdded protected constructor() : TicketEvent() {
 @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
 open class TicketEventUserRemoved protected constructor() : TicketEvent() {
     companion object {
+        fun create(ticket: Ticket, user: User, removedUser: User, tag: AssignmentTag): TicketEventUserRemoved {
+            val o = TicketEventUserRemoved()
+            o.setSuperValues(ticket, user)
+            o.removedUser = removedUser
+            o.tag = tag
+            return o
+        }
     }
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -231,6 +300,13 @@ open class TicketEventUserRemoved protected constructor() : TicketEvent() {
 @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
 open class TicketEventMentionAdded protected constructor() : TicketEvent() {
     companion object {
+        fun create(ticket: Ticket, user: User, comment: Comment, mentionedTicket: Ticket): TicketEventMentionAdded {
+            val o = TicketEventMentionAdded()
+            o.setSuperValues(ticket, user)
+            o.comment = comment
+            o.mentionedTicket = mentionedTicket
+            return o
+        }
     }
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -247,6 +323,13 @@ open class TicketEventMentionAdded protected constructor() : TicketEvent() {
 @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
 open class TicketEventMentionRemoved protected constructor() : TicketEvent() {
     companion object {
+        fun create(ticket: Ticket, user: User, comment: Comment, mentionedTicket: Ticket): TicketEventMentionRemoved {
+            val o = TicketEventMentionRemoved()
+            o.setSuperValues(ticket, user)
+            o.comment = comment
+            o.mentionedTicket = mentionedTicket
+            return o
+        }
     }
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -263,6 +346,14 @@ open class TicketEventMentionRemoved protected constructor() : TicketEvent() {
 @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
 open class TicketEventLoggedTimeAdded protected constructor() : TicketEvent() {
     companion object {
+        fun create(ticket: Ticket, user: User, comment: Comment, category: TimeCategory, loggedTime: Duration): TicketEventLoggedTimeAdded {
+            val o = TicketEventLoggedTimeAdded()
+            o.setSuperValues(ticket, user)
+            o.comment = comment
+            o.category = category
+            o.loggedTime = loggedTime
+            return o
+        }
     }
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -282,6 +373,14 @@ open class TicketEventLoggedTimeAdded protected constructor() : TicketEvent() {
 @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
 open class TicketEventLoggedTimeRemoved protected constructor() : TicketEvent() {
     companion object {
+        fun create(ticket: Ticket, user: User, comment: Comment, category: TimeCategory, loggedTime: Duration): TicketEventLoggedTimeRemoved {
+            val o = TicketEventLoggedTimeRemoved()
+            o.setSuperValues(ticket, user)
+            o.comment = comment
+            o.category = category
+            o.loggedTime = loggedTime
+            return o
+        }
     }
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
