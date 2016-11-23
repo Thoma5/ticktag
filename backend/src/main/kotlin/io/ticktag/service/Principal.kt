@@ -1,5 +1,6 @@
 package io.ticktag.service
 
+import io.ticktag.persistence.LoggedTime.LoggedTimeRepository
 import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.member.MemberRepository
 import io.ticktag.persistence.member.entity.ProjectRole
@@ -16,10 +17,11 @@ data class Principal(
         val role: Role?,
         private val members: MemberRepository?,
         private val comments: CommentRepository?,
-        private val assignmenttags: AssignmentTagRepository?
+        private val assignmenttags: AssignmentTagRepository?,
+        private val loggedTimes: LoggedTimeRepository?
 ) {
     companion object {
-        val INTERNAL = Principal(UUID(-1, -1), null, null, null, null)
+        val INTERNAL = Principal(UUID(-1, -1), null, null, null, null, null)
     }
 
     fun isInternal(): Boolean = members == null
@@ -58,6 +60,20 @@ data class Principal(
         if (comments == null) return UUID.fromString("invalid")
         val comment = comments.findOne(commentId) ?: return UUID.fromString("invalid")
         return comment.user.id
+
+    }
+
+    fun hasProjectRoleForTimeLogg(loggedTimeId: UUID, roleString: String): Boolean {
+        if (members == null) return false
+        val member = members.findByUserIdAndLoggedTimeId(this.id, loggedTimeId) ?: return false
+        return member.role.includesRole(ProjectRole.valueOf(roleString))
+
+    }
+
+    fun userIdForLoggedTimeId(loggId: UUID): UUID {
+        if (loggedTimes == null) return UUID.fromString("invalid")
+        val loggedTime = loggedTimes.findOne(loggId) ?: return UUID.fromString("invalid")
+        return loggedTime.comment.user.id
 
     }
 
@@ -102,6 +118,8 @@ class AuthExpr private constructor() {
         const val READ_COMMENT = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForComment(#authCommentId, 'OBSERVER')"
         const val CREATE_COMMENT = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicket(#authTicketId, 'USER') "
         const val EDIT_COMMENT = "principal.hasRole('ADMIN') || principal.hasProjectRoleForComment(#authCommentId, 'ADMIN') || principal.isId(principal.userIdForCommentId(#authCommentId))"
+        const val EDIT_TIME_LOG = "principal.hasRole('ADMIN') || principal.findByUserIdAndLoggedTimeId(#authLoggedTimeId, 'ADMIN') || principal.isId(principal.userIdForLoggedTimeId(#authLoggedTimeId))"
+
 
         const val READ_TICKET_TAG_GROUP = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForTicketTagGroup(#authTicketTagGroupId, 'OBSERVER')"
         const val CREATE_TICKET_TAG_GROUP = "principal.hasRole('ADMIN') || principal.hasProjectRole(#authProjectId, 'ADMIN')"

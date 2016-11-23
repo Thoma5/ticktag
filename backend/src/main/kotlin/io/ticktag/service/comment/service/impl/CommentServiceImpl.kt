@@ -59,8 +59,7 @@ open class CommentServiceImpl @Inject constructor(
 
         if (createComment.loggedTime != null){
             for (createLoggedTime:CreateLoggedTime in createComment.loggedTime){
-                createLoggedTime.commentId = newComment.id
-               val result =  loggedTimeService.createLoggedTime(createLoggedTime)
+                val result =  loggedTimeService.createLoggedTime(createLoggedTime,newComment.id)
                 val loggedTime = loggedTimes.findOne(result.id) ?: throw NotFoundException()
                 newComment.loggedTimes.add(loggedTime)
             }
@@ -102,7 +101,7 @@ open class CommentServiceImpl @Inject constructor(
             comment.loggedTimes.clear()
             for (createLoggedTime:CreateLoggedTime in updateComment.loggedTime){
                 createLoggedTime.commentId = comment.id
-                val result =  loggedTimeService.createLoggedTime(createLoggedTime)
+                val result =  loggedTimeService.createLoggedTime(createLoggedTime, comment.id)
                 val loggedTime = loggedTimes.findOne(result.id) ?: throw NotFoundException()
                 comment.loggedTimes.add(loggedTime)
             }

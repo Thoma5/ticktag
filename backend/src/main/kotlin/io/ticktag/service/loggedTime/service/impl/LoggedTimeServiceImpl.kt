@@ -10,6 +10,7 @@ import io.ticktag.service.comment.dto.CreateLoggedTime
 import io.ticktag.service.loggedTime.dto.LoggedTimeResult
 import io.ticktag.service.loggedTime.dto.UpdateLoggedTime
 import io.ticktag.service.loggedTime.service.LoggedTimeService
+import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
 import java.util.*
 import javax.inject.Inject
@@ -22,16 +23,18 @@ open class LoggedTimeServiceImpl @Inject constructor(
         private val comments:CommentRepository,
         private val timeCategorys: TimeCategoryRepository
 ) :LoggedTimeService{
-    @PreAuthorize(AuthExpr.USER)
-    override fun listLoggedTimeForComment(commentId: UUID): List<LoggedTimeResult>{
+    @PreAuthorize(AuthExpr.READ_COMMENT)
+    override fun listLoggedTimeForComment(@P("authCommentId") commentId: UUID): List<LoggedTimeResult>{
         return loggedTimes.findAll().map( ::LoggedTimeResult )
     }
-    @PreAuthorize(AuthExpr.USER)
-    override fun listLoggedTimeForProjectAndUserAndCategory(projedId: UUID?, userId: UUID?, categoryId: UUID?): List<LoggedTimeResult>{
+
+    @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
+    override fun listLoggedTimeForProjectAndUserAndCategory(@P("authProjectId") projedId: UUID?, userId: UUID?, categoryId: UUID?): List<LoggedTimeResult>{
         return loggedTimes.findByProjectIdOrUserIdOrCategoryId(projedId,userId,categoryId).map(::LoggedTimeResult)
     }
-    @PreAuthorize(AuthExpr.USER)
-    override fun createLoggedTime(createLoggedTime: CreateLoggedTime): LoggedTimeResult {
+
+    @PreAuthorize(AuthExpr.EDIT_COMMENT)
+    override fun createLoggedTime(createLoggedTime: CreateLoggedTime, @P("authCommentId")commentId: UUID): LoggedTimeResult {
         val duration = createLoggedTime.time
         val commentId = createLoggedTime.commentId ?: throw  TicktagValidationException(listOf(ValidationError("createLoggedTime.commentId", ValidationErrorDetail.Other("commentId is null"))))
         val comment = comments.findOne(commentId)?:throw NotFoundException()
@@ -41,7 +44,7 @@ open class LoggedTimeServiceImpl @Inject constructor(
         return LoggedTimeResult(newLoggedTime)
     }
 
-    @PreAuthorize(AuthExpr.USER)
+    @PreAuthorize(AuthExpr.EDIT_TIME_LOG)
     override fun updateLoggedTime(updateLoggedTime: UpdateLoggedTime, loggedTimeId: UUID): LoggedTimeResult {
         val loggedTime = loggedTimes.findOne(loggedTimeId) ?: throw NotFoundException()
         if (updateLoggedTime.time != null){
@@ -54,7 +57,8 @@ open class LoggedTimeServiceImpl @Inject constructor(
         }
         return LoggedTimeResult(loggedTime)
     }
-    @PreAuthorize(AuthExpr.USER)
+
+    @PreAuthorize(AuthExpr.EDIT_TIME_LOG)
     override fun deleteLoggedTime(loggedTimeId: UUID) {
        val loggedTimeToDelete = loggedTimes.findOne(loggedTimeId) ?: throw NotFoundException()
         loggedTimes.delete(loggedTimeToDelete)
