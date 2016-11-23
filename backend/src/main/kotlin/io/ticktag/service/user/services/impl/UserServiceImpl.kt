@@ -25,6 +25,10 @@ open class UserServiceImpl @Inject constructor(
         private val hashing: HashingLibrary,
         private val nn: NameNormalizationLibrary
 ) : UserService {
+    @PreAuthorize(AuthExpr.USER)  // TODO maybe refine
+    override fun getUsers(ids: Collection<UUID>): Map<UUID, UserResult> {
+        return users.findByIds(ids).map(::UserResult).associateBy { it.id }
+    }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listUsersFuzzy(@P("#authProjectId") projectId: UUID, query: String, pageable: Pageable): List<UserResult> {

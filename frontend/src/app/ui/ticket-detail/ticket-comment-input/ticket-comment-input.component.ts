@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import {
-  TicketTagResultJson, AssignmentTagResultJson, TicketResultJson, TimeCategoryJson
+  TicketTagResultJson, AssignmentTagResultJson, TicketResultJson, TimeCategoryJson,
+  UserResultJson
 } from '../../../api';
 
 @Component({
@@ -13,6 +14,7 @@ export class TicketCommentInputComponent {
   @Input() allTicketTags = new Array<TicketTagResultJson>();
   @Input() allAssignmentTags = new Array<AssignmentTagResultJson>();
   @Input() allTimeCategories = new Array<TimeCategoryJson>();
+  @Input() assignedUsers = new Array<UserResultJson>();
 
   get ticketTags(): TicketTagResultJson[] {
     return this.ticket.tagIds.map(tid => this.allTicketTags.find(tt => tt.id === tid)).filter(tt => tt);

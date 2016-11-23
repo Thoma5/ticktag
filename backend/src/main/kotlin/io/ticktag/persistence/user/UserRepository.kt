@@ -34,4 +34,7 @@ interface UserRepository : TicktagCrudRepository<User, UUID> {
             @Param("name") nameLike: String,
             @Param("username") usernameLike: String,
             pageable: Pageable): List<User>
+
+    @Query("select u from User u where u.id in :ids")
+    fun findByIds(@Param("ids") ids: Collection<UUID>): List<User>
 }

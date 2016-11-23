@@ -4,7 +4,8 @@ import { ApiCallService } from '../../service';
 import {
   TicketApi, TicketResultJson, CommentsApi, AssignmenttagApi,
   AssignmentTagResultJson, CommentResultJson, TicketTagResultJson,
-  TickettagApi, TimeCategoryJson, TimecategoryApi
+  TickettagApi, TimeCategoryJson, TimecategoryApi, UserResultJson,
+  GetApi, GetResultJson
 } from '../../api';
 import { Observable } from 'rxjs';
 
@@ -20,6 +21,7 @@ export class TicketDetailComponent implements OnInit {
   private allAssignmentTags: AssignmentTagResultJson[] | null = null;
   private allTicketTags: TicketTagResultJson[] | null = null;
   private allTimeCategories: TimeCategoryJson[] | null = null;
+  private assignedUsers: UserResultJson[] | null = null;
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(
@@ -30,7 +32,8 @@ export class TicketDetailComponent implements OnInit {
     private commentsApi: CommentsApi,
     private assigmentTagsApi: AssignmenttagApi,
     private ticketTagsApi: TickettagApi,
-    private timeCategoryApi: TimecategoryApi) {
+    private timeCategoryApi: TimecategoryApi,
+    private getApi: GetApi) {
   }
 
   ngOnInit(): void {
@@ -53,13 +56,20 @@ export class TicketDetailComponent implements OnInit {
 
         return Observable.zip(ticketObs, commentsObs, assignmentTagsObs, ticketTagsObs, timeCategoriesObs);
       })
+      .switchMap(tuple => {
+        let wantedUsers = tuple[0].ticketAssignments.map(ta => ta.userId);
+        let obs = this.apiCallService
+          .callNoError<GetResultJson>(p => this.getApi.getUsingGETWithHttpInfo(wantedUsers, p));
+        return Observable.zip(Observable.of(tuple), obs);
+      })
       .subscribe(tuple => {
-        let [ticket, comments, assignmentTags, ticketTags, timeCategories] = tuple;
+        let [[ticket, comments, assignmentTags, ticketTags, timeCategories], joined] = tuple;
         this.ticket = ticket;
         this.comments = comments;
         this.allAssignmentTags = assignmentTags;
         this.allTicketTags = ticketTags;
         this.allTimeCategories = timeCategories;
+        this.assignedUsers = ticket.ticketAssignments.map(ta => joined.users[ta.userId]).filter(it => it);
         this.loading = false;
       });
   }

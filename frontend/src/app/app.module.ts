@@ -18,7 +18,7 @@ import { ProjectsComponent } from './ui/projects/projects.component';
 import { ProjectCreateComponent } from './ui/projects/project-create.component';
 import {
   ProjectApi, AuthApi, UserApi, AssignmenttagApi, CommentsApi, MemberApi,
-  TimecategoryApi, TicketApi, TickettagApi, TickettaggroupApi
+  TimecategoryApi, TicketApi, TickettagApi, TickettaggroupApi, GetApi
 } from './api';
 import { TicketDetailComponent } from './ui/ticket-detail/ticket-detail.component';
 import { TicketSidebarComponent } from './ui/ticket-detail/ticket-sidebar/ticket-sidebar.component';
@@ -116,6 +116,7 @@ import { RichTextviewComponent } from './util/rich-textview/rich-textview.compon
     TicketApi,
     TickettagApi,
     TickettaggroupApi,
+    GetApi,
 
     ApiCallService,
     AuthService,

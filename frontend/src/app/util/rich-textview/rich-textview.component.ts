@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import {
     TicketTagResultJson, UserResultJson, TimeCategoryJson, UserApi,
-    AssignmentTagResultJson
+    AssignmentTagResultJson, TicketAssignmentJson
 } from '../../api';
 import { ApiCallService } from '../../service';
 import * as grammar from './grammar';
@@ -46,6 +46,8 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
     @Input() ticketTags = new Array<TicketTagResultJson>();
     @Input() allTimeCategories = new Array<TimeCategoryJson>();
     @Input() allAssignmentTags = new Array<AssignmentTagResultJson>();
+    @Input() assignedUsers = new Array<UserResultJson>();
+    @Input() assignments = new Array<TicketAssignmentJson>();
 
     private content: string;
     private instance: any;
@@ -107,7 +109,7 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
                     list: COMMAND_COMPLETIONS,
                     from: {line: cursor.line, ch: cursor.ch - isCommand[1].length},
                     to: cursor,
-                    selectedHint: Math.max(0, COMMAND_COMPLETIONS.findIndex(c => c.startsWith(isCommand[1]))),
+                    selectedHint: Math.max(0, COMMAND_COMPLETIONS.findIndex(c => c.toLowerCase().startsWith(isCommand[1].toLowerCase()))),
                 }),
                 completeSingle: false,
             });
@@ -125,7 +127,7 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
                     list: tags.map(tt => tt.normalizedName + ' '),
                     from: {line: cursor.line, ch: cursor.ch - isAddRemoveTag[2].length},
                     to: cursor,
-                    selectedHint: Math.max(0, tags.findIndex(tt => tt.normalizedName.startsWith(isAddRemoveTag[2]))),
+                    selectedHint: Math.max(0, tags.findIndex(tt => tt.normalizedName.startsWith(isAddRemoveTag[2].toLowerCase()))),
                 }),
                 completeSingle: false,
             });
@@ -144,7 +146,7 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
                     list: cats.map(cat => cat.normalizedName + ' '),
                     from: {line: cursor.line, ch: cursor.ch - isTimeTag[1].length},
                     to: cursor,
-                    selectedHint: Math.max(0, cats.findIndex(cat => cat.normalizedName.startsWith(isTimeTag[1]))),
+                    selectedHint: Math.max(0, cats.findIndex(cat => cat.normalizedName.startsWith(isTimeTag[1].toLowerCase()))),
                 }),
                 completeSingle: false,
             });
@@ -169,7 +171,7 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
                             })),
                             from: {line: cursor.line, ch: cursor.ch - isAssign[1].length},
                             to: cursor,
-                            selectedHint: Math.max(0, users.findIndex(user => user.username.startsWith(isAssign[1]))),
+                            selectedHint: Math.max(0, users.findIndex(user => user.username.startsWith(isAssign[1].toLowerCase()))),
                         }))
                         .toPromise();
                 },
@@ -191,7 +193,36 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
                     list: tags.map(tag => tag.normalizedName + ' '),
                     from: {line: cursor.line, ch: cursor.ch - isAssignTag[1].length},
                     to: cursor,
-                    selectedHint: Math.max(0, tags.findIndex(tag => tag.normalizedName.startsWith(isAssignTag[1]))),
+                    selectedHint: Math.max(0, tags.findIndex(tag => tag.normalizedName.startsWith(isAssignTag[1].toLowerCase()))),
+                }),
+                completeSingle: false,
+            });
+            return;
+        }
+
+        let isUnassign = new RegExp(
+            String.raw`${grammar.SEPERATOR_FRONT_REGEX}!-assign:(${grammar.USER_LETTER}*(?:@${grammar.TAG_LETTER}*)?)$`,
+            'ui'
+        ).exec(text);
+        if (isUnassign) {
+            if (this.assignments.length === 0) { return; }
+            let aus = this.assignments
+                .map(a => ({
+                    tag: this.allAssignmentTags.find(at => at.id === a.assignmentTagId),
+                    user : this.assignedUsers.find(u => u.id === a.userId)
+                }))
+                .filter(a => a.tag && a.user)
+                .map(as => ({
+                    text: `${as.user.username}@${as.tag.normalizedName} `,
+                    displayText: `${as.user.username}@${as.tag.normalizedName} (${as.user.name} <${as.user.mail}>)`,
+                }));
+            if (aus.length === 0) { return; }
+            this.instance.showHint({
+                hint: () => ({
+                    list: aus,
+                    from: {line: cursor.line, ch: cursor.ch - isUnassign[1].length},
+                    to: cursor,
+                    selectedHint: Math.max(0, aus.findIndex(au => au.text.startsWith(isUnassign[1].toLowerCase()))),
                 }),
                 completeSingle: false,
             });
