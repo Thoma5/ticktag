@@ -4,12 +4,12 @@ import io.ticktag.service.ticketevent.dto.TicketEventCommentTextChangedResult
 import java.util.*
 
 class TicketEventCommentTextChangedResultJson(e: TicketEventCommentTextChangedResult) : TicketEventResultJson(e) {
-    val comment_id: UUID
+    val commentId: UUID
     val srcText: String
     val dstText: String
 
     init {
-        comment_id = e.comment_id
+        commentId = e.commentId
         srcText = e.srcText
         dstText = e.dstText
     }

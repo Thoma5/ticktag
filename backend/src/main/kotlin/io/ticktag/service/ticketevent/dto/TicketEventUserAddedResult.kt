@@ -1,15 +1,20 @@
 package io.ticktag.service.ticketevent.dto
 
-import io.ticktag.persistence.ticket.entity.AssignmentTag
 import io.ticktag.persistence.ticket.entity.TicketEventUserAdded
-import io.ticktag.persistence.user.entity.User
+import java.util.*
 
 class TicketEventUserAddedResult(e: TicketEventUserAdded) : TicketEventResult(e) {
-    val addedUser: User
-    val tag: AssignmentTag
+    val addedUserId: UUID
+    val addedUserUsername: String
+    val assignmentTagId: UUID
+    val assignmentTagName: String
+    val assignmentTagColor: String
 
     init {
-        addedUser = e.addedUser
-        tag = e.tag
+        addedUserId = e.addedUser.id
+        addedUserUsername = e.addedUser.username
+        assignmentTagId = e.tag.id
+        assignmentTagName = e.tag.name
+        assignmentTagColor = e.tag.color
     }
 }

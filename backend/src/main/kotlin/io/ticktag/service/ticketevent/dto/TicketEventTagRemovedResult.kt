@@ -1,12 +1,16 @@
 package io.ticktag.service.ticketevent.dto
 
 import io.ticktag.persistence.ticket.entity.TicketEventTagRemoved
-import io.ticktag.persistence.ticket.entity.TicketTag
+import java.util.*
 
 class TicketEventTagRemovedResult(e: TicketEventTagRemoved) : TicketEventResult(e) {
-    val tag: TicketTag
+    val tagId: UUID
+    val tagName: String
+    val tagColor: String
 
     init {
-        tag = e.tag
+        tagId = e.tag.id
+        tagName = e.tag.name
+        tagColor = e.tag.color
     }
 }
