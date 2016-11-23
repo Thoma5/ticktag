@@ -70,16 +70,16 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
             autofocus: false,
         });
         this.instance.on('changes', () => {
-            this.content = this.instance.getValue();
-            if (this.refreshTimeout === null) {
-                this.refreshTimeout = window.setTimeout(() => {
-                    this.zone.run(() => {
+            this.zone.run(() => {
+                this.content = this.instance.getValue();
+                if (this.refreshTimeout === null) {
+                    this.refreshTimeout = window.setTimeout(() => {
                         this.refreshTimeout = null;
                         this.updateCommands();
                         this.showHints();
-                    });
-                }, 100);
-            }
+                    }, 100);
+                }
+            });
         });
     }
 
