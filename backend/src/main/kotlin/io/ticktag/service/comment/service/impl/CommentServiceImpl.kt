@@ -1,6 +1,7 @@
 package io.ticktag.service.comment.service.impl
 
 import io.ticktag.TicktagService
+import io.ticktag.persistence.LoggedTime.LoggedTimeRepository
 import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.ticket.entity.Comment
 import io.ticktag.persistence.ticket.entity.TicketRepository
@@ -11,9 +12,11 @@ import io.ticktag.service.Principal
 import io.ticktag.service.ValidationError
 import io.ticktag.service.comment.dto.CommentResult
 import io.ticktag.service.comment.dto.CreateComment
+import io.ticktag.service.comment.dto.CreateLoggedTime
 
 import io.ticktag.service.comment.dto.UpdateComment
 import io.ticktag.service.comment.service.CommentService
+import io.ticktag.service.loggedTime.service.LoggedTimeService
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -26,7 +29,9 @@ import javax.validation.Valid
 open class CommentServiceImpl @Inject constructor(
         private val comments: CommentRepository,
         private val tickets: TicketRepository,
-        private val users: UserRepository
+        private val users: UserRepository,
+        private val loggedTimeService: LoggedTimeService,
+        private val loggedTimes: LoggedTimeRepository
 
 ) : CommentService {
 
@@ -49,6 +54,15 @@ open class CommentServiceImpl @Inject constructor(
             for (ticketId:UUID in createComment.mentionedTicketIds){
                 val ticket = tickets.findOne(ticketId)?:throw NotFoundException()
                 newComment.mentionedTickets.add(ticket)
+            }
+        }
+
+        if (createComment.loggedTime != null){
+            for (createLoggedTime:CreateLoggedTime in createComment.loggedTime){
+                createLoggedTime.commentId = newComment.id
+               val result =  loggedTimeService.createLoggedTime(createLoggedTime)
+                val loggedTime = loggedTimes.findOne(result.id) ?: throw NotFoundException()
+                newComment.loggedTimes.add(loggedTime)
             }
         }
         return CommentResult(newComment)

@@ -9,8 +9,8 @@ import javax.validation.constraints.Size
 
 data class CreateLoggedTime(
         val time:Duration,
-        val commentId: UUID,
+        var commentId: UUID?,
         val categoryId: UUID
 ) {
-
+    constructor(l: CreateLoggedTimeJson):this(time = l.time,commentId = l.commentId,categoryId = l.categoryId)
 }
