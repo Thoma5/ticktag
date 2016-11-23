@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import {
     TicketTagResultJson, UserResultJson, TimeCategoryJson, UserApi,
-    AssignmentTagResultJson, TicketAssignmentJson
+    AssignmentTagResultJson, TicketAssignmentJson, TicketApi, TicketResultJson
 } from '../../api';
 import { ApiCallService } from '../../service';
 import * as grammar from './grammar';
@@ -58,7 +58,8 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
     constructor(
         private element: ElementRef,
         private userApi: UserApi,
-        private apiCallService: ApiCallService) {
+        private apiCallService: ApiCallService,
+        private ticketApi: TicketApi) {
     }
 
     ngAfterViewInit(): void {
@@ -111,6 +112,33 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
                     to: cursor,
                     selectedHint: Math.max(0, COMMAND_COMPLETIONS.findIndex(c => c.toLowerCase().startsWith(isCommand[1].toLowerCase()))),
                 }),
+                completeSingle: false,
+            });
+            return;
+        }
+
+        let isTicket = new RegExp(String.raw`${grammar.SEPERATOR_FRONT_REGEX}#(\S{0,20})$`, 'ui').exec(text);
+        if (isTicket) {
+            this.instance.showHint({
+                hint: () => {
+                    let projectId = this.projectId;
+                    return this.apiCallService
+                        .callNoError<TicketResultJson[]>(p => this.ticketApi.listTicketsFuzzyUsingGETWithHttpInfo(
+                            projectId,
+                            isTicket[1],
+                            ['NUMBER_DESC', 'TITLE_ASC'],
+                            p))
+                        .map(tickets => ({
+                            list: tickets.map(ticket => ({
+                                text: `${ticket.number} `,
+                                displayText: `#${ticket.number}: ${ticket.title}`,
+                            })),
+                            from: {line: cursor.line, ch: cursor.ch - isTicket[1].length},
+                            to: cursor,
+                            selectedHint: Math.max(0, tickets.findIndex(ticket => ('' + ticket.number).startsWith(isTicket[1]))),
+                        }))
+                        .toPromise();
+                },
                 completeSingle: false,
             });
             return;

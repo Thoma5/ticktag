@@ -51,7 +51,7 @@ open class UserController @Inject constructor(
     open fun listUsersFuzzy(
             @RequestParam(name="projectId", required = true) projectId: UUID,
             @RequestParam(name="q", required = true) query: String,
-            @RequestParam(name="order", required = true) order: Array<UserSort>): List<UserResultJson> {
+            @RequestParam(name="order", required = true) order: List<UserSort>): List<UserResultJson> {
         val result = userService.listUsersFuzzy(projectId, query, PageRequest(0, 15, Sort(order.map { it.order })))
         return result.map(::UserResultJson)
     }

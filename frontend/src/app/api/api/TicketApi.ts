@@ -117,6 +117,24 @@ export class TicketApi {
     }
 
     /**
+     * listTicketsFuzzy
+     * 
+     * @param projectId projectId
+     * @param q q
+     * @param order order
+     */
+    public listTicketsFuzzyUsingGET(projectId: string, q: string, order: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.TicketResultJson>> {
+        return this.listTicketsFuzzyUsingGETWithHttpInfo(projectId, q, order, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
      * listTickets
      * 
      * @param projectId projectId
@@ -253,6 +271,69 @@ export class TicketApi {
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling getTicketUsingGET.');
+        }
+
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json'
+        ];
+        
+            
+
+
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Get,
+            headers: headers,
+            search: queryParameters
+        });
+        
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * listTicketsFuzzy
+     * 
+     * @param projectId projectId
+     * @param q q
+     * @param order order
+     */
+    public listTicketsFuzzyUsingGETWithHttpInfo(projectId: string, q: string, order: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/ticket/fuzzy`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling listTicketsFuzzyUsingGET.');
+        }
+        // verify required parameter 'q' is not null or undefined
+        if (q === null || q === undefined) {
+            throw new Error('Required parameter q was null or undefined when calling listTicketsFuzzyUsingGET.');
+        }
+        // verify required parameter 'order' is not null or undefined
+        if (order === null || order === undefined) {
+            throw new Error('Required parameter order was null or undefined when calling listTicketsFuzzyUsingGET.');
+        }
+        if (projectId !== undefined) {
+            queryParameters.set('projectId', <any>projectId);
+        }
+        if (q !== undefined) {
+            queryParameters.set('q', <any>q);
+        }
+        if (order !== undefined) {
+            queryParameters.set('order', <any>order);
         }
 
 
