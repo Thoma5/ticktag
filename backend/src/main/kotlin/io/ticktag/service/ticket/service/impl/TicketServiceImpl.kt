@@ -190,7 +190,7 @@ open class TicketServiceImpl @Inject constructor(
         if (updateTicket.ticketAssignments != null) {
             val ticketAssignmentList = emptyList<TicketAssignmentResult>().toMutableList()
             for ((assignmentTagId, userId) in updateTicket.ticketAssignments) {
-                ticketAssignmentList.add(ticketAssignmentService.createOrReceiveTicketAssignment(ticket.id, assignmentTagId, userId))
+                ticketAssignmentList.add(ticketAssignmentService.createOrGetIfExistsTicketAssignment(ticket.id, assignmentTagId, userId))
             }
             val ticketAssignmentDtos = ticket.assignedTicketUsers.map(::TicketAssignment)
             for ((assignmentTagId, userId) in ticketAssignmentDtos) {

@@ -36,17 +36,17 @@ open class TicketAssignmentServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.WRITE_TICKET_ASSIGNMENT)
     override fun createTicketAssignment(@P("authTicketId") ticketId: UUID, tagId: UUID, userId: UUID): TicketAssignmentResult {
-        return createOrReceiveHelper(ticketId, tagId, userId, false)
+        return createOrGetHelper(ticketId, tagId, userId, false)
 
     }
 
     @PreAuthorize(AuthExpr.WRITE_TICKET_ASSIGNMENT)
-    override fun createOrReceiveTicketAssignment(@P("authTicketId") ticketId: UUID, tagId: UUID, userId: UUID): TicketAssignmentResult {
-        return createOrReceiveHelper(ticketId, tagId, userId, true)
+    override fun createOrGetIfExistsTicketAssignment(@P("authTicketId") ticketId: UUID, tagId: UUID, userId: UUID): TicketAssignmentResult {
+        return createOrGetHelper(ticketId, tagId, userId, true)
 
     }
 
-    private fun createOrReceiveHelper(ticketId: UUID, tagId: UUID, userId: UUID, receiveIfExists: Boolean): TicketAssignmentResult {
+    private fun createOrGetHelper(ticketId: UUID, tagId: UUID, userId: UUID, receiveIfExists: Boolean): TicketAssignmentResult {
         val ticket = tickets.findOne(ticketId) ?: throw NotFoundException()
         val assignmentTag = assignmentTags.findOne(tagId) ?: throw NotFoundException()
         if (!assignmentTags.findByProjectId(ticket.project.id).contains(assignmentTag)) throw NotFoundException()
