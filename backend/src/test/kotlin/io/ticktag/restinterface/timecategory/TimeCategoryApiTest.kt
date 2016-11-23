@@ -39,6 +39,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
         val projectId = PROJECT_AOU_UOA_ID
         withUser(USER_USER_ID) { principal ->
             val req = CreateTimeCategoryRequestJson(projectId, name)
+            assignmentTagController.createTimeCategory(req)
             assignmentTagController.listProjectTimeCategories(projectId)
             val result = assignmentTagController.listProjectTimeCategories(projectId).filter { it.name == name }.singleOrNull()
             result ?: fail()
@@ -52,6 +53,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
         val projectId = PROJECT_AOU_OAU_ID
         withUser(OBSERVER_USER_ID) { principal ->
             val req = CreateTimeCategoryRequestJson(projectId, name)
+            assignmentTagController.createTimeCategory(req)
             assignmentTagController.listProjectTimeCategories(projectId)
             val result = assignmentTagController.listProjectTimeCategories(projectId).filter { it.name == name }.singleOrNull()
             result ?: fail()
