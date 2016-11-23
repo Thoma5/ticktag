@@ -25,12 +25,14 @@
 
 import * as models from './models';
 
-export interface UpdateCommentRequestJson {
-    text: string;
+export interface LoggedTimeResultJson {
+    categoryId: string;
 
-    mentionedTicketIds: Array<string>;
+    commentId: string;
 
-    loggedTime: Array<models.CreateLoggedTimeJson>;
+    id: string;
+
+    time: number;
 
 }
 

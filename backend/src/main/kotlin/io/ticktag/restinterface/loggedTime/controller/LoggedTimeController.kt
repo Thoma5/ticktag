@@ -21,7 +21,7 @@ open class LoggedTimeController @Inject constructor(
         private val loggedTimeService: LoggedTimeService
 ) {
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/{loggTimeId}")
     open fun getLoggedTimesForId(
             @RequestParam loggTimeId: UUID): LoggedTimeResultJson {
         val loggedTime = loggedTimeService.getLoggedTime(loggTimeId)
@@ -50,14 +50,14 @@ open class LoggedTimeController @Inject constructor(
         return LoggedTimeResultJson(newLoggedTime)
     }
 
-    @PutMapping(value = "/{id}")
+    @PutMapping(value = "/{loggedTimeId}")
     open fun updateLoggedTime(@RequestBody req: UpdateLoggedTimeJson,
                               @RequestParam loggedTimeId: UUID): LoggedTimeResultJson {
         val newLoggedTime = loggedTimeService.updateLoggedTime(UpdateLoggedTime(req.time, req.categoryId), loggedTimeId)
         return LoggedTimeResultJson(newLoggedTime)
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "/{loggedTimeId}")
     open fun deleteLoggedTime(@RequestParam loggedTimeId: UUID) {
         loggedTimeService.deleteLoggedTime(loggedTimeId)
     }
