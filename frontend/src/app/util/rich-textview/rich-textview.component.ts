@@ -96,7 +96,7 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
             this.instance.showHint({
                 hint: () => ({
                     list: COMMAND_COMPLETIONS,
-                    from: {line: cursor.line, ch: cursor.ch - isCommand[0].length + 1},
+                    from: {line: cursor.line, ch: cursor.ch - isCommand[1].length},
                     to: cursor,
                     selectedHint: COMMAND_COMPLETIONS.findIndex(c => c.startsWith(isCommand[1])),
                 }),
