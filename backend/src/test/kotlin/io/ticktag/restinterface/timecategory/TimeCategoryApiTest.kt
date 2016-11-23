@@ -27,7 +27,6 @@ class TimeCategoryApiTest : ApiBaseTest() {
         withUser(ADMIN_USER_ID) { principal ->
             val req = CreateTimeCategoryRequestJson(projectId, name)
             assignmentTagController.createTimeCategory(req)
-            assignmentTagController.listProjectTimeCategories(projectId)
             val result = assignmentTagController.listProjectTimeCategories(projectId).filter { it.name == name }.singleOrNull()
             result ?: fail()
             assertThat(result?.name, `is`(name))
@@ -40,7 +39,6 @@ class TimeCategoryApiTest : ApiBaseTest() {
         val projectId = PROJECT_AOU_UOA_ID
         withUser(USER_USER_ID) { principal ->
             val req = CreateTimeCategoryRequestJson(projectId, name)
-            assignmentTagController.createTimeCategory(req)
             assignmentTagController.listProjectTimeCategories(projectId)
             val result = assignmentTagController.listProjectTimeCategories(projectId).filter { it.name == name }.singleOrNull()
             result ?: fail()
@@ -54,7 +52,6 @@ class TimeCategoryApiTest : ApiBaseTest() {
         val projectId = PROJECT_AOU_OAU_ID
         withUser(OBSERVER_USER_ID) { principal ->
             val req = CreateTimeCategoryRequestJson(projectId, name)
-            assignmentTagController.createTimeCategory(req)
             assignmentTagController.listProjectTimeCategories(projectId)
             val result = assignmentTagController.listProjectTimeCategories(projectId).filter { it.name == name }.singleOrNull()
             result ?: fail()
@@ -133,7 +130,6 @@ class TimeCategoryApiTest : ApiBaseTest() {
         withUser(ADMIN_USER_ID) { principal ->
             val req = UpdateTimeCategoryRequestJson(name2)
             assignmentTagController.updateTimeCategory(TIMECAT_PROJECT_NO_MEMBERS_IDS.first(), req)
-            assignmentTagController.listProjectTimeCategories(projectId)
             val result = assignmentTagController.listProjectTimeCategories(projectId).filter { it.name == name2 }.singleOrNull()
             result ?: fail()
             assertThat(result?.name, `is`(name2))
@@ -147,7 +143,6 @@ class TimeCategoryApiTest : ApiBaseTest() {
         withUser(USER_USER_ID) { principal ->
             val req = UpdateTimeCategoryRequestJson(name2)
             assignmentTagController.updateTimeCategory(TIMECAT_PROJECT_AOU_UOA_IDS.first(), req)
-            assignmentTagController.listProjectTimeCategories(projectId)
             val result = assignmentTagController.listProjectTimeCategories(projectId).filter { it.name == name2 }.singleOrNull()
             result ?: fail()
             assertThat(result?.name, `is`(name2))
@@ -161,7 +156,6 @@ class TimeCategoryApiTest : ApiBaseTest() {
         withUser(OBSERVER_USER_ID) { principal ->
             val req = UpdateTimeCategoryRequestJson(name2)
             assignmentTagController.updateTimeCategory(TIMECAT_PROJECT_AOU_OAU_IDS.first(), req)
-            assignmentTagController.listProjectTimeCategories(projectId)
             val result = assignmentTagController.listProjectTimeCategories(projectId).filter { it.name == name2 }.singleOrNull()
             result ?: fail()
             assertThat(result?.name, `is`(name2))
@@ -432,7 +426,6 @@ class TimeCategoryApiTest : ApiBaseTest() {
         val projectId = PROJECT_NO_MEMBERS_ID
         withUser(ADMIN_USER_ID) { principal ->
             assignmentTagController.deleteTimeCategory(TIMECAT_PROJECT_NO_MEMBERS_IDS.first())
-            assignmentTagController.listProjectTimeCategories(projectId)
             val result = assignmentTagController.listProjectTimeCategories(projectId).filter { it.name == name2 }.singleOrNull()
             if (result != null) fail()
         }
@@ -444,7 +437,6 @@ class TimeCategoryApiTest : ApiBaseTest() {
         val projectId = PROJECT_AOU_UOA_ID
         withUser(USER_USER_ID) { principal ->
             assignmentTagController.deleteTimeCategory(TIMECAT_PROJECT_AOU_UOA_IDS.first())
-            assignmentTagController.listProjectTimeCategories(projectId)
             val result = assignmentTagController.listProjectTimeCategories(projectId).filter { it.name == name2 }.singleOrNull()
             if (result != null) fail()
         }
@@ -456,7 +448,6 @@ class TimeCategoryApiTest : ApiBaseTest() {
         val projectId = PROJECT_AOU_OAU_ID
         withUser(OBSERVER_USER_ID) { principal ->
             assignmentTagController.deleteTimeCategory(TIMECAT_PROJECT_AOU_OAU_IDS.first())
-            assignmentTagController.listProjectTimeCategories(projectId)
             val result = assignmentTagController.listProjectTimeCategories(projectId).filter { it.name == name2 }.singleOrNull()
             if (result != null) fail()
         }

@@ -2,14 +2,14 @@ package io.ticktag.service.member.services
 
 import io.ticktag.TicktagService
 import io.ticktag.persistence.member.MemberRepository
+import io.ticktag.persistence.member.entity.ProjectRole
 import io.ticktag.persistence.ticket.AssignmentTagRepository
 import io.ticktag.persistence.ticket.entity.AssignedTicketUser
 import io.ticktag.persistence.ticket.entity.AssignedTicketUserKey
 import io.ticktag.persistence.ticket.entity.TicketAssignmentRepository
 import io.ticktag.persistence.ticket.entity.TicketRepository
 import io.ticktag.persistence.user.UserRepository
-import io.ticktag.service.AuthExpr
-import io.ticktag.service.NotFoundException
+import io.ticktag.service.*
 import io.ticktag.service.member.dto.TicketAssignmentResult
 import io.ticktag.service.timecategory.TicketAssignmentService
 import org.springframework.security.access.method.P
@@ -36,12 +36,34 @@ open class TicketAssignmentServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.WRITE_TICKET_ASSIGNMENT)
     override fun createTicketAssignment(@P("authTicketId") ticketId: UUID, tagId: UUID, userId: UUID): TicketAssignmentResult {
+        return createOrReceiveHelper(ticketId, tagId, userId, false)
+
+    }
+
+    @PreAuthorize(AuthExpr.WRITE_TICKET_ASSIGNMENT)
+    override fun createOrReceiveTicketAssignment(@P("authTicketId") ticketId: UUID, tagId: UUID, userId: UUID): TicketAssignmentResult {
+        return createOrReceiveHelper(ticketId, tagId, userId, true)
+
+    }
+
+    private fun createOrReceiveHelper(ticketId: UUID, tagId: UUID, userId: UUID, receiveIfExists: Boolean): TicketAssignmentResult {
         val ticket = tickets.findOne(ticketId) ?: throw NotFoundException()
         val assignmentTag = assignmentTags.findOne(tagId) ?: throw NotFoundException()
-        if (!assignmentTags.findByProjectId(ticket.project.id).contains(assignmentTag)) throw NotFoundException() //TODO: ExceptionMessage?
+        if (!assignmentTags.findByProjectId(ticket.project.id).contains(assignmentTag)) throw NotFoundException()
         val user = users.findOne(userId) ?: throw NotFoundException()
-        members.findByUserIdAndProjectId(userId, ticket.project.id) ?: throw NotFoundException()
-        val ticketAssignment = AssignedTicketUser.create(ticket, assignmentTag, user)
+        val member = members.findByUserIdAndProjectId(userId, ticket.project.id) ?: throw NotFoundException()
+        if (member.role.equals(ProjectRole.OBSERVER)) {
+            throw TicktagValidationException(listOf(ValidationError("member.role", ValidationErrorDetail.Other("notpermitted"))))
+        }
+        var ticketAssignment: AssignedTicketUser?
+        ticketAssignment = null
+        if (receiveIfExists) {
+            ticketAssignment = ticketAssignments.findOne(AssignedTicketUserKey.create(ticket, assignmentTag, user))
+        }
+        if (ticketAssignment != null) {
+            return TicketAssignmentResult(ticketAssignment)
+        }
+        ticketAssignment = AssignedTicketUser.create(ticket, assignmentTag, user)
         ticketAssignments.insert(ticketAssignment)
         return TicketAssignmentResult(ticketAssignment)
     }
