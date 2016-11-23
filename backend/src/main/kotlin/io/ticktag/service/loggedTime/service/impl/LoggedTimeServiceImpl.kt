@@ -9,6 +9,7 @@ import io.ticktag.service.AuthExpr
 import io.ticktag.service.NotFoundException
 import io.ticktag.service.comment.dto.CreateLoggedTime
 import io.ticktag.service.loggedTime.dto.LoggedTimeResult
+import io.ticktag.service.loggedTime.dto.UpdateLoggedTime
 import io.ticktag.service.loggedTime.service.LoggedTimeService
 import org.springframework.security.access.prepost.PreAuthorize
 import java.util.*
@@ -37,5 +38,24 @@ open class LoggedTimeServiceImpl @Inject constructor(
         val newLoggedTime = LoggedTime.create(duration,comment,category)
         loggedTimes.insert(newLoggedTime)
         return LoggedTimeResult(newLoggedTime)
+    }
+
+    @PreAuthorize(AuthExpr.USER)
+    override fun updateLoggedTime(updateLoggedTime: UpdateLoggedTime, loggedTimeId: UUID): LoggedTimeResult {
+        val loggedTime = loggedTimes.findOne(loggedTimeId) ?: throw NotFoundException()
+        if (updateLoggedTime.time != null){
+            loggedTime.time = updateLoggedTime.time
+        }
+
+        if (updateLoggedTime.categoryId != null){
+            val category = timeCategorys.findOne(updateLoggedTime.categoryId) ?: throw NotFoundException()
+            loggedTime.category = category
+        }
+        return LoggedTimeResult(loggedTime)
+    }
+    @PreAuthorize(AuthExpr.USER)
+    override fun deleteLoggedTime(loggedTimeId: UUID) {
+       val loggedTimeToDelete = loggedTimes.findOne(loggedTimeId) ?: throw NotFoundException()
+        loggedTimes.delete(loggedTimeToDelete)
     }
 }
