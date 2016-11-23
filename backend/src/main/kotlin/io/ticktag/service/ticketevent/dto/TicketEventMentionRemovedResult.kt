@@ -1,15 +1,18 @@
 package io.ticktag.service.ticketevent.dto
 
-import io.ticktag.persistence.ticket.entity.Comment
-import io.ticktag.persistence.ticket.entity.Ticket
 import io.ticktag.persistence.ticket.entity.TicketEventMentionRemoved
+import java.util.*
 
 class TicketEventMentionRemovedResult(e: TicketEventMentionRemoved) : TicketEventResult(e) {
-    val comment: Comment
-    val mentionedTicket: Ticket
+    val commentId: UUID
+    val mentionedTicketId: UUID
+    val mentionedTicketNumber: Int
+    val mentionedTicketTitle: String
 
     init {
-        comment = e.comment
-        mentionedTicket = e.mentionedTicket
+        commentId = e.comment.id
+        mentionedTicketId = e.mentionedTicket.id
+        mentionedTicketNumber = e.mentionedTicket.number
+        mentionedTicketTitle = e.mentionedTicket.title
     }
 }
