@@ -1,6 +1,6 @@
 import {
     Component, Input, ElementRef, AfterViewInit, OnChanges, SimpleChanges,
-    OnDestroy
+    OnDestroy, NgZone
 } from '@angular/core';
 import {
     TicketTagResultJson, UserResultJson, TimeCategoryJson, UserApi,
@@ -51,10 +51,13 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
     private instance: any;
     private commands: grammar.Cmd[];
 
+    private refreshTimeout: number = null;
+
     constructor(
         private element: ElementRef,
         private userApi: UserApi,
-        private apiCallService: ApiCallService) {
+        private apiCallService: ApiCallService,
+        private zone: NgZone) {
     }
 
     ngAfterViewInit(): void {
@@ -68,8 +71,15 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
         });
         this.instance.on('changes', () => {
             this.content = this.instance.getValue();
-            this.updateCommands();  // TODO debounce
-            this.showHints();  // TODO debounce
+            if (this.refreshTimeout === null) {
+                this.refreshTimeout = window.setTimeout(() => {
+                    this.zone.run(() => {
+                        this.refreshTimeout = null;
+                        this.updateCommands();
+                        this.showHints();
+                    });
+                }, 100);
+            }
         });
     }
 
@@ -80,6 +90,8 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
     }
 
     ngOnDestroy(): void {
+        window.clearTimeout(this.refreshTimeout);
+        this.refreshTimeout = null;
         this.instance.toTextArea();
     }
 
