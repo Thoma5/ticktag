@@ -7,8 +7,8 @@ import java.util.*
 data class CreateCommentRequestJson(
         val text: String,
         val ticketId: UUID,
-        val mentionedTicketIds: List<UUID>?,
-        val loggedTime: List<CreateLoggedTimeJson>?
+        val mentionedTicketIds: List<UUID>,
+        val loggedTime: List<CreateLoggedTimeJson>
 ) {
 
 }

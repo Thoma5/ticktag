@@ -90,7 +90,7 @@ class CommentTest : ServiceBaseTest() {
         val ownerTicketId = UUID.fromString("00000000-0003-0000-0000-000000000001")
         val referenceTicketId = UUID.fromString("00000000-0003-0000-0000-000000000002")
         withUser(id) { principal ->
-            val createComment = CreateComment("test",ownerTicketId, listOf(referenceTicketId),null)
+            val createComment = CreateComment("test",ownerTicketId, listOf(referenceTicketId), emptyList())
             val createResult = commentService.createComment(createComment,principal,ownerTicketId)
             assertEquals(createResult.mentionedTicketIds.size,1)
             assertThat(createResult.mentionedTicketIds, `hasItem`(referenceTicketId))
