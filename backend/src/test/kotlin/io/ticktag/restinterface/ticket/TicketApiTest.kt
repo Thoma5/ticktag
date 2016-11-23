@@ -15,9 +15,7 @@ import java.time.Instant
 import java.util.*
 import javax.inject.Inject
 
-/**
- * Created by stefandraskovits on 18/11/2016.
- */
+
 class TicketApiTest : ApiBaseTest() {
     @Inject
     lateinit var ticketController: TicketController
