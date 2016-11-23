@@ -6,8 +6,8 @@ import io.ticktag.service.member.dto.UpdateMember
 import java.util.*
 
 interface MemberService {
-    fun getMember(uID: UUID, pID: UUID): MemberResult
-    fun createMember(uID: UUID, pID: UUID, member: CreateMember): MemberResult
-    fun deleteMember(uID: UUID, pID: UUID)
-    fun updateMember(uID: UUID, pID: UUID, member: UpdateMember): MemberResult
+    fun getMember(userId: UUID, projectId: UUID): MemberResult
+    fun createMember(userId: UUID, projectId: UUID, member: CreateMember): MemberResult
+    fun deleteMember(userId: UUID, projectId: UUID)
+    fun updateMember(userId: UUID, projectId: UUID, member: UpdateMember): MemberResult
 }

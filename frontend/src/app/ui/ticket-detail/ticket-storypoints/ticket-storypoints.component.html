@@ -1,0 +1,10 @@
+<div class='points-container'>
+    <tt-edit-button *ngIf='!editing' (click)='this.editing=true'></tt-edit-button>
+    <tt-edit-textview [(editing)]='editing' [content]='points' (contentChange)='pointsChange.emit($event)' class='points-textview'>
+        <!-- TODO duplication, get rid of it -->
+        <tt-storypoints-textview-read #read class='textview-read'>
+        </tt-storypoints-textview-read>
+        <tt-storypoints-textview-edit #edit class='textview-edit'>
+        </tt-storypoints-textview-edit>
+    </tt-edit-textview>
+</div>

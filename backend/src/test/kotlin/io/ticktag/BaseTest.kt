@@ -5,6 +5,7 @@ import io.ticktag.persistence.LoggedTime.LoggedTimeRepository
 import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.member.MemberRepository
 import io.ticktag.persistence.ticket.AssignmentTagRepository
+import io.ticktag.persistence.timecategory.TimeCategoryRepository
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.Principal
 import io.ticktag.util.tryw
@@ -54,6 +55,8 @@ abstract class BaseTest {
     @Inject lateinit var comments: CommentRepository
     @Inject lateinit var assignmenttags: AssignmentTagRepository
     @Inject lateinit var loggedTimes : LoggedTimeRepository
+    @Inject lateinit var timeCategories: TimeCategoryRepository
+
 
     @Before
     fun setUp() {
@@ -74,7 +77,8 @@ abstract class BaseTest {
             throw RuntimeException("Called withUser even though the security context is already set")
 
         val user = users.findOne(userId) ?: throw RuntimeException("Called withUser with an unknown user UUID")
-        val principal = Principal(user.id, user.role, members, comments, assignmenttags,loggedTimes)
+        val principal = Principal(user.id, user.role, members, comments, assignmenttags, timeCategories, loggedTimes)
+
         SecurityContextHolder.getContext().authentication = PreAuthenticatedAuthenticationToken(principal, null, emptySet())
         try {
             return proc(principal)

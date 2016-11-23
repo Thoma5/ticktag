@@ -1,6 +1,5 @@
-package io.ticktag.restinterface.user.schema
+package io.ticktag.restinterface.ticket.schema
 
-import io.ticktag.persistence.user.entity.Role
 import java.time.Duration
 import java.time.Instant
 import java.util.*
@@ -12,6 +11,7 @@ data class UpdateTicketRequestJson(
         val currentEstimatedTime: Duration?,
         val dueDate: Instant?,
         val description: String?,
+        val ticketAssignments: List<TicketAssignmentJson>?,
         val subTickets: List<CreateTicketRequestJson>?,
         val existingSubTicketIds: List<UUID>?,
         val partenTicketId: UUID?

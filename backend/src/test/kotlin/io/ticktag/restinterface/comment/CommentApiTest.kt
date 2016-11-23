@@ -1,16 +1,14 @@
-package io.ticktag.service.comments
+package io.ticktag.restinterface.comment
 
-import io.ticktag.BaseTest
-import io.ticktag.restinterface.comment.controllers.CommentController
 import io.ticktag.service.NotFoundException
 import io.ticktag.service.ServiceBaseTest
+
 import io.ticktag.service.TicktagValidationException
 import io.ticktag.service.comment.dto.CreateComment
 import io.ticktag.service.comment.dto.UpdateComment
 import io.ticktag.service.comment.service.CommentService
 import io.ticktag.service.ticket.service.TicketService
 import org.junit.Test
-import org.springframework.test.context.web.WebAppConfiguration
 import java.util.*
 import javax.inject.Inject
 

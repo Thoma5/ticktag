@@ -35,11 +35,11 @@ interface MemberRepository : TicktagCrudRepository<Member, MemberKey> {
     @Query("SELECT m " +
             "FROM Member m join m.project p join p.ticketTagGroups g " +
             "WHERE g.id = :ticketTagGroupId AND m.user.id = :userId")
-    fun findByUserIdAndTicketTagGroupId(@Param("userId") id: UUID, @Param("ticketTagGroupId")ticketTagGroupId: UUID): Member?
+    fun findByUserIdAndTicketTagGroupId(@Param("userId") id: UUID, @Param("ticketTagGroupId") ticketTagGroupId: UUID): Member?
 
 
     @Query("SELECT m " +
             "FROM Member m join m.project p join p.ticketTagGroups g join g.ticketTags t " +
             "WHERE t.id = :ticketTagId AND m.user.id = :userId")
-    fun  findByUserIdAndTicketTagId(@Param("userId")id: UUID, @Param("ticketTagId")ticketTagId: UUID): Member?
+    fun findByUserIdAndTicketTagId(@Param("userId") id: UUID, @Param("ticketTagId") ticketTagId: UUID): Member?
 }

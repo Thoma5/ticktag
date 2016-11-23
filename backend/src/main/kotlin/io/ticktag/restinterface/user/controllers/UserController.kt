@@ -24,7 +24,7 @@ open class UserController @Inject constructor(
 
     @PostMapping
     open fun createUser(@RequestBody req: CreateUserRequestJson): UserResultJson {
-        val user = userService.createUser(CreateUser(mail = req.mail, name = req.name, password = req.password, role = req.role, profilePic = req.profilePic))
+        val user = userService.createUser(CreateUser(mail = req.mail, name = req.name, password = req.password, role = req.role, profilePic = req.profilePic, username = req.username))
         return UserResultJson(user)
     }
 
@@ -35,6 +35,11 @@ open class UserController @Inject constructor(
         val user = userService.updateUser(principal, id, UpdateUser(mail = req.mail, name = req.name, password = req.password,
                 role = req.role, profilePic = req.profilePic, oldPassword = req.oldPassword))
         return UserResultJson(user)
+    }
+
+    @GetMapping(value = "/{id}")
+    open fun getUser(@PathVariable(name = "id") id: UUID): UserResultJson {
+        return UserResultJson(userService.getUser(id))
     }
 
     @GetMapping

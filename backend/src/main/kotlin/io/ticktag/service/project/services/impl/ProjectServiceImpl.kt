@@ -3,15 +3,14 @@ package io.ticktag.service.project.services.impl
 import io.ticktag.TicktagService
 import io.ticktag.persistence.project.ProjectRepository
 import io.ticktag.persistence.project.entity.Project
-import io.ticktag.persistence.timecategory.TimeCategoryRepository
 import io.ticktag.service.AuthExpr
 import io.ticktag.service.NotFoundException
-import io.ticktag.service.Principal
 import io.ticktag.service.project.dto.CreateProject
 import io.ticktag.service.project.dto.ProjectResult
 import io.ticktag.service.project.dto.UpdateProject
 import io.ticktag.service.project.services.ProjectService
-import io.ticktag.service.timecategory.dto.TimeCategoryResult
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
@@ -21,8 +20,7 @@ import javax.validation.Valid
 
 @TicktagService
 open class ProjectServiceImpl @Inject constructor(
-        private val projects: ProjectRepository,
-        private val timeCategories: TimeCategoryRepository
+        private val projects: ProjectRepository
 ) : ProjectService {
 
     @PreAuthorize(AuthExpr.ADMIN)
@@ -42,13 +40,17 @@ open class ProjectServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.ADMIN)
-    override fun listAllProjects(name: String, pageable: Pageable): List<ProjectResult> {
-        return projects.findByNameContainingIgnoreCase(name, pageable).content.map(::ProjectResult)
+    override fun listAllProjects(name: String, pageable: Pageable): Page<ProjectResult> {
+        val page = projects.findByNameContainingIgnoreCase(name, pageable)
+        val content = page.content.map(::ProjectResult)
+        return PageImpl(content, pageable, page.totalElements)
     }
 
-    @PreAuthorize(AuthExpr.USER)
-    override fun listUserProjects(principal: Principal, name: String, pageable: Pageable): List<ProjectResult> {
-        return projects.findByMembersUserIdAndNameContainingIgnoreCase(principal.id, name, pageable).content.map(::ProjectResult)
+    @PreAuthorize(AuthExpr.ADMIN_OR_SELF)
+    override fun listUserProjects(userId: UUID, name: String, pageable: Pageable): Page<ProjectResult> {
+        val page = projects.findByMembersUserIdAndNameContainingIgnoreCase(userId, name, pageable)
+        val content = page.content.map(::ProjectResult)
+        return PageImpl(content, pageable, page.totalElements)
     }
 
     @PreAuthorize(AuthExpr.ADMIN)
@@ -75,19 +77,14 @@ open class ProjectServiceImpl @Inject constructor(
         return ProjectResult(projectToUpdate)
     }
 
-    @PreAuthorize(AuthExpr.PROJECT_USER)
-    override fun listProjectTimeCategories(projectId: UUID, name: String, pageable: Pageable): List<TimeCategoryResult> {
-        return timeCategories.findByProjectIdAndNameContainingIgnoreCase(projectId, name, pageable).content.map(::TimeCategoryResult)
-    }
-
     @PreAuthorize(AuthExpr.ADMIN)
     override fun getProjectCount(): Int {
         return projects.count()
     }
 
     @PreAuthorize(AuthExpr.ADMIN_OR_SELF)
-    override fun getUserProjectCount(principal: Principal): Int {
-        return projects.countByMembersUserId(principal.id)
+    override fun getUserProjectCount(userId: UUID): Int {
+        return projects.countByMembersUserId(userId)
     }
 
 }

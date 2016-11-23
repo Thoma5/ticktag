@@ -28,6 +28,8 @@ import * as models from './models';
 export interface CreateUserRequestJson {
     mail: string;
 
+    username: string;
+
     name: string;
 
     password: string;

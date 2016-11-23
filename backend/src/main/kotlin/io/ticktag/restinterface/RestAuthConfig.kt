@@ -5,8 +5,7 @@ import io.ticktag.persistence.LoggedTime.LoggedTimeRepository
 import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.member.MemberRepository
 import io.ticktag.persistence.ticket.AssignmentTagRepository
-import io.ticktag.persistence.ticket.entity.AssignmentTag
-import io.ticktag.persistence.ticket.entity.TicketRepository
+import io.ticktag.persistence.timecategory.TimeCategoryRepository
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.Principal
 import org.slf4j.LoggerFactory
@@ -99,7 +98,7 @@ open class RestSecurityConfigBeans {
     }
 
     @Bean("restAuthFilter")
-    open fun restAuthFilter(@Named("restAuthTokenService") tokenService: TokenService, users: UserRepository, members: MemberRepository, comments: CommentRepository, assignmentTags: AssignmentTagRepository, loggedTimes: LoggedTimeRepository): Filter {
+    open fun restAuthFilter(@Named("restAuthTokenService") tokenService: TokenService, users: UserRepository, members: MemberRepository, comments: CommentRepository, assignmentTags: AssignmentTagRepository, timeCategories: TimeCategoryRepository,loggedTimes: LoggedTimeRepository): Filter {
         return object : OncePerRequestFilter() {
             override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
                 val tokenKey = request.getHeader("X-Authorization")
@@ -110,7 +109,7 @@ open class RestSecurityConfigBeans {
                             val token = RestAuthToken.fromString(rawToken.extendedInformation)
                             val user = users.findOne(token.userId)
                             if (user != null && user.currentToken == token.currentToken) {
-                                val principal = Principal(user.id, user.role, members, comments, assignmentTags,loggedTimes)
+                                val principal = Principal(user.id, user.role, members, comments, assignmentTags, timeCategories, loggedTimes)
                                 val auth = PreAuthenticatedAuthenticationToken(principal, null, emptySet())
                                 auth.details = WebAuthenticationDetails(request)
                                 SecurityContextHolder.getContext().authentication = auth

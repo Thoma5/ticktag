@@ -9,6 +9,7 @@ services:
 server:
   image: maven:3.3.9-jdk-8
   cache:
+    key: "$CI_BUILD_NAME"
     paths:
     - .mvn-cache
   script:
@@ -22,6 +23,7 @@ server:
 client:
   image: node:7.0
   cache:
+    key: "$CI_BUILD_NAME"
     paths:
     - .npm-cache
     - frontend/node_modules

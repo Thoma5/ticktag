@@ -9,7 +9,7 @@ import javax.persistence.*
 @Table(name = "ticket_tag_group")
 open class TicketTagGroup protected constructor() {
     companion object {
-        fun create(name: String, exclusive: Boolean, project: Project) : TicketTagGroup {
+        fun create(name: String, exclusive: Boolean, project: Project): TicketTagGroup {
             val o = TicketTagGroup()
             o.id = UUID.randomUUID()
             o.name = name

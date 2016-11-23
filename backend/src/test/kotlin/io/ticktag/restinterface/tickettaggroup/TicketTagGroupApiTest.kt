@@ -38,7 +38,7 @@ class TicketTagGroupApiTest : ApiBaseTest() {
     }
 
 
-    val ticketTagGroupToInsert = CreateTicketTagGroupRequestJson("test", true, UUID.fromString("00000000-0002-0000-0000-000000000001"))
+    val ticketTagGroupToInsert = CreateTicketTagGroupRequestJson("ticket", true, UUID.fromString("00000000-0002-0000-0000-000000000001"))
 
     @Test
     fun createTicketTagGroup_positive() {
@@ -59,7 +59,7 @@ class TicketTagGroupApiTest : ApiBaseTest() {
     }
 
 
-    val ticketTagGroupToUpdate = UpdateTicketTagGroupRequestJson("test", true, null)
+    val ticketTagGroupToUpdate = UpdateTicketTagGroupRequestJson("ticket", true, null)
     val ticketTagGroupToUpdateId = UUID.fromString("00000000-0009-0000-0000-000000000001")!!
 
     @Test

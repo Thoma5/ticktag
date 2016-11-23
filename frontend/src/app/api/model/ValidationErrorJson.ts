@@ -30,6 +30,8 @@ export interface ValidationErrorJson {
 
     otherInfo?: models.ValidationErrorOtherJson;
 
+    patternInfo?: models.ValidationErrorPatternJson;
+
     sizeInfo?: models.ValidationErrorSizeJson;
 
     type: string;

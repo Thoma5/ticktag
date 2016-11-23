@@ -2,7 +2,6 @@ package io.ticktag.persistence.ticket.entity
 
 import io.ticktag.persistence.project.entity.Project
 import io.ticktag.persistence.user.entity.User
-import org.hibernate.annotations.Cascade
 import java.time.Duration
 import java.time.Instant
 import java.util.*
