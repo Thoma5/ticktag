@@ -10,12 +10,14 @@ import io.ticktag.restinterface.auth.schema.LoginRequestJson
 import io.ticktag.restinterface.user.controllers.UserController
 import io.ticktag.restinterface.user.schema.CreateUserRequestJson
 import io.ticktag.restinterface.user.schema.UpdateUserRequestJson
+import io.ticktag.restinterface.user.schema.UserSort
 import io.ticktag.service.TicktagValidationException
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.not
 import org.junit.Assert.*
 import org.junit.Test
 import org.springframework.security.access.AccessDeniedException
+import java.util.*
 import javax.inject.Inject
 
 class UserApiTest : ApiBaseTest() {
@@ -63,17 +65,14 @@ class UserApiTest : ApiBaseTest() {
             userController.updateUser(id, UpdateUserRequestJson(oldPassword = "aaaa", password = newPassword, mail = mail, role = Role.ADMIN, profilePic = null, name = name), principal)
 
             val user = userController.getUser(id)
-            if (user == null) {
-                fail()
-            } else {
-                assertEquals(user.name, name)
-                assertEquals(user.mail, mail)
-                assertEquals(user.role.name, Role.ADMIN.name)
 
-                val result = authController.login(LoginRequestJson(mail, newPassword))
-                assertNotNull(result.token)
-                assertThat(result.token, `is`(not("")))
-            }
+            assertEquals(user.name, name)
+            assertEquals(user.mail, mail)
+            assertEquals(user.role.name, Role.ADMIN.name)
+
+            val result = authController.login(LoginRequestJson(mail, newPassword))
+            assertNotNull(result.token)
+            assertThat(result.token, `is`(not("")))
         }
     }
 
@@ -89,17 +88,14 @@ class UserApiTest : ApiBaseTest() {
             userController.updateUser(id, UpdateUserRequestJson(oldPassword = "cccc", password = newPassword, mail = mail, role = null, profilePic = null, name = name), principal)
 
             val user = userController.getUser(id)
-            if (user == null) {
-                fail()
-            } else {
-                assertEquals(user.name, name)
-                assertEquals(user.mail, mail)
-                assertEquals(user.role.name, Role.OBSERVER.name) //Can't change own role!
 
-                val result = authController.login(LoginRequestJson(mail, newPassword))
-                assertNotNull(result.token)
-                assertThat(result.token, `is`(not("")))
-            }
+            assertEquals(user.name, name)
+            assertEquals(user.mail, mail)
+            assertEquals(user.role.name, Role.OBSERVER.name) //Can't change own role!
+
+            val result = authController.login(LoginRequestJson(mail, newPassword))
+            assertNotNull(result.token)
+            assertThat(result.token, `is`(not("")))
         }
     }
 
@@ -119,6 +115,17 @@ class UserApiTest : ApiBaseTest() {
         val otherId = OBSERVER_ID
         withUser(ownId) { principal ->
             userController.updateUser(otherId, UpdateUserRequestJson(role = Role.ADMIN, oldPassword = null, password = null, mail = null, profilePic = null, name = null), principal)
+        }
+    }
+
+    @Test
+    fun `listUsersFuzzy should find two users`() {
+        withUser(ADMIN_ID) { ->
+            val users = userController.listUsersFuzzy(UUID.fromString("00000000-0002-0000-0000-000000000001"), "user", listOf(UserSort.NAME_ASC))
+
+            assertEquals(2, users.size)
+            assertEquals("Berta Berta", users[0].name)
+            assertEquals("Mr. A", users[1].name)
         }
     }
 }

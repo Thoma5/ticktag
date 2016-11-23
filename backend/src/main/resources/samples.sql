@@ -44,7 +44,10 @@ INSERT INTO public."user" (id, username, mail, name, password_hash, role, curren
   ('93ef43d9-20b7-461a-b960-2d1e89ba099f', 'heinzl', 'michael.heinzl@test.de', 'Michael Heinzl',
    '$2a$10$.dLg4Vgt7JrP.564p/tPQOm.TLoy3HieFP1ZpnyWVPkJDYrG6r.Ce', 'OBSERVER', '370f4e86-1ebf-4b70-a113-add96d0905e1',
    E'\\x'); --michael-supersecure
-
+INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, profile_pic) VALUES
+  ('00000000-0001-0000-0000-000000000004', 'cannot', 'adsf@asdf.ad', 'I Can Nothing the Second',
+   '$2a$10$mTEkiQq2Wo./aqfekJHPk.5sG8JLWqWYbtMODwk9xQwQp0GtkCiM.', 'USER', '4aa33174-0001-4d33-0000-add96d0905e1',
+   NULL); --aaaa
 
 -- BEGIN all role/project role member permutations DO NOT ALTER
 INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, profile_pic) VALUES
