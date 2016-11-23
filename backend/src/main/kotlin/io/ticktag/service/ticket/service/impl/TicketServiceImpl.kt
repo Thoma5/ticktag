@@ -115,7 +115,7 @@ open class TicketServiceImpl @Inject constructor(
         return ticketResult
     }
 
-    fun implies(p: Boolean, q: Boolean): Boolean {
+    private fun implies(p: Boolean, q: Boolean): Boolean {
         return !p || q
     }
 
