@@ -16,7 +16,7 @@ data class UpdateTicket(
         @field:Size(min = 1, max = 5000) val description: String?,
         val subTickets: List<CreateTicket>?,
         val existingSubTicketIds: List<UUID>?,
-        val parentTicket: UUID?
+        val parentTicketId: UUID?
 
 ) {
     constructor(req: UpdateTicketRequestJson) : this(

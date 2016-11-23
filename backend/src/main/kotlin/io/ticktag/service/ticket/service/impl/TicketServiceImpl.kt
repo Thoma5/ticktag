@@ -51,7 +51,7 @@ open class TicketServiceImpl @Inject constructor(
 
         //implies(q,p) is only false if q is true and p is false
         if (!(implies(wantToSetParentTicket, (dontWantToCreateSubTicketsInThisUpdate && dontWantToReferenceSubTicketsInThisUpdate)))) {
-            throw TicktagValidationException(listOf(ValidationError("updateUser.parentTicket", ValidationErrorDetail.Other("subTickets are Set"))))
+            throw TicktagValidationException(listOf(ValidationError("updateUser.parentTicketId", ValidationErrorDetail.Other("subTickets are Set"))))
         }
 
         val wantToSetSubTickets = (createTicket.subTickets != null && createTicket.subTickets.size != 0) || //creates New SubTickets
@@ -123,7 +123,7 @@ open class TicketServiceImpl @Inject constructor(
         val user = users.findOne(principal.id) ?: throw NotFoundException()
         val ticket = tickets.findOne(ticketId) ?: throw NotFoundException()
 
-        val wantToSetParentTicket = updateTicket.parentTicket != null
+        val wantToSetParentTicket = updateTicket.parentTicketId != null
         val dontWantToCreateSubTicketsInThisUpdate = updateTicket.subTickets == null || (updateTicket.subTickets != null && updateTicket.subTickets.size == 0)
         val dontWantToReferenceSubTicketsInThisUpdate = updateTicket.existingSubTicketIds == null || (updateTicket.existingSubTicketIds != null && updateTicket.existingSubTicketIds.size == 0)
 
@@ -131,38 +131,48 @@ open class TicketServiceImpl @Inject constructor(
 
         //implies(q,p) is only false if q is true and p is false
         if (!(implies(wantToSetParentTicket, (noSubTicketsArePresentBeforeUpdate || (dontWantToCreateSubTicketsInThisUpdate && dontWantToReferenceSubTicketsInThisUpdate))))) {
-            throw TicktagValidationException(listOf(ValidationError("updateUser.parentTicket", ValidationErrorDetail.Other("subTickets are Set"))))
+            throw TicktagValidationException(listOf(ValidationError("updateUser.parentTicketId", ValidationErrorDetail.Other("subTickets are Set"))))
         }
 
         val wantToSetSubTickets = (updateTicket.subTickets != null && updateTicket.subTickets.size != 0) || //creates New SubTickets
                 (updateTicket.existingSubTicketIds != null && updateTicket.existingSubTicketIds.size != 0)  // references SubTickets
-        val dontWantToSetParentTicket = updateTicket.parentTicket == null
+        val dontWantToSetParentTicket = updateTicket.parentTicketId == null
         val noPartentTicketIsPresentBeforeUpdate = ticket.parentTicket == null
 
         if (!(implies(wantToSetSubTickets, (dontWantToSetParentTicket || noPartentTicketIsPresentBeforeUpdate)))) {
             throw TicktagValidationException(listOf(ValidationError("updateUser.subTickets", ValidationErrorDetail.Other("tickets are Set"))))
         }
 
-
         if (updateTicket.title != null) {
             if (ticket.title != updateTicket.title) ticketEvents.insert(TicketEventTitleChanged.create(ticket, user, ticket.title, updateTicket.title))
             ticket.title = updateTicket.title
         }
         if (updateTicket.open != null) {
+            if (ticket.open != updateTicket.open)
+                ticketEvents.insert(TicketEventStateChanged.create(ticket, user, ticket.open, updateTicket.open))
             ticket.open = updateTicket.open
         }
         if (updateTicket.storyPoints != null) {
+            if (ticket.storyPoints != updateTicket.storyPoints)
+                ticketEvents.insert(TicketEventStoryPointsChanged.create(ticket, user, ticket.storyPoints, updateTicket.storyPoints))
             ticket.storyPoints = updateTicket.storyPoints
         }
         if (updateTicket.currentEstimatedTime != null) {
+            if (ticket.currentEstimatedTime != updateTicket.currentEstimatedTime)
+                ticketEvents.insert(TicketEventCurrentEstimatedTimeChanged.create(ticket, user, ticket.currentEstimatedTime, updateTicket.currentEstimatedTime))
             ticket.currentEstimatedTime = updateTicket.currentEstimatedTime
         }
         if (updateTicket.dueDate != null) {
+            if (ticket.dueDate != updateTicket.dueDate)
+                ticketEvents.insert(TicketEventDueDateChanged.create(ticket, user, ticket.dueDate, updateTicket.dueDate))
             ticket.dueDate = updateTicket.dueDate
         }
 
-        if (updateTicket.parentTicket != null) {
-            ticket.parentTicket = tickets.findOne(updateTicket.parentTicket)
+        if (updateTicket.parentTicketId != null) {
+            val parentTicket = tickets.findOne(updateTicket.parentTicketId) ?: throw NotFoundException()
+            if (ticket.parentTicket != parentTicket)
+                ticketEvents.insert(TicketEventParentChanged.create(ticket, user, ticket.parentTicket, parentTicket))
+            ticket.parentTicket = parentTicket
         }
 
         //Comment
