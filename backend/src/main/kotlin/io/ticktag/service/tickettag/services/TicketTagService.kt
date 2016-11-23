@@ -12,5 +12,5 @@ interface TicketTagService {
     fun listTicketTagsInGroup(ticketTagGroupId: UUID): List<TicketTagResult>
     fun createTicketTag(ticketTag: CreateTicketTag, ticketTagGroupId: UUID): TicketTagResult
     fun deleteTicketTag(id: UUID)
-    fun updateTicketTag(id: UUID, ticketTag: UpdateTicketTag) : TicketTagResult
+    fun updateTicketTag(id: UUID, ticketTag: UpdateTicketTag): TicketTagResult
 }

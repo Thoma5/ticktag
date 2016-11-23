@@ -3,8 +3,8 @@ import io.ticktag.restinterface.ApiBaseTest
 import io.ticktag.restinterface.comment.controllers.CommentController
 import io.ticktag.restinterface.comment.schema.UpdateCommentRequestJson
 import io.ticktag.restinterface.ticket.controllers.TicketController
+import io.ticktag.restinterface.ticket.schema.UpdateTicketRequestJson
 import io.ticktag.restinterface.ticketevent.controllers.TicketEventController
-import io.ticktag.restinterface.user.schema.UpdateTicketRequestJson
 import io.ticktag.service.Principal
 import org.junit.Assert
 import org.junit.Test
@@ -23,12 +23,12 @@ class TicketEventApiTest : ApiBaseTest() {
 
 
     fun updateTicket(principal: Principal) {
-        ticketController.updateTicket(UpdateTicketRequestJson("New Title", false, 20, Duration.ofMinutes(50), Instant.parse("2016-11-16T16:00:00Z"), "Added Models to Layout", null, null, null), ticketId, principal)
+        ticketController.updateTicket(UpdateTicketRequestJson("New Title", false, 20, Duration.ofMinutes(50), Instant.parse("2016-11-16T16:00:00Z"), "Added Models to Layout", null, null, null, null), ticketId, principal)
     }
 
     fun keepTicketSame(principal: Principal) {
         val ticket = ticketController.getTicket(ticketId)
-        ticketController.updateTicket(UpdateTicketRequestJson(ticket.title, true, ticket.storyPoints, ticket.currentEstimatedTime, ticket.dueDate, ticket.description, null, null, null), ticketId, principal)
+        ticketController.updateTicket(UpdateTicketRequestJson(ticket.title, true, ticket.storyPoints, ticket.currentEstimatedTime, ticket.dueDate, ticket.description, null, null, null, null), ticketId, principal)
     }
 
     fun updateComment(principal: Principal) {
@@ -55,7 +55,7 @@ class TicketEventApiTest : ApiBaseTest() {
         withUser(USER_ID) { principal ->
             val sizeBefore = ticketEventController.listTicketEvents(ticketId).size
             val ticket = ticketController.getTicket(ticketId)
-            ticketController.updateTicket(UpdateTicketRequestJson("New Title", true, ticket.storyPoints, ticket.currentEstimatedTime, ticket.dueDate, ticket.description, null, null, null), ticketId, principal)
+            ticketController.updateTicket(UpdateTicketRequestJson("New Title", true, ticket.storyPoints, ticket.currentEstimatedTime, ticket.dueDate, ticket.description, null, null, null, null), ticketId, principal)
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
         }
     }
@@ -74,7 +74,7 @@ class TicketEventApiTest : ApiBaseTest() {
         withUser(USER_ID) { principal ->
             val sizeBefore = ticketEventController.listTicketEvents(ticketId).size
             val ticket = ticketController.getTicket(ticketId)
-            ticketController.updateTicket(UpdateTicketRequestJson(ticket.title, true, ticket.storyPoints, ticket.currentEstimatedTime, ticket.dueDate, "New Description", null, null, null), ticketId, principal)
+            ticketController.updateTicket(UpdateTicketRequestJson(ticket.title, true, ticket.storyPoints, ticket.currentEstimatedTime, ticket.dueDate, "New Description", null, null, null, null), ticketId, principal)
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
         }
     }

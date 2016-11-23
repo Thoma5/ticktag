@@ -117,7 +117,7 @@ class UserApiTest : ApiBaseTest() {
     fun test_checkUpdate_other_user_shouldFail() {
         val ownId = USER_ID
         val otherId = OBSERVER_ID
-           withUser(ownId) { principal ->
+        withUser(ownId) { principal ->
             userController.updateUser(otherId, UpdateUserRequestJson(role = Role.ADMIN, oldPassword = null, password = null, mail = null, profilePic = null, name = null), principal)
         }
     }

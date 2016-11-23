@@ -11,16 +11,13 @@ import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.AuthExpr
 import io.ticktag.service.NotFoundException
 import io.ticktag.service.Principal
-import io.ticktag.service.ValidationError
 import io.ticktag.service.comment.dto.CommentResult
 import io.ticktag.service.comment.dto.CreateComment
-
 import io.ticktag.service.comment.dto.UpdateComment
 import io.ticktag.service.comment.service.CommentService
 import org.springframework.context.annotation.Description
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
-import org.springframework.security.core.annotation.AuthenticationPrincipal
 import java.time.Instant
 import java.util.*
 import javax.inject.Inject

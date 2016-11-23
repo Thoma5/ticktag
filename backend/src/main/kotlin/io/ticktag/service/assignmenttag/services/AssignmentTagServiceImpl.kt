@@ -6,6 +6,7 @@ import io.ticktag.persistence.project.ProjectRepository
 import io.ticktag.persistence.ticket.AssignmentTagRepository
 import io.ticktag.persistence.ticket.entity.AssignmentTag
 import io.ticktag.service.*
+import io.ticktag.service.assignmenttag.AssignmentTagService
 import io.ticktag.service.assignmenttag.dto.AssignmentTagResult
 import io.ticktag.service.assignmenttag.dto.CreateAssignmentTag
 import io.ticktag.service.assignmenttag.dto.UpdateAssignmentTag
@@ -23,8 +24,8 @@ open class AssignmentTagServiceImpl @Inject constructor(
 ) : AssignmentTagService {
 
     @PreAuthorize(AuthExpr.PROJECT_USER)
-    override fun listAssignmentTags(@P("authProjectId") pid: UUID): List<AssignmentTagResult> {
-        return assignmentTags.findByProjectId(pid).map(::AssignmentTagResult)
+    override fun listAssignmentTags(@P("authProjectId") projectId: UUID): List<AssignmentTagResult> {
+        return assignmentTags.findByProjectId(projectId).map(::AssignmentTagResult)
     }
 
     @PreAuthorize(AuthExpr.READ_ASSIGNMENTTAG)
@@ -35,7 +36,7 @@ open class AssignmentTagServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.PROJECT_USER)
     override fun createAssignmentTag(@P("authProjectId") projectId: UUID, @Valid createAssignmentTag: CreateAssignmentTag): AssignmentTagResult {
-        val project = projects.findOne(createAssignmentTag.pID) ?: throw NotFoundException()
+        val project = projects.findOne(createAssignmentTag.projectId) ?: throw NotFoundException()
 
         val normalizedName = nameNormalizationLibrary.normalize(createAssignmentTag.name)
         if (assignmentTags.findByNormalizedNameAndProjectId(normalizedName, projectId) != null) {
@@ -68,7 +69,7 @@ open class AssignmentTagServiceImpl @Inject constructor(
     /** No server side search
     @PreAuthorize(AuthExpr.PROJECT_USER)
     override fun searchAssignmentTags(@P("authProjectId") pid: UUID, name: String): List<AssignmentTagResult> {
-        return assignmentTags.findByProjectIdAndNameLikeIgnoreCase(pid, name).map(::AssignmentTagResult)
+    return assignmentTags.findByProjectIdAndNameLikeIgnoreCase(pid, name).map(::AssignmentTagResult)
     }*/
 
     /** Implement it when needed, makes no sense right now

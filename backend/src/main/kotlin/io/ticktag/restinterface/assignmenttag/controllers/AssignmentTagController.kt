@@ -2,10 +2,12 @@ package io.ticktag.restinterface.assignmenttag.controllers
 
 import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
-import io.ticktag.restinterface.assignmenttag.schema.*
-import io.ticktag.service.assignmenttag.dto.*
-import io.ticktag.service.assignmenttag.services.AssignmentTagService
-
+import io.ticktag.restinterface.assignmenttag.schema.AssignmentTagResultJson
+import io.ticktag.restinterface.assignmenttag.schema.CreateAssignmentTagRequestJson
+import io.ticktag.restinterface.assignmenttag.schema.UpdateAssignmentRequestJson
+import io.ticktag.service.assignmenttag.AssignmentTagService
+import io.ticktag.service.assignmenttag.dto.CreateAssignmentTag
+import io.ticktag.service.assignmenttag.dto.UpdateAssignmentTag
 import org.springframework.web.bind.annotation.*
 import java.util.*
 import javax.inject.Inject
@@ -26,7 +28,7 @@ open class AssignmentTagController @Inject constructor(
     @PostMapping
     open fun createAssignmentTag(
             @RequestBody req: CreateAssignmentTagRequestJson): AssignmentTagResultJson {
-        val assignmentTag = assignmentTagService.createAssignmentTag(req.projectId, CreateAssignmentTag(pID = req.projectId, name = req.name, color = req.color))
+        val assignmentTag = assignmentTagService.createAssignmentTag(req.projectId, CreateAssignmentTag(projectId = req.projectId, name = req.name, color = req.color))
         return AssignmentTagResultJson(assignmentTag)
     }
 
@@ -47,7 +49,7 @@ open class AssignmentTagController @Inject constructor(
 
     @GetMapping(value = "project/{projectId}/search/{name}")
     open fun searchAssignmentTags(@RequestParam(name = "projectId") pid: UUID, @RequestParam(name = "name") name: String): List<AssignmentTagResultJson> {
-        return assignmentTagService.searchAssignmentTags(pid, name).map(::AssignmentTagResultJson)
+    return assignmentTagService.searchAssignmentTags(pid, name).map(::AssignmentTagResultJson)
     }**/
 
     /**

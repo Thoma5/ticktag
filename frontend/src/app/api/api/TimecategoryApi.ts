@@ -101,28 +101,12 @@ export class TimecategoryApi {
     }
 
     /**
-     * getTimeCategoryCount
-     * 
-     */
-    public getTimeCategoryCountUsingGET(extraHttpRequestParams?: any): Observable<models.CountJson> {
-        return this.getTimeCategoryCountUsingGETWithHttpInfo(extraHttpRequestParams)
-            .map((response: Response) => {
-                if (response.status === 204) {
-                    return undefined;
-                } else {
-                    return response.json();
-                }
-            });
-    }
-
-    /**
      * getTimeCategory
      * 
      * @param id id
-     * @param usage usage
      */
-    public getTimeCategoryUsingGET(id: string, usage?: boolean, extraHttpRequestParams?: any): Observable<models.TimeCategoryJson> {
-        return this.getTimeCategoryUsingGETWithHttpInfo(id, usage, extraHttpRequestParams)
+    public getTimeCategoryUsingGET(id: string, extraHttpRequestParams?: any): Observable<models.TimeCategoryJson> {
+        return this.getTimeCategoryUsingGETWithHttpInfo(id, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -133,16 +117,12 @@ export class TimecategoryApi {
     }
 
     /**
-     * listTimeCategories
+     * listProjectTimeCategories
      * 
-     * @param page page
-     * @param size size
-     * @param order order
-     * @param asc asc
-     * @param name name
+     * @param projectId projectId
      */
-    public listTimeCategoriesUsingGET(page?: number, size?: number, order?: string, asc?: boolean, name?: string, extraHttpRequestParams?: any): Observable<Array<models.TimeCategoryJson>> {
-        return this.listTimeCategoriesUsingGETWithHttpInfo(page, size, order, asc, name, extraHttpRequestParams)
+    public listProjectTimeCategoriesUsingGET(projectId: string, extraHttpRequestParams?: any): Observable<Array<models.TimeCategoryJson>> {
+        return this.listProjectTimeCategoriesUsingGETWithHttpInfo(projectId, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -176,7 +156,7 @@ export class TimecategoryApi {
      * @param req req
      */
     public createTimeCategoryUsingPOSTWithHttpInfo(req: models.CreateTimeCategoryRequestJson, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/timecategory`;
+        const path = this.basePath + `/timecategory/`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -261,51 +241,11 @@ export class TimecategoryApi {
     }
 
     /**
-     * getTimeCategoryCount
-     * 
-     */
-    public getTimeCategoryCountUsingGETWithHttpInfo(extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/timecategory/count`;
-
-        let queryParameters = new URLSearchParams();
-        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-
-
-        // to determine the Content-Type header
-        let consumes: string[] = [
-            'application/json'
-        ];
-
-        // to determine the Accept header
-        let produces: string[] = [
-            'application/json'
-        ];
-        
-            
-
-
-
-        let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Get,
-            headers: headers,
-            search: queryParameters
-        });
-        
-        // https://github.com/swagger-api/swagger-codegen/issues/4037
-        if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
-        }
-
-        return this.http.request(path, requestOptions);
-    }
-
-    /**
      * getTimeCategory
      * 
      * @param id id
-     * @param usage usage
      */
-    public getTimeCategoryUsingGETWithHttpInfo(id: string, usage?: boolean, extraHttpRequestParams?: any): Observable<Response> {
+    public getTimeCategoryUsingGETWithHttpInfo(id: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/timecategory/${id}`;
 
         let queryParameters = new URLSearchParams();
@@ -314,9 +254,6 @@ export class TimecategoryApi {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling getTimeCategoryUsingGET.');
         }
-        if (usage !== undefined) {
-            queryParameters.set('usage', <any>usage);
-        }
 
 
         // to determine the Content-Type header
@@ -348,33 +285,21 @@ export class TimecategoryApi {
     }
 
     /**
-     * listTimeCategories
+     * listProjectTimeCategories
      * 
-     * @param page page
-     * @param size size
-     * @param order order
-     * @param asc asc
-     * @param name name
+     * @param projectId projectId
      */
-    public listTimeCategoriesUsingGETWithHttpInfo(page?: number, size?: number, order?: string, asc?: boolean, name?: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/timecategory`;
+    public listProjectTimeCategoriesUsingGETWithHttpInfo(projectId: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/timecategory/`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        if (page !== undefined) {
-            queryParameters.set('page', <any>page);
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling listProjectTimeCategoriesUsingGET.');
         }
-        if (size !== undefined) {
-            queryParameters.set('size', <any>size);
-        }
-        if (order !== undefined) {
-            queryParameters.set('order', <any>order);
-        }
-        if (asc !== undefined) {
-            queryParameters.set('asc', <any>asc);
-        }
-        if (name !== undefined) {
-            queryParameters.set('name', <any>name);
+        if (projectId !== undefined) {
+            queryParameters.set('projectId', <any>projectId);
         }
 
 

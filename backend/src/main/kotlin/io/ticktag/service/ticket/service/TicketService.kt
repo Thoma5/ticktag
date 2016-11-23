@@ -1,9 +1,9 @@
 package io.ticktag.service.ticket.service
 
 import io.ticktag.service.Principal
-import io.ticktag.service.project.dto.CreateTicket
-import io.ticktag.service.project.dto.UpdateTicket
+import io.ticktag.service.ticket.dto.CreateTicket
 import io.ticktag.service.ticket.dto.TicketResult
+import io.ticktag.service.ticket.dto.UpdateTicket
 import java.util.*
 
 

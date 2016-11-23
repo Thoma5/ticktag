@@ -1,13 +1,9 @@
 package io.ticktag.service.user.services
 
 import io.ticktag.ADMIN_ID
-import io.ticktag.OBSERVER_ID
-import io.ticktag.USER_ID
-import io.ticktag.persistence.user.entity.Role
 import io.ticktag.service.ServiceBaseTest
-import io.ticktag.service.TicktagValidationException
 import io.ticktag.service.user.dto.UpdateUser
-import org.junit.Assert.*
+import org.junit.Assert.assertNotEquals
 import org.junit.Test
 import javax.inject.Inject
 
