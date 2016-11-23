@@ -7,9 +7,9 @@
     <div class="itwill">
       <p *ngFor="let command of commands" [ngSwitch]="command.cmd">
         <span *ngSwitchCase="'time'">This comment will <code>log {{ command.minutes }} minutes</code> of <code>{{ command.category }}</code> time.</span>
-        <span *ngSwitchCase="'assign'">This comment will <code>assign {{ command.user }}</code> with the tag {{ command.tag }}.</span>
+        <span *ngSwitchCase="'assign'">This comment will <code>assign {{ command.user }}</code> with the tag <code>{{ command.tag }}</code>.</span>
         <span *ngSwitchCase="'unassign'">
-          <span *ngIf="command.tag">This comment will <code>unassign {{ command.user }}</code> with the tag {{ command.tag }}.</span>
+          <span *ngIf="command.tag">This comment will <code>unassign {{ command.user }}</code> with the tag <code>{{ command.tag }}</code>.</span>
           <span *ngIf="!command.tag">This comment will completely <code>unassign {{ command.user }}</code></span>
         </span>
         <span *ngSwitchCase="'close'">This comment will <code>close</code> this ticket.</span>

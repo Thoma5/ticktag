@@ -1,8 +1,11 @@
 import {
-    Component, Input, Output, EventEmitter, ElementRef, AfterViewInit, OnInit,
-    NgZone, ViewChild, OnChanges, SimpleChanges, OnDestroy
+    Component, Input, ElementRef, AfterViewInit, OnChanges, SimpleChanges,
+    OnDestroy
 } from '@angular/core';
-import { TicketTagResultJson, UserResultJson, TimeCategoryJson, UserApi } from '../../api';
+import {
+    TicketTagResultJson, UserResultJson, TimeCategoryJson, UserApi,
+    AssignmentTagResultJson
+} from '../../api';
 import { ApiCallService } from '../../service';
 import * as grammar from './grammar';
 
@@ -42,6 +45,7 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
     @Input() allTicketTags = new Array<TicketTagResultJson>();
     @Input() ticketTags = new Array<TicketTagResultJson>();
     @Input() allTimeCategories = new Array<TimeCategoryJson>();
+    @Input() allAssignmentTags = new Array<AssignmentTagResultJson>();
 
     private content: string;
     private instance: any;
@@ -144,7 +148,10 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
                             ['USERNAME_ASC', 'NAME_ASC', 'MAIL_ASC'],
                             p))
                         .map(users => ({
-                            list: users.map(user => ({text: user.username, displayText: `${user.username} (${user.name} <${user.mail}>)`})),
+                            list: users.map(user => ({
+                                text: user.username + '@',
+                                displayText: `${user.username} (${user.name} <${user.mail}>)`,
+                            })),
                             from: {line: cursor.line, ch: cursor.ch - isAssign[1].length},
                             to: cursor,
                             selectedHint: 0,
@@ -155,11 +162,25 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
             return;
         }
 
+        let isAssignTag = new RegExp(
+            String.raw`${grammar.SEPERATOR_FRONT_REGEX}!assign:${grammar.USER_REGEX}?@(${grammar.TAG_LETTER}*)$`,
+            'ui'
+        ).exec(text);
+        if (isAssignTag) {
+            let tags = this.allAssignmentTags.slice();
+            tags.sort(using<AssignmentTagResultJson>(tag => tag.normalizedName));
+            this.instance.showHint({
+                hint: () => ({
+                    list: tags.map(tag => tag.normalizedName + ' '),
+                    from: {line: cursor.line, ch: cursor.ch - isAssignTag[1].length},
+                    to: cursor,
+                    selectedHint: tags.findIndex(tag => tag.normalizedName.startsWith(isAssignTag[1])),
+                }),
+            });
+            return;
+        }
+
         // Hide hints
-        this.instance.showHint({
-            hint: () => {
-                return { list: new Array<string>() };
-            }
-        });
+        this.instance.showHint({ hint: () => ({ list: new Array<string>() }) });
     }
 }
