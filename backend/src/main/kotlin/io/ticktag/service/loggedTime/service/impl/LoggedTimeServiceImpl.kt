@@ -33,6 +33,11 @@ open class LoggedTimeServiceImpl @Inject constructor(
         return loggedTimes.findByProjectIdOrUserIdOrCategoryId(projedId,userId,categoryId).map(::LoggedTimeResult)
     }
 
+    @PreAuthorize(AuthExpr.READ_TIME_LOG)
+    override fun getLoggedTime( @P("loggedTimeId") loggedTimeId: UUID): LoggedTimeResult {
+        return LoggedTimeResult(loggedTimes.findOne(loggedTimeId) ?: throw NotFoundException())
+    }
+
     @PreAuthorize(AuthExpr.EDIT_COMMENT)
     override fun createLoggedTime(createLoggedTime: CreateLoggedTime, @P("authCommentId")commentId: UUID): LoggedTimeResult {
         val duration = createLoggedTime.time
@@ -45,7 +50,7 @@ open class LoggedTimeServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.EDIT_TIME_LOG)
-    override fun updateLoggedTime(updateLoggedTime: UpdateLoggedTime, loggedTimeId: UUID): LoggedTimeResult {
+    override fun updateLoggedTime(updateLoggedTime: UpdateLoggedTime, @P("authLoggedTimeId") loggedTimeId: UUID): LoggedTimeResult {
         val loggedTime = loggedTimes.findOne(loggedTimeId) ?: throw NotFoundException()
         if (updateLoggedTime.time != null){
             loggedTime.time = updateLoggedTime.time
@@ -59,7 +64,7 @@ open class LoggedTimeServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.EDIT_TIME_LOG)
-    override fun deleteLoggedTime(loggedTimeId: UUID) {
+    override fun deleteLoggedTime( @P("authLoggedTimeId") loggedTimeId: UUID) {
        val loggedTimeToDelete = loggedTimes.findOne(loggedTimeId) ?: throw NotFoundException()
         loggedTimes.delete(loggedTimeToDelete)
     }

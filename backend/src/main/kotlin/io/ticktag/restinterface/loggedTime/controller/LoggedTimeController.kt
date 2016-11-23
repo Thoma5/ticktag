@@ -22,13 +22,20 @@ open class LoggedTimeController @Inject constructor(
 ) {
 
     @GetMapping(value = "/{id}")
+    open fun getLoggedTimesForId(
+            @RequestParam loggTimeId: UUID): LoggedTimeResultJson {
+        val loggedTime = loggedTimeService.getLoggedTime(loggTimeId)
+        return LoggedTimeResultJson(loggedTime)
+    }
+
+    @GetMapping
     open fun getLoggedTimesForComment(
             @RequestParam commentId: UUID): List<LoggedTimeResultJson> {
         val loggedTime = loggedTimeService.listLoggedTimeForComment(commentId)
         return loggedTime.map(::LoggedTimeResultJson)
     }
 
-    @GetMapping()
+    @GetMapping(value="/search")
     open fun getLoggedTimesForProjectAndUserAndCategory(
             @RequestParam(required = false) projectId: UUID?,
             @RequestParam(required = false) userId: UUID?,
