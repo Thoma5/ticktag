@@ -1,4 +1,4 @@
-package io.ticktag.service.comments
+package io.ticktag.restinterface.comment
 
 import io.ticktag.service.NotFoundException
 import io.ticktag.service.ServiceBaseTest

@@ -8,10 +8,11 @@ import javax.persistence.*
 @Table(name = "time_category")
 open class TimeCategory protected constructor() {
     companion object {
-        fun create(name: String, project: Project): TimeCategory {
+        fun create(name: String, normalizedName: String, project: Project): TimeCategory {
             val o = TimeCategory()
             o.id = UUID.randomUUID()
             o.name = name
+            o.normalizedName = normalizedName
             o.project = project
             o.loggedTimes = mutableListOf()
             o.loggedTimeAddedEvents = mutableListOf()
@@ -27,6 +28,9 @@ open class TimeCategory protected constructor() {
 
     @Column(name = "name", nullable = false)
     lateinit open var name: String
+
+    @Column(name = "normalized_name", nullable = false)
+    lateinit open var normalizedName: String
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", referencedColumnName = "id", nullable = false)

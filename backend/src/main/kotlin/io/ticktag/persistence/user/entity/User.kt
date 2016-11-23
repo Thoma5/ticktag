@@ -9,17 +9,18 @@ import javax.persistence.*
 @Table(name = "user")
 open class User protected constructor() {
     companion object {
-        fun create(mail: String, passwordHash: String, name: String, role: Role, currentToken: UUID, profilePic: ByteArray?): User {
-            return createWithId(UUID.randomUUID(), mail, passwordHash, name, role, currentToken, profilePic)
+        fun create(mail: String, passwordHash: String, name: String, username: String, role: Role, currentToken: UUID, profilePic: ByteArray?): User {
+            return createWithId(UUID.randomUUID(), mail, passwordHash, name, username, role, currentToken, profilePic)
         }
 
-        fun createWithId(uuid: UUID, mail: String, passwordHash: String, name: String, role: Role,
+        fun createWithId(uuid: UUID, mail: String, passwordHash: String, name: String, username: String, role: Role,
                          currentToken: UUID, profilePic: ByteArray?): User {
             val u = User()
             u.id = uuid
             u.mail = mail
             u.passwordHash = passwordHash
             u.name = name
+            u.username = username
             u.role = role
             u.currentToken = currentToken
             u.profilePic = profilePic
@@ -32,6 +33,8 @@ open class User protected constructor() {
             u.userRemovedEvents = mutableListOf()
             return u
         }
+
+        const val USERNAME_REGEX = "^[a-z0-9_]{3,30}$"
     }
 
     @Id
@@ -47,6 +50,9 @@ open class User protected constructor() {
 
     @Column(name = "name", nullable = false)
     lateinit open var name: String
+
+    @Column(name = "username", nullable = false)
+    lateinit open var username: String
 
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)

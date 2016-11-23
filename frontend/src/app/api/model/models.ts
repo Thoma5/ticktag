@@ -36,6 +36,7 @@ export * from './UpdateUserRequestJson';
 export * from './UserResultJson';
 export * from './ValidationErrorJson';
 export * from './ValidationErrorOtherJson';
+export * from './ValidationErrorPatternJson';
 export * from './ValidationErrorSizeJson';
 export * from './WhoamiResultJson';
 

@@ -1,4 +1,4 @@
-package  io.ticktag.service.assignmenttag.services
+package  io.ticktag.service.assignmenttag
 
 
 import io.ticktag.service.assignmenttag.dto.AssignmentTagResult
@@ -12,5 +12,5 @@ interface AssignmentTagService {
     fun getAssignmentTag(id: UUID): AssignmentTagResult
     fun updateAssignmentTag(id: UUID, assignmentTag: UpdateAssignmentTag): AssignmentTagResult
     fun listAssignmentTags(projectId: UUID): List<AssignmentTagResult>
-    fun searchAssignmentTags(projectId: UUID, name: String): List<AssignmentTagResult>
+    //fun searchAssignmentTags(projectId: UUID, name: String): List<AssignmentTagResult> //No need
 }

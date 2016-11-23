@@ -7,7 +7,6 @@ import io.ticktag.restinterface.project.schema.CreateProjectRequestJson
 import io.ticktag.restinterface.project.schema.ProjectResultJson
 import io.ticktag.restinterface.project.schema.ProjectSort
 import io.ticktag.restinterface.project.schema.UpdateProjectRequestJson
-import io.ticktag.restinterface.tickettaggroup.schema.TicketTagGroupResultJson
 import io.ticktag.service.Principal
 import io.ticktag.service.project.dto.CreateProject
 import io.ticktag.service.project.dto.UpdateProject
@@ -70,11 +69,6 @@ open class ProjectController @Inject constructor(
                            @RequestBody req: UpdateProjectRequestJson): ProjectResultJson {
         val project = projectService.updateProject(id, UpdateProject(req.name, req.description, req.icon))
         return ProjectResultJson(project)
-    }
-
-    @GetMapping(value = "/{id}/tickettaggroups")
-    open fun listTicketTagGroups(@PathVariable(name = "id") id: UUID): List<TicketTagGroupResultJson> {
-        return ticketTagGroupService.listTicketTagGroups(id).map(::TicketTagGroupResultJson)
     }
 
     @GetMapping(value = "/count")

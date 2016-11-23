@@ -8,6 +8,7 @@ import io.ticktag.restinterface.tickettag.schema.UpdateTicketTagRequestJson
 import io.ticktag.service.tickettag.dto.CreateTicketTag
 import io.ticktag.service.tickettag.dto.UpdateTicketTag
 import io.ticktag.service.tickettag.services.TicketTagService
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
 import javax.inject.Inject
@@ -40,5 +41,23 @@ open class TicketTagController @Inject constructor(
     @DeleteMapping(value = "/{id}")
     open fun deleteTicketTag(@PathVariable(name = "id") id: UUID) {
         ticketTagService.deleteTicketTag(id)
+    }
+
+    @GetMapping(value = "/")
+    open fun listTicketTags(@RequestParam(name = "ticketTagGroupId", required = false) ticketTagGroupId: UUID?,
+                            @RequestParam(name = "projectId", required = false) projectId: UUID?): ResponseEntity<List<TicketTagResultJson>> {
+        val bothParamSet = projectId != null && ticketTagGroupId != null
+        val noParamSet = projectId == null && ticketTagGroupId == null
+        if (bothParamSet || noParamSet) {
+            return ResponseEntity.badRequest().body(null)
+        } else if (ticketTagGroupId != null) {
+            val list = ticketTagService.listTicketTagsInGroup(ticketTagGroupId).map(::TicketTagResultJson)
+            return ResponseEntity.ok(list)
+        } else if (projectId != null) {
+            val list = ticketTagService.listTicketTagsInProject(projectId).map(::TicketTagResultJson)
+            return ResponseEntity.ok(list)
+        } else { // else is unnecessary
+            return ResponseEntity.badRequest().body(null)
+        }
     }
 }

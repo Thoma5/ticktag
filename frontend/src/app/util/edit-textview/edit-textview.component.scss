@@ -1,0 +1,27 @@
+@import '../../../style/constants.scss';
+
+$edit-background-color: palette(Grey, 100);
+
+.textview-container {
+    width: 100%;
+}
+
+.reading {
+    width: 100%;
+}
+
+.editing {
+    width: 100%;
+    background-color: $edit-background-color;
+
+    textarea {
+        width: 100%;
+        height: auto;
+        overflow: hidden;
+        border: none;
+        background-color: transparent;
+        resize: none;
+        outline: none;
+        box-shadow: none;
+    }
+}

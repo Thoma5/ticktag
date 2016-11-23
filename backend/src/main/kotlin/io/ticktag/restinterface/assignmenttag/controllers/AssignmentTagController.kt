@@ -5,9 +5,9 @@ import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.assignmenttag.schema.AssignmentTagResultJson
 import io.ticktag.restinterface.assignmenttag.schema.CreateAssignmentTagRequestJson
 import io.ticktag.restinterface.assignmenttag.schema.UpdateAssignmentRequestJson
+import io.ticktag.service.assignmenttag.AssignmentTagService
 import io.ticktag.service.assignmenttag.dto.CreateAssignmentTag
 import io.ticktag.service.assignmenttag.dto.UpdateAssignmentTag
-import io.ticktag.service.assignmenttag.services.AssignmentTagService
 import org.springframework.web.bind.annotation.*
 import java.util.*
 import javax.inject.Inject
@@ -40,21 +40,22 @@ open class AssignmentTagController @Inject constructor(
         return AssignmentTagResultJson(assignmentTag)
     }
 
-    @GetMapping(value = "project/{projectId}")
+    @GetMapping(value = "/")
     open fun listAssignmentTags(@RequestParam(name = "projectId") req: UUID): List<AssignmentTagResultJson> {
         return assignmentTagService.listAssignmentTags(req).map(::AssignmentTagResultJson)
     }
 
+    /** No search function server side
+
     @GetMapping(value = "project/{projectId}/search/{name}")
-    open fun searchAssignmentTags(@RequestParam(name = "projectId") projectId: UUID, @RequestParam(name = "name") name: String): List<AssignmentTagResultJson> {
-        return assignmentTagService.searchAssignmentTags(projectId, name).map(::AssignmentTagResultJson)
-    }
+    open fun searchAssignmentTags(@RequestParam(name = "projectId") pid: UUID, @RequestParam(name = "name") name: String): List<AssignmentTagResultJson> {
+    return assignmentTagService.searchAssignmentTags(pid, name).map(::AssignmentTagResultJson)
+    }**/
+
     /**
     @DeleteMapping(value = "{id}")
     open fun deleteAssignmentTag(
     @PathVariable id: UUID) {
     assignmentTagService.deleteAssignmentTag(id)
     }**/
-
-
 }

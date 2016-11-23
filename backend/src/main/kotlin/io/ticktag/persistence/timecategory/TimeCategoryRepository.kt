@@ -7,5 +7,6 @@ import java.util.*
 
 @TicktagRepository
 interface TimeCategoryRepository : TicktagCrudRepository<TimeCategory, UUID> {
+    fun findByNormalizedNameAndProjectId(normalizedName: String, projectId: UUID): TimeCategory?
     fun findByProjectId(projectId: UUID): List<TimeCategory>
 }

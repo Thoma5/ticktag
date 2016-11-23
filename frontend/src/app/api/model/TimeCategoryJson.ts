@@ -30,6 +30,8 @@ export interface TimeCategoryJson {
 
     name: string;
 
+    normalizedName: string;
+
     projectId: string;
 
 }

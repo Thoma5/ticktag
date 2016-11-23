@@ -14,6 +14,7 @@ import org.springframework.core.annotation.Order
 import javax.validation.ConstraintViolation
 import javax.validation.Valid
 import javax.validation.Validator
+import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 
 @Configuration
@@ -58,6 +59,7 @@ class ValidateServiceAspect(private val validator: Validator) {
                     val detail = when(ann) {
                         is Size -> ValidationErrorDetail.Size(ann.min, ann.max)
                         is Length -> ValidationErrorDetail.Size(ann.min, ann.max)
+                        is Pattern -> ValidationErrorDetail.Pattern(ann.regexp)
                         is NotEmpty -> ValidationErrorDetail.Size(1, Int.MAX_VALUE)
                         else -> ValidationErrorDetail.Unknown
                     }

@@ -6,9 +6,10 @@ import java.util.*
 data class TicketTagResult(
         val id: UUID,
         val name: String,
+        val normalizedName: String,
         val color: String,
         val order: Int,
         val ticketTagGroupId: UUID
 ) {
-    constructor(t: TicketTag) : this(id = t.id, name = t.name, color = t.color, order = t.order, ticketTagGroupId = t.ticketTagGroup.id)
+    constructor(t: TicketTag) : this(id = t.id, name = t.name, normalizedName = t.normalizedName, color = t.color, order = t.order, ticketTagGroupId = t.ticketTagGroup.id)
 }
