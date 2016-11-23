@@ -99,12 +99,10 @@ open class TicketServiceImpl @Inject constructor(
         newTicket.descriptionComment = newComment
 
         //Assignee
-        val ticketAssignmentList: MutableList<TicketAssignmentResult>? = ArrayList() // Attach this list after the conversion of newTicket to ticketResult to avoid code duplication
-        if (createTicket.ticketAssignments != null) {
-            for ((assignmentTagId, userId) in createTicket.ticketAssignments) {
-                val ticketAssignmentResult = ticketAssignmentService.createTicketAssignment(newTicket.id, assignmentTagId, userId)
-                ticketAssignmentList?.add(ticketAssignmentResult)
-            }
+        val ticketAssignmentList = emptyList<TicketAssignmentResult>().toMutableList() // Attach this list after the conversion of newTicket to ticketResult to avoid code duplication
+        for ((assignmentTagId, userId) in createTicket.ticketAssignments) {
+            val ticketAssignmentResult = ticketAssignmentService.createTicketAssignment(newTicket.id, assignmentTagId, userId)
+            ticketAssignmentList.add(ticketAssignmentResult)
         }
 
         //SubTickets
@@ -190,7 +188,7 @@ open class TicketServiceImpl @Inject constructor(
 
         //Assignee
         if (updateTicket.ticketAssignments != null) {
-            var ticketAssignmentList = emptyList<TicketAssignmentResult>().toMutableList()
+            val ticketAssignmentList = emptyList<TicketAssignmentResult>().toMutableList()
             for ((assignmentTagId, userId) in updateTicket.ticketAssignments) {
                 ticketAssignmentList.add(ticketAssignmentService.createOrReceiveTicketAssignment(ticket.id, assignmentTagId, userId))
             }

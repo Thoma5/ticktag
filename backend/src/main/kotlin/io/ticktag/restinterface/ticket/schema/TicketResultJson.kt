@@ -18,7 +18,7 @@ class TicketResultJson(
         val dueDate: Instant?,
         val description: String,
         val projectId: UUID,
-        val ticketAssignments: List<TicketAssignmentResultJson>?,
+        val ticketAssignments: List<TicketAssignmentResultJson>,
         val subTicketIds: List<UUID>,
         val parentTicketId: UUID?,
         val createdBy: UUID,
@@ -29,6 +29,6 @@ class TicketResultJson(
 ) {
     constructor(t: TicketResult) : this(id = t.id, number = t.number, createTime = t.createTime, title = t.title,
             open = t.open, storyPoints = t.storyPoints, initialEstimatedTime = t.initialEstimatedTime, currentEstimatedTime = t.currentEstimatedTime,
-            dueDate = t.dueDate, description = t.description, projectId = t.projectId, ticketAssignments = t.ticketAssignments?.map(::TicketAssignmentResultJson), subTicketIds = t.subTicketIds, parentTicketId = t.parentTicketId,
+            dueDate = t.dueDate, description = t.description, projectId = t.projectId, ticketAssignments = t.ticketAssignments.map(::TicketAssignmentResultJson), subTicketIds = t.subTicketIds, parentTicketId = t.parentTicketId,
             createdBy = t.createdBy, tagIds = t.tagIds, mentoningCommentIds = t.mentoningCommentIds, commentIds = t.commentIds)
 }
