@@ -117,27 +117,6 @@ export class ProjectApi {
     }
 
     /**
-     * listProjectTimeCategories
-     * 
-     * @param id id
-     * @param page page
-     * @param size size
-     * @param order order
-     * @param asc asc
-     * @param name name
-     */
-    public listProjectTimeCategoriesUsingGET(id: string, page?: number, size?: number, order?: string, asc?: boolean, name?: string, extraHttpRequestParams?: any): Observable<Array<models.TimeCategoryJson>> {
-        return this.listProjectTimeCategoriesUsingGETWithHttpInfo(id, page, size, order, asc, name, extraHttpRequestParams)
-            .map((response: Response) => {
-                if (response.status === 204) {
-                    return undefined;
-                } else {
-                    return response.json();
-                }
-            });
-    }
-
-    /**
      * listProjects
      * 
      * @param page page
@@ -147,7 +126,7 @@ export class ProjectApi {
      * @param name name
      * @param all all
      */
-    public listProjectsUsingGET(page?: number, size?: number, order?: string, asc?: boolean, name?: string, all?: boolean, extraHttpRequestParams?: any): Observable<Array<models.ProjectResultJson>> {
+    public listProjectsUsingGET(page?: number, size?: number, order?: string, asc?: boolean, name?: string, all?: boolean, extraHttpRequestParams?: any): Observable<models.PageProjectResultJson> {
         return this.listProjectsUsingGETWithHttpInfo(page, size, order, asc, name, all, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -278,70 +257,6 @@ export class ProjectApi {
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         if (all !== undefined) {
             queryParameters.set('all', <any>all);
-        }
-
-
-        // to determine the Content-Type header
-        let consumes: string[] = [
-            'application/json'
-        ];
-
-        // to determine the Accept header
-        let produces: string[] = [
-            'application/json'
-        ];
-        
-            
-
-
-
-        let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Get,
-            headers: headers,
-            search: queryParameters
-        });
-        
-        // https://github.com/swagger-api/swagger-codegen/issues/4037
-        if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
-        }
-
-        return this.http.request(path, requestOptions);
-    }
-
-    /**
-     * listProjectTimeCategories
-     * 
-     * @param id id
-     * @param page page
-     * @param size size
-     * @param order order
-     * @param asc asc
-     * @param name name
-     */
-    public listProjectTimeCategoriesUsingGETWithHttpInfo(id: string, page?: number, size?: number, order?: string, asc?: boolean, name?: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/project/${id}/timecategories`;
-
-        let queryParameters = new URLSearchParams();
-        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'id' is not null or undefined
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling listProjectTimeCategoriesUsingGET.');
-        }
-        if (page !== undefined) {
-            queryParameters.set('page', <any>page);
-        }
-        if (size !== undefined) {
-            queryParameters.set('size', <any>size);
-        }
-        if (order !== undefined) {
-            queryParameters.set('order', <any>order);
-        }
-        if (asc !== undefined) {
-            queryParameters.set('asc', <any>asc);
-        }
-        if (name !== undefined) {
-            queryParameters.set('name', <any>name);
         }
 
 

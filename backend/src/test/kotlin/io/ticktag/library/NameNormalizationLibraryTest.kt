@@ -1,8 +1,8 @@
 package io.ticktag.library
 
 import io.ticktag.library.unicode.impl.NameNormalizationLibraryImpl
+import org.junit.Assert.assertEquals
 import org.junit.Test
-import org.junit.Assert.*
 
 class NameNormalizationLibraryTest {
 

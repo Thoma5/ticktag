@@ -111,7 +111,9 @@ class AssignmentTagApiTest : ApiBaseTest() {
         }
     }
 
+    //No function to search assignmenttags server site
 
+    /**
     @Test
     fun search_assignmenttag_positive() {
         withUser(USER_ID) { principal ->
@@ -125,5 +127,5 @@ class AssignmentTagApiTest : ApiBaseTest() {
         withoutUser {
             assignmentTagController.searchAssignmentTags(projectId, "t%")
         }
-    }
+    }*/
 }

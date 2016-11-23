@@ -9,7 +9,8 @@ UPDATE TICKET
 SET description_comment_id = NULL;
 DELETE FROM "comment";
 DELETE FROM "ticket";
-UPDATE public.ticket_tag_group SET default_ticket_tag_id = NULL;
+UPDATE public.ticket_tag_group
+SET default_ticket_tag_id = NULL;
 DELETE FROM "ticket_tag";
 DELETE FROM "ticket_tag_group";
 DELETE FROM "member";
@@ -43,6 +44,23 @@ INSERT INTO public."user" (id, username, mail, name, password_hash, role, curren
   ('93ef43d9-20b7-461a-b960-2d1e89ba099f', 'heinzl', 'michael.heinzl@test.de', 'Michael Heinzl',
    '$2a$10$.dLg4Vgt7JrP.564p/tPQOm.TLoy3HieFP1ZpnyWVPkJDYrG6r.Ce', 'OBSERVER', '370f4e86-1ebf-4b70-a113-add96d0905e1',
    E'\\x'); --michael-supersecure
+
+
+-- BEGIN all role/project role member permutations DO NOT ALTER
+INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, profile_pic) VALUES
+  ('00000000-0001-0000-0000-000000000101', 'admit', 'admin@ticktag.a', 'Admiral Admin',
+   '$2a$10$mTEkiQq2Wo./aqfekJHPk.5sG8JLWqWYbtMODwk9xQwQp0GtkCiM.', 'ADMIN', '00000000-0001-0000-0000-abcdef123641',
+   NULL); --aaaa
+INSERT INTO public."user" (id, username, name, mail, password_hash, role, current_token, profile_pic) VALUES
+  ('00000000-0001-0000-0000-000000000102', 'obelix', 'observer@ticktag.a', 'Obelix Observer',
+   '$2a$10$Ydzo0FR5x8ZweeaeIQS2gevmLqsZuS37.bWRYy.f.u62NG00MAOcS', 'OBSERVER', '00000000-0001-0000-2343-abcdef123641',
+   NULL); --bbbb
+INSERT INTO public."user" (id, username, name, mail, password_hash, role, current_token, profile_pic) VALUES
+  ('00000000-0001-0000-0000-000000000103', 'userla', 'user1@ticktag.a', 'Ursula User',
+   '$2a$10$OgvbSbiDxizgC/6K3dhVwO8iY6.QFS6f2PvE1AyJS1Vmo6Rnb3Gve', 'USER', '00000000-0001-8676-0000-abcdef123641',
+   NULL); --cccc
+-- END all role/project role member permutations DO NOT ALTER
+
 
 INSERT INTO "project" VALUES
   ('00000000-0002-0000-0000-000000000001', 'Bitchip', 'Pfizer Consumer Healthcare', '2016-07-03 08:49:05', NULL),
@@ -94,7 +112,13 @@ INSERT INTO "project" VALUES
   ('00000000-0002-0000-0000-000000000047', 'Bigtax', 'American Sales Company', '2015-03-17 00:05:49', NULL),
   ('00000000-0002-0000-0000-000000000048', 'Sonair', 'WAL-MART STORES INC', '2016-01-07 18:13:31', NULL),
   ('00000000-0002-0000-0000-000000000049', 'Home Ing', 'Aurolife Pharma, LLC', '2016-03-27 16:25:32', NULL),
-  ('00000000-0002-0000-0000-000000000050', 'Konklux', 'ALK-Abello, Inc.', '2016-07-17 03:47:25', NULL);
+  ('00000000-0002-0000-0000-000000000050', 'Konklux', 'ALK-Abello, Inc.', '2016-07-17 03:47:25', NULL),
+  -- BEGIN all role/project role member permutations DO NOT ALTER
+  ('00000000-0002-0000-0000-000000000101', 'Project One', 'Incredible Stuff ', '2016-07-03 08:49:05', NULL),
+  ('00000000-0002-0000-0000-000000000102', 'Project Two', 'Amazing Too', '2016-08-26 21:57:39', NULL),
+  ('00000000-0002-0000-0000-000000000103', 'Project Three', 'Quite Astonishing', '2016-01-17 16:00:33', NULL),
+  ('00000000-0002-0000-0000-000000000104', 'Project Four', 'Pretty Boring', '2016-01-17 16:00:33', NULL);
+-- END all role/project role member permutations DO NOT ALTER
 INSERT INTO "member" VALUES
   ('00000000-0001-0000-0000-000000000001', '00000000-0002-0000-0000-000000000001', 'ADMIN',
    to_date('2016-11-11', 'YYYY-MM-DD')),
@@ -103,7 +127,30 @@ INSERT INTO "member" VALUES
   ('00000000-0001-0000-0000-000000000002', '00000000-0002-0000-0000-000000000002', 'ADMIN',
    to_date('2016-10-11', 'YYYY-MM-DD')),
   ('00000000-0001-0000-0000-000000000003', '00000000-0002-0000-0000-000000000002', 'ADMIN',
+   to_date('2016-10-13', 'YYYY-MM-DD')),
+  ('93ef43d9-20b7-461a-b960-2d1e89ba099f', '00000000-0002-0000-0000-000000000001', 'ADMIN',
+   to_date('2016-11-11', 'YYYY-MM-DD')),
+
+  -- BEGIN all role/project role member permutations DO NOT ALTER
+  ('00000000-0001-0000-0000-000000000101', '00000000-0002-0000-0000-000000000101', 'ADMIN',
+   to_date('2016-11-11', 'YYYY-MM-DD')),
+  ('00000000-0001-0000-0000-000000000101', '00000000-0002-0000-0000-000000000102', 'USER',
+   to_date('2016-12-11', 'YYYY-MM-DD')),
+  ('00000000-0001-0000-0000-000000000101', '00000000-0002-0000-0000-000000000103', 'OBSERVER',
+   to_date('2016-12-11', 'YYYY-MM-DD')),
+  ('00000000-0001-0000-0000-000000000102', '00000000-0002-0000-0000-000000000101', 'USER',
+   to_date('2016-12-11', 'YYYY-MM-DD')),
+  ('00000000-0001-0000-0000-000000000102', '00000000-0002-0000-0000-000000000102', 'OBSERVER',
+   to_date('2016-10-11', 'YYYY-MM-DD')),
+  ('00000000-0001-0000-0000-000000000102', '00000000-0002-0000-0000-000000000103', 'ADMIN',
+   to_date('2016-10-13', 'YYYY-MM-DD')),
+  ('00000000-0001-0000-0000-000000000103', '00000000-0002-0000-0000-000000000101', 'OBSERVER',
+   to_date('2016-12-11', 'YYYY-MM-DD')),
+  ('00000000-0001-0000-0000-000000000103', '00000000-0002-0000-0000-000000000102', 'ADMIN',
+   to_date('2016-10-11', 'YYYY-MM-DD')),
+  ('00000000-0001-0000-0000-000000000103', '00000000-0002-0000-0000-000000000103', 'USER',
    to_date('2016-10-13', 'YYYY-MM-DD'));
+-- END all role/project role permutations DO NOT ALTER
 
 COMMIT;
 
@@ -290,37 +337,90 @@ INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
 
 COMMIT;
 
+-- BEGIN Role Based Ticket Testdata DO NOT ALTER
+INSERT INTO PUBLIC.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, OPEN, story_points, initial_estimated_time, current_estimated_time, due_date)
+VALUES ('00000000-0003-0000-0000-000000000101', 1, NULL, '00000000-0002-0000-0000-000000000101',
+                                                '00000000-0001-0000-0000-000000000101', NULL,
+                                                '2016-11-16 17:06:07.221000', 'Project 1 Ticket One', TRUE, 10, 20, 25,
+        '2016-11-20 17:07:05.554000');
+INSERT INTO PUBLIC.comment (id, user_id, ticket_id, create_time, TEXT)
+VALUES ('00000000-0004-0000-0000-000000000101', '00000000-0001-0000-0000-000000000101',
+        '00000000-0003-0000-0000-000000000101', '2016-11-16 17:09:59.019000', 'Description Project1 Ticket1');
+UPDATE PUBLIC.ticket
+SET description_comment_id = '00000000-0004-0000-0000-000000000101'
+WHERE id = '00000000-0003-0000-0000-000000000101';
+
+
+INSERT INTO PUBLIC.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, OPEN, story_points, initial_estimated_time, current_estimated_time, due_date)
+VALUES ('00000000-0003-0000-0000-000000000102', 1, NULL, '00000000-0002-0000-0000-000000000102',
+                                                '00000000-0001-0000-0000-000000000101', NULL,
+                                                '2016-11-16 17:06:07.221000', 'Project 2 Ticket One', TRUE, 10, 20, 25,
+        '2016-11-20 17:07:05.554000');
+INSERT INTO PUBLIC.comment (id, user_id, ticket_id, create_time, TEXT)
+VALUES ('00000000-0004-0000-0000-000000000102', '00000000-0001-0000-0000-000000000101',
+        '00000000-0003-0000-0000-000000000102', '2016-11-16 17:09:59.019000', 'Description Project2 Ticket1');
+UPDATE PUBLIC.ticket
+SET description_comment_id = '00000000-0004-0000-0000-000000000102'
+WHERE id = '00000000-0003-0000-0000-000000000102';
+
+INSERT INTO PUBLIC.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, OPEN, story_points, initial_estimated_time, current_estimated_time, due_date)
+VALUES ('00000000-0003-0000-0000-000000000103', 1, NULL, '00000000-0002-0000-0000-000000000103',
+                                                '00000000-0001-0000-0000-000000000101', NULL,
+                                                '2016-11-16 17:06:07.221000', 'Project 3 Ticket One', TRUE, 10, 20, 25,
+        '2016-11-20 17:07:05.554000');
+INSERT INTO PUBLIC.comment (id, user_id, ticket_id, create_time, TEXT)
+VALUES ('00000000-0004-0000-0000-000000000103', '00000000-0001-0000-0000-000000000101',
+        '00000000-0003-0000-0000-000000000103', '2016-11-16 17:09:59.019000', 'Description Project3 Ticket1');
+UPDATE PUBLIC.ticket
+SET description_comment_id = '00000000-0004-0000-0000-000000000103'
+WHERE id = '00000000-0003-0000-0000-000000000103';
+INSERT INTO PUBLIC.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, OPEN, story_points, initial_estimated_time, current_estimated_time, due_date)
+VALUES ('00000000-0003-0000-0000-000000000104', 1, NULL, '00000000-0002-0000-0000-000000000104',
+                                                '00000000-0001-0000-0000-000000000101', NULL,
+                                                '2016-11-16 17:06:07.221000', 'Project 4 Ticket One', TRUE, 10, 20, 25,
+        '2016-11-20 17:07:05.554000');
+INSERT INTO PUBLIC.comment (id, user_id, ticket_id, create_time, TEXT)
+VALUES ('00000000-0004-0000-0000-000000000104', '00000000-0001-0000-0000-000000000101',
+        '00000000-0003-0000-0000-000000000104', '2016-11-16 17:09:59.019000', 'Description Project4 Ticket1');
+UPDATE PUBLIC.ticket
+SET description_comment_id = '00000000-0004-0000-0000-000000000104'
+WHERE id = '00000000-0003-0000-0000-000000000104';
+-- END Role Based Ticket Testdata DO NOT ALTER
 
 --TICKET TAG GROUPS
 BEGIN;
 
 INSERT INTO public.ticket_tag_group (id, project_id, default_ticket_tag_id, name, exclusive)
-VALUES ('00000000-0009-0000-0000-000000000001', '00000000-0002-0000-0000-000000000001', NULL, 'Agile', TRUE );
+VALUES ('00000000-0009-0000-0000-000000000001', '00000000-0002-0000-0000-000000000001', NULL, 'Agile', TRUE);
 INSERT INTO public.ticket_tag_group (id, project_id, default_ticket_tag_id, name, exclusive)
-VALUES ('00000000-0009-0000-0000-000000000002', '00000000-0002-0000-0000-000000000001', NULL, 'Priority', TRUE );
+VALUES ('00000000-0009-0000-0000-000000000002', '00000000-0002-0000-0000-000000000001', NULL, 'Priority', TRUE);
 INSERT INTO public.ticket_tag_group (id, project_id, default_ticket_tag_id, name, exclusive)
-VALUES ('00000000-0009-0000-0000-000000000003', '00000000-0002-0000-0000-000000000002', NULL, 'Test', FALSE );
+VALUES ('00000000-0009-0000-0000-000000000003', '00000000-0002-0000-0000-000000000002', NULL, 'Test', FALSE);
 
 --TICKET TAGS
 
 INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, normalized_name, color, "order")
-VALUES ('00000000-0005-0000-0000-000000000001', '00000000-0009-0000-0000-000000000001', 'Feature', 'feature', '008000', 1);
+VALUES
+  ('00000000-0005-0000-0000-000000000001', '00000000-0009-0000-0000-000000000001', 'Feature', 'feature', '008000', 1);
 
 INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, normalized_name, color, "order")
 VALUES ('00000000-0005-0000-0000-000000000002', '00000000-0009-0000-0000-000000000001', 'Bug', 'bug', 'FF0000', 2);
 
 INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, normalized_name, color, "order")
-VALUES ('00000000-0005-0000-0000-000000000003', '00000000-0009-0000-0000-000000000001', 'Implementing', 'implementing', 'FFA500', 3);
+VALUES ('00000000-0005-0000-0000-000000000003', '00000000-0009-0000-0000-000000000001', 'Implementing', 'implementing',
+        'FFA500', 3);
 
 INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, normalized_name, color, "order")
-VALUES ('00000000-0005-0000-0000-000000000004', '00000000-0009-0000-0000-000000000001', 'Review', 'review', '008000', 4);
+VALUES
+  ('00000000-0005-0000-0000-000000000004', '00000000-0009-0000-0000-000000000001', 'Review', 'review', '008000', 4);
 
 
 INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, normalized_name, color, "order")
 VALUES ('00000000-0005-0000-0001-000000000001', '00000000-0009-0000-0000-000000000002', 'Low', 'low', '008000', 5);
 
 INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, normalized_name, color, "order")
-VALUES ('00000000-0005-0000-0001-000000000002', '00000000-0009-0000-0000-000000000002', 'Medium', 'medium', 'FFA500', 6);
+VALUES
+  ('00000000-0005-0000-0001-000000000002', '00000000-0009-0000-0000-000000000002', 'Medium', 'medium', 'FFA500', 6);
 
 INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, normalized_name, color, "order")
 VALUES ('00000000-0005-0000-0001-000000000003', '00000000-0009-0000-0000-000000000002', 'High', 'high', 'FF0000', 7);
@@ -332,9 +432,11 @@ VALUES ('00000000-0005-0000-0002-000000000001', '00000000-0009-0000-0000-0000000
 INSERT INTO public.ticket_tag (id, ticket_tag_group_id, name, normalized_name, color, "order")
 VALUES ('00000000-0005-0000-0002-000000000002', '00000000-0009-0000-0000-000000000003', 'Red', 'red', 'FFFF00', 8);
 
-UPDATE public.ticket_tag_group SET default_ticket_tag_id = '00000000-0005-0000-0000-000000000001'
+UPDATE public.ticket_tag_group
+SET default_ticket_tag_id = '00000000-0005-0000-0000-000000000001'
 WHERE id = '00000000-0009-0000-0000-000000000001';
-UPDATE public.ticket_tag_group SET default_ticket_tag_id = '00000000-0005-0000-0001-000000000001'
+UPDATE public.ticket_tag_group
+SET default_ticket_tag_id = '00000000-0005-0000-0001-000000000001'
 WHERE id = '00000000-0009-0000-0000-000000000002';
 
 --TICKET TAG TICKET
@@ -371,23 +473,53 @@ BEGIN;
 --Assignment-Tag
 
 INSERT INTO public.assignment_tag (id, project_id, name, normalized_name, color)
-VALUES ('00000000-0006-0000-0000-000000000001', '00000000-0002-0000-0000-000000000001', 'Implementing', 'implementing', '0000ff');
+VALUES ('00000000-0006-0000-0000-000000000001', '00000000-0002-0000-0000-000000000001', 'Implementing', 'implementing',
+        '0000ff');
 
 INSERT INTO public.assignment_tag (id, project_id, name, normalized_name, color)
 VALUES ('00000000-0006-0000-0000-000000000002', '00000000-0002-0000-0000-000000000001', 'Testing', 'testing', '00ff00');
 
 INSERT INTO public.assignment_tag (id, project_id, name, normalized_name, color)
-VALUES ('00000000-0006-0000-0000-000000000003', '00000000-0002-0000-0000-000000000001', 'Bug Fixing', 'bugfixing', 'ff0000');
+VALUES
+  ('00000000-0006-0000-0000-000000000003', '00000000-0002-0000-0000-000000000001', 'Bug Fixing', 'bugfixing', 'ff0000');
 
 INSERT INTO public.assignment_tag (id, project_id, name, normalized_name, color)
-VALUES ('00000000-0006-0000-0000-000000000004', '00000000-0002-0000-0000-000000000001', 'Ticket Owner', 'ticketowner', 'ff0000');
+VALUES ('00000000-0006-0000-0000-000000000004', '00000000-0002-0000-0000-000000000001', 'Ticket Owner', 'ticketowner',
+        'ff0000');
 
 INSERT INTO public.assignment_tag (id, project_id, name, normalized_name, color)
-VALUES ('00000000-0006-0000-0000-000000000005', '00000000-0002-0000-0000-000000000001', 'Document', 'document', 'ff0000');
+VALUES
+  ('00000000-0006-0000-0000-000000000005', '00000000-0002-0000-0000-000000000001', 'Document', 'document', 'ff0000');
 
 INSERT INTO public.assignment_tag (id, project_id, name, normalized_name, color)
 VALUES ('00000000-0006-0000-0000-000000000006', '00000000-0002-0000-0000-000000000001', 'Review', 'review', 'ff0000');
 
+--BEGIN Assignment-Tag Data for rolebased testing DO NOT ALTER
+INSERT INTO PUBLIC.assignment_tag (id, project_id, NAME, normalized_name, color)
+VALUES ('00000000-0006-0000-0000-000000000101', '00000000-0002-0000-0000-000000000101', 'dev', 'dev', 'ff0000');
+INSERT INTO PUBLIC.assignment_tag (id, project_id, NAME, normalized_name, color)
+VALUES ('00000000-0006-0000-0000-000000000102', '00000000-0002-0000-0000-000000000101', 'test', 'test', '0000ff');
+INSERT INTO PUBLIC.assignment_tag (id, project_id, NAME, normalized_name, color)
+VALUES ('00000000-0006-0000-0000-000000000103', '00000000-0002-0000-0000-000000000101', 'rev', 'rev', 'ff000f');
+INSERT INTO PUBLIC.assignment_tag (id, project_id, NAME, normalized_name, color)
+VALUES ('00000000-0006-0000-0000-000000000104', '00000000-0002-0000-0000-000000000102', 'dev', 'dev', 'ff0000');
+INSERT INTO PUBLIC.assignment_tag (id, project_id, NAME, normalized_name, color)
+VALUES ('00000000-0006-0000-0000-000000000105', '00000000-0002-0000-0000-000000000102', 'test', 'test', '0000ff');
+INSERT INTO PUBLIC.assignment_tag (id, project_id, NAME, normalized_name, color)
+VALUES ('00000000-0006-0000-0000-000000000106', '00000000-0002-0000-0000-000000000102', 'rev', 'rev', 'ff000f');
+INSERT INTO PUBLIC.assignment_tag (id, project_id, NAME, normalized_name, color)
+VALUES ('00000000-0006-0000-0000-000000000107', '00000000-0002-0000-0000-000000000103', 'dev', 'dev', 'ff0000');
+INSERT INTO PUBLIC.assignment_tag (id, project_id, NAME, normalized_name, color)
+VALUES ('00000000-0006-0000-0000-000000000108', '00000000-0002-0000-0000-000000000103', 'test', 'test', '0000ff');
+INSERT INTO PUBLIC.assignment_tag (id, project_id, NAME, normalized_name, color)
+VALUES ('00000000-0006-0000-0000-000000000109', '00000000-0002-0000-0000-000000000103', 'rev', 'rev', 'ff000f');
+INSERT INTO PUBLIC.assignment_tag (id, project_id, NAME, normalized_name, color)
+VALUES ('00000000-0006-0000-0000-000000000110', '00000000-0002-0000-0000-000000000104', 'dev', 'dev', 'ff0000');
+INSERT INTO PUBLIC.assignment_tag (id, project_id, NAME, normalized_name, color)
+VALUES ('00000000-0006-0000-0000-000000000111', '00000000-0002-0000-0000-000000000104', 'test', 'test', '0000ff');
+INSERT INTO PUBLIC.assignment_tag (id, project_id, NAME, normalized_name, color)
+VALUES ('00000000-0006-0000-0000-000000000112', '00000000-0002-0000-0000-000000000104', 'rev', 'rev', 'ff000f');
+--END Assignment-Tag Data for rolebased testing DO NOT ALTER
 
 --TICKET USER
 INSERT INTO public.assigned_ticket_user (ticket_id, assignment_tag_id, user_id)
@@ -420,6 +552,22 @@ INSERT INTO public.assigned_ticket_user (ticket_id, assignment_tag_id, user_id)
 VALUES ('00000000-0003-0000-0000-000000000006', '00000000-0006-0000-0000-000000000002',
         '93ef43d9-20b7-461a-b960-2d1e89ba099f');
 
+--BEGIN ASSIGNED TICKET USERS role based Test data DO NOT ALTER
+INSERT INTO PUBLIC.assigned_ticket_user (ticket_id, assignment_tag_id, user_id)
+VALUES ('00000000-0003-0000-0000-000000000101', '00000000-0006-0000-0000-000000000101',
+        '00000000-0001-0000-0000-000000000101');
+INSERT INTO PUBLIC.assigned_ticket_user (ticket_id, assignment_tag_id, user_id)
+VALUES ('00000000-0003-0000-0000-000000000101', '00000000-0006-0000-0000-000000000102',
+        '00000000-0001-0000-0000-000000000103');
+INSERT INTO PUBLIC.assigned_ticket_user (ticket_id, assignment_tag_id, user_id)
+VALUES ('00000000-0003-0000-0000-000000000102', '00000000-0006-0000-0000-000000000104',
+        '00000000-0001-0000-0000-000000000101');
+INSERT INTO PUBLIC.assigned_ticket_user (ticket_id, assignment_tag_id, user_id)
+VALUES ('00000000-0003-0000-0000-000000000102', '00000000-0006-0000-0000-000000000106',
+        '00000000-0001-0000-0000-000000000103');
+--Ticket 00000000-0003-0000-0000-000000000103 reserved for insert tests
+--END ASSIGNED TICKET USERS role based Test data DO NOT ALTER
+
 --Time Category
 
 INSERT INTO public.time_category (id, project_id, name, normalized_name)
@@ -430,6 +578,26 @@ VALUES ('00000000-0007-0000-0000-000000000002', '00000000-0002-0000-0000-0000000
 
 INSERT INTO public.time_category (id, project_id, name, normalized_name)
 VALUES ('00000000-0007-0000-0000-000000000003', '00000000-0002-0000-0000-000000000001', 'Testing', 'testing');
+
+--BEGIN TimeCategories for Role based testing DO NOT ALTER
+INSERT INTO PUBLIC.time_category (id, project_id, NAME, normalized_name)
+VALUES ('00000000-0007-0000-0000-000000000101', '00000000-0002-0000-0000-000000000101', 'dev', 'dev');
+INSERT INTO PUBLIC.time_category (id, project_id, NAME, normalized_name)
+VALUES ('00000000-0007-0000-0000-000000000102', '00000000-0002-0000-0000-000000000101', 'plan', 'plan');
+INSERT INTO PUBLIC.time_category (id, project_id, NAME, normalized_name)
+VALUES ('00000000-0007-0000-0000-000000000103', '00000000-0002-0000-0000-000000000102', 'dev', 'dev');
+INSERT INTO PUBLIC.time_category (id, project_id, NAME, normalized_name)
+VALUES ('00000000-0007-0000-0000-000000000104', '00000000-0002-0000-0000-000000000102', 'plan', 'plan');
+INSERT INTO PUBLIC.time_category (id, project_id, NAME, normalized_name)
+VALUES ('00000000-0007-0000-0000-000000000105', '00000000-0002-0000-0000-000000000103', 'dev', 'dev');
+INSERT INTO PUBLIC.time_category (id, project_id, NAME, normalized_name)
+VALUES ('00000000-0007-0000-0000-000000000106', '00000000-0002-0000-0000-000000000103', 'plan', 'plan');
+INSERT INTO PUBLIC.time_category (id, project_id, NAME, normalized_name)
+VALUES ('00000000-0007-0000-0000-000000000107', '00000000-0002-0000-0000-000000000104', 'dev', 'dev');
+INSERT INTO PUBLIC.time_category (id, project_id, NAME, normalized_name)
+VALUES ('00000000-0007-0000-0000-000000000108', '00000000-0002-0000-0000-000000000104', 'plan', 'plan');
+--END TimeCategories for Role based testing DO NOT ALTER
+
 
 --Time
 

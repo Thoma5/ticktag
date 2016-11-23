@@ -43,7 +43,7 @@ class TicketTagApiTest : ApiBaseTest() {
     }
 
 
-    val ticketTagToInsert = CreateTicketTagRequestJson("test", "000000", 0, UUID.fromString("00000000-0009-0000-0000-000000000001"))
+    val ticketTagToInsert = CreateTicketTagRequestJson("ticket", "000000", 0, UUID.fromString("00000000-0009-0000-0000-000000000001"))
 
     @Test
     fun createTicketTag_positive() {
@@ -65,7 +65,7 @@ class TicketTagApiTest : ApiBaseTest() {
     }
 
 
-    val ticketTagToUpdate = UpdateTicketTagRequestJson("test", "000000", 0)
+    val ticketTagToUpdate = UpdateTicketTagRequestJson("ticket", "000000", 0)
     val ticketTagToUpdateId = UUID.fromString("00000000-0005-0000-0000-000000000001")!!
 
     @Test

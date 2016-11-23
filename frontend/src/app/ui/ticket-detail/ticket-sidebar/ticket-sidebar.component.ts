@@ -3,12 +3,14 @@ import { UserResultJson, TicketResultJson } from '../../../api';
 import { AssignmentTagResultJson } from '../assigned-user/assigned-user.component';
 
 let userMock1: UserResultJson = {
+  username: 'maxmustermann',
   id: '123q4123412341324',
   mail: 'mail@maililili.com',
   name: 'Max Mustermann',
   role: UserResultJson.RoleEnum.USER,
 };
 let userMock2: UserResultJson = {
+  username: 'maxmustermann',
   id: 'asdfasdfasdf',
   mail: 'mail@mailasdilili.com',
   name: 'Alan Turing',
@@ -58,9 +60,11 @@ export class TicketSidebarComponent {
     }
 
     onAdd() {
+      // TODO username
       // TODO database checks and so on
       this.assigned.push({
         user: {
+          username: 'todo',
           id: Math.random() + '',
           mail: 'aa.aaa',
           name: this.newUserName,
