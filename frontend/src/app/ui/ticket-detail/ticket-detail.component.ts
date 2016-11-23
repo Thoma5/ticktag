@@ -48,9 +48,8 @@ export class TicketDetailComponent implements OnInit {
           .callNoError<AssignmentTagResultJson[]>(p => this.assigmentTagsApi.listAssignmentTagsUsingGETWithHttpInfo(projectId, p));
         let ticketTagsObs = this.apiCallService
           .callNoError<TicketTagResultJson[]>(p => this.ticketTagsApi.listTicketTagsUsingGETWithHttpInfo(null, projectId, p));
-        // let timeCategoriesObs = this.apiCallService
-        //  .callNoError<TimeCategoryJson[]>(p => this.timeCategoryApi.listTimeCategoriesUsingGETWithHttpInfo(projectId, p));
-        let timeCategoriesObs = Observable.of(new Array<TimeCategoryJson>());  // TODO merge develop after thomas merged
+        let timeCategoriesObs = this.apiCallService
+          .callNoError<TimeCategoryJson[]>(p => this.timeCategoryApi.listProjectTimeCategoriesUsingGETWithHttpInfo(projectId, p));
 
         return Observable.zip(ticketObs, commentsObs, assignmentTagsObs, ticketTagsObs, timeCategoriesObs);
       })
