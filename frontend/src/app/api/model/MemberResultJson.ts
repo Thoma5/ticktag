@@ -28,11 +28,11 @@ import * as models from './models';
 export interface MemberResultJson {
     joinDate: Date;
 
-    pid?: string;
+    projectId: string;
 
     projectRole: MemberResultJson.ProjectRoleEnum;
 
-    uid?: string;
+    userId: string;
 
 }
 export namespace MemberResultJson {

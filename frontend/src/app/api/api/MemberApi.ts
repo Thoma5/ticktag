@@ -71,12 +71,12 @@ export class MemberApi {
     /**
      * createMember
      * 
-     * @param uID uID
-     * @param pID pID
+     * @param userId userId
+     * @param projectId projectId
      * @param req req
      */
-    public createMemberUsingPOST(uID: string, pID: string, req: models.CreateMemberRequestJson, extraHttpRequestParams?: any): Observable<models.MemberResultJson> {
-        return this.createMemberUsingPOSTWithHttpInfo(uID, pID, req, extraHttpRequestParams)
+    public createMemberUsingPOST(userId: string, projectId: string, req: models.CreateMemberRequestJson, extraHttpRequestParams?: any): Observable<models.MemberResultJson> {
+        return this.createMemberUsingPOSTWithHttpInfo(userId, projectId, req, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -89,11 +89,11 @@ export class MemberApi {
     /**
      * deleteMember
      * 
-     * @param uID uID
-     * @param pID pID
+     * @param userId userId
+     * @param projectId projectId
      */
-    public deleteMemberUsingDELETE(uID: string, pID: string, extraHttpRequestParams?: any): Observable<{}> {
-        return this.deleteMemberUsingDELETEWithHttpInfo(uID, pID, extraHttpRequestParams)
+    public deleteMemberUsingDELETE(userId: string, projectId: string, extraHttpRequestParams?: any): Observable<{}> {
+        return this.deleteMemberUsingDELETEWithHttpInfo(userId, projectId, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -106,11 +106,11 @@ export class MemberApi {
     /**
      * getMember
      * 
-     * @param uID uID
-     * @param pID pID
+     * @param userId userId
+     * @param projectId projectId
      */
-    public getMemberUsingGET(uID: string, pID: string, extraHttpRequestParams?: any): Observable<models.MemberResultJson> {
-        return this.getMemberUsingGETWithHttpInfo(uID, pID, extraHttpRequestParams)
+    public getMemberUsingGET(userId: string, projectId: string, extraHttpRequestParams?: any): Observable<models.MemberResultJson> {
+        return this.getMemberUsingGETWithHttpInfo(userId, projectId, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -123,12 +123,12 @@ export class MemberApi {
     /**
      * updateMember
      * 
-     * @param uID uID
-     * @param pID pID
+     * @param userId userId
+     * @param projectId projectId
      * @param req req
      */
-    public updateMemberUsingPUT(uID: string, pID: string, req: models.UpdateMemberRequestJson, extraHttpRequestParams?: any): Observable<models.MemberResultJson> {
-        return this.updateMemberUsingPUTWithHttpInfo(uID, pID, req, extraHttpRequestParams)
+    public updateMemberUsingPUT(userId: string, projectId: string, req: models.UpdateMemberRequestJson, extraHttpRequestParams?: any): Observable<models.MemberResultJson> {
+        return this.updateMemberUsingPUTWithHttpInfo(userId, projectId, req, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -142,22 +142,22 @@ export class MemberApi {
     /**
      * createMember
      * 
-     * @param uID uID
-     * @param pID pID
+     * @param userId userId
+     * @param projectId projectId
      * @param req req
      */
-    public createMemberUsingPOSTWithHttpInfo(uID: string, pID: string, req: models.CreateMemberRequestJson, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/project/${pID}/member/${uID}`;
+    public createMemberUsingPOSTWithHttpInfo(userId: string, projectId: string, req: models.CreateMemberRequestJson, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/project/${projectId}/member/${userId}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'uID' is not null or undefined
-        if (uID === null || uID === undefined) {
-            throw new Error('Required parameter uID was null or undefined when calling createMemberUsingPOST.');
+        // verify required parameter 'userId' is not null or undefined
+        if (userId === null || userId === undefined) {
+            throw new Error('Required parameter userId was null or undefined when calling createMemberUsingPOST.');
         }
-        // verify required parameter 'pID' is not null or undefined
-        if (pID === null || pID === undefined) {
-            throw new Error('Required parameter pID was null or undefined when calling createMemberUsingPOST.');
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling createMemberUsingPOST.');
         }
         // verify required parameter 'req' is not null or undefined
         if (req === null || req === undefined) {
@@ -198,21 +198,21 @@ export class MemberApi {
     /**
      * deleteMember
      * 
-     * @param uID uID
-     * @param pID pID
+     * @param userId userId
+     * @param projectId projectId
      */
-    public deleteMemberUsingDELETEWithHttpInfo(uID: string, pID: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/project/${pID}/member/${uID}`;
+    public deleteMemberUsingDELETEWithHttpInfo(userId: string, projectId: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/project/${projectId}/member/${userId}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'uID' is not null or undefined
-        if (uID === null || uID === undefined) {
-            throw new Error('Required parameter uID was null or undefined when calling deleteMemberUsingDELETE.');
+        // verify required parameter 'userId' is not null or undefined
+        if (userId === null || userId === undefined) {
+            throw new Error('Required parameter userId was null or undefined when calling deleteMemberUsingDELETE.');
         }
-        // verify required parameter 'pID' is not null or undefined
-        if (pID === null || pID === undefined) {
-            throw new Error('Required parameter pID was null or undefined when calling deleteMemberUsingDELETE.');
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling deleteMemberUsingDELETE.');
         }
 
 
@@ -247,21 +247,21 @@ export class MemberApi {
     /**
      * getMember
      * 
-     * @param uID uID
-     * @param pID pID
+     * @param userId userId
+     * @param projectId projectId
      */
-    public getMemberUsingGETWithHttpInfo(uID: string, pID: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/project/${pID}/member/${uID}`;
+    public getMemberUsingGETWithHttpInfo(userId: string, projectId: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/project/${projectId}/member/${userId}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'uID' is not null or undefined
-        if (uID === null || uID === undefined) {
-            throw new Error('Required parameter uID was null or undefined when calling getMemberUsingGET.');
+        // verify required parameter 'userId' is not null or undefined
+        if (userId === null || userId === undefined) {
+            throw new Error('Required parameter userId was null or undefined when calling getMemberUsingGET.');
         }
-        // verify required parameter 'pID' is not null or undefined
-        if (pID === null || pID === undefined) {
-            throw new Error('Required parameter pID was null or undefined when calling getMemberUsingGET.');
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getMemberUsingGET.');
         }
 
 
@@ -296,22 +296,22 @@ export class MemberApi {
     /**
      * updateMember
      * 
-     * @param uID uID
-     * @param pID pID
+     * @param userId userId
+     * @param projectId projectId
      * @param req req
      */
-    public updateMemberUsingPUTWithHttpInfo(uID: string, pID: string, req: models.UpdateMemberRequestJson, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/project/${pID}/member/${uID}`;
+    public updateMemberUsingPUTWithHttpInfo(userId: string, projectId: string, req: models.UpdateMemberRequestJson, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/project/${projectId}/member/${userId}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'uID' is not null or undefined
-        if (uID === null || uID === undefined) {
-            throw new Error('Required parameter uID was null or undefined when calling updateMemberUsingPUT.');
+        // verify required parameter 'userId' is not null or undefined
+        if (userId === null || userId === undefined) {
+            throw new Error('Required parameter userId was null or undefined when calling updateMemberUsingPUT.');
         }
-        // verify required parameter 'pID' is not null or undefined
-        if (pID === null || pID === undefined) {
-            throw new Error('Required parameter pID was null or undefined when calling updateMemberUsingPUT.');
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling updateMemberUsingPUT.');
         }
         // verify required parameter 'req' is not null or undefined
         if (req === null || req === undefined) {

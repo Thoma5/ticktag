@@ -27,7 +27,7 @@ open class TicketTagController @Inject constructor(
 
     @PutMapping(value = "/{id}")
     open fun updateTicketTag(@PathVariable(name = "id") id: UUID,
-                                  @RequestBody req: UpdateTicketTagRequestJson
+                             @RequestBody req: UpdateTicketTagRequestJson
     ): TicketTagResultJson {
         val ticketTag = ticketTagService.updateTicketTag(id, UpdateTicketTag(req.name, req.color, req.order))
         return TicketTagResultJson(ticketTag)

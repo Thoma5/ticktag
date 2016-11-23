@@ -5,6 +5,7 @@ export * from './CommentsApi';
 export * from './MemberApi';
 export * from './ProjectApi';
 export * from './TicketApi';
+export * from './TicketassignmentApi';
 export * from './TickettagApi';
 export * from './TickettaggroupApi';
 export * from './TimecategoryApi';
