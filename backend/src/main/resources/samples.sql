@@ -314,6 +314,17 @@ It''s sometimes handy for breaking things up.
 
 ![Cat](http://lorempixel.com/400/400/cats)
 
+## Code
+
+```haskell
+quicksort :: (Ord a) => [a] -> [a]
+quicksort [] = []
+quicksort (x:xs) =
+    let smallerSorted = quicksort [a | a <- xs, a <= x]
+        biggerSorted = quicksort [a | a <- xs, a > x]
+    in  smallerSorted ++ [x] ++ biggerSorted
+```
+
 ## Finally
 
 
