@@ -2,12 +2,9 @@ package io.ticktag.service.ticket.service.impl
 
 import io.ticktag.TicktagService
 import io.ticktag.persistence.comment.CommentRepository
-import io.ticktag.persistence.member.MemberRepository
 import io.ticktag.persistence.project.ProjectRepository
-import io.ticktag.persistence.ticket.AssignmentTagRepository
 import io.ticktag.persistence.ticket.entity.Comment
 import io.ticktag.persistence.ticket.entity.Ticket
-import io.ticktag.persistence.ticket.entity.TicketAssignmentRepository
 import io.ticktag.persistence.ticket.entity.TicketRepository
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.*
@@ -28,9 +25,6 @@ import javax.validation.Valid
 @TicktagService
 open class TicketServiceImpl @Inject constructor(
         private val tickets: TicketRepository,
-        private val ticketAssignments: TicketAssignmentRepository,
-        private val ticketAssignmentTags: AssignmentTagRepository,
-        private val members: MemberRepository,
         private val projects: ProjectRepository,
         private val users: UserRepository,
         private val comments: CommentRepository,
@@ -84,11 +78,11 @@ open class TicketServiceImpl @Inject constructor(
 
 
         var parentTicket: Ticket? = null
-        var parentTicketCopy = createTicket.parentTicket
+        val parentTicketCopy = createTicket.parentTicket
         if ((parentTicketCopy != null)) {
             parentTicket = tickets.findOne(parentTicketCopy)
         }
-        var newTicket = Ticket.create(number, createTime, title, open, storyPoints, initialEstimatedTime, currentEstimatedTime, dueDate, parentTicket, project, user)
+        val newTicket = Ticket.create(number, createTime, title, open, storyPoints, initialEstimatedTime, currentEstimatedTime, dueDate, parentTicket, project, user)
         tickets.insert(newTicket)
 
         //Comment
@@ -123,7 +117,7 @@ open class TicketServiceImpl @Inject constructor(
             subTicket.parentTicket = newTicket
         }
 
-        var ticketResult = TicketResult(newTicket) //Weder EM noch via UPDATECASCADE kann das ticket neu geladen werden
+        val ticketResult = TicketResult(newTicket) //Weder EM noch via UPDATECASCADE kann das ticket neu geladen werden
         ticketResult.subTicketIds = newSubs
         ticketResult.ticketAssignments = ticketAssignmentList
         return ticketResult
@@ -184,7 +178,7 @@ open class TicketServiceImpl @Inject constructor(
         if (updateTicket.description != null) {
             ticket.descriptionComment.text = updateTicket.description
         }
-        var ticketResult = TicketResult(ticket)
+        val ticketResult = TicketResult(ticket)
 
         //Assignee
         if (updateTicket.ticketAssignments != null) {
