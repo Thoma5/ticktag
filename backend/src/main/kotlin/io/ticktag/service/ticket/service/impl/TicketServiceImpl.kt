@@ -4,6 +4,7 @@ import com.sun.org.apache.xml.internal.utils.MutableAttrListImpl
 import io.ticktag.TicktagService
 import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.project.ProjectRepository
+import io.ticktag.persistence.ticket.AssignmentTagRepository
 import io.ticktag.persistence.ticket.TicketEventRepository
 import io.ticktag.persistence.ticket.entity.*
 import io.ticktag.persistence.user.UserRepository
@@ -30,6 +31,7 @@ open class TicketServiceImpl @Inject constructor(
         private val users: UserRepository,
         private val comments: CommentRepository,
         private val ticketAssignmentService: TicketAssignmentService,
+        private val assignmentTagRepository: AssignmentTagRepository,
         private val ticketEvents: TicketEventRepository
 ) : TicketService {
 
@@ -145,7 +147,7 @@ open class TicketServiceImpl @Inject constructor(
             throw TicktagValidationException(listOf(ValidationError("updateUser.parentTicket", ValidationErrorDetail.Other("subTickets are Set"))))
         }
 
-         val wantToSetSubTickets = (updateTicket.subTickets != null && updateTicket.subTickets.isNotEmpty()) || //creates New SubTickets
+        val wantToSetSubTickets = (updateTicket.subTickets != null && updateTicket.subTickets.isNotEmpty()) || //creates New SubTickets
                 (updateTicket.existingSubTicketIds != null && updateTicket.existingSubTicketIds.isNotEmpty())  // references SubTickets
         val dontWantToSetParentTicket = updateTicket.parentTicketId == null
         val noParentTicketIsPresentBeforeUpdate = ticket.parentTicket == null
@@ -167,6 +169,11 @@ open class TicketServiceImpl @Inject constructor(
             if (ticket.storyPoints != updateTicket.storyPoints)
                 ticketEvents.insert(TicketEventStoryPointsChanged.create(ticket, user, ticket.storyPoints, updateTicket.storyPoints))
             ticket.storyPoints = updateTicket.storyPoints
+        }
+        if (updateTicket.initialEstimatedTime != null) {
+            if (ticket.initialEstimatedTime != updateTicket.initialEstimatedTime)
+                ticketEvents.insert(TicketEventInitialEstimatedTimeChanged.create(ticket, user, ticket.initialEstimatedTime, updateTicket.initialEstimatedTime))
+            ticket.initialEstimatedTime = updateTicket.initialEstimatedTime
         }
         if (updateTicket.currentEstimatedTime != null) {
             if (ticket.currentEstimatedTime != updateTicket.currentEstimatedTime)
@@ -192,6 +199,7 @@ open class TicketServiceImpl @Inject constructor(
                 ticketEvents.insert(TicketEventCommentTextChanged.create(ticket, user, ticket.descriptionComment, ticket.descriptionComment.text, updateTicket.description))
             ticket.descriptionComment.text = updateTicket.description
         }
+
         val ticketResult = TicketResult(ticket)
 
         //Assignee
@@ -199,11 +207,17 @@ open class TicketServiceImpl @Inject constructor(
             val ticketAssignmentList = emptyList<TicketAssignmentResult>().toMutableList()
             for ((assignmentTagId, userId) in updateTicket.ticketAssignments) {
                 ticketAssignmentList.add(ticketAssignmentService.createOrGetIfExistsTicketAssignment(ticket.id, assignmentTagId, userId))
+                val addedUser = users.findOne(userId) ?: throw NotFoundException()
+                val addedAssignmentTag = assignmentTagRepository.findOne(assignmentTagId) ?: throw NotFoundException()
+                ticketEvents.insert(TicketEventUserAdded.create(ticket, user, addedUser, addedAssignmentTag))
             }
             val ticketAssignmentDtos = ticket.assignedTicketUsers.map(::TicketAssignment)
             for ((assignmentTagId, userId) in ticketAssignmentDtos) {
                 if (!ticketAssignmentList.contains(TicketAssignmentResult(ticket.id, assignmentTagId, userId))) {
                     ticketAssignmentService.deleteTicketAssignment(ticket.id, assignmentTagId, userId)
+                    val deletedUser = users.findOne(userId) ?: throw NotFoundException()
+                    val deletedAssignmentTag = assignmentTagRepository.findOne(assignmentTagId) ?: throw NotFoundException()
+                    ticketEvents.insert(TicketEventUserAdded.create(ticket, user, deletedUser, deletedAssignmentTag))
                 }
             }
             ticketResult.ticketAssignments = ticketAssignmentList
@@ -222,10 +236,15 @@ open class TicketServiceImpl @Inject constructor(
 
             if (updateTicket.existingSubTicketIds != null) {
                 newSubs.addAll(updateTicket.existingSubTicketIds)
+
             }
 
             newSubs.forEach { subID ->
                 val subTicket = tickets.findOne(subID) ?: throw NotFoundException()
+                if (updateTicket.existingSubTicketIds != null)
+                    if (updateTicket.existingSubTicketIds.contains(subID)) {
+                        ticketEvents.insert(TicketEventParentChanged.create(ticket, user, subTicket.parentTicket, ticket))
+                    }
                 subTicket.parentTicket = ticket
             }
             ticketResult.subTicketIds = newSubs

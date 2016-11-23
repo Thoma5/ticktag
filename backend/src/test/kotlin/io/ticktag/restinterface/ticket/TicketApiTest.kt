@@ -11,6 +11,7 @@ import io.ticktag.restinterface.ticketassignment.schema.TicketAssignmentResultJs
 import io.ticktag.service.NotFoundException
 import io.ticktag.service.TicktagValidationException
 import org.hamcrest.CoreMatchers.*
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThat
 import org.junit.Test
 import org.springframework.security.access.AccessDeniedException
@@ -143,16 +144,16 @@ class TicketApiTest : ApiBaseTest() {
     fun `updateTicket positiv`() {
         withUser(ADMIN_ID) { principal ->
             val now = Instant.now()
-            val req = UpdateTicketRequestJson("ticket", true, 4, Duration.ofDays(1),
+            val req = UpdateTicketRequestJson("ticket", true, 4, Duration.ofDays(2), Duration.ofDays(3),
                     now, "description", emptyList(), emptyList(), emptyList(), null)
             val result = ticketController.updateTicket(req, UUID.fromString("00000000-0003-0000-0000-000000000001"), principal)
+            assertEquals(result.initialEstimatedTime, Duration.ofDays(3))
             assert(result.title.equals("ticket"))
             assert(result.open == true)
             assert(result.storyPoints == 4)
-            assert(result.currentEstimatedTime?.equals(Duration.ofDays(1)) ?: false)
+            assert(result.currentEstimatedTime?.equals(Duration.ofDays(3)) ?: false)
             assert(result.dueDate?.equals(now) ?: false)
             assert(result.description.equals("description"))
-
         }
     }
 
@@ -162,7 +163,7 @@ class TicketApiTest : ApiBaseTest() {
             val now = Instant.now()
             val assignments = ArrayList<TicketAssignmentJson>()
             assignments.add(TicketAssignmentJson(UUID.fromString("00000000-0006-0000-0000-000000000001"), UUID.fromString("93ef43d9-20b7-461a-b960-2d1e89ba099f")))
-            val req = UpdateTicketRequestJson("ticket", true, 4, Duration.ofDays(1),
+            val req = UpdateTicketRequestJson("ticket", true, 4, Duration.ofDays(1), Duration.ofDays(1),
                     now, "description", assignments, emptyList(), emptyList(), null)
             val result = ticketController.updateTicket(req, UUID.fromString("00000000-0003-0000-0000-000000000006"), principal)
             assertThat(result.title, `is`("ticket"))
@@ -187,7 +188,7 @@ class TicketApiTest : ApiBaseTest() {
             assignments.add(TicketAssignmentJson(UUID.fromString("00000000-0006-0000-0000-000000000002"), UUID.fromString("93ef43d9-20b7-461a-b960-2d1e89ba099f")))
             assignments.add(TicketAssignmentJson(UUID.fromString("00000000-0006-0000-0000-000000000003"), UUID.fromString("93ef43d9-20b7-461a-b960-2d1e89ba099f")))
 
-            val req = UpdateTicketRequestJson("ticket", true, 4, Duration.ofDays(1),
+            val req = UpdateTicketRequestJson("ticket", true, 4, Duration.ofDays(1), Duration.ofDays(1),
                     now, "description", assignments, emptyList(), emptyList(), null)
             val result = ticketController.updateTicket(req, UUID.fromString("00000000-0003-0000-0000-000000000006"), principal)
             assertThat(result.title, `is`("ticket"))
@@ -213,7 +214,7 @@ class TicketApiTest : ApiBaseTest() {
             assignments.add(TicketAssignmentJson(UUID.fromString("00000000-0006-0000-0000-000000000001"), UUID.fromString("93ef43d9-20b7-461a-b960-2d1e89ba099f")))
             assignments.add(TicketAssignmentJson(UUID.fromString("00000000-0006-0000-0000-000000000003"), UUID.fromString("93ef43d9-20b7-461a-b960-2d1e89ba099f")))
 
-            val req = UpdateTicketRequestJson("ticket", true, 4, Duration.ofDays(1),
+            val req = UpdateTicketRequestJson("ticket", true, 4, Duration.ofDays(1), Duration.ofDays(1),
                     now, "description", assignments, emptyList(), emptyList(), null)
             val result = ticketController.updateTicket(req, UUID.fromString("00000000-0003-0000-0000-000000000006"), principal)
             assertThat(result.title, `is`("ticket"))
@@ -237,7 +238,7 @@ class TicketApiTest : ApiBaseTest() {
             val req2 = CreateTicketRequestJson("ticket", true, 4, Duration.ofDays(1), Duration.ofDays(1),
                     now, "description", UUID.fromString("00000000-0002-0000-0000-000000000001"), emptyList(), emptyList(), emptyList(), null)
 
-            val req = UpdateTicketRequestJson("ticket", true, 4, Duration.ofDays(1),
+            val req = UpdateTicketRequestJson("ticket", true, 4, Duration.ofDays(1), Duration.ofDays(1),
                     now, "description", emptyList(), listOf(req2), listOf(UUID.fromString("00000000-0003-0000-0000-000000000001")), null)
             val result = ticketController.updateTicket(req, UUID.fromString("00000000-0003-0000-0000-000000000002"), principal)
             assert(result.title.equals("ticket"))
@@ -258,7 +259,7 @@ class TicketApiTest : ApiBaseTest() {
             val now = Instant.now()
             val req2 = CreateTicketRequestJson("ticket", true, 4, Duration.ofDays(1), Duration.ofDays(1),
                     now, "description", UUID.fromString("00000000-0002-0000-0000-000000000001"), emptyList(), emptyList(), emptyList(), null)
-            val req = UpdateTicketRequestJson("ticket", true, 4, Duration.ofDays(1),
+            val req = UpdateTicketRequestJson("ticket", true, 4, Duration.ofDays(1), Duration.ofDays(1),
                     now, "description", emptyList(), listOf(req2), listOf(UUID.fromString("00000000-0003-0000-0000-000000000001")), UUID.fromString("00000000-0003-0000-0000-000000000002"))
             val result = ticketController.updateTicket(req, UUID.fromString("00000000-0003-0000-0000-000000000002"), principal)
 

@@ -32,6 +32,8 @@ export interface UpdateTicketRequestJson {
 
     storyPoints: number;
 
+    initialEstimatedTime: number;
+
     currentEstimatedTime: number;
 
     dueDate: number;

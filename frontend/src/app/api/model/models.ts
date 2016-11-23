@@ -20,6 +20,7 @@ export * from './RoleResultJson';
 export * from './Sort';
 export * from './TicketAssignmentJson';
 export * from './TicketAssignmentResultJson';
+export * from './TicketEventResultJson';
 export * from './TicketResultJson';
 export * from './TicketTagGroupResultJson';
 export * from './TicketTagResultJson';

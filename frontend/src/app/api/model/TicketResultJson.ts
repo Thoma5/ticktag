@@ -58,7 +58,7 @@ export interface TicketResultJson {
 
     tagIds?: Array<string>;
 
-    ticketAssignments?: Array<models.TicketAssignmentResultJson>;
+    ticketAssignments: Array<models.TicketAssignmentResultJson>;
 
     title: string;
 

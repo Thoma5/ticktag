@@ -11,6 +11,7 @@ data class UpdateTicket(
         @field:Size(min = 1, max = 100) val title: String?,
         val open: Boolean?,
         @field:DecimalMin("0") val storyPoints: Int?,
+        val initialEstimatedTime: Duration?,
         val currentEstimatedTime: Duration?,
         val dueDate: Instant?,
         @field:Size(min = 1, max = 5000) val description: String?,
@@ -21,6 +22,6 @@ data class UpdateTicket(
 
 ) {
     constructor(req: UpdateTicketRequestJson) : this(
-            req.title, req.open, req.storyPoints, req.currentEstimatedTime, req.dueDate,
+            req.title, req.open, req.storyPoints, req.initialEstimatedTime, req.currentEstimatedTime, req.dueDate,
             req.description, req.ticketAssignments?.map(::TicketAssignment), req.subTickets?.map(::CreateTicket), req.existingSubTicketIds, req.partenTicketId)
 }
