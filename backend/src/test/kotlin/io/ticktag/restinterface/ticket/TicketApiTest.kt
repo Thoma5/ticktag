@@ -171,8 +171,8 @@ class TicketApiTest : ApiBaseTest() {
             assertThat(result.currentEstimatedTime, `is`(Duration.ofDays(1)))
             assertThat(result.dueDate, `is`(now))
             assertThat(result.description, `is`("description"))
-            assertThat(result.ticketAssignments!!.size, `is`(1))
-            assertThat(result.ticketAssignments!!, `hasItem`(TicketAssignmentResultJson(UUID.fromString("00000000-0003-0000-0000-000000000006"), UUID.fromString("00000000-0006-0000-0000-000000000001"), UUID.fromString("93ef43d9-20b7-461a-b960-2d1e89ba099f"))))
+            assertThat(result.ticketAssignments.size, `is`(1))
+            assertThat(result.ticketAssignments, `hasItem`(TicketAssignmentResultJson(UUID.fromString("00000000-0003-0000-0000-000000000006"), UUID.fromString("00000000-0006-0000-0000-000000000001"), UUID.fromString("93ef43d9-20b7-461a-b960-2d1e89ba099f"))))
 
 
         }
@@ -196,10 +196,10 @@ class TicketApiTest : ApiBaseTest() {
             assertThat(result.currentEstimatedTime, `is`(Duration.ofDays(1)))
             assertThat(result.dueDate, `is`(now))
             assertThat(result.description, `is`("description"))
-            assertThat(result.ticketAssignments!!.size, `is`(3))
-            assertThat(result.ticketAssignments!!, `hasItem`(TicketAssignmentResultJson(UUID.fromString("00000000-0003-0000-0000-000000000006"), UUID.fromString("00000000-0006-0000-0000-000000000001"), UUID.fromString("93ef43d9-20b7-461a-b960-2d1e89ba099f"))))
-            assertThat(result.ticketAssignments!!, `hasItem`(TicketAssignmentResultJson(UUID.fromString("00000000-0003-0000-0000-000000000006"), UUID.fromString("00000000-0006-0000-0000-000000000002"), UUID.fromString("93ef43d9-20b7-461a-b960-2d1e89ba099f"))))
-            assertThat(result.ticketAssignments!!, `hasItem`(TicketAssignmentResultJson(UUID.fromString("00000000-0003-0000-0000-000000000006"), UUID.fromString("00000000-0006-0000-0000-000000000003"), UUID.fromString("93ef43d9-20b7-461a-b960-2d1e89ba099f"))))
+            assertThat(result.ticketAssignments.size, `is`(3))
+            assertThat(result.ticketAssignments, `hasItem`(TicketAssignmentResultJson(UUID.fromString("00000000-0003-0000-0000-000000000006"), UUID.fromString("00000000-0006-0000-0000-000000000001"), UUID.fromString("93ef43d9-20b7-461a-b960-2d1e89ba099f"))))
+            assertThat(result.ticketAssignments, `hasItem`(TicketAssignmentResultJson(UUID.fromString("00000000-0003-0000-0000-000000000006"), UUID.fromString("00000000-0006-0000-0000-000000000002"), UUID.fromString("93ef43d9-20b7-461a-b960-2d1e89ba099f"))))
+            assertThat(result.ticketAssignments, `hasItem`(TicketAssignmentResultJson(UUID.fromString("00000000-0003-0000-0000-000000000006"), UUID.fromString("00000000-0006-0000-0000-000000000003"), UUID.fromString("93ef43d9-20b7-461a-b960-2d1e89ba099f"))))
 
 
         }
@@ -222,10 +222,10 @@ class TicketApiTest : ApiBaseTest() {
             assertThat(result.currentEstimatedTime, `is`(Duration.ofDays(1)))
             assertThat(result.dueDate, `is`(now))
             assertThat(result.description, `is`("description"))
-            assertThat(result.ticketAssignments!!.size, `is`(2))
-            assertThat(result.ticketAssignments!!, `not`(`hasItem`(TicketAssignmentResultJson(UUID.fromString("00000000-0003-0000-0000-000000000006"), UUID.fromString("00000000-0006-0000-0000-000000000002"), UUID.fromString("93ef43d9-20b7-461a-b960-2d1e89ba099f")))))
-            assertThat(result.ticketAssignments!!, `hasItem`(TicketAssignmentResultJson(UUID.fromString("00000000-0003-0000-0000-000000000006"), UUID.fromString("00000000-0006-0000-0000-000000000001"), UUID.fromString("93ef43d9-20b7-461a-b960-2d1e89ba099f"))))
-            assertThat(result.ticketAssignments!!, `hasItem`(TicketAssignmentResultJson(UUID.fromString("00000000-0003-0000-0000-000000000006"), UUID.fromString("00000000-0006-0000-0000-000000000003"), UUID.fromString("93ef43d9-20b7-461a-b960-2d1e89ba099f"))))
+            assertThat(result.ticketAssignments.size, `is`(2))
+            assertThat(result.ticketAssignments, `not`(`hasItem`(TicketAssignmentResultJson(UUID.fromString("00000000-0003-0000-0000-000000000006"), UUID.fromString("00000000-0006-0000-0000-000000000002"), UUID.fromString("93ef43d9-20b7-461a-b960-2d1e89ba099f")))))
+            assertThat(result.ticketAssignments, `hasItem`(TicketAssignmentResultJson(UUID.fromString("00000000-0003-0000-0000-000000000006"), UUID.fromString("00000000-0006-0000-0000-000000000001"), UUID.fromString("93ef43d9-20b7-461a-b960-2d1e89ba099f"))))
+            assertThat(result.ticketAssignments, `hasItem`(TicketAssignmentResultJson(UUID.fromString("00000000-0003-0000-0000-000000000006"), UUID.fromString("00000000-0006-0000-0000-000000000003"), UUID.fromString("93ef43d9-20b7-461a-b960-2d1e89ba099f"))))
         }
     }
 
