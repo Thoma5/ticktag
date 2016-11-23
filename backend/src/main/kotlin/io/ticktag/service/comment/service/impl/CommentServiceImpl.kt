@@ -94,8 +94,7 @@ open class CommentServiceImpl @Inject constructor(
         }
         if (updateComment.loggedTime != null) {
             for (loggeTime in comment.loggedTimes) {
-                loggedTimes.delete(loggeTime)
-
+                loggedTimeService.deleteLoggedTime(loggeTime.id)
             }
             comment.loggedTimes.clear()
             for (createLoggedTime: CreateLoggedTime in updateComment.loggedTime) {
