@@ -1,4 +1,4 @@
-package io.ticktag.service.member.services
+package io.ticktag.service.ticketassignment.services.impl
 
 import io.ticktag.TicktagService
 import io.ticktag.persistence.member.MemberRepository
@@ -10,8 +10,8 @@ import io.ticktag.persistence.ticket.entity.TicketAssignmentRepository
 import io.ticktag.persistence.ticket.entity.TicketRepository
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.*
-import io.ticktag.service.member.dto.TicketAssignmentResult
-import io.ticktag.service.timecategory.TicketAssignmentService
+import io.ticktag.service.ticketassignment.dto.TicketAssignmentResult
+import io.ticktag.service.ticketassignment.services.TicketAssignmentService
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
 import java.util.*
@@ -52,7 +52,7 @@ open class TicketAssignmentServiceImpl @Inject constructor(
         if (!assignmentTags.findByProjectId(ticket.project.id).contains(assignmentTag)) throw NotFoundException()
         val user = users.findOne(userId) ?: throw NotFoundException()
         val member = members.findByUserIdAndProjectId(userId, ticket.project.id) ?: throw NotFoundException()
-        if (member.role.equals(ProjectRole.OBSERVER)) {
+        if (member.role == ProjectRole.OBSERVER) {
             throw TicktagValidationException(listOf(ValidationError("member.role", ValidationErrorDetail.Other("notpermitted"))))
         }
         var ticketAssignment: AssignedTicketUser?

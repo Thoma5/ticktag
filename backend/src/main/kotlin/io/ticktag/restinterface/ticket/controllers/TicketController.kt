@@ -2,9 +2,9 @@ package io.ticktag.restinterface.ticket.controllers
 
 import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
+import io.ticktag.restinterface.ticket.schema.CreateTicketRequestJson
 import io.ticktag.restinterface.ticket.schema.TicketResultJson
-import io.ticktag.restinterface.user.schema.CreateTicketRequestJson
-import io.ticktag.restinterface.user.schema.UpdateTicketRequestJson
+import io.ticktag.restinterface.ticket.schema.UpdateTicketRequestJson
 import io.ticktag.service.Principal
 import io.ticktag.service.comment.service.CommentService
 import io.ticktag.service.ticket.dto.CreateTicket

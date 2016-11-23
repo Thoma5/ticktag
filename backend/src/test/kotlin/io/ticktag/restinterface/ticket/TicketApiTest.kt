@@ -4,12 +4,12 @@ import io.ticktag.ADMIN_ID
 import io.ticktag.USER_ID
 import io.ticktag.restinterface.ApiBaseTest
 import io.ticktag.restinterface.ticket.controllers.TicketController
-import io.ticktag.restinterface.user.schema.CreateTicketRequestJson
-import io.ticktag.restinterface.user.schema.TicketAssignmentJson
-import io.ticktag.restinterface.user.schema.UpdateTicketRequestJson
+import io.ticktag.restinterface.ticket.schema.CreateTicketRequestJson
+import io.ticktag.restinterface.ticket.schema.TicketAssignmentJson
+import io.ticktag.restinterface.ticket.schema.UpdateTicketRequestJson
+import io.ticktag.restinterface.ticketassignment.schema.TicketAssignmentResultJson
 import io.ticktag.service.NotFoundException
 import io.ticktag.service.TicktagValidationException
-import io.ticktag.service.member.dto.TicketAssignmentResultJson
 import org.hamcrest.CoreMatchers.*
 import org.junit.Assert.assertThat
 import org.junit.Test

@@ -1,6 +1,6 @@
 package io.ticktag.service.ticket.dto
 
-import io.ticktag.restinterface.user.schema.UpdateTicketRequestJson
+import io.ticktag.restinterface.ticket.schema.UpdateTicketRequestJson
 import java.time.Duration
 import java.time.Instant
 import java.util.*
@@ -22,5 +22,5 @@ data class UpdateTicket(
 ) {
     constructor(req: UpdateTicketRequestJson) : this(
             req.title, req.open, req.storyPoints, req.currentEstimatedTime, req.dueDate,
-            req.description, req.ticketAssignments?.map(::TicketAssignment), req.subTickets?.map { s -> CreateTicket(s) }, req.existingSubTicketIds, req.partenTicketId)
+            req.description, req.ticketAssignments?.map(::TicketAssignment), req.subTickets?.map(::CreateTicket), req.existingSubTicketIds, req.partenTicketId)
 }

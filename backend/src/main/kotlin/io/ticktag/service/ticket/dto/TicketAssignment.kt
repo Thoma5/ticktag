@@ -1,7 +1,7 @@
 package io.ticktag.service.ticket.dto
 
 import io.ticktag.persistence.ticket.entity.AssignedTicketUser
-import io.ticktag.restinterface.user.schema.TicketAssignmentJson
+import io.ticktag.restinterface.ticket.schema.TicketAssignmentJson
 import java.util.*
 
 data class TicketAssignment(

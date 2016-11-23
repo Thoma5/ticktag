@@ -1,4 +1,4 @@
-package io.ticktag.service.member.dto
+package io.ticktag.service.ticketassignment.dto
 
 import io.ticktag.persistence.ticket.entity.AssignedTicketUser
 import java.util.*

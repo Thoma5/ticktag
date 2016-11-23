@@ -1,4 +1,4 @@
-package io.ticktag.restinterface.user.schema
+package io.ticktag.restinterface.ticket.schema
 
 import java.time.Duration
 import java.time.Instant

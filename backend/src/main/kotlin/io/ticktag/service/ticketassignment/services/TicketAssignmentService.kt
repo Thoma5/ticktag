@@ -1,6 +1,6 @@
-package io.ticktag.service.timecategory
+package io.ticktag.service.ticketassignment.services
 
-import io.ticktag.service.member.dto.TicketAssignmentResult
+import io.ticktag.service.ticketassignment.dto.TicketAssignmentResult
 import java.util.*
 
 interface TicketAssignmentService {

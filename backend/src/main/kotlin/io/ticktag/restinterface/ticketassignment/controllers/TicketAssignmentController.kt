@@ -2,8 +2,8 @@ package io.ticktag.restinterface.ticketassignment.controllers
 
 import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
-import io.ticktag.service.member.dto.TicketAssignmentResultJson
-import io.ticktag.service.timecategory.TicketAssignmentService
+import io.ticktag.restinterface.ticketassignment.schema.TicketAssignmentResultJson
+import io.ticktag.service.ticketassignment.services.TicketAssignmentService
 import org.springframework.web.bind.annotation.*
 import java.util.*
 import javax.inject.Inject

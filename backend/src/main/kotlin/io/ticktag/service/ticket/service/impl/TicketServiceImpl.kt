@@ -8,13 +8,13 @@ import io.ticktag.persistence.ticket.AssignmentTagRepository
 import io.ticktag.persistence.ticket.entity.*
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.*
-import io.ticktag.service.member.dto.TicketAssignmentResult
 import io.ticktag.service.ticket.dto.CreateTicket
 import io.ticktag.service.ticket.dto.TicketAssignment
 import io.ticktag.service.ticket.dto.TicketResult
 import io.ticktag.service.ticket.dto.UpdateTicket
 import io.ticktag.service.ticket.service.TicketService
-import io.ticktag.service.timecategory.TicketAssignmentService
+import io.ticktag.service.ticketassignment.dto.TicketAssignmentResult
+import io.ticktag.service.ticketassignment.services.TicketAssignmentService
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
 import java.time.Instant
@@ -51,16 +51,16 @@ open class TicketServiceImpl @Inject constructor(
     override fun createTicket(@Valid createTicket: CreateTicket, principal: Principal, @P("authProjectId") projectId: UUID): TicketResult {
 
         val wantToSetParentTicket = createTicket.parentTicket != null
-        val dontWantToCreateSubTicketsInThisUpdate = createTicket.subTickets == null || (createTicket.subTickets != null && createTicket.subTickets.size == 0)
-        val dontWantToReferenceSubTicketsInThisUpdate = createTicket.existingSubTicketIds == null || (createTicket.existingSubTicketIds != null && createTicket.existingSubTicketIds.size == 0)
+        val dontWantToCreateSubTicketsInThisUpdate = createTicket.subTickets == null || createTicket.subTickets.isEmpty()
+        val dontWantToReferenceSubTicketsInThisUpdate = createTicket.existingSubTicketIds == null || createTicket.existingSubTicketIds.isEmpty()
 
         //implies(q,p) is only false if q is true and p is false
         if (!(implies(wantToSetParentTicket, (dontWantToCreateSubTicketsInThisUpdate && dontWantToReferenceSubTicketsInThisUpdate)))) {
             throw TicktagValidationException(listOf(ValidationError("updateUser.parentTicket", ValidationErrorDetail.Other("subTickets are Set"))))
         }
 
-        val wantToSetSubTickets = (createTicket.subTickets != null && createTicket.subTickets.size != 0) || //creates New SubTickets
-                (createTicket.existingSubTicketIds != null && createTicket.existingSubTicketIds.size != 0) // references SubTickets
+        val wantToSetSubTickets = (createTicket.subTickets != null && createTicket.subTickets.isNotEmpty()) || //creates New SubTickets
+                (createTicket.existingSubTicketIds != null && createTicket.existingSubTicketIds.isNotEmpty()) // references SubTickets
         val dontWantToSetParentTicket = createTicket.parentTicket == null
 
         if (!(implies(wantToSetSubTickets, dontWantToSetParentTicket))) {
@@ -107,10 +107,10 @@ open class TicketServiceImpl @Inject constructor(
                     val assignedTicketUser = AssignedTicketUser.create(newTicket, assignmentTag, user)
                     ticketAssignments.insert(assignedTicketUser)
                     ticketAssignmentList.add(assignedTicketUser)
-                } else throw NotFoundException() //TODO: Message?
+                } else throw NotFoundException()
 
             }
-            newTicket.assignedTicketUsers = ticketAssignmentList;
+            newTicket.assignedTicketUsers = ticketAssignmentList
         }
 
         //SubTickets
@@ -147,8 +147,8 @@ open class TicketServiceImpl @Inject constructor(
         val ticket = tickets.findOne(ticketId) ?: throw NotFoundException()
 
         val wantToSetParentTicket = updateTicket.parentTicket != null
-        val dontWantToCreateSubTicketsInThisUpdate = updateTicket.subTickets == null || (updateTicket.subTickets != null && updateTicket.subTickets.size == 0)
-        val dontWantToReferenceSubTicketsInThisUpdate = updateTicket.existingSubTicketIds == null || (updateTicket.existingSubTicketIds != null && updateTicket.existingSubTicketIds.size == 0)
+        val dontWantToCreateSubTicketsInThisUpdate = updateTicket.subTickets == null || updateTicket.subTickets.isEmpty()
+        val dontWantToReferenceSubTicketsInThisUpdate = updateTicket.existingSubTicketIds == null || (updateTicket.existingSubTicketIds.isEmpty())
 
         val noSubTicketsArePresentBeforeUpdate = (ticket.subTickets.size == 0)
 
@@ -157,8 +157,8 @@ open class TicketServiceImpl @Inject constructor(
             throw TicktagValidationException(listOf(ValidationError("updateUser.parentTicket", ValidationErrorDetail.Other("subTickets are Set"))))
         }
 
-        val wantToSetSubTickets = (updateTicket.subTickets != null && updateTicket.subTickets.size != 0) || //creates New SubTickets
-                (updateTicket.existingSubTicketIds != null && updateTicket.existingSubTicketIds.size != 0)  // references SubTickets
+        val wantToSetSubTickets = (updateTicket.subTickets != null && updateTicket.subTickets.isNotEmpty()) || //creates New SubTickets
+                (updateTicket.existingSubTicketIds != null && updateTicket.existingSubTicketIds.isNotEmpty())  // references SubTickets
         val dontWantToSetParentTicket = updateTicket.parentTicket == null
         val noParentTicketIsPresentBeforeUpdate = ticket.parentTicket == null
 

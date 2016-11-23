@@ -1,5 +1,6 @@
-package io.ticktag.service.member.dto
+package io.ticktag.restinterface.ticketassignment.schema
 
+import io.ticktag.service.ticketassignment.dto.TicketAssignmentResult
 import java.util.*
 
 data class TicketAssignmentResultJson(

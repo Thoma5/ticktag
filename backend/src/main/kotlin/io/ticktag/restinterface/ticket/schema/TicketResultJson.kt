@@ -1,6 +1,6 @@
 package io.ticktag.restinterface.ticket.schema
 
-import io.ticktag.service.member.dto.TicketAssignmentResultJson
+import io.ticktag.restinterface.ticketassignment.schema.TicketAssignmentResultJson
 import io.ticktag.service.ticket.dto.TicketResult
 import java.time.Duration
 import java.time.Instant
@@ -29,6 +29,6 @@ class TicketResultJson(
 ) {
     constructor(t: TicketResult) : this(id = t.id, number = t.number, createTime = t.createTime, title = t.title,
             open = t.open, storyPoints = t.storyPoints, initialEstimatedTime = t.initialEstimatedTime, currentEstimatedTime = t.currentEstimatedTime,
-            dueDate = t.dueDate, description = t.description, projectId = t.projectId, ticketAssignments = t.ticketAssignments?.map { s -> TicketAssignmentResultJson(s) }, subTicketIds = t.subTicketIds, parentTicketId = t.parentTicketId,
+            dueDate = t.dueDate, description = t.description, projectId = t.projectId, ticketAssignments = t.ticketAssignments?.map(::TicketAssignmentResultJson), subTicketIds = t.subTicketIds, parentTicketId = t.parentTicketId,
             createdBy = t.createdBy, tagIds = t.tagIds, mentoningCommentIds = t.mentoningCommentIds, commentIds = t.commentIds)
 }
