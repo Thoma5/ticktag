@@ -25,14 +25,12 @@
 
 import * as models from './models';
 
-export interface TemporalUnit {
-    dateBased?: boolean;
+export interface CreateTicketTagGroupRequestJson {
+    name: string;
 
-    duration?: models.Duration;
+    exclusive: boolean;
 
-    durationEstimated?: boolean;
-
-    timeBased?: boolean;
+    projectId: string;
 
 }
 

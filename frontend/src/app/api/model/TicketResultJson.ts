@@ -28,19 +28,19 @@ import * as models from './models';
 export interface TicketResultJson {
     commentIds: Array<string>;
 
-    createTime: models.Instant;
+    createTime: number;
 
     createdBy: string;
 
-    currentEstimatedTime?: models.Duration;
+    currentEstimatedTime?: number;
 
     description: string;
 
-    dueDate?: models.Instant;
+    dueDate?: number;
 
     id: string;
 
-    initialEstimatedTime?: models.Duration;
+    initialEstimatedTime?: number;
 
     mentoningCommentIds: Array<string>;
 

@@ -25,10 +25,12 @@
 
 import * as models from './models';
 
-export interface CreateCommentRequestJson {
-    text: string;
+export interface UpdateTicketTagRequestJson {
+    name: string;
 
-    ticketId: string;
+    color: string;
+
+    order: number;
 
 }
 

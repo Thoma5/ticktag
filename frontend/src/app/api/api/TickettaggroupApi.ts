@@ -39,7 +39,7 @@ import { Configuration }                                     from '../configurat
 
 
 @Injectable()
-export class CommentsApi {
+export class TickettaggroupApi {
     protected basePath = 'http://localhost:8080/';
     public defaultHeaders: Headers = new Headers();
     public configuration: Configuration = new Configuration();
@@ -69,12 +69,12 @@ export class CommentsApi {
     }
 
     /**
-     * createComment
+     * createTicketTagGroup
      * 
      * @param req req
      */
-    public createCommentUsingPOST(req: models.CreateCommentRequestJson, extraHttpRequestParams?: any): Observable<models.CommentResultJson> {
-        return this.createCommentUsingPOSTWithHttpInfo(req, extraHttpRequestParams)
+    public createTicketTagGroupUsingPOST(req: models.CreateTicketTagGroupRequestJson, extraHttpRequestParams?: any): Observable<models.TicketTagGroupResultJson> {
+        return this.createTicketTagGroupUsingPOSTWithHttpInfo(req, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -85,12 +85,12 @@ export class CommentsApi {
     }
 
     /**
-     * deleteComment
+     * deleteTicketTagGroup
      * 
      * @param id id
      */
-    public deleteCommentUsingDELETE(id: string, extraHttpRequestParams?: any): Observable<{}> {
-        return this.deleteCommentUsingDELETEWithHttpInfo(id, extraHttpRequestParams)
+    public deleteTicketTagGroupUsingDELETE(id: string, extraHttpRequestParams?: any): Observable<{}> {
+        return this.deleteTicketTagGroupUsingDELETEWithHttpInfo(id, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -101,12 +101,12 @@ export class CommentsApi {
     }
 
     /**
-     * getComment
+     * getTicketTagGroup
      * 
      * @param id id
      */
-    public getCommentUsingGET(id: string, extraHttpRequestParams?: any): Observable<models.CommentResultJson> {
-        return this.getCommentUsingGETWithHttpInfo(id, extraHttpRequestParams)
+    public getTicketTagGroupUsingGET(id: string, extraHttpRequestParams?: any): Observable<models.TicketTagGroupResultJson> {
+        return this.getTicketTagGroupUsingGETWithHttpInfo(id, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -117,29 +117,12 @@ export class CommentsApi {
     }
 
     /**
-     * listComments
+     * listTicketTags
      * 
-     * @param ticketId ticketId
-     */
-    public listCommentsUsingGET(ticketId: string, extraHttpRequestParams?: any): Observable<Array<models.CommentResultJson>> {
-        return this.listCommentsUsingGETWithHttpInfo(ticketId, extraHttpRequestParams)
-            .map((response: Response) => {
-                if (response.status === 204) {
-                    return undefined;
-                } else {
-                    return response.json();
-                }
-            });
-    }
-
-    /**
-     * updateComment
-     * 
-     * @param req req
      * @param id id
      */
-    public updateCommentUsingPUT(req: models.UpdateCommentRequestJson, id: string, extraHttpRequestParams?: any): Observable<models.CommentResultJson> {
-        return this.updateCommentUsingPUTWithHttpInfo(req, id, extraHttpRequestParams)
+    public listTicketTagsUsingGET(id: string, extraHttpRequestParams?: any): Observable<Array<models.TicketTagResultJson>> {
+        return this.listTicketTagsUsingGETWithHttpInfo(id, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -149,20 +132,37 @@ export class CommentsApi {
             });
     }
 
-
     /**
-     * createComment
+     * updateTicketTagGroup
      * 
+     * @param id id
      * @param req req
      */
-    public createCommentUsingPOSTWithHttpInfo(req: models.CreateCommentRequestJson, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/comments`;
+    public updateTicketTagGroupUsingPUT(id: string, req: models.UpdateTicketTagGroupRequestJson, extraHttpRequestParams?: any): Observable<models.TicketTagGroupResultJson> {
+        return this.updateTicketTagGroupUsingPUTWithHttpInfo(id, req, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+
+    /**
+     * createTicketTagGroup
+     * 
+     * @param req req
+     */
+    public createTicketTagGroupUsingPOSTWithHttpInfo(req: models.CreateTicketTagGroupRequestJson, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/tickettaggroup`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         // verify required parameter 'req' is not null or undefined
         if (req === null || req === undefined) {
-            throw new Error('Required parameter req was null or undefined when calling createCommentUsingPOST.');
+            throw new Error('Required parameter req was null or undefined when calling createTicketTagGroupUsingPOST.');
         }
 
 
@@ -197,18 +197,18 @@ export class CommentsApi {
     }
 
     /**
-     * deleteComment
+     * deleteTicketTagGroup
      * 
      * @param id id
      */
-    public deleteCommentUsingDELETEWithHttpInfo(id: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/comments/${id}`;
+    public deleteTicketTagGroupUsingDELETEWithHttpInfo(id: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/tickettaggroup/${id}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling deleteCommentUsingDELETE.');
+            throw new Error('Required parameter id was null or undefined when calling deleteTicketTagGroupUsingDELETE.');
         }
 
 
@@ -241,18 +241,18 @@ export class CommentsApi {
     }
 
     /**
-     * getComment
+     * getTicketTagGroup
      * 
      * @param id id
      */
-    public getCommentUsingGETWithHttpInfo(id: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/comments/${id}`;
+    public getTicketTagGroupUsingGETWithHttpInfo(id: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/tickettaggroup/${id}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling getCommentUsingGET.');
+            throw new Error('Required parameter id was null or undefined when calling getTicketTagGroupUsingGET.');
         }
 
 
@@ -285,70 +285,67 @@ export class CommentsApi {
     }
 
     /**
-     * listComments
+     * listTicketTags
      * 
-     * @param ticketId ticketId
-     */
-    public listCommentsUsingGETWithHttpInfo(ticketId: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/comments`;
-
-        let queryParameters = new URLSearchParams();
-        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'ticketId' is not null or undefined
-        if (ticketId === null || ticketId === undefined) {
-            throw new Error('Required parameter ticketId was null or undefined when calling listCommentsUsingGET.');
-        }
-        if (ticketId !== undefined) {
-            queryParameters.set('ticketId', <any>ticketId);
-        }
-
-
-        // to determine the Content-Type header
-        let consumes: string[] = [
-            'application/json'
-        ];
-
-        // to determine the Accept header
-        let produces: string[] = [
-            'application/json'
-        ];
-        
-            
-
-
-
-        let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Get,
-            headers: headers,
-            search: queryParameters
-        });
-        
-        // https://github.com/swagger-api/swagger-codegen/issues/4037
-        if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
-        }
-
-        return this.http.request(path, requestOptions);
-    }
-
-    /**
-     * updateComment
-     * 
-     * @param req req
      * @param id id
      */
-    public updateCommentUsingPUTWithHttpInfo(req: models.UpdateCommentRequestJson, id: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/comments/${id}`;
+    public listTicketTagsUsingGETWithHttpInfo(id: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/tickettaggroup/${id}/tickettag`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'id' is not null or undefined
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling listTicketTagsUsingGET.');
+        }
+
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json'
+        ];
+        
+            
+
+
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Get,
+            headers: headers,
+            search: queryParameters
+        });
+        
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * updateTicketTagGroup
+     * 
+     * @param id id
+     * @param req req
+     */
+    public updateTicketTagGroupUsingPUTWithHttpInfo(id: string, req: models.UpdateTicketTagGroupRequestJson, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/tickettaggroup/${id}`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'id' is not null or undefined
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling updateTicketTagGroupUsingPUT.');
+        }
         // verify required parameter 'req' is not null or undefined
         if (req === null || req === undefined) {
-            throw new Error('Required parameter req was null or undefined when calling updateCommentUsingPUT.');
-        }
-        // verify required parameter 'id' is not null or undefined
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling updateCommentUsingPUT.');
+            throw new Error('Required parameter req was null or undefined when calling updateTicketTagGroupUsingPUT.');
         }
 
 

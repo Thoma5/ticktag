@@ -26,7 +26,7 @@
 import * as models from './models';
 
 export interface CommentResultJson {
-    createTime: models.Instant;
+    createTime: number;
 
     id: string;
 

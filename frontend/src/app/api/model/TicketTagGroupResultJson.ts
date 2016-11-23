@@ -25,16 +25,18 @@
 
 import * as models from './models';
 
-export interface Duration {
-    nano?: number;
+export interface TicketTagGroupResultJson {
+    defaultTicketTagId?: string;
 
-    negative?: boolean;
+    exclusive: boolean;
 
-    seconds?: number;
+    id: string;
 
-    units?: Array<models.TemporalUnit>;
+    name: string;
 
-    zero?: boolean;
+    projectId: string;
+
+    required: boolean;
 
 }
 

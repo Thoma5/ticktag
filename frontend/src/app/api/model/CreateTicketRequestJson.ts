@@ -32,11 +32,11 @@ export interface CreateTicketRequestJson {
 
     storyPoints: number;
 
-    initialEstimatedTime: models.Duration;
+    initialEstimatedTime: number;
 
-    currentEstimatedTime: models.Duration;
+    currentEstimatedTime: number;
 
-    dueDate: models.Instant;
+    dueDate: number;
 
     description: string;
 
@@ -48,7 +48,7 @@ export interface CreateTicketRequestJson {
 
     existingSubTicketIds: Array<string>;
 
-    parentTicket: string;
+    partenTicketId: string;
 
 }
 

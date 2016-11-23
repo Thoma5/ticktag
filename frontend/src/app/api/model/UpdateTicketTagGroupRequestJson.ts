@@ -25,10 +25,12 @@
 
 import * as models from './models';
 
-export interface Instant {
-    epochSecond?: number;
+export interface UpdateTicketTagGroupRequestJson {
+    name: string;
 
-    nano?: number;
+    exclusive: boolean;
+
+    defaultTicketTagId: string;
 
 }
 

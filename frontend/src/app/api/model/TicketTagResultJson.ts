@@ -25,10 +25,16 @@
 
 import * as models from './models';
 
-export interface CreateCommentRequestJson {
-    text: string;
+export interface TicketTagResultJson {
+    color: string;
 
-    ticketId: string;
+    id: string;
+
+    name: string;
+
+    order: number;
+
+    ticketTagGroupId: string;
 
 }
 
