@@ -47,7 +47,7 @@ open class CommentController @Inject constructor(
     @PutMapping(value = "/{id}")
     open fun updateComment(@RequestBody req: UpdateCommentRequestJson,
                            @PathVariable(name = "id") id: UUID): CommentResultJson {
-        return CommentResultJson(commentService.updateComment(updateComment = UpdateComment(req.text,req.mentionedTicketIds), commentId = id) ?: throw NotFoundException())
+        return CommentResultJson(commentService.updateComment(updateComment = UpdateComment(req.text,req.mentionedTicketIds,req.loggedTime?.map(::CreateLoggedTime)), commentId = id) ?: throw NotFoundException())
     }
 
     @DeleteMapping(value = "/{id}")

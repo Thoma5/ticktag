@@ -84,7 +84,9 @@ open class CommentServiceImpl @Inject constructor(
         if (comment.describedTicket != null) {
             throw NotFoundException()
         }
-        comment.text = updateComment.text
+        if (updateComment.text != null) {
+            comment.text = updateComment.text
+        }
         if (updateComment.mentionedTicketIds != null) {
             comment.mentionedTickets.clear()
             for (ticketId:UUID in updateComment.mentionedTicketIds){
@@ -92,7 +94,19 @@ open class CommentServiceImpl @Inject constructor(
                 comment.mentionedTickets.add(ticket)
             }
         }
+        if (updateComment.loggedTime != null){
+            for (loggeTime in comment.loggedTimes){
+                loggedTimes.delete(loggeTime)
 
+            }
+            comment.loggedTimes.clear()
+            for (createLoggedTime:CreateLoggedTime in updateComment.loggedTime){
+                createLoggedTime.commentId = comment.id
+                val result =  loggedTimeService.createLoggedTime(createLoggedTime)
+                val loggedTime = loggedTimes.findOne(result.id) ?: throw NotFoundException()
+                comment.loggedTimes.add(loggedTime)
+            }
+        }
 
         return CommentResult(comment)
     }

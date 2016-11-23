@@ -59,7 +59,7 @@ open class Comment protected constructor() {
     @OneToOne(mappedBy = "descriptionComment", optional = true)
     open var describedTicket: Ticket? = null
 
-    @OneToMany(mappedBy = "comment")
+    @OneToMany(mappedBy = "comment", cascade = arrayOf(CascadeType.REMOVE))
     lateinit open var loggedTimes: MutableList<LoggedTime>
         protected set
 
