@@ -9,7 +9,7 @@ import io.ticktag.restinterface.comment.schema.UpdateCommentRequestJson
 import io.ticktag.service.NotFoundException
 import io.ticktag.service.Principal
 import io.ticktag.service.comment.dto.CreateComment
-import io.ticktag.service.comment.dto.CreateLoggedTime
+import io.ticktag.service.loggedTime.dto.CreateLoggedTime
 
 import io.ticktag.service.comment.dto.UpdateComment
 import io.ticktag.service.comment.service.CommentService

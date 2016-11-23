@@ -5,7 +5,7 @@ import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.loggedTime.schema.LoggedTimeResultJson
 import io.ticktag.restinterface.loggedTime.schema.UpdateLoggedTimeJson
 import io.ticktag.service.NotFoundException
-import io.ticktag.service.comment.dto.CreateLoggedTime
+import io.ticktag.service.loggedTime.dto.CreateLoggedTime
 import io.ticktag.service.comment.dto.CreateLoggedTimeJson
 import io.ticktag.service.loggedTime.dto.UpdateLoggedTime
 import io.ticktag.service.loggedTime.service.LoggedTimeService

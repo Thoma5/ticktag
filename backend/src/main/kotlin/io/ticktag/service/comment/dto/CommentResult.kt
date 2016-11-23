@@ -1,6 +1,8 @@
 package io.ticktag.service.comment.dto
 
 import io.ticktag.persistence.ticket.entity.Comment
+import io.ticktag.persistence.ticket.entity.LoggedTime
+import io.ticktag.persistence.ticket.entity.Ticket
 import java.time.Instant
 import java.util.*
 
@@ -15,5 +17,5 @@ data class CommentResult(
         val loggedTimeIds: List<UUID>
 ) {
     constructor(c: Comment) : this(id = c.id, createTime = c.createTime, text = c.text, userId = c.user.id, ticketId = c.ticket.id,
-            mentionedTicketIds = c.mentionedTickets.map { t -> t.id }, loggedTimeIds = c.loggedTimes.map { time -> time.id })
+            mentionedTicketIds = c.mentionedTickets.map(Ticket::id), loggedTimeIds = c.loggedTimes.map(LoggedTime::id))
 }

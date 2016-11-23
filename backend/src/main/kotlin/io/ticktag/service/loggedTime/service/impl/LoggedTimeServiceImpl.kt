@@ -6,7 +6,7 @@ import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.ticket.entity.LoggedTime
 import io.ticktag.persistence.timecategory.TimeCategoryRepository
 import io.ticktag.service.*
-import io.ticktag.service.comment.dto.CreateLoggedTime
+import io.ticktag.service.loggedTime.dto.CreateLoggedTime
 import io.ticktag.service.loggedTime.dto.LoggedTimeResult
 import io.ticktag.service.loggedTime.dto.UpdateLoggedTime
 import io.ticktag.service.loggedTime.service.LoggedTimeService
@@ -14,8 +14,6 @@ import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
 import java.util.*
 import javax.inject.Inject
-import javax.swing.UIDefaults
-import javax.xml.bind.ValidationException
 
 @TicktagService
 open class LoggedTimeServiceImpl @Inject constructor(
