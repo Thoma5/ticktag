@@ -24,6 +24,8 @@ export class TaginputComponent implements OnChanges {
   // Array of `Tag.id` values of `allTags`.
   @Input() tags: string[];
   @Output() readonly tagsChange = new EventEmitter<string[]>();
+  @Output() readonly tagAdded = new EventEmitter<string>();
+  @Output() readonly tagRemoved = new EventEmitter<string>();
   private sortedTags: Tag[];
 
   private newTagName: string;
@@ -46,7 +48,8 @@ export class TaginputComponent implements OnChanges {
     let index = newTags.indexOf(tag.id);
     if (index >= 0) {
       newTags.splice(index, 1);
-      this.tagsChange.next(newTags);
+      this.tagsChange.emit(newTags);
+      this.tagRemoved.emit(tag.id);
     }
   }
 
@@ -65,7 +68,8 @@ export class TaginputComponent implements OnChanges {
       if (alreadyAdded < 0) {
         let newTags = this.tags.slice();
         newTags.push(tag.id);
-        this.tagsChange.next(newTags);
+        this.tagsChange.emit(newTags);
+        this.tagAdded.emit(tag.id);
       }
     }
     this.newTagName = '';
