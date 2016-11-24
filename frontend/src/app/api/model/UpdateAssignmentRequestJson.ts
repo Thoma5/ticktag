@@ -26,9 +26,9 @@
 import * as models from './models';
 
 export interface UpdateAssignmentRequestJson {
-    name: string;
+    name?: string;
 
-    color: string;
+    color?: string;
 
 }
 

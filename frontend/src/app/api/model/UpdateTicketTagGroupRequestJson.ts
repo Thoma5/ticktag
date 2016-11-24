@@ -26,11 +26,11 @@
 import * as models from './models';
 
 export interface UpdateTicketTagGroupRequestJson {
-    name: string;
+    name?: string;
 
-    exclusive: boolean;
+    exclusive?: boolean;
 
-    defaultTicketTagId: string;
+    defaultTicketTagId?: string;
 
 }
 

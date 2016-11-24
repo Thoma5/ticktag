@@ -30,5 +30,9 @@ export interface CreateCommentRequestJson {
 
     ticketId: string;
 
+    mentionedTicketIds: Array<string>;
+
+    loggedTime: Array<models.CreateLoggedTimeJson>;
+
 }
 

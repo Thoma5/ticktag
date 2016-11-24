@@ -25,12 +25,14 @@
 
 import * as models from './models';
 
-export interface UpdateProjectRequestJson {
-    name?: string;
+export interface LoggedTimeResultJson {
+    categoryId: string;
 
-    description?: string;
+    commentId: string;
 
-    icon?: Array<string>;
+    id: string;
+
+    time: number;
 
 }
 

@@ -54,16 +54,16 @@ open class TicketServiceImpl @Inject constructor(
     override fun createTicket(@Valid createTicket: CreateTicket, principal: Principal, @P("authProjectId") projectId: UUID): TicketResult {
 
         val wantToSetParentTicket = createTicket.parentTicket != null
-        val dontWantToCreateSubTicketsInThisUpdate = createTicket.subTickets == null || createTicket.subTickets.isEmpty()
-        val dontWantToReferenceSubTicketsInThisUpdate = createTicket.existingSubTicketIds == null || createTicket.existingSubTicketIds.isEmpty()
+        val dontWantToCreateSubTicketsInThisUpdate =  createTicket.subTickets.isEmpty()
+        val dontWantToReferenceSubTicketsInThisUpdate = createTicket.existingSubTicketIds.isEmpty()
 
         //implies(q,p) is only false if q is true and p is false
         if (!(implies(wantToSetParentTicket, (dontWantToCreateSubTicketsInThisUpdate && dontWantToReferenceSubTicketsInThisUpdate)))) {
             throw TicktagValidationException(listOf(ValidationError("updateUser.parentTicket", ValidationErrorDetail.Other("subTickets are Set"))))
         }
 
-        val wantToSetSubTickets = (createTicket.subTickets != null && createTicket.subTickets.isNotEmpty()) || //creates New SubTickets
-                (createTicket.existingSubTicketIds != null && createTicket.existingSubTicketIds.isNotEmpty()) // references SubTickets
+        val wantToSetSubTickets = (createTicket.subTickets.isNotEmpty()) || //creates New SubTickets
+                (createTicket.existingSubTicketIds.isNotEmpty()) // references SubTickets
         val dontWantToSetParentTicket = createTicket.parentTicket == null
 
         if (!(implies(wantToSetSubTickets, dontWantToSetParentTicket))) {

@@ -19,6 +19,7 @@ import java.time.Duration
 import java.time.Instant
 import java.util.*
 import javax.inject.Inject
+import org.junit.Assert.assertEquals
 
 class TicketApiTest : ApiBaseTest() {
     @Inject
@@ -32,14 +33,14 @@ class TicketApiTest : ApiBaseTest() {
                     now, "description", UUID.fromString("00000000-0002-0000-0000-000000000001"), emptyList(), emptyList(), emptyList(), null)
 
             val result = ticketController.createTicket(req, principal)
-            assert(result.title.equals("test"))
-            assert(result.open == true)
-            assert(result.storyPoints == 4)
-            assert(result.initialEstimatedTime?.equals(Duration.ofDays(1)) ?: false)
-            assert(result.currentEstimatedTime?.equals(Duration.ofDays(1)) ?: false)
-            assert(result.dueDate?.equals(now) ?: false)
-            assert(result.description.equals("description"))
-            assert(result.projectId.equals(UUID.fromString("00000000-0002-0000-0000-000000000001")))
+            assertEquals(result.title, ("test"))
+            assertEquals(result.open,true)
+            assertEquals(result.storyPoints,  4)
+            assertEquals(result.initialEstimatedTime, (Duration.ofDays(1)))
+            assertEquals(result.currentEstimatedTime, (Duration.ofDays(1) ))
+            assertEquals(result.dueDate, now)
+            assertEquals(result.description,"description")
+            assertEquals(result.projectId, UUID.fromString("00000000-0002-0000-0000-000000000001"))
 
         }
     }
@@ -56,7 +57,7 @@ class TicketApiTest : ApiBaseTest() {
 
             val result = ticketController.createTicket(req, principal)
             assertThat(result.title, `is`("ticket"))
-            assert(result.open)
+            assertEquals(result.open,true)
             assertThat(result.storyPoints, `is`(4))
             assertThat(result.initialEstimatedTime, `is`(Duration.ofDays(1)))
             assertThat(result.currentEstimatedTime, `is`(Duration.ofDays(1)))
@@ -96,16 +97,16 @@ class TicketApiTest : ApiBaseTest() {
                     now, "description", UUID.fromString("00000000-0002-0000-0000-000000000001"), emptyList(), listOf(req), listOf(UUID.fromString("00000000-0003-0000-0000-000000000001")), null)
 
             val result = ticketController.createTicket(req2, principal)
-            assert(result.title.equals("ticket"))
-            assert(result.open == true)
-            assert(result.storyPoints == 4)
-            assert(result.initialEstimatedTime?.equals(Duration.ofDays(1)) ?: false)
-            assert(result.currentEstimatedTime?.equals(Duration.ofDays(1)) ?: false)
-            assert(result.dueDate?.equals(now) ?: false)
-            assert(result.description.equals("description"))
-            assert(result.projectId.equals(UUID.fromString("00000000-0002-0000-0000-000000000001")))
-            assert(result.subTicketIds.size == 2)
-            assert(result.subTicketIds.contains(UUID.fromString("00000000-0003-0000-0000-000000000001")))
+                    assertEquals(result.title, ("ticket"))
+            assertEquals(result.open,true)
+            assertEquals(result.storyPoints,  4)
+            assertEquals(result.initialEstimatedTime, (Duration.ofDays(1)))
+            assertEquals(result.currentEstimatedTime, (Duration.ofDays(1) ))
+            assertEquals(result.dueDate, now)
+            assertEquals(result.description,"description")
+            assertEquals(result.projectId, UUID.fromString("00000000-0002-0000-0000-000000000001"))
+            assertEquals(result.subTicketIds.size,  2)
+            assertThat(result.subTicketIds, `hasItem`(UUID.fromString("00000000-0003-0000-0000-000000000001")))
 
         }
     }
@@ -147,12 +148,12 @@ class TicketApiTest : ApiBaseTest() {
             val req = UpdateTicketRequestJson("ticket", true, 4, Duration.ofDays(1),
                     now, "description", emptyList(), emptyList(), emptyList(), null)
             val result = ticketController.updateTicket(req, UUID.fromString("00000000-0003-0000-0000-000000000001"), principal)
-            assert(result.title.equals("ticket"))
-            assert(result.open == true)
-            assert(result.storyPoints == 4)
-            assert(result.currentEstimatedTime?.equals(Duration.ofDays(1)) ?: false)
-            assert(result.dueDate?.equals(now) ?: false)
-            assert(result.description.equals("description"))
+            assertEquals(result.title, "ticket")
+            assertEquals(result.open,  true)
+            assertEquals(result.storyPoints,  4)
+            assertEquals(result.currentEstimatedTime, (Duration.ofDays(1)))
+            assertEquals(result.dueDate, (now) )
+            assertEquals(result.description, ("description"))
 
         }
     }
@@ -167,7 +168,7 @@ class TicketApiTest : ApiBaseTest() {
                     now, "description", assignments, emptyList(), emptyList(), null)
             val result = ticketController.updateTicket(req, UUID.fromString("00000000-0003-0000-0000-000000000006"), principal)
             assertThat(result.title, `is`("ticket"))
-            assert(result.open)
+            assertEquals(result.open,true)
             assertThat(result.storyPoints, `is`(4))
             assertThat(result.currentEstimatedTime, `is`(Duration.ofDays(1)))
             assertThat(result.dueDate, `is`(now))
@@ -192,7 +193,7 @@ class TicketApiTest : ApiBaseTest() {
                     now, "description", assignments, emptyList(), emptyList(), null)
             val result = ticketController.updateTicket(req, UUID.fromString("00000000-0003-0000-0000-000000000006"), principal)
             assertThat(result.title, `is`("ticket"))
-            assert(result.open)
+            assertEquals(result.open,true)
             assertThat(result.storyPoints, `is`(4))
             assertThat(result.currentEstimatedTime, `is`(Duration.ofDays(1)))
             assertThat(result.dueDate, `is`(now))
@@ -218,7 +219,7 @@ class TicketApiTest : ApiBaseTest() {
                     now, "description", assignments, emptyList(), emptyList(), null)
             val result = ticketController.updateTicket(req, UUID.fromString("00000000-0003-0000-0000-000000000006"), principal)
             assertThat(result.title, `is`("ticket"))
-            assert(result.open)
+            assertEquals(result.open,true)
             assertThat(result.storyPoints, `is`(4))
             assertThat(result.currentEstimatedTime, `is`(Duration.ofDays(1)))
             assertThat(result.dueDate, `is`(now))
@@ -241,14 +242,15 @@ class TicketApiTest : ApiBaseTest() {
             val req = UpdateTicketRequestJson("ticket", true, 4, Duration.ofDays(1),
                     now, "description", emptyList(), listOf(req2), listOf(UUID.fromString("00000000-0003-0000-0000-000000000001")), null)
             val result = ticketController.updateTicket(req, UUID.fromString("00000000-0003-0000-0000-000000000002"), principal)
-            assert(result.title.equals("ticket"))
-            assert(result.open == true)
-            assert(result.storyPoints == 4)
-            assert(result.currentEstimatedTime?.equals(Duration.ofDays(1)) ?: false)
-            assert(result.dueDate?.equals(now) ?: false)
-            assert(result.description.equals("description"))
-            assert(result.subTicketIds.size == 2)
-            assert(result.subTicketIds.contains(UUID.fromString("00000000-0003-0000-0000-000000000001")))
+            assertThat(result.title, `is`("ticket"))
+            assertThat(result.open, `is`(true))
+            assertThat(result.storyPoints,`is`(4))
+            val duration =
+            assertThat(result.currentEstimatedTime, `is`(Duration.ofDays(1)) )
+            assertThat(result.dueDate, `is`(now) )
+            assertThat(result.description, `is`("description"))
+            assertThat(result.subTicketIds.size, `is` (2))
+            assertThat(result.subTicketIds, `hasItem`(UUID.fromString("00000000-0003-0000-0000-000000000001")))
 
         }
     }

@@ -26,7 +26,7 @@
 import * as models from './models';
 
 export interface UpdateMemberRequestJson {
-    projectRole: UpdateMemberRequestJson.ProjectRoleEnum;
+    projectRole?: UpdateMemberRequestJson.ProjectRoleEnum;
 
 }
 export namespace UpdateMemberRequestJson {
