@@ -1,14 +1,16 @@
 <div class='core'>
-    <div *ngIf='!ticket.open' class='closed'>
+    <div *ngIf='!open' class='closed'>
         <img src='/img/checkmark_circle.svg' />
     </div>
     <div class='card-content'>
         <div class='header-row'>
             <h3 class='title'>
                 <div class='title-container'>
-                    <span class='number'>#{{ticket.number}}</span>
+                    <span class='number'>#{{number}}</span>
                     <span class='title-text-wrapper'>
-                    <tt-edit-textview [(editing)]='editingTitle' [(content)]='ticket.title'>
+                    <tt-edit-textview
+                        [(editing)]='editingTitle'
+                        [content]='title' (contentChange)='titleChange.emit($event)'>
                         <!-- TODO duplication, get rid of it -->
                         <tt-title-textview-read #read class='textview-read'>
                         </tt-title-textview-read>
@@ -19,32 +21,36 @@
                     <tt-edit-button [visible]='!editingTitle' (click)='editingTitle=true'></tt-edit-button>
                 </div>
             </h3>
-            <tt-ticket-storypoints [(points)]='ticket.storyPoints'></tt-ticket-storypoints>
+            <tt-ticket-storypoints [points]='storypoints' (pointsChange)='storypointsChange.emit($event)'>
+            </tt-ticket-storypoints>
         </div>
         <div class='sub-header-row'>
             <div class='tags'>
-                <tt-taginput [(tags)]='ticket.tagIds' [allTags]='allTags'></tt-taginput>
+                <tt-taginput [tags]='tagIds' (tagsChange)='tagIdsChange.emit($event)' [allTags]='allTags'>
+                </tt-taginput>
             </div>
         </div>
         <div class='subtickets'>Subtickets</div>
         <div class='status'>
             <div class='initial-estimation'>
-                Initial estimation: {{ticket.initialEstimatedTime | ttHumanizeDuration}}
+                Initial estimation: {{initialEstimatedTime | ttHumanizeDuration}}
             </div>
             <div class='current-estimation'>
-                Current estimation: {{ticket.currentEstimatedTime | ttHumanizeDuration}}
+                Current estimation: {{currentEstimatedTime | ttHumanizeDuration}}
             </div>
             <div class='ticket-progress'>
                 Progress: ???%
             </div>
             <div class='due-date'>
-                Due date: {{ticket.dueDate | ttFormatMoment}}
+                Due date: {{dueDate | ttFormatMoment}}
             </div>
         </div>
         <div class='description-container'>
             <tt-edit-button [visible]='!editingDescription' (click)='editingDescription=true'></tt-edit-button>
             <div class='description-wrapper'>
-                <tt-edit-textview [(editing)]='editingDescription' [(content)]='ticket.description'>
+                <tt-edit-textview
+                    [(editing)]='editingDescription'
+                    [content]='description' (contentChange)='descriptionChange.emit($event)'>
                     <!-- TODO duplication, get rid of it -->
                     <tt-markdown-textview-read #read class='textview-read'>
                     </tt-markdown-textview-read>
@@ -56,7 +62,7 @@
         <div class='footer-row'>
             <div class='filler'></div>
             <div class='created-by'>
-                Created by {{ ticketCreator.username }} on {{ticket.createTime | ttFormatMoment}}
+                Created by {{ creator.username }} on {{createTime | ttFormatMoment}}
             </div>
         </div>
     </div>

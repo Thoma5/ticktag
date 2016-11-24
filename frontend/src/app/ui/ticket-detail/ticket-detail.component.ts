@@ -5,7 +5,7 @@ import {
   TicketApi, TicketResultJson, CommentsApi, AssignmenttagApi,
   AssignmentTagResultJson, CommentResultJson, TicketTagResultJson,
   TickettagApi, TimeCategoryJson, TimecategoryApi, UserResultJson,
-  GetApi, GetResultJson
+  GetApi, GetResultJson, UpdateTicketRequestJson,
 } from '../../api';
 import { Observable } from 'rxjs';
 
@@ -58,7 +58,59 @@ export class TicketDetailComponent implements OnInit {
       });
   }
 
-  getTicketDetail(projectId: string, ticketId: string): Observable<TicketDetailResult> {
+  onTitleChange(val: string): void {
+    this.ticketDetail.ticket.title = val;
+    let req = this.getEmptyUpdateRequest();
+    req.title = val;
+    this.updateTicket(req);
+  }
+
+  onDescriptionChange(val: string): void {
+    this.ticketDetail.ticket.description = val;
+    let req = this.getEmptyUpdateRequest();
+    req.description = val;
+    this.updateTicket(req);
+  }
+
+  onStorypointsChange(val: number): void {
+    this.ticketDetail.ticket.storyPoints = val;
+    let req = this.getEmptyUpdateRequest();
+    req.storyPoints = val;
+    this.updateTicket(req);
+  }
+
+  onTagIdsChange(val: string[]): void {
+    this.ticketDetail.ticket.tagIds = val;
+    // TODO field missing, needs to go through another endpoint
+  }
+
+  private updateTicket(req: UpdateTicketRequestJson): void {
+    let ticketId = this.ticketDetail.ticket.id;
+
+    let updateObs = this.apiCallService
+      .callNoError<TicketResultJson>(p => this.ticketApi.updateTicketUsingPUTWithHttpInfo(req, ticketId, p));
+    updateObs.subscribe(ticket => {
+      this.ticketDetail.ticket = ticket;
+      console.log(ticket);
+    });
+  }
+
+  private getEmptyUpdateRequest(): UpdateTicketRequestJson {
+    return {
+      title: null,
+      open: null,
+      storyPoints: null,
+      currentEstimatedTime: null,
+      dueDate: null,
+      description: null,
+      ticketAssignments: null,
+      subTickets: null,
+      existingSubTicketIds: null,
+      partenTicketId: null,
+    };
+  }
+
+  private getTicketDetail(projectId: string, ticketId: string): Observable<TicketDetailResult> {
     let ticketObs = this.apiCallService
       .callNoError<TicketResultJson>(p => this.ticketApi.getTicketUsingGETWithHttpInfo(ticketId, p));
     let commentsObs = this.apiCallService

@@ -5,9 +5,19 @@
     <div *ngIf="!loading" class='content row'>
         <div class='left col-md-8'>
             <tt-ticket-core
-                [(ticket)]='ticketDetail.ticket'
+                [open]='ticketDetail.ticket.open'
+                [number]='ticketDetail.ticket.number'
+                [title]='ticketDetail.ticket.title' (titleChange)='onTitleChange($event)'
+                [(description)]='ticketDetail.ticket.description' (descriptionChange)='onDescriptionChange($event)'
+                [(storypoints)]='ticketDetail.ticket.storyPoints' (storypointsChange)='onStorypointsChange($event)'
+                [(tagIds)]='ticketDetail.ticket.tagIds' (tagIdsChange)='onTagIdsChange($event)'
+                [initialEstimatedTime]='ticketDetail.ticket.initialEstimatedTime'
+                [currentEstimatedTime]='ticketDetail.ticket.currentEstimatedTime'
+                [dueDate]='ticketDetail.ticket.dueDate'
+                [creator]='ticketDetail.ticketCreator'
+                [createTime]='ticketDetail.ticket.createTime'
+
                 [allTags]='ticketDetail.allTicketTags'
-                [(ticketCreator)] = 'ticketDetail.ticketCreator'
                 ></tt-ticket-core>
 
             <div class='comments-wrapper'>
