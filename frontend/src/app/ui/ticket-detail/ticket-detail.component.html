@@ -10,6 +10,10 @@
                 <tt-ticket-comments [comments]='comments'></tt-ticket-comments>
                 <tt-ticket-comment-input></tt-ticket-comment-input>
             </div>
+
+            <div class='comments-wrapper'>
+              <tt-ticket-events [events]='ticketEvents'></tt-ticket-events>
+            </div>
         </div>
         <div class='right col-md-4'>
             <tt-ticket-sidebar [ticket]="ticket"></tt-ticket-sidebar>

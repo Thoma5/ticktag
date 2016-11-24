@@ -53,7 +53,7 @@ import { SelectAllDirective } from './util/select-all.directive';
 import { EditButtonComponent } from './util/edit-button/edit-button.component';
 import { LoadingComponent } from './util/loading/loading.component';
 import {TicketEventsComponent} from './ui/ticket-detail/ticket-events/ticket-events.component';
-import {TicketEventComponent} from './ui/ticket-detail/ticket-event/ticket-event.component';
+import {TicketEventTitleChangedComponent} from './ui/ticket-detail/ticket-events/ticket-event-title-changed/ticket-event-title-changed.component';
 import {TicketeventApi} from './api/api/TicketeventApi';
 
 
@@ -94,7 +94,7 @@ import {TicketeventApi} from './api/api/TicketeventApi';
     TicketCommentsComponent,
     TicketCommentComponent,
     TicketEventsComponent,
-    TicketEventComponent,
+    TicketEventTitleChangedComponent,
     TicketCommentInputComponent,
     EditButtonComponent,
 

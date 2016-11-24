@@ -1,7 +1,10 @@
 <div class='events'>
     <div *ngFor="let event of events">
+      <div ng-switch="event.type">
         <div class='event-wrapper'>
-            <tt-ticket-event [event]='event'></tt-ticket-event>
+          <div ng-switch-when='TicketEventTitleChangedResultJson'>
+            <tt-ticket-event-title-changed [event]='event'></tt-ticket-event-title-changed>
+          </div>
         </div>
     </div>
 </div>
