@@ -4,12 +4,15 @@ import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.ticket.schema.CreateTicketRequestJson
 import io.ticktag.restinterface.ticket.schema.TicketResultJson
+import io.ticktag.restinterface.ticket.schema.TicketSort
 import io.ticktag.restinterface.ticket.schema.UpdateTicketRequestJson
 import io.ticktag.service.Principal
 import io.ticktag.service.comment.service.CommentService
 import io.ticktag.service.ticket.dto.CreateTicket
 import io.ticktag.service.ticket.dto.UpdateTicket
 import io.ticktag.service.ticket.service.TicketService
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -24,8 +27,13 @@ open class TicketController @Inject constructor(
 ) {
 
     @GetMapping
-    open fun listTickets(@RequestParam(name = "projectId") req: UUID): List<TicketResultJson> {
-        return ticketService.listTickets(req).map(::TicketResultJson)
+    open fun listTickets(@RequestParam(name = "projectId") req: UUID,
+                         @RequestParam(name = "page", defaultValue = "0", required = false) page: Int,
+                         @RequestParam(name = "size", defaultValue = "50", required = false) size: Int,
+                         @RequestParam(name = "order", required = true) order: List<TicketSort>): List<TicketResultJson> {
+
+        val pageRequest = PageRequest(page, size, Sort(order.map { it.order }))
+        return ticketService.listTickets(req, pageRequest).map(::TicketResultJson)
     }
 
 
