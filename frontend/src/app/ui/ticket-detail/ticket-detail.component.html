@@ -5,9 +5,9 @@
     <div *ngIf="!loading" class='content row'>
         <div class='left col-md-8'>
             <tt-ticket-core
-                [ticket]='ticketDetail.ticket'
-                [ticketTags]='ticketDetail.allTicketTags'
-                [ticketCreator] = 'ticketDetail.ticketCreator'
+                [(ticket)]='ticketDetail.ticket'
+                [allTags]='ticketDetail.allTicketTags'
+                [(ticketCreator)] = 'ticketDetail.ticketCreator'
                 ></tt-ticket-core>
 
             <div class='comments-wrapper'>
@@ -25,4 +25,5 @@
             <tt-ticket-sidebar [ticket]="ticketDetail.ticket"></tt-ticket-sidebar>
         </div>
     </div>
+    <pre>{{ ticketDetail | json }}</pre>
 </div>
