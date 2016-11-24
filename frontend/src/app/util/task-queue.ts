@@ -11,7 +11,7 @@ export class TaskQueue {
     private queue: Task[] = [];
 
     public push(task: Task): void {
-        this.queue.push(task)
+        this.queue.push(task);
         if (this.queue.length === 1) {
             this.execNext();
         }
@@ -32,6 +32,6 @@ export class TaskQueue {
 
     private popNext(): void {
         this.queue.shift();
-        this.execNext()
+        this.execNext();
     }
 }
