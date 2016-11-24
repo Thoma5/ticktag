@@ -99,7 +99,7 @@ export function extractCommands(string: string): Cmd[] {
     } else if (command.startsWith('!-assign:')) {
       let split = command.split(/:|@/);
       result.push({
-        cmd: 'assign',
+        cmd: 'unassign',
         user: split[1],
         tag: split[2] || null,
       });
