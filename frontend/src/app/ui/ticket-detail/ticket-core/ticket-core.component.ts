@@ -10,13 +10,14 @@ export class TicketCoreComponent {
     @Input() open: boolean;
     // TODO no output
     @Input() title: string;
-    @Output() titleChange: EventEmitter<string> = new EventEmitter<string>();
+    @Output() titleChange = new EventEmitter<string>();
     @Input() description: string;
-    @Output() descriptionChange: EventEmitter<string> = new EventEmitter<string>();
+    @Output() descriptionChange = new EventEmitter<string>();
     @Input() storypoints: number;
-    @Output() storypointsChange: EventEmitter<number> = new EventEmitter<number>();
+    @Output() storypointsChange = new EventEmitter<number>();
     @Input() tagIds: string[];
-    @Output() tagIdsChange: EventEmitter<string[]> = new EventEmitter<string[]>();
+    @Output() tagAdd = new EventEmitter<string>();
+    @Output() tagRemove = new EventEmitter<string>();
     @Input() initialEstimatedTime: number;
     // TODO no output
     @Input() currentEstimatedTime: number;

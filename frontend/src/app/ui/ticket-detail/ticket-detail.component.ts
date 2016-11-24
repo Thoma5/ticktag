@@ -79,9 +79,14 @@ export class TicketDetailComponent implements OnInit {
     this.updateTicket(req);
   }
 
-  onTagIdsChange(val: string[]): void {
-    this.ticketDetail.ticket.tagIds = val;
-    // TODO field missing, needs to go through another endpoint
+  onTagAdd(val: string): void {
+    // TODO endpoint missing...
+    console.log('TODO add tag');
+  }
+
+  onTagRemove(val: string): void {
+    // TODO endpoint missing...
+    console.log('TODO remove tag');
   }
 
   private updateTicket(req: UpdateTicketRequestJson): void {

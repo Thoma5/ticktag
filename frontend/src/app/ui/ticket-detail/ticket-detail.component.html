@@ -10,7 +10,7 @@
                 [title]='ticketDetail.ticket.title' (titleChange)='onTitleChange($event)'
                 [(description)]='ticketDetail.ticket.description' (descriptionChange)='onDescriptionChange($event)'
                 [(storypoints)]='ticketDetail.ticket.storyPoints' (storypointsChange)='onStorypointsChange($event)'
-                [(tagIds)]='ticketDetail.ticket.tagIds' (tagIdsChange)='onTagIdsChange($event)'
+                [(tagIds)]='ticketDetail.ticket.tagIds' (tagAdd)='onTagAdd($event)' (tagRemove)='onTagRemove($event)'
                 [initialEstimatedTime]='ticketDetail.ticket.initialEstimatedTime'
                 [currentEstimatedTime]='ticketDetail.ticket.currentEstimatedTime'
                 [dueDate]='ticketDetail.ticket.dueDate'
