@@ -4,6 +4,8 @@ import { ApiCallService } from '../../service';
 import {
   TicketApi, TicketResultJson, CommentsApi, AssignmenttagApi,
   AssignmentTagResultJson, CommentResultJson, TicketTagResultJson,
+  TickettagApi, TimeCategoryJson, TimecategoryApi, UserResultJson,
+  GetApi, GetResultJson
 } from '../../api';
 import { Observable } from 'rxjs';
 
@@ -16,8 +18,10 @@ export class TicketDetailComponent implements OnInit {
   private loading = true;
   private ticket: TicketResultJson | null = null;
   private comments: CommentResultJson[] | null = null;
-  private assignmentTags: AssignmentTagResultJson[] | null = null;
-  private ticketTags: TicketTagResultJson[] | null = null;
+  private allAssignmentTags: AssignmentTagResultJson[] | null = null;
+  private allTicketTags: TicketTagResultJson[] | null = null;
+  private allTimeCategories: TimeCategoryJson[] | null = null;
+  private assignedUsers: UserResultJson[] | null = null;
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(
@@ -27,7 +31,9 @@ export class TicketDetailComponent implements OnInit {
     private ticketApi: TicketApi,
     private commentsApi: CommentsApi,
     private assigmentTagsApi: AssignmenttagApi,
-    ) {
+    private ticketTagsApi: TickettagApi,
+    private timeCategoryApi: TimecategoryApi,
+    private getApi: GetApi) {
   }
 
   ngOnInit(): void {
@@ -43,18 +49,27 @@ export class TicketDetailComponent implements OnInit {
           .callNoError<CommentResultJson[]>(p => this.commentsApi.listCommentsUsingGETWithHttpInfo(ticketId, p));
         let assignmentTagsObs = this.apiCallService
           .callNoError<AssignmentTagResultJson[]>(p => this.assigmentTagsApi.listAssignmentTagsUsingGETWithHttpInfo(projectId, p));
-        let ticketTagsObs = Observable.of([]);
+        let ticketTagsObs = this.apiCallService
+          .callNoError<TicketTagResultJson[]>(p => this.ticketTagsApi.listTicketTagsUsingGETWithHttpInfo(null, projectId, p));
+        let timeCategoriesObs = this.apiCallService
+          .callNoError<TimeCategoryJson[]>(p => this.timeCategoryApi.listProjectTimeCategoriesUsingGETWithHttpInfo(projectId, p));
 
-        return Observable.zip(ticketObs, commentsObs, assignmentTagsObs, ticketTagsObs);
+        return Observable.zip(ticketObs, commentsObs, assignmentTagsObs, ticketTagsObs, timeCategoriesObs);
+      })
+      .switchMap(tuple => {
+        let wantedUsers = tuple[0].ticketAssignments.map(ta => ta.userId);
+        let obs = this.apiCallService
+          .callNoError<GetResultJson>(p => this.getApi.getUsingGETWithHttpInfo(wantedUsers, p));
+        return Observable.zip(Observable.of(tuple), obs);
       })
       .subscribe(tuple => {
-        let [ticket, comments, assignmentTags, ticketTags] = tuple;
+        let [[ticket, comments, assignmentTags, ticketTags, timeCategories], joined] = tuple;
         this.ticket = ticket;
-        // TODO remove this when we can actually use ticket tags
-        this.ticket.tagIds = [];
         this.comments = comments;
-        this.assignmentTags = assignmentTags;
-        this.ticketTags = ticketTags;
+        this.allAssignmentTags = assignmentTags;
+        this.allTicketTags = ticketTags;
+        this.allTimeCategories = timeCategories;
+        this.assignedUsers = ticket.ticketAssignments.map(ta => joined.users[ta.userId]).filter(it => it);
         this.loading = false;
       });
   }

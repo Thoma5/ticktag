@@ -7,7 +7,7 @@ import io.ticktag.persistence.ticket.AssignmentTagRepository
 import io.ticktag.persistence.ticket.entity.AssignedTicketUser
 import io.ticktag.persistence.ticket.entity.AssignedTicketUserKey
 import io.ticktag.persistence.ticket.entity.TicketAssignmentRepository
-import io.ticktag.persistence.ticket.entity.TicketRepository
+import io.ticktag.persistence.ticket.TicketRepository
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.*
 import io.ticktag.service.ticketassignment.dto.TicketAssignmentResult

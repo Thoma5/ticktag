@@ -6,12 +6,13 @@ import io.ticktag.restinterface.ApiBaseTest
 import io.ticktag.restinterface.ticket.controllers.TicketController
 import io.ticktag.restinterface.ticket.schema.CreateTicketRequestJson
 import io.ticktag.restinterface.ticket.schema.TicketAssignmentJson
+import io.ticktag.restinterface.ticket.schema.TicketSort
 import io.ticktag.restinterface.ticket.schema.UpdateTicketRequestJson
 import io.ticktag.restinterface.ticketassignment.schema.TicketAssignmentResultJson
 import io.ticktag.service.NotFoundException
 import io.ticktag.service.TicktagValidationException
 import org.hamcrest.CoreMatchers.*
-import org.junit.Assert.assertThat
+import org.junit.Assert.*
 import org.junit.Test
 import org.springframework.security.access.AccessDeniedException
 import java.time.Duration
@@ -293,4 +294,20 @@ class TicketApiTest : ApiBaseTest() {
         }
     }
 
+    @Test
+    fun `listTicketsFuzzy should find some tickets`() {
+        withUser(ADMIN_ID) { ->
+            val tickets = ticketController.listTicketsFuzzy(UUID.fromString("00000000-0002-0000-0000-000000000001"), "USerS", listOf(TicketSort.NUMBER_ASC))
+
+            assertEquals(4, tickets.size)
+            assertEquals(tickets.map { it.number }, listOf(2, 3, 4, 5))
+        }
+    }
+
+    @Test(expected = org.springframework.security.access.AccessDeniedException::class)
+    fun `listTicketsFuzzy should only work for project members`() {
+        withUser(UUID.fromString("00000000-0001-0000-0000-000000000004")) { ->
+            ticketController.listTicketsFuzzy(UUID.fromString("00000000-0002-0000-0000-000000000001"), "USerS", listOf(TicketSort.NUMBER_ASC))
+        }
+    }
 }

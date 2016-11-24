@@ -1,15 +1,19 @@
 import { Injectable } from '@angular/core';
-import * as marked from 'marked';
 
 @Injectable()
 export class MarkdownService {
-    private readonly parser: MarkedStatic;
+    private markdown: any;
 
     constructor() {
-        this.parser = marked.setOptions({});
+        this.markdown = require('markdown-it')({
+            'commonmark': true,
+            'html': false,
+            'linkify': true,
+        });
     }
 
     markdownToHtml(markdown: string): string {
-        return this.parser.parse(markdown);
+        let html = this.markdown.render(markdown);
+        return html;
     }
 }
