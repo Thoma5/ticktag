@@ -52,7 +52,7 @@ import { TaginputComponent } from './util/taginput/taginput.component';
 import { SelectAllDirective } from './util/select-all.directive';
 import { EditButtonComponent } from './util/edit-button/edit-button.component';
 import { LoadingComponent } from './util/loading/loading.component';
-
+import { TicketOverviewComponent} from'./ui/ticket-overview/ticket-overview.component';
 
 @NgModule({
   imports: [
@@ -74,6 +74,7 @@ import { LoadingComponent } from './util/loading/loading.component';
     UserCreateComponent,
     ProjectsComponent,
     ProjectCreateComponent,
+    TicketOverviewComponent,
     TicketDetailComponent,
     TicketSidebarComponent,
     TicketCoreComponent,
