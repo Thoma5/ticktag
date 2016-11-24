@@ -64,7 +64,7 @@ data class Principal(
 
     }
 
-    fun hasProjectRoleForTimeLogg(loggedTimeId: UUID, roleString: String): Boolean {
+    fun hasProjectRoleForLoggedTime(loggedTimeId: UUID, roleString: String): Boolean {
         if (members == null) return false
         val member = members.findByUserIdAndLoggedTimeId(this.id, loggedTimeId) ?: return false
         return member.role.includesRole(ProjectRole.valueOf(roleString))
@@ -131,8 +131,8 @@ class AuthExpr private constructor() {
         const val READ_COMMENT = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForComment(#authCommentId, 'OBSERVER')"
         const val CREATE_COMMENT = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicket(#authTicketId, 'USER') "
         const val EDIT_COMMENT = "principal.hasRole('ADMIN') || principal.hasProjectRoleForComment(#authCommentId, 'ADMIN') || principal.isId(principal.userIdForCommentId(#authCommentId))"
-        const val EDIT_TIME_LOG = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTimeLogg(#authLoggedTimeId, 'ADMIN') || principal.isId(principal.userIdForLoggedTimeId(#authLoggedTimeId))"
-        const val READ_TIME_LOG = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForTimeLogg(#authLoggedTimeId, 'OBSERVER') || principal.isId(principal.userIdForLoggedTimeId(#authLoggedTimeId))"
+        const val EDIT_TIME_LOG = "principal.hasRole('ADMIN') || principal.hasProjectRoleForLoggedTime(#authLoggedTimeId, 'ADMIN') || principal.isId(principal.userIdForLoggedTimeId(#authLoggedTimeId))"
+        const val READ_TIME_LOG = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForLoggedTime(#authLoggedTimeId, 'OBSERVER') || principal.isId(principal.userIdForLoggedTimeId(#authLoggedTimeId))"
 
 
         const val READ_TICKET_TAG_GROUP = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForTicketTagGroup(#authTicketTagGroupId, 'OBSERVER')"

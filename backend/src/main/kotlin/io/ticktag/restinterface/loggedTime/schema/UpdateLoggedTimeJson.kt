@@ -6,5 +6,4 @@ import java.util.*
 data class UpdateLoggedTimeJson(
         val time: Duration?,
         val categoryId: UUID?
-) {
-}
+)

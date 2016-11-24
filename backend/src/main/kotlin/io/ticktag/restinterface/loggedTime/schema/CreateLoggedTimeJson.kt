@@ -11,6 +11,4 @@ data class CreateLoggedTimeJson(
         val time: Duration,
         val commentId: UUID?,
         val categoryId: UUID
-) {
-
-}
+)

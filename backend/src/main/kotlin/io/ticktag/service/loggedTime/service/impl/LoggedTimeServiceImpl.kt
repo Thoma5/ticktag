@@ -21,6 +21,7 @@ open class LoggedTimeServiceImpl @Inject constructor(
         private val comments: CommentRepository,
         private val timeCategorys: TimeCategoryRepository
 ) : LoggedTimeService {
+    
     @PreAuthorize(AuthExpr.READ_COMMENT)
     override fun listLoggedTimeForComment(@P("authCommentId") commentId: UUID): List<LoggedTimeResult> {
         return loggedTimes.findAll().map(::LoggedTimeResult)
