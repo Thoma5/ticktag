@@ -6,13 +6,21 @@
         <div class='left col-md-8'>
             <tt-ticket-core [ticket]='ticket' [ticketTags]='ticketTags'></tt-ticket-core>
 
-            <div class='comments-wrapper'>
-                <tt-ticket-comments [comments]='comments'></tt-ticket-comments>
-                <tt-ticket-comment-input></tt-ticket-comment-input>
-            </div>
+            <div class='bottom-section'>
+            <tabset>
+                <tab heading='Comments'>
+                    <div>
+                        <tt-ticket-comments [comments]='comments'></tt-ticket-comments>
+                        <tt-ticket-comment-input></tt-ticket-comment-input>
+                    </div>
+                </tab>
 
-            <div class='comments-wrapper'>
-              <tt-ticket-events [events]='ticketEvents'></tt-ticket-events>
+                <tab heading='Activity'>
+                    <div>
+                        <tt-ticket-events [events]='ticketEvents'></tt-ticket-events>
+                    </div>
+                </tab>
+            </tabset>
             </div>
         </div>
         <div class='right col-md-4'>

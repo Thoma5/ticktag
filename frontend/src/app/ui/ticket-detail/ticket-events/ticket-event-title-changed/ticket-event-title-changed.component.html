@@ -1,11 +1,17 @@
 <div class='event'>
   <div class='header-row'>
-      <div class='user-icon'><img src='http://lorempixel.com/100/100/cats'/></div>
-      <div class='user-name'><span>{{event.userId}} changed Ticket Title</span></div>
+      <div class="user">
+        <div class='user-icon'><img src='http://lorempixel.com/100/100/cats'/></div>
+        <div class='user-name'><span>?user? changed Title</span></div>
+      </div>
+      <div class='date'>{{ dateFromEvent() | date:'medium' }}</div>
   </div>
-  <div>{{event.id}}</div>
-  <div>{{event.userId}}</div>
-  <div>{{event.ticketId}}</div>
-  <div>{{event.srcTitle}}</div>
-  <div>{{event.dstTitle}}</div>
+  <div>
+    <span class='label label-danger change-label'>From</span>
+    <span>{{event.srcTitle}}</span>
+  </div>
+  <div>
+    <span class='label label-success change-label'>To</span>
+    <span>{{event.dstTitle}}</span>
+  </div>
 </div>

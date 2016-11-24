@@ -30,6 +30,8 @@ export interface TicketEventResultJson {
 
     ticketId: string;
 
+    time: number;
+
     userId: string;
 
 }
