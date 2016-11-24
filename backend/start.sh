@@ -17,4 +17,5 @@ psql $CONN -f $DROP_SQL
 psql $CONN -f $SCHEMA_SQL
 psql $CONN -f $SAMPLES_SQL
 
+./mvnw compile
 ./mvnw -DTICKTAG_CONFIG=$PROP_FILE exec:java -Dexec.mainClass=io.ticktag.TicktagApplicationKt
