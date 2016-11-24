@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { TicketResultJson, TicketTagResultJson } from '../../../api/';
+import { TicketResultJson, TicketTagResultJson, UserResultJson } from '../../../api/';
 
 @Component({
   selector: 'tt-ticket-core',
@@ -9,6 +9,7 @@ import { TicketResultJson, TicketTagResultJson } from '../../../api/';
 export class TicketCoreComponent {
     @Input() ticket: TicketResultJson;
     @Input() ticketTags: TicketTagResultJson[];
+    @Input() ticketCreator: UserResultJson;
     editingTitle: boolean;
     editingDescription: boolean;
 }

@@ -9,6 +9,18 @@ import {
 } from '../../api';
 import { Observable } from 'rxjs';
 
+class TicketDetailResult {
+  constructor(
+    public ticket: TicketResultJson,
+    public comments: CommentResultJson[],
+    public allAssignmentTags: AssignmentTagResultJson[],
+    public allTicketTags: TicketTagResultJson[],
+    public allTimeCategories: TimeCategoryJson[],
+    public assignedUsers: UserResultJson[],
+    public ticketCreator: UserResultJson,
+  ) { }
+}
+
 @Component({
   selector: 'tt-ticket-detail',
   templateUrl: './ticket-detail.component.html',
@@ -16,12 +28,7 @@ import { Observable } from 'rxjs';
 })
 export class TicketDetailComponent implements OnInit {
   private loading = true;
-  private ticket: TicketResultJson | null = null;
-  private comments: CommentResultJson[] | null = null;
-  private allAssignmentTags: AssignmentTagResultJson[] | null = null;
-  private allTicketTags: TicketTagResultJson[] | null = null;
-  private allTimeCategories: TimeCategoryJson[] | null = null;
-  private assignedUsers: UserResultJson[] | null = null;
+  private ticketDetail: TicketDetailResult | null = null;
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(
@@ -43,34 +50,55 @@ export class TicketDetailComponent implements OnInit {
         let ticketId = '' + params['ticketNumber'];
         let projectId = '' + params['projectId'];
 
-        let ticketObs = this.apiCallService
-          .callNoError<TicketResultJson>(p => this.ticketApi.getTicketUsingGETWithHttpInfo(ticketId, p));
-        let commentsObs = this.apiCallService
-          .callNoError<CommentResultJson[]>(p => this.commentsApi.listCommentsUsingGETWithHttpInfo(ticketId, p));
-        let assignmentTagsObs = this.apiCallService
-          .callNoError<AssignmentTagResultJson[]>(p => this.assigmentTagsApi.listAssignmentTagsUsingGETWithHttpInfo(projectId, p));
-        let ticketTagsObs = this.apiCallService
-          .callNoError<TicketTagResultJson[]>(p => this.ticketTagsApi.listTicketTagsUsingGETWithHttpInfo(null, projectId, p));
-        let timeCategoriesObs = this.apiCallService
-          .callNoError<TimeCategoryJson[]>(p => this.timeCategoryApi.listProjectTimeCategoriesUsingGETWithHttpInfo(projectId, p));
-
-        return Observable.zip(ticketObs, commentsObs, assignmentTagsObs, ticketTagsObs, timeCategoriesObs);
+        return this.getTicketDetail(projectId, ticketId);
       })
-      .switchMap(tuple => {
-        let wantedUsers = tuple[0].ticketAssignments.map(ta => ta.userId);
-        let obs = this.apiCallService
-          .callNoError<GetResultJson>(p => this.getApi.getUsingGETWithHttpInfo(wantedUsers, p));
-        return Observable.zip(Observable.of(tuple), obs);
-      })
-      .subscribe(tuple => {
-        let [[ticket, comments, assignmentTags, ticketTags, timeCategories], joined] = tuple;
-        this.ticket = ticket;
-        this.comments = comments;
-        this.allAssignmentTags = assignmentTags;
-        this.allTicketTags = ticketTags;
-        this.allTimeCategories = timeCategories;
-        this.assignedUsers = ticket.ticketAssignments.map(ta => joined.users[ta.userId]).filter(it => it);
+      .subscribe(ticketDetail => {
+        this.ticketDetail = ticketDetail;
         this.loading = false;
       });
+  }
+
+  getTicketDetail(projectId: string, ticketId: string): Observable<TicketDetailResult> {
+    let ticketObs = this.apiCallService
+      .callNoError<TicketResultJson>(p => this.ticketApi.getTicketUsingGETWithHttpInfo(ticketId, p));
+    let commentsObs = this.apiCallService
+      .callNoError<CommentResultJson[]>(p => this.commentsApi.listCommentsUsingGETWithHttpInfo(ticketId, p));
+    let assignmentTagsObs = this.apiCallService
+      .callNoError<AssignmentTagResultJson[]>(p => this.assigmentTagsApi.listAssignmentTagsUsingGETWithHttpInfo(projectId, p));
+    let ticketTagsObs = this.apiCallService
+      .callNoError<TicketTagResultJson[]>(p => this.ticketTagsApi.listTicketTagsUsingGETWithHttpInfo(null, projectId, p));
+    let timeCategoriesObs = this.apiCallService
+      .callNoError<TimeCategoryJson[]>(p => this.timeCategoryApi.listProjectTimeCategoriesUsingGETWithHttpInfo(projectId, p));
+
+    // There is no dependency between these requests so we can execute them in paralell
+    let zipped = Observable.zip(ticketObs, commentsObs, assignmentTagsObs, ticketTagsObs, timeCategoriesObs);
+
+    return zipped.flatMap(tuple => {
+      let ticketResult = tuple[0];
+      // We need all assigned users
+      let wantedUserIds = ticketResult.ticketAssignments.map(ta => ta.userId);
+      // And the person who created it
+      wantedUserIds.push(ticketResult.createdBy);
+
+      let obs = this.apiCallService
+        .callNoError<GetResultJson>(p => this.getApi.getUsingGETWithHttpInfo(wantedUserIds, p));
+
+      // Transform the result into a nice dto
+      return obs.map(getResult => {
+        // filter(it => it) removes null/undefined
+        let assignedUsers = ticketResult.ticketAssignments.map(ta => getResult.users[ta.userId]).filter(it => it);
+        let creator = getResult.users[ticketResult.createdBy];
+
+        return {
+          ticket: tuple[0],
+          comments: tuple[1],
+          allAssignmentTags: tuple[2],
+          allTicketTags: tuple[3],
+          allTimeCategories: tuple[4],
+          assignedUsers: assignedUsers,
+          ticketCreator: creator,
+        };
+      });
+    });
   }
 }

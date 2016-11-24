@@ -4,21 +4,25 @@
     </div>
     <div *ngIf="!loading" class='content row'>
         <div class='left col-md-8'>
-            <tt-ticket-core [ticket]='ticket' [ticketTags]='allTicketTags'></tt-ticket-core>
+            <tt-ticket-core
+                [ticket]='ticketDetail.ticket'
+                [ticketTags]='ticketDetail.allTicketTags'
+                [ticketCreator] = 'ticketDetail.ticketCreator'
+                ></tt-ticket-core>
 
             <div class='comments-wrapper'>
                 <tt-ticket-comments [comments]='comments'></tt-ticket-comments>
                 <tt-ticket-comment-input
-                    [allTicketTags]='allTicketTags'
-                    [ticket]='ticket'
-                    [allTimeCategories]='allTimeCategories'
-                    [allAssignmentTags]='allAssignmentTags'
-                    [assignedUsers]='assignedUsers'
+                    [allTicketTags]='ticketDetail.allTicketTags'
+                    [ticket]='ticketDetail.ticket'
+                    [allTimeCategories]='ticketDetail.allTimeCategories'
+                    [allAssignmentTags]='ticketDetail.allAssignmentTags'
+                    [assignedUsers]='ticketDetail.assignedUsers'
                 ></tt-ticket-comment-input>
             </div>
         </div>
         <div class='right col-md-4'>
-            <tt-ticket-sidebar [ticket]="ticket"></tt-ticket-sidebar>
+            <tt-ticket-sidebar [ticket]="ticketDetail.ticket"></tt-ticket-sidebar>
         </div>
     </div>
 </div>
