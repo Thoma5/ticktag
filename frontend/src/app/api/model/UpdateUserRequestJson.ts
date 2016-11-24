@@ -26,17 +26,17 @@
 import * as models from './models';
 
 export interface UpdateUserRequestJson {
-    mail: string;
+    mail?: string;
 
-    name: string;
+    name?: string;
 
-    password: string;
+    password?: string;
 
-    oldPassword: string;
+    oldPassword?: string;
 
-    role: UpdateUserRequestJson.RoleEnum;
+    role?: UpdateUserRequestJson.RoleEnum;
 
-    profilePic: Array<string>;
+    profilePic?: Array<string>;
 
 }
 export namespace UpdateUserRequestJson {
