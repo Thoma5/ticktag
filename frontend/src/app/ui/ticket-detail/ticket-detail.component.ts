@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiCallService } from '../../service';
+import { TaskQueue, Task } from '../../util/task-queue';
 import {
   TicketApi, TicketResultJson, CommentsApi, AssignmenttagApi,
   AssignmentTagResultJson, CommentResultJson, TicketTagResultJson,
   TickettagApi, TimeCategoryJson, TimecategoryApi, UserResultJson,
   GetApi, GetResultJson, UpdateTicketRequestJson,
 } from '../../api';
-import { Observable } from 'rxjs';
+import { Observable, Subscriber } from 'rxjs';
 
 class TicketDetailResult {
   constructor(
@@ -27,6 +28,8 @@ class TicketDetailResult {
   styleUrls: ['./ticket-detail.component.scss']
 })
 export class TicketDetailComponent implements OnInit {
+  private queue = new TaskQueue();
+
   private loading = true;
   private ticketDetail: TicketDetailResult | null = null;
 
@@ -92,12 +95,13 @@ export class TicketDetailComponent implements OnInit {
   private updateTicket(req: UpdateTicketRequestJson): void {
     let ticketId = this.ticketDetail.ticket.id;
 
-    let updateObs = this.apiCallService
-      .callNoError<TicketResultJson>(p => this.ticketApi.updateTicketUsingPUTWithHttpInfo(req, ticketId, p));
-    updateObs.subscribe(ticket => {
+    let sub = new Subscriber((ticket: TicketResultJson) => {
       this.ticketDetail.ticket = ticket;
       console.log(ticket);
     });
+    let updateObs = this.apiCallService
+      .callNoError<TicketResultJson>(p => this.ticketApi.updateTicketUsingPUTWithHttpInfo(req, ticketId, p));
+    this.queue.push(new Task(updateObs, sub));
   }
 
   private getEmptyUpdateRequest(): UpdateTicketRequestJson {
