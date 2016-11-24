@@ -9,6 +9,7 @@ import io.ticktag.restinterface.comment.schema.UpdateCommentRequestJson
 import io.ticktag.service.NotFoundException
 import io.ticktag.service.Principal
 import io.ticktag.service.comment.dto.CreateComment
+import io.ticktag.service.loggedTime.dto.CreateLoggedTime
 
 import io.ticktag.service.comment.dto.UpdateComment
 import io.ticktag.service.comment.service.CommentService
@@ -39,14 +40,14 @@ open class CommentController @Inject constructor(
     @PostMapping
     open fun createComment(@RequestBody req: CreateCommentRequestJson,
                            @AuthenticationPrincipal principal: Principal): CommentResultJson {
-        val comment = commentService.createComment(createComment = CreateComment(req.text, req.ticketId), principal = principal, ticketId = req.ticketId)
+        val comment = commentService.createComment(createComment = CreateComment(req.text, req.ticketId,req.mentionedTicketIds,req.loggedTime?.map(::CreateLoggedTime)), principal = principal, ticketId = req.ticketId)
         return CommentResultJson(comment)
     }
 
     @PutMapping(value = "/{id}")
     open fun updateComment(@RequestBody req: UpdateCommentRequestJson,
                            @PathVariable(name = "id") id: UUID): CommentResultJson {
-        return CommentResultJson(commentService.updateComment(updateComment = UpdateComment(req.text), commentId = id) ?: throw NotFoundException())
+        return CommentResultJson(commentService.updateComment(updateComment = UpdateComment(req.text,req.mentionedTicketIds,req.loggedTime?.map(::CreateLoggedTime)), commentId = id) ?: throw NotFoundException())
     }
 
     @DeleteMapping(value = "/{id}")

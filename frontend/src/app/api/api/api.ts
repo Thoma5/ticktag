@@ -2,6 +2,7 @@
 export * from './AssignmenttagApi';
 export * from './AuthApi';
 export * from './CommentsApi';
+export * from './LoggedTimeApi';
 export * from './MemberApi';
 export * from './ProjectApi';
 export * from './TicketApi';

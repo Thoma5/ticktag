@@ -30,6 +30,10 @@ export interface CommentResultJson {
 
     id: string;
 
+    loggedTimeIds: Array<string>;
+
+    mentionedTicketId: Array<string>;
+
     text: string;
 
     ticketId: string;
