@@ -8,7 +8,6 @@ import {TicketEventResultJson} from '../../../../api/model/TicketEventResultJson
 })
 export class TicketEventComponent {
   @Input() event: TicketEventResultJson;
-  @Input() title: String;
 
   dateFromEvent() {
     return new Date(this.event.time);

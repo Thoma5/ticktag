@@ -9,6 +9,7 @@
   <div ng-switch='event.type'>
     <div ng-switch-when='TicketEventTitleChangedResultJson'>
       <tt-ticket-event-old-new
+        [title]="'Title changed'"
         [oldString]='event.srcTitle'
         [newString]='event.dstTitle'
       ></tt-ticket-event-old-new>

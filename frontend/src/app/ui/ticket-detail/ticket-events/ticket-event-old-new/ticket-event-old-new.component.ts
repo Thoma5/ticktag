@@ -6,7 +6,7 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['../ticket-events.component.scss']
 })
 export class TicketEventOldNewComponent {
+    @Input() title: String;
     @Input() oldString: String;
     @Input() newString: String;
-
 }
