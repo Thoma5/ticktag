@@ -31,6 +31,14 @@ class TicketTagRelationApiTest : ApiBaseTest() {
         }
     }
 
+    @Test(expected = NotFoundException::class)
+    fun `create with tag from wrong project should fail`() {
+        withUser(ADMIN_ID) { principal ->
+            ticketTagRelationController.setTicketTagRelation(TICKET_PROJECT_AOU_AUO_2_ID, TAG_AOU_OAU_G1.first())
+        }
+    }
+
+
     @Test(expected = TicktagValidationException::class)
     fun `breaking exclusive Tag Group Constraint should fail`() {
         withUser(ADMIN_ID) { principal ->
@@ -97,9 +105,9 @@ class TicketTagRelationApiTest : ApiBaseTest() {
     @Test
     fun `create and get ticketTagRelation with Observer as ProjectAdmin should succeed`() {
         withUser(OBSERVER_ID) { principal ->
-            ticketTagRelationController.setTicketTagRelation(TICKET_PROJECT_AOU_OAU_0_ID, TAG_AOU_UOA_G1.first())
-            val relation = ticketTagRelationController.getTicketTagRelation(TICKET_PROJECT_AOU_OAU_0_ID, TAG_AOU_UOA_G1.first())
-            assertThat(relation.tagId.toString(), `is`(TAG_AOU_UOA_G1.first().toString()))
+            ticketTagRelationController.setTicketTagRelation(TICKET_PROJECT_AOU_OAU_0_ID, TAG_AOU_OAU_G1.first())
+            val relation = ticketTagRelationController.getTicketTagRelation(TICKET_PROJECT_AOU_OAU_0_ID, TAG_AOU_OAU_G1.first())
+            assertThat(relation.tagId.toString(), `is`(TAG_AOU_OAU_G1.first().toString()))
             assertThat(relation.ticketId.toString(), `is`(TICKET_PROJECT_AOU_OAU_0_ID.toString()))
         }
     }
@@ -117,9 +125,9 @@ class TicketTagRelationApiTest : ApiBaseTest() {
     @Test
     fun `create and get ticketTagRelation with Admin as ProjectObserver should succeed`() {
         withUser(ADMIN_ID) { principal ->
-            ticketTagRelationController.setTicketTagRelation(TICKET_PROJECT_AOU_OAU_0_ID, TAG_AOU_UOA_G1.first())
-            val relation = ticketTagRelationController.getTicketTagRelation(TICKET_PROJECT_AOU_OAU_0_ID, TAG_AOU_UOA_G1.first())
-            assertThat(relation.tagId.toString(), `is`(TAG_AOU_UOA_G1.first().toString()))
+            ticketTagRelationController.setTicketTagRelation(TICKET_PROJECT_AOU_OAU_0_ID, TAG_AOU_OAU_G1.first())
+            val relation = ticketTagRelationController.getTicketTagRelation(TICKET_PROJECT_AOU_OAU_0_ID, TAG_AOU_OAU_G1.first())
+            assertThat(relation.tagId.toString(), `is`(TAG_AOU_OAU_G1.first().toString()))
             assertThat(relation.ticketId.toString(), `is`(TICKET_PROJECT_AOU_OAU_0_ID.toString()))
         }
     }
@@ -137,9 +145,9 @@ class TicketTagRelationApiTest : ApiBaseTest() {
     @Test
     fun `create and get ticketTagRelation with Admin as ProjectUser should succeed`() {
         withUser(ADMIN_ID) { principal ->
-            ticketTagRelationController.setTicketTagRelation(TICKET_PROJECT_AOU_UOA_2_ID, TAG_AOU_OAU_G1.first())
-            val relation = ticketTagRelationController.getTicketTagRelation(TICKET_PROJECT_AOU_UOA_2_ID, TAG_AOU_OAU_G1.first())
-            assertThat(relation.tagId.toString(), `is`(TAG_AOU_OAU_G1.first().toString()))
+            ticketTagRelationController.setTicketTagRelation(TICKET_PROJECT_AOU_UOA_2_ID, TAG_AOU_UOA_G1.first())
+            val relation = ticketTagRelationController.getTicketTagRelation(TICKET_PROJECT_AOU_UOA_2_ID, TAG_AOU_UOA_G1.first())
+            assertThat(relation.tagId.toString(), `is`(TAG_AOU_UOA_G1.first().toString()))
             assertThat(relation.ticketId.toString(), `is`(TICKET_PROJECT_AOU_UOA_2_ID.toString()))
         }
     }
@@ -200,9 +208,9 @@ class TicketTagRelationApiTest : ApiBaseTest() {
     fun `delete ticketTagRelation with Observer as ProjectAdmin should succeed`() {
         withUser(OBSERVER_ID) { principal ->
             try {
-                ticketTagRelationController.setTicketTagRelation(TICKET_PROJECT_AOU_OAU_0_ID, TAG_AOU_UOA_G1.first())
-                ticketTagRelationController.getTicketTagRelation(TICKET_PROJECT_AOU_OAU_0_ID, TAG_AOU_UOA_G1.first())
-                ticketTagRelationController.deleteTicketTagRelation(TICKET_PROJECT_AOU_OAU_0_ID, TAG_AOU_UOA_G1.first())
+                ticketTagRelationController.setTicketTagRelation(TICKET_PROJECT_AOU_OAU_0_ID, TAG_AOU_OAU_G1.first())
+                ticketTagRelationController.getTicketTagRelation(TICKET_PROJECT_AOU_OAU_0_ID, TAG_AOU_OAU_G1.first())
+                ticketTagRelationController.deleteTicketTagRelation(TICKET_PROJECT_AOU_OAU_0_ID, TAG_AOU_OAU_G1.first())
             } catch (e: Exception) {
                 fail()
             }
