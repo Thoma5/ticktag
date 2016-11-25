@@ -94,7 +94,29 @@ export class TicketDetailComponent implements OnInit {
   }
 
   onAssignmentAdd(ass: TicketAssignmentJson) {
-    console.dir(ass);
+    let obs = this.apiCallService
+      .call<void>(p => this.ticketAssignmentApi.createTicketAssignmentUsingPOSTWithHttpInfo(
+        this.ticketDetail.ticket.id,
+        ass.assignmentTagId,
+        ass.userId,
+        p));
+    this.queue.push(obs)
+      .flatMap<ValidationErrorJson[] | TicketDetailResult>(result => {
+        if (result.isValid) {
+          return this.getTicketDetail(this.ticketDetail.ticket.projectId, this.ticketDetail.ticket.id);
+        } else {
+          return Observable.of(result.error);
+        }
+      })
+      .subscribe(result => {
+        if (result instanceof TicketDetailResult) {
+          this.ticketDetail = result;
+        } else {
+          // TODO nice message
+          console.dir(result);
+          console.warn('asldöf jasldfkj sdaölfaj sdölsajdl aösdfas');
+        }
+      });
   }
 
   onAssignmentRemove(ass: TicketAssignmentJson) {
