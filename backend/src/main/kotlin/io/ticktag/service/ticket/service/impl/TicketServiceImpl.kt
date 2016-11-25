@@ -15,6 +15,8 @@ import io.ticktag.service.ticket.dto.UpdateTicket
 import io.ticktag.service.ticket.service.TicketService
 import io.ticktag.service.ticketassignment.dto.TicketAssignmentResult
 import io.ticktag.service.ticketassignment.services.TicketAssignmentService
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
@@ -39,8 +41,11 @@ open class TicketServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
-    override fun listTickets(@P("authProjectId") project: UUID): List<TicketResult> {
-        return tickets.findByProjectId(project).map(::TicketResult)
+
+    override fun listTickets(@P("authProjectId") project: UUID, pageable: Pageable): Page<TicketResult> {
+        val page =  tickets.findByProjectId(project, pageable)
+        val  content = page.content.map(::TicketResult)
+        return PageImpl(content,pageable,page.totalElements)
     }
 
     @PreAuthorize(AuthExpr.READ_TICKET)
@@ -54,7 +59,7 @@ open class TicketServiceImpl @Inject constructor(
     override fun createTicket(@Valid createTicket: CreateTicket, principal: Principal, @P("authProjectId") projectId: UUID): TicketResult {
 
         val wantToSetParentTicket = createTicket.parentTicket != null
-        val dontWantToCreateSubTicketsInThisUpdate =  createTicket.subTickets.isEmpty()
+        val dontWantToCreateSubTicketsInThisUpdate = createTicket.subTickets.isEmpty()
         val dontWantToReferenceSubTicketsInThisUpdate = createTicket.existingSubTicketIds.isEmpty()
 
         //implies(q,p) is only false if q is true and p is false
