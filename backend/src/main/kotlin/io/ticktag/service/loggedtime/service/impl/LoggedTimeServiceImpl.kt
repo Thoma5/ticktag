@@ -1,15 +1,15 @@
-package io.ticktag.service.loggedTime.service.impl
+package io.ticktag.service.loggedtime.service.impl
 
 import io.ticktag.TicktagService
-import io.ticktag.persistence.LoggedTime.LoggedTimeRepository
+import io.ticktag.persistence.loggedtime.LoggedTimeRepository
 import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.ticket.entity.LoggedTime
 import io.ticktag.persistence.timecategory.TimeCategoryRepository
 import io.ticktag.service.*
-import io.ticktag.service.loggedTime.dto.CreateLoggedTime
-import io.ticktag.service.loggedTime.dto.LoggedTimeResult
-import io.ticktag.service.loggedTime.dto.UpdateLoggedTime
-import io.ticktag.service.loggedTime.service.LoggedTimeService
+import io.ticktag.service.loggedtime.dto.CreateLoggedTime
+import io.ticktag.service.loggedtime.dto.LoggedTimeResult
+import io.ticktag.service.loggedtime.dto.UpdateLoggedTime
+import io.ticktag.service.loggedtime.service.LoggedTimeService
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
 import java.util.*

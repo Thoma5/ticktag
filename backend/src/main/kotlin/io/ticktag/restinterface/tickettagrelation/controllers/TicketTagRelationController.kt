@@ -3,8 +3,6 @@ package io.ticktag.restinterface.tickettagrelation.controllers
 import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.tickettagrelation.schema.TicketTagRelationResultJson
-import io.ticktag.restinterface.ticketuserrelation.schema.TickerUserRelationResultJson
-import io.ticktag.service.ticketassignment.services.TicketAssignmentService
 import io.ticktag.service.tickettagrelation.services.TicketTagRelationService
 import org.springframework.web.bind.annotation.*
 import java.util.*

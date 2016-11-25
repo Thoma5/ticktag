@@ -6,9 +6,9 @@ import io.ticktag.restinterface.loggedtime.schema.LoggedTimeResultJson
 import io.ticktag.restinterface.loggedtime.schema.UpdateLoggedTimeJson
 import io.ticktag.service.NotFoundException
 import io.ticktag.service.comment.dto.CreateLoggedTimeJson
-import io.ticktag.service.loggedTime.dto.CreateLoggedTime
-import io.ticktag.service.loggedTime.dto.UpdateLoggedTime
-import io.ticktag.service.loggedTime.service.LoggedTimeService
+import io.ticktag.service.loggedtime.dto.CreateLoggedTime
+import io.ticktag.service.loggedtime.dto.UpdateLoggedTime
+import io.ticktag.service.loggedtime.service.LoggedTimeService
 import org.springframework.web.bind.annotation.*
 import java.util.*
 import javax.inject.Inject

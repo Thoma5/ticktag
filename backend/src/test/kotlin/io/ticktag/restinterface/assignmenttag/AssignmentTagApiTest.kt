@@ -29,7 +29,7 @@ class AssignmentTagApiTest : ApiBaseTest() {
             val req = CreateAssignmentTagRequestJson(projectId, name, color)
             assignmentTagController.createAssignmentTag(req)
 
-            assignmentTagController.listAssignmentTags(projectId);
+            assignmentTagController.listAssignmentTags(projectId)
 
             val result = assignmentTagController.listAssignmentTags(projectId).filter { it.name == name }.singleOrNull()
             if (result != null) {

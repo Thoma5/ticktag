@@ -1,4 +1,4 @@
-package io.ticktag.persistence.LoggedTime
+package io.ticktag.persistence.loggedtime
 
 import io.ticktag.TicktagRepository
 import io.ticktag.persistence.TicktagCrudRepository

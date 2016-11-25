@@ -1,6 +1,6 @@
 package io.ticktag.service
 
-import io.ticktag.persistence.LoggedTime.LoggedTimeRepository
+import io.ticktag.persistence.loggedtime.LoggedTimeRepository
 import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.member.MemberRepository
 import io.ticktag.persistence.member.entity.ProjectRole

@@ -1,6 +1,6 @@
 package io.ticktag.restinterface.loggedtime.schema
 
-import io.ticktag.service.loggedTime.dto.LoggedTimeResult
+import io.ticktag.service.loggedtime.dto.LoggedTimeResult
 import java.time.Duration
 import java.util.*
 

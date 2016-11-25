@@ -1,4 +1,4 @@
-package io.ticktag.service.loggedTime.dto
+package io.ticktag.service.loggedtime.dto
 
 import io.ticktag.persistence.ticket.entity.LoggedTime
 import java.time.Duration

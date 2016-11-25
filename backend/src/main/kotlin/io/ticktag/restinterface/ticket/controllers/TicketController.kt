@@ -7,7 +7,6 @@ import io.ticktag.service.Principal
 import io.ticktag.service.ticket.dto.CreateTicket
 import io.ticktag.service.ticket.dto.UpdateTicket
 import io.ticktag.service.ticket.service.TicketService
-import io.ticktag.service.tickettag.services.TicketTagService
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.security.core.annotation.AuthenticationPrincipal

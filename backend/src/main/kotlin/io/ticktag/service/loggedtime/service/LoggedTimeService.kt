@@ -1,8 +1,8 @@
-package io.ticktag.service.loggedTime.service
+package io.ticktag.service.loggedtime.service
 
-import io.ticktag.service.loggedTime.dto.CreateLoggedTime
-import io.ticktag.service.loggedTime.dto.LoggedTimeResult
-import io.ticktag.service.loggedTime.dto.UpdateLoggedTime
+import io.ticktag.service.loggedtime.dto.CreateLoggedTime
+import io.ticktag.service.loggedtime.dto.LoggedTimeResult
+import io.ticktag.service.loggedtime.dto.UpdateLoggedTime
 import java.util.*
 
 
