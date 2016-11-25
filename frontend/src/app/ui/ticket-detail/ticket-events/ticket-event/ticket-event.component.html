@@ -1,0 +1,17 @@
+<div class='event'>
+  <div class='header-row'>
+    <div class='user'>
+      <div class='user-icon'><img src='http://lorempixel.com/100/100/cats'/></div>
+      <div class='user-name'><span>?user?</span></div>
+    </div>
+    <div class='date'>{{ dateFromEvent() | date:'medium' }}</div>
+  </div>
+  <div ng-switch='event.type'>
+    <div ng-switch-when='TicketEventTitleChangedResultJson'>
+      <tt-ticket-event-old-new
+        [oldString]='event.srcTitle'
+        [newString]='event.dstTitle'
+      ></tt-ticket-event-old-new>
+    </div>
+  </div>
+</div>

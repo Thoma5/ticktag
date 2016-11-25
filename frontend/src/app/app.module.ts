@@ -53,8 +53,9 @@ import { SelectAllDirective } from './util/select-all.directive';
 import { EditButtonComponent } from './util/edit-button/edit-button.component';
 import { LoadingComponent } from './util/loading/loading.component';
 import {TicketEventsComponent} from './ui/ticket-detail/ticket-events/ticket-events.component';
-import {TicketEventTitleChangedComponent} from './ui/ticket-detail/ticket-events/ticket-event-title-changed/ticket-event-title-changed.component';
+import {TicketEventOldNewComponent} from './ui/ticket-detail/ticket-events/ticket-event-old-new/ticket-event-old-new.component';
 import {TicketeventApi} from './api/api/TicketeventApi';
+import {TicketEventComponent} from './ui/ticket-detail/ticket-events/ticket-event/ticker-event.component';
 
 
 @NgModule({
@@ -94,7 +95,8 @@ import {TicketeventApi} from './api/api/TicketeventApi';
     TicketCommentsComponent,
     TicketCommentComponent,
     TicketEventsComponent,
-    TicketEventTitleChangedComponent,
+    TicketEventComponent,
+    TicketEventOldNewComponent,
     TicketCommentInputComponent,
     EditButtonComponent,
 
