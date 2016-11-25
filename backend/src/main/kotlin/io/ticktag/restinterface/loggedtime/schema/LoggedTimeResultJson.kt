@@ -1,4 +1,4 @@
-package io.ticktag.restinterface.loggedTime.schema
+package io.ticktag.restinterface.loggedtime.schema
 
 import io.ticktag.service.loggedTime.dto.LoggedTimeResult
 import java.time.Duration

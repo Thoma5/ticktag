@@ -1,12 +1,12 @@
-package io.ticktag.restinterface.loggedTime.controller
+package io.ticktag.restinterface.loggedtime.controller
 
 import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
-import io.ticktag.restinterface.loggedTime.schema.LoggedTimeResultJson
-import io.ticktag.restinterface.loggedTime.schema.UpdateLoggedTimeJson
+import io.ticktag.restinterface.loggedtime.schema.LoggedTimeResultJson
+import io.ticktag.restinterface.loggedtime.schema.UpdateLoggedTimeJson
 import io.ticktag.service.NotFoundException
-import io.ticktag.service.loggedTime.dto.CreateLoggedTime
 import io.ticktag.service.comment.dto.CreateLoggedTimeJson
+import io.ticktag.service.loggedTime.dto.CreateLoggedTime
 import io.ticktag.service.loggedTime.dto.UpdateLoggedTime
 import io.ticktag.service.loggedTime.service.LoggedTimeService
 import org.springframework.web.bind.annotation.*
@@ -15,16 +15,16 @@ import javax.inject.Inject
 
 
 @TicktagRestInterface
-@RequestMapping("/logged_time")
-@Api(tags = arrayOf("loggedTime"), description = "loggedTime management")
+@RequestMapping("/loggedtime")
+@Api(tags = arrayOf("loggedtime"), description = "logged time management")
 open class LoggedTimeController @Inject constructor(
         private val loggedTimeService: LoggedTimeService
 ) {
 
-    @GetMapping(value = "/{loggTimeId}")
+    @GetMapping(value = "/{id}")
     open fun getLoggedTimesForId(
-            @RequestParam loggTimeId: UUID): LoggedTimeResultJson {
-        val loggedTime = loggedTimeService.getLoggedTime(loggTimeId)
+            @RequestParam id: UUID): LoggedTimeResultJson {
+        val loggedTime = loggedTimeService.getLoggedTime(id)
         return LoggedTimeResultJson(loggedTime)
     }
 
@@ -50,15 +50,15 @@ open class LoggedTimeController @Inject constructor(
         return LoggedTimeResultJson(newLoggedTime)
     }
 
-    @PutMapping(value = "/{loggedTimeId}")
+    @PutMapping(value = "/{id}")
     open fun updateLoggedTime(@RequestBody req: UpdateLoggedTimeJson,
-                              @RequestParam loggedTimeId: UUID): LoggedTimeResultJson {
-        val newLoggedTime = loggedTimeService.updateLoggedTime(UpdateLoggedTime(req.time, req.categoryId), loggedTimeId)
+                              @RequestParam id: UUID): LoggedTimeResultJson {
+        val newLoggedTime = loggedTimeService.updateLoggedTime(UpdateLoggedTime(req.time, req.categoryId), id)
         return LoggedTimeResultJson(newLoggedTime)
     }
 
-    @DeleteMapping(value = "/{loggedTimeId}")
-    open fun deleteLoggedTime(@RequestParam loggedTimeId: UUID) {
-        loggedTimeService.deleteLoggedTime(loggedTimeId)
+    @DeleteMapping(value = "/{id}")
+    open fun deleteLoggedTime(@RequestParam id: UUID) {
+        loggedTimeService.deleteLoggedTime(id)
     }
 }
