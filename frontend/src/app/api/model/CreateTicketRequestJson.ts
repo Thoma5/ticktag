@@ -30,13 +30,13 @@ export interface CreateTicketRequestJson {
 
     open: boolean;
 
-    storyPoints: number;
+    storyPoints?: number;
 
-    initialEstimatedTime: number;
+    initialEstimatedTime?: number;
 
-    currentEstimatedTime: number;
+    currentEstimatedTime?: number;
 
-    dueDate: number;
+    dueDate?: number;
 
     description: string;
 
@@ -48,7 +48,7 @@ export interface CreateTicketRequestJson {
 
     existingSubTicketIds: Array<string>;
 
-    partenTicketId: string;
+    partenTicketId?: string;
 
 }
 

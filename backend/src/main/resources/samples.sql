@@ -60,7 +60,10 @@ INSERT INTO public."user" (id, username, mail, name, password_hash, role, curren
   ('93ef43d9-20b7-461a-b960-2d1e89ba099f', 'heinzl', 'michael.heinzl@test.de', 'Michael Heinzl',
    '$2a$10$.dLg4Vgt7JrP.564p/tPQOm.TLoy3HieFP1ZpnyWVPkJDYrG6r.Ce', 'OBSERVER', '370f4e86-1ebf-4b70-a113-add96d0905e1',
    E'\\x'); --michael-supersecure
-
+INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, profile_pic) VALUES
+  ('00000000-0001-0000-0000-000000000004', 'cannot', 'adsf@asdf.ad', 'I Can Nothing the Second',
+   '$2a$10$mTEkiQq2Wo./aqfekJHPk.5sG8JLWqWYbtMODwk9xQwQp0GtkCiM.', 'USER', '4aa33174-0001-4d33-0000-add96d0905e1',
+   NULL); --aaaa
 
 -- BEGIN all role/project role member permutations DO NOT ALTER
 INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, profile_pic) VALUES
@@ -193,7 +196,7 @@ INSERT INTO public.ticket (id, number, parent_ticket_id, project_id, created_by,
 VALUES ('00000000-0003-0000-0000-000000000002', 2, NULL, '00000000-0002-0000-0000-000000000001',
                                                 '660f2968-aa46-4870-bcc5-a3805366cff2',
                                                 NULL, '2016-11-16 18:06:07.221000',
-                                                'Create Users View', TRUE, 10, 20, 25, '2016-11-20 17:07:05.554000');
+                                                'Create Users View', TRUE, 10, 20, 25, '2016-11-21 17:07:05.554000');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text)
 VALUES ('00000000-0004-0000-0000-000000000002', '660f2968-aa46-4870-bcc5-a3805366cff2',
         '00000000-0003-0000-0000-000000000002', '2016-11-16 17:09:59.019000', 'You have to do 3 sub Tasks');
@@ -207,7 +210,7 @@ VALUES ('00000000-0003-0000-0000-000000000003', 3, '00000000-0003-0000-0000-0000
                                                 '00000000-0002-0000-0000-000000000001',
                                                 '660f2968-aa46-4870-bcc5-a3805366cff2',
                                                 NULL, '2016-11-16 18:06:07.221000',
-                                                'UI Users View', FALSE, 10, 10, 10, '2016-11-20 17:07:05.554000');
+                                                'UI Users View', FALSE, 10, 10, 10, '2016-11-22 17:07:05.554000');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
   ('00000000-0004-0000-0000-000000000003', '660f2968-aa46-4870-bcc5-a3805366cff2',
    '00000000-0003-0000-0000-000000000003', '2016-11-16 17:09:59.019000',
@@ -226,7 +229,7 @@ VALUES ('00000000-0003-0000-0000-000000000004', 4, '00000000-0003-0000-0000-0000
                                                 '00000000-0002-0000-0000-000000000001',
                                                 '660f2968-aa46-4870-bcc5-a3805366cff2',
                                                 NULL, '2016-11-16 18:06:07.221000',
-                                                'Implement Users View', TRUE, 4, 25, 25, '2016-11-20 17:07:05.554000');
+                                                'Implement Users View', TRUE, 4, 25, 25, '2016-12-20 17:07:05.554000');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
   ('00000000-0004-0000-0000-000000000004', '660f2968-aa46-4870-bcc5-a3805366cff2',
    '00000000-0003-0000-0000-000000000004', '2016-11-16 17:09:59.019000', 'Implement Users View');
@@ -240,7 +243,7 @@ VALUES ('00000000-0003-0000-0000-000000000005', 5, '00000000-0003-0000-0000-0000
                                                 '00000000-0002-0000-0000-000000000001',
                                                 '660f2968-aa46-4870-bcc5-a3805366cff2',
                                                 NULL, '2016-11-16 18:06:07.221000',
-                                                'Test Users View', FALSE, 20, 20, 25, '2016-11-20 17:07:05.554000');
+                                                'Test Users View', FALSE, 20, 20, 25, '2016-9-20 17:07:05.554000');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
   ('00000000-0004-0000-0000-000000000005', '660f2968-aa46-4870-bcc5-a3805366cff2',
    '00000000-0003-0000-0000-000000000005', '2016-11-16 17:09:59.019000', 'Test Users View');
@@ -253,7 +256,7 @@ INSERT INTO public.ticket (id, number, parent_ticket_id, project_id, created_by,
 VALUES ('00000000-0003-0000-0000-000000000006', 6, NULL, '00000000-0002-0000-0000-000000000001',
                                                 '93ef43d9-20b7-461a-b960-2d1e89ba099f',
                                                 NULL, '2016-11-16 18:06:07.221000',
-                                                'Set UP CI', FALSE, 20, 3.6e+13, 5.4e+13, '2016-11-20 17:07:05.554000');
+                                                'Set UP CI', FALSE, 20, 3.6e+13, 5.4e+13, '2015-4-20 17:07:05.554000');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
   ('00000000-0004-0000-0000-000000000007', '93ef43d9-20b7-461a-b960-2d1e89ba099f',
    '00000000-0003-0000-0000-000000000006', '2016-11-16 17:09:59.019', '# An exhibit of Markdown
@@ -328,18 +331,31 @@ It''s sometimes handy for breaking things up.
 
 ## Images
 
-Markdown can also contain images. I''ll need to add something here sometime.
+![Cat](http://lorempixel.com/400/400/cats)
+
+## Code
+
+```haskell
+quicksort :: (Ord a) => [a] -> [a]
+quicksort [] = []
+quicksort (x:xs) =
+    let smallerSorted = quicksort [a | a <- xs, a <= x]
+        biggerSorted = quicksort [a | a <- xs, a > x]
+    in  smallerSorted ++ [x] ++ biggerSorted
+```
 
 ## Finally
 
-There''s actually a lot more to Markdown than this. See the official [introduction][4] and [syntax][5] for more information. However, be aware that this is not using the official implementation, and this might work subtly differently in some of the little things.
+
+  This is the XSS test:
+  <script>alert("xss")</script>
+  [XSS](javascript&#58this;alert(1&#41;)
+  [XSS](javascript&#58;alert(1&#41;)
+  ![XSS](javascript:alert())
 
 
-  [1]: http://daringfireball.net/projects/markdown/
-  [2]: http://www.fileformat.info/info/unicode/char/2163/index.htm
-  [3]: http://www.markitdown.net/
-  [4]: http://daringfireball.net/projects/markdown/basics
-  [5]: http://daringfireball.net/projects/markdown/syntax
+  This is the linkify test: https://www.google.com
+  And this is the normal link test: [Link](https://www.google.com)
 ');
 
 UPDATE public.ticket
@@ -476,6 +492,12 @@ VALUES ('00000000-0003-0000-0000-000000000003', '00000000-0005-0000-0000-0000000
 
 INSERT INTO public.assigned_ticket_tag (ticket_id, ticket_tag_id)
 VALUES ('00000000-0003-0000-0000-000000000004', '00000000-0005-0000-0000-000000000001');
+
+
+INSERT INTO public.assigned_ticket_tag (ticket_id, ticket_tag_id)
+VALUES ('00000000-0003-0000-0000-000000000006', '00000000-0005-0000-0000-000000000001');
+INSERT INTO public.assigned_ticket_tag (ticket_id, ticket_tag_id)
+VALUES ('00000000-0003-0000-0000-000000000006', '00000000-0005-0000-0001-000000000002');
 
 COMMIT;
 
@@ -630,11 +652,7 @@ BEGIN;
 --TicketEvent
 INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('aacf19e5-4afb-443c-9597-991e7d91f453', '00000000-0003-0000-0000-000000000006', '00000000-0001-0000-0000-000000000001', '2016-11-24 16:11:09.768000');
 INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('4e7773dd-2010-408b-a936-42cb1419c462', '00000000-0003-0000-0000-000000000006', '00000000-0001-0000-0000-000000000001', '2016-11-24 16:11:27.467000');
-INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('9abd317d-94fe-4e97-909d-af713479b367', '00000000-0003-0000-0000-000000000006', '00000000-0001-0000-0000-000000000001', '2016-11-25 17:02:25.216000');
-INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('31720c8c-19e6-47d7-b1c9-de1cf321d4d5', '00000000-0003-0000-0000-000000000006', '00000000-0001-0000-0000-000000000001', '2016-11-25 17:02:32.631000');
-INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('392ff38c-69eb-4e83-8681-79371eb4af20', '00000000-0003-0000-0000-000000000006', '00000000-0001-0000-0000-000000000001', '2016-11-25 17:02:37.587000');
-INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('1b139e94-20bb-4070-989a-4e219c124bc3', '00000000-0003-0000-0000-000000000006', '00000000-0001-0000-0000-000000000001', '2016-11-25 17:09:49.356000');
-INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('a6a40784-6e76-4da1-b054-c3bdbcc5f5da', '00000000-0003-0000-0000-000000000006', '00000000-0001-0000-0000-000000000001', '2016-11-25 17:10:00.327000');
+
 INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('8156ef34-bb01-41ec-a03d-9a96817d6ff9', '00000000-0003-0000-0000-000000000006', '00000000-0001-0000-0000-000000000001', '2016-11-25 17:01:27.665000');
 INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('ac39dd07-1b13-4ea0-bb56-92d82be2b585', '00000000-0003-0000-0000-000000000006', '00000000-0001-0000-0000-000000000001', '2016-11-25 17:01:39.048000');
 INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('c26f0650-06f8-4d45-a311-43acc9990299', '00000000-0003-0000-0000-000000000006', '00000000-0001-0000-0000-000000000001', '2016-11-25 17:04:26.346000');
@@ -648,9 +666,11 @@ INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('a94a570d
 INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('799ee2dd-2168-46cf-84e2-b6a6395c4801', '00000000-0003-0000-0000-000000000006', '00000000-0001-0000-0000-000000000001', '2016-11-25 17:20:40.389000');
 INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('0e842df3-2308-4a12-beba-cacbdf4eeccf', '00000000-0003-0000-0000-000000000006', '00000000-0001-0000-0000-000000000001', '2016-11-25 17:20:49.227000');
 
---Ticket Event Title Changed
+--TicketEventTitleChanged
 INSERT INTO public.ticket_event_title_changed (id, src_title, dst_title) VALUES ('aacf19e5-4afb-443c-9597-991e7d91f453', 'Set UP CI', 'New Title');
 INSERT INTO public.ticket_event_title_changed (id, src_title, dst_title) VALUES ('4e7773dd-2010-408b-a936-42cb1419c462', 'New Title', 'Last Title was odd');
+
+
 
 --Ticket Event Comment Text Changed
 INSERT INTO public.ticket_event_comment_text_changed (id, comment_id, src_text, dst_text) VALUES ('8156ef34-bb01-41ec-a03d-9a96817d6ff9', '00000000-0004-0000-0000-000000000008', 'There is still so much todo', 'I am New');
@@ -660,7 +680,8 @@ INSERT INTO public.ticket_event_comment_text_changed (id, comment_id, src_text, 
 INSERT INTO public.ticket_event_due_date_changed (id, src_due_date, dst_due_date) VALUES ('c26f0650-06f8-4d45-a311-43acc9990299', '2015-04-20 17:07:05.554000', '1970-01-01 01:01:40.000000');
 INSERT INTO public.ticket_event_due_date_changed (id, src_due_date, dst_due_date) VALUES ('98f68e51-af94-417b-a121-b70ee2e3aecd', '1970-01-01 01:01:40.000000', '1970-01-01 01:01:30.000000');
 
--- Ticket Event Initial Estimated Time Changed
+
+-- Ticket Event Inital Estimated Time Changed
 INSERT INTO public.ticket_event_initial_estimated_time_changed (id, src_initial_estimated_time, dst_initial_estimated_time) VALUES ('7c2e93c0-22df-4d9d-856d-0a1ad23a4e5a', 36000000000000, 100000000000);
 INSERT INTO public.ticket_event_initial_estimated_time_changed (id, src_initial_estimated_time, dst_initial_estimated_time) VALUES ('f8c680e3-3975-489e-890d-917a36e0c97c', 100000000000, 80000000000);
 INSERT INTO public.ticket_event_initial_estimated_time_changed (id, src_initial_estimated_time, dst_initial_estimated_time) VALUES ('43444635-5ea0-4366-9d8a-cd139aec5459', 80000000000, 40000000000);
@@ -672,14 +693,5 @@ INSERT INTO public.ticket_event_state_changed (id, src_state, dst_state) VALUES 
 -- Ticket Event User Added
 INSERT INTO public.ticket_event_user_added (id, user_id, assignment_tag_id) VALUES ('799ee2dd-2168-46cf-84e2-b6a6395c4801', '00000000-0001-0000-0000-000000000001', '00000000-0006-0000-0000-000000000001');
 INSERT INTO public.ticket_event_user_added (id, user_id, assignment_tag_id) VALUES ('0e842df3-2308-4a12-beba-cacbdf4eeccf', '00000000-0001-0000-0000-000000000001', '00000000-0006-0000-0000-000000000002');
-
---Ticket Event Current Estimated Time Changed
-INSERT INTO public.ticket_event_current_estimated_time_changed (id, src_current_estimated_time, dst_current_estimated_time) VALUES ('9abd317d-94fe-4e97-909d-af713479b367', 54000000000000, 8000000000);
-INSERT INTO public.ticket_event_current_estimated_time_changed (id, src_current_estimated_time, dst_current_estimated_time) VALUES ('31720c8c-19e6-47d7-b1c9-de1cf321d4d5', 8000000000, 15000000000);
-INSERT INTO public.ticket_event_current_estimated_time_changed (id, src_current_estimated_time, dst_current_estimated_time) VALUES ('392ff38c-69eb-4e83-8681-79371eb4af20', 15000000000, 10000000000);
-
---Ticket Event Parent Changed
-INSERT INTO public.ticket_event_parent_changed (id, src_parent_id, dst_parent_id) VALUES ('1b139e94-20bb-4070-989a-4e219c124bc3', null, '00000000-0003-0000-0000-000000000001');
-INSERT INTO public.ticket_event_parent_changed (id, src_parent_id, dst_parent_id) VALUES ('a6a40784-6e76-4da1-b054-c3bdbcc5f5da', '00000000-0003-0000-0000-000000000001', '00000000-0003-0000-0000-000000000002');
 
 COMMIT;

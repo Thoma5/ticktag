@@ -28,5 +28,9 @@ import * as models from './models';
 export interface UpdateCommentRequestJson {
     text: string;
 
+    mentionedTicketIds?: Array<string>;
+
+    loggedTime?: Array<models.CreateLoggedTimeJson>;
+
 }
 

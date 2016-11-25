@@ -57,8 +57,8 @@ open class SwaggerConfig : WebMvcConfigurerAdapter() {
                     val bean = context.beanPropertyDefinition.get()
                     if (bean.hasField()) {
                         val property = bean.field.annotated.kotlinProperty
-                        if (property != null && !property.returnType.isMarkedNullable) {
-                            context.builder.required(true)
+                        if (property != null) {
+                            context.builder.required(!property.returnType.isMarkedNullable)
                         }
                     }
                 }

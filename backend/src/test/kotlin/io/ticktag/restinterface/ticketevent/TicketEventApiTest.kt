@@ -32,12 +32,12 @@ class TicketEventApiTest : ApiBaseTest() {
     }
 
     fun updateComment(principal: Principal) {
-        commentController.updateComment(UpdateCommentRequestJson("Changed Comment"), commendId, principal)
+      //  commentController.updateComment(UpdateCommentRequestJson("Changed Comment"), , commendId, principal)
     }
 
     fun keepCommentSame(principal: Principal) {
         val comment = commentController.getComment(commendId)
-        commentController.updateComment(UpdateCommentRequestJson(comment.text), commendId, principal)
+        commentController.updateComment(UpdateCommentRequestJson(comment.text, comment.mentionedTicketId, null), commendId, principal)
     }
 
 

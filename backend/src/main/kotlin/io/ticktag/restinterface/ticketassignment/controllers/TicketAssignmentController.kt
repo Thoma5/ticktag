@@ -3,7 +3,9 @@ package io.ticktag.restinterface.ticketassignment.controllers
 import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.ticketassignment.schema.TicketAssignmentResultJson
+import io.ticktag.service.Principal
 import io.ticktag.service.ticketassignment.services.TicketAssignmentService
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import java.util.*
 import javax.inject.Inject
@@ -27,8 +29,9 @@ open class TicketAssignmentController @Inject constructor(
     open fun createTicketAssignment(
             @PathVariable ticketId: UUID,
             @PathVariable assignmentTagId: UUID,
-            @PathVariable userId: UUID): TicketAssignmentResultJson {
-        val ticketAssignment = ticketAssignmentService.createTicketAssignment(ticketId, assignmentTagId, userId)
+            @PathVariable userId: UUID,
+            @AuthenticationPrincipal principal: Principal): TicketAssignmentResultJson {
+        val ticketAssignment = ticketAssignmentService.createTicketAssignment(ticketId, assignmentTagId, userId, principal)
         return TicketAssignmentResultJson(ticketAssignment)
     }
 
@@ -36,8 +39,9 @@ open class TicketAssignmentController @Inject constructor(
     open fun deleteTicketAssignment(
             @PathVariable ticketId: UUID,
             @PathVariable assignmentTagId: UUID,
-            @PathVariable userId: UUID) {
-        ticketAssignmentService.deleteTicketAssignment(ticketId, assignmentTagId, userId)
+            @PathVariable userId: UUID,
+            @AuthenticationPrincipal principal: Principal) {
+        ticketAssignmentService.deleteTicketAssignment(ticketId, assignmentTagId, userId, principal)
     }
 
 }

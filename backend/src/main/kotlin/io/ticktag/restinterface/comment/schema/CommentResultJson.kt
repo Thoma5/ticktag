@@ -9,6 +9,9 @@ data class CommentResultJson(val id: UUID,
                              val createTime: Instant,
                              val text: String,
                              val userId: UUID,
-                             val ticketId: UUID) {
-    constructor(c: CommentResult) : this(id = c.id, createTime = c.createTime, text = c.text, userId = c.userId, ticketId = c.ticketId)
+                             val ticketId: UUID,
+                             val mentionedTicketId: List<UUID>,
+                             val loggedTimeIds:List<UUID> ) {
+    constructor(c: CommentResult) : this(id = c.id, createTime = c.createTime, text = c.text, userId = c.userId, ticketId = c.ticketId,
+                mentionedTicketId = c.mentionedTicketIds, loggedTimeIds = c.loggedTimeIds)
 }

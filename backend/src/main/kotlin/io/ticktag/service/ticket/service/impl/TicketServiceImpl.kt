@@ -7,6 +7,9 @@ import io.ticktag.persistence.project.ProjectRepository
 import io.ticktag.persistence.ticket.AssignmentTagRepository
 import io.ticktag.persistence.ticket.TicketEventRepository
 import io.ticktag.persistence.ticket.entity.*
+import io.ticktag.persistence.ticket.entity.Comment
+import io.ticktag.persistence.ticket.entity.Ticket
+import io.ticktag.persistence.ticket.TicketRepository
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.*
 import io.ticktag.service.ticket.dto.CreateTicket
@@ -16,6 +19,9 @@ import io.ticktag.service.ticket.dto.UpdateTicket
 import io.ticktag.service.ticket.service.TicketService
 import io.ticktag.service.ticketassignment.dto.TicketAssignmentResult
 import io.ticktag.service.ticketassignment.services.TicketAssignmentService
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
 import java.time.Duration
@@ -34,10 +40,18 @@ open class TicketServiceImpl @Inject constructor(
         private val assignmentTagRepository: AssignmentTagRepository,
         private val ticketEvents: TicketEventRepository
 ) : TicketService {
+    @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
+    override fun listTicketsFuzzy(@P("authProjectId") project: UUID, query: String, pageable: Pageable): List<TicketResult> {
+        val result = tickets.findByProjectIdAndFuzzy(project, "%$query%", "%$query%", pageable)
+        return result.map(::TicketResult)
+    }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
-    override fun listTickets(@P("authProjectId") project: UUID): List<TicketResult> {
-        return tickets.findByProjectId(project).map(::TicketResult)
+
+    override fun listTickets(@P("authProjectId") project: UUID, pageable: Pageable): Page<TicketResult> {
+        val page = tickets.findByProjectId(project, pageable)
+        val content = page.content.map(::TicketResult)
+        return PageImpl(content, pageable, page.totalElements)
     }
 
     @PreAuthorize(AuthExpr.READ_TICKET)
@@ -51,16 +65,16 @@ open class TicketServiceImpl @Inject constructor(
     override fun createTicket(@Valid createTicket: CreateTicket, principal: Principal, @P("authProjectId") projectId: UUID): TicketResult {
 
         val wantToSetParentTicket = createTicket.parentTicket != null
-        val dontWantToCreateSubTicketsInThisUpdate = createTicket.subTickets == null || createTicket.subTickets.isEmpty()
-        val dontWantToReferenceSubTicketsInThisUpdate = createTicket.existingSubTicketIds == null || createTicket.existingSubTicketIds.isEmpty()
+        val dontWantToCreateSubTicketsInThisUpdate = createTicket.subTickets.isEmpty()
+        val dontWantToReferenceSubTicketsInThisUpdate = createTicket.existingSubTicketIds.isEmpty()
 
         //implies(q,p) is only false if q is true and p is false
         if (!(implies(wantToSetParentTicket, (dontWantToCreateSubTicketsInThisUpdate && dontWantToReferenceSubTicketsInThisUpdate)))) {
             throw TicktagValidationException(listOf(ValidationError("updateUser.parentTicket", ValidationErrorDetail.Other("subTickets are Set"))))
         }
 
-        val wantToSetSubTickets = (createTicket.subTickets != null && createTicket.subTickets.isNotEmpty()) || //creates New SubTickets
-                (createTicket.existingSubTicketIds != null && createTicket.existingSubTicketIds.isNotEmpty()) // references SubTickets
+        val wantToSetSubTickets = (createTicket.subTickets.isNotEmpty()) || //creates New SubTickets
+                (createTicket.existingSubTicketIds.isNotEmpty()) // references SubTickets
         val dontWantToSetParentTicket = createTicket.parentTicket == null
 
         if (!(implies(wantToSetSubTickets, dontWantToSetParentTicket))) {
@@ -98,7 +112,7 @@ open class TicketServiceImpl @Inject constructor(
         //Assignee
         val ticketAssignmentList = emptyList<TicketAssignmentResult>().toMutableList() // Attach this list after the conversion of newTicket to ticketResult to avoid code duplication
         for ((assignmentTagId, userId) in createTicket.ticketAssignments) {
-            val ticketAssignmentResult = ticketAssignmentService.createTicketAssignment(newTicket.id, assignmentTagId, userId)
+            val ticketAssignmentResult = ticketAssignmentService.createTicketAssignment(newTicket.id, assignmentTagId, userId, principal)
             ticketAssignmentList.add(ticketAssignmentResult)
         }
 
@@ -126,14 +140,14 @@ open class TicketServiceImpl @Inject constructor(
         return ticketResult
     }
 
-    fun implies(p: Boolean, q: Boolean): Boolean {
+    private fun implies(p: Boolean, q: Boolean): Boolean {
         return !p || q
     }
 
     //TODO: Log Changes in History
     @PreAuthorize(AuthExpr.WRITE_TICKET)
     override fun updateTicket(@Valid updateTicket: UpdateTicket, @P("authTicketId") ticketId: UUID, principal: Principal): TicketResult {
-        val user = users.findOne(principal.id) ?: throw NotFoundException()
+        val user = users.findOne(principal.id)?: throw NotFoundException()
         val ticket = tickets.findOne(ticketId) ?: throw NotFoundException()
 
         val wantToSetParentTicket = updateTicket.parentTicketId != null
@@ -206,18 +220,12 @@ open class TicketServiceImpl @Inject constructor(
         if (updateTicket.ticketAssignments != null) {
             val ticketAssignmentList = emptyList<TicketAssignmentResult>().toMutableList()
             for ((assignmentTagId, userId) in updateTicket.ticketAssignments) {
-                ticketAssignmentList.add(ticketAssignmentService.createOrGetIfExistsTicketAssignment(ticket.id, assignmentTagId, userId))
-                val addedUser = users.findOne(userId) ?: throw NotFoundException()
-                val addedAssignmentTag = assignmentTagRepository.findOne(assignmentTagId) ?: throw NotFoundException()
-                ticketEvents.insert(TicketEventUserAdded.create(ticket, user, addedUser, addedAssignmentTag))
+                ticketAssignmentList.add(ticketAssignmentService.createOrGetIfExistsTicketAssignment(ticket.id, assignmentTagId, userId, principal))
             }
             val ticketAssignmentDtos = ticket.assignedTicketUsers.map(::TicketAssignment)
             for ((assignmentTagId, userId) in ticketAssignmentDtos) {
                 if (!ticketAssignmentList.contains(TicketAssignmentResult(ticket.id, assignmentTagId, userId))) {
-                    ticketAssignmentService.deleteTicketAssignment(ticket.id, assignmentTagId, userId)
-                    val deletedUser = users.findOne(userId) ?: throw NotFoundException()
-                    val deletedAssignmentTag = assignmentTagRepository.findOne(assignmentTagId) ?: throw NotFoundException()
-                    ticketEvents.insert(TicketEventUserAdded.create(ticket, user, deletedUser, deletedAssignmentTag))
+                    ticketAssignmentService.deleteTicketAssignment(ticket.id, assignmentTagId, userId, principal)
                 }
             }
             ticketResult.ticketAssignments = ticketAssignmentList
