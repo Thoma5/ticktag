@@ -25,12 +25,8 @@
 
 import * as models from './models';
 
-export interface UpdateProjectRequestJson {
-    name?: string;
-
-    description?: string;
-
-    icon?: Array<string>;
+export interface GetResultJson {
+    users: { [key: string]: models.UserResultJson; };
 
 }
 

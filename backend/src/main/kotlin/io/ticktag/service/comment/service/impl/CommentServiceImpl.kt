@@ -4,7 +4,7 @@ import io.ticktag.TicktagService
 import io.ticktag.persistence.LoggedTime.LoggedTimeRepository
 import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.ticket.entity.Comment
-import io.ticktag.persistence.ticket.entity.TicketRepository
+import io.ticktag.persistence.ticket.TicketRepository
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.AuthExpr
 import io.ticktag.service.NotFoundException

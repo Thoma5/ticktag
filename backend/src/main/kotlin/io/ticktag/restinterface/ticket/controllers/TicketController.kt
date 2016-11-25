@@ -7,7 +7,6 @@ import io.ticktag.restinterface.ticket.schema.TicketResultJson
 import io.ticktag.restinterface.ticket.schema.TicketSort
 import io.ticktag.restinterface.ticket.schema.UpdateTicketRequestJson
 import io.ticktag.service.Principal
-import io.ticktag.service.comment.service.CommentService
 import io.ticktag.service.ticket.dto.CreateTicket
 import io.ticktag.service.ticket.dto.UpdateTicket
 import io.ticktag.service.ticket.service.TicketService
@@ -22,8 +21,7 @@ import javax.inject.Inject
 @RequestMapping("/ticket")
 @Api(tags = arrayOf("ticket"), description = "ticket manager")
 open class TicketController @Inject constructor(
-        private val ticketService: TicketService,
-        private val commentService: CommentService
+        private val ticketService: TicketService
 ) {
 
     @GetMapping
@@ -62,5 +60,12 @@ open class TicketController @Inject constructor(
         ticketService.deleteTicket(id)
     }
 
-
+    @GetMapping("/fuzzy")
+    open fun listTicketsFuzzy(
+            @RequestParam(name="projectId", required = true) projectId: UUID,
+            @RequestParam(name="q", required = true) query: String,
+            @RequestParam(name="order", required = true) order: List<TicketSort>): List<TicketResultJson> {
+        val tickets = ticketService.listTicketsFuzzy(projectId, query, PageRequest(0, 15, Sort(order.map { it.order })))
+        return tickets.map(::TicketResultJson)
+    }
 }

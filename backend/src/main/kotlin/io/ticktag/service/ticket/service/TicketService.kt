@@ -14,4 +14,5 @@ interface TicketService {
     fun createTicket(createTicket: CreateTicket, principal: Principal, projectId: UUID): TicketResult
     fun updateTicket(updateTicket: UpdateTicket, ticketId: UUID, principal: Principal): TicketResult
     fun deleteTicket(id: UUID)
+    fun listTicketsFuzzy(project: UUID, query: String, pageable: Pageable): List<TicketResult>
 }

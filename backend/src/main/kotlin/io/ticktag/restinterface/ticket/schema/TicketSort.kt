@@ -14,4 +14,3 @@ enum class TicketSort(val order: Sort.Order) {
     STORY_POINTS_DESC(Sort.Order(Sort.Direction.DESC, "storyPoints"));
 }
 
-

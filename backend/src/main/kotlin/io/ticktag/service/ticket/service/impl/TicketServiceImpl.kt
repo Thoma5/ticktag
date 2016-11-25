@@ -5,7 +5,7 @@ import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.project.ProjectRepository
 import io.ticktag.persistence.ticket.entity.Comment
 import io.ticktag.persistence.ticket.entity.Ticket
-import io.ticktag.persistence.ticket.entity.TicketRepository
+import io.ticktag.persistence.ticket.TicketRepository
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.*
 import io.ticktag.service.ticket.dto.CreateTicket
@@ -32,6 +32,11 @@ open class TicketServiceImpl @Inject constructor(
         private val ticketAssignmentService: TicketAssignmentService
 
 ) : TicketService {
+    @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
+    override fun listTicketsFuzzy(@P("authProjectId") project: UUID, query: String, pageable: Pageable): List<TicketResult> {
+        val result = tickets.findByProjectIdAndFuzzy(project, "%$query%", "%$query%", pageable)
+        return result.map(::TicketResult)
+    }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
 
@@ -125,7 +130,7 @@ open class TicketServiceImpl @Inject constructor(
         return ticketResult
     }
 
-    fun implies(p: Boolean, q: Boolean): Boolean {
+    private fun implies(p: Boolean, q: Boolean): Boolean {
         return !p || q
     }
 

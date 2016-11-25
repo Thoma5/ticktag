@@ -26,25 +26,25 @@
 import * as models from './models';
 
 export interface UpdateTicketRequestJson {
-    title: string;
+    title?: string;
 
-    open: boolean;
+    open?: boolean;
 
-    storyPoints: number;
+    storyPoints?: number;
 
-    currentEstimatedTime: number;
+    currentEstimatedTime?: number;
 
-    dueDate: number;
+    dueDate?: number;
 
-    description: string;
+    description?: string;
 
-    ticketAssignments: Array<models.TicketAssignmentJson>;
+    ticketAssignments?: Array<models.TicketAssignmentJson>;
 
-    subTickets: Array<models.CreateTicketRequestJson>;
+    subTickets?: Array<models.CreateTicketRequestJson>;
 
-    existingSubTicketIds: Array<string>;
+    existingSubTicketIds?: Array<string>;
 
-    partenTicketId: string;
+    partenTicketId?: string;
 
 }
 

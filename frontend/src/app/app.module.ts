@@ -18,7 +18,7 @@ import { ProjectsComponent } from './ui/projects/projects.component';
 import { ProjectCreateComponent } from './ui/projects/project-create.component';
 import {
   ProjectApi, AuthApi, UserApi, AssignmenttagApi, CommentsApi, MemberApi,
-  TimecategoryApi, TicketApi, TickettagApi, TickettaggroupApi
+  TimecategoryApi, TicketApi, TickettagApi, TickettaggroupApi, GetApi
 } from './api';
 import { TicketDetailComponent } from './ui/ticket-detail/ticket-detail.component';
 import { TicketSidebarComponent } from './ui/ticket-detail/ticket-sidebar/ticket-sidebar.component';
@@ -46,12 +46,14 @@ import { MaterialModule } from '@angular/material';
 import { HumanizeDurationPipe } from './util/humanize-duration.pipe';
 import { FormatMomentPipe } from './util/format-moment.pipe';
 import { MarkdownToHtmlPipe } from './util/markdown-to-html.pipe';
+import { JsonPipe } from './util/json.pipe';
 import { AutosizeTextareaDirective } from './util/autosize-textarea.directive';
 import { FocusDirective } from './util/focus.directive';
 import { TaginputComponent } from './util/taginput/taginput.component';
 import { SelectAllDirective } from './util/select-all.directive';
 import { EditButtonComponent } from './util/edit-button/edit-button.component';
 import { LoadingComponent } from './util/loading/loading.component';
+import { RichTextviewComponent } from './util/rich-textview/rich-textview.component';
 
 
 @NgModule({
@@ -92,10 +94,12 @@ import { LoadingComponent } from './util/loading/loading.component';
     TicketCommentComponent,
     TicketCommentInputComponent,
     EditButtonComponent,
+    RichTextviewComponent,
 
     HumanizeDurationPipe,
     FormatMomentPipe,
     MarkdownToHtmlPipe,
+    JsonPipe,
     AutosizeTextareaDirective,
     FocusDirective,
     SelectAllDirective,
@@ -112,6 +116,7 @@ import { LoadingComponent } from './util/loading/loading.component';
     TicketApi,
     TickettagApi,
     TickettaggroupApi,
+    GetApi,
 
     ApiCallService,
     AuthService,

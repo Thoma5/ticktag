@@ -378,5 +378,21 @@ class TicketApiTest : ApiBaseTest() {
 
         }
     }
+    @Test
+    fun `listTicketsFuzzy should find some tickets`() {
+        withUser(ADMIN_ID) { ->
+            val tickets = ticketController.listTicketsFuzzy(UUID.fromString("00000000-0002-0000-0000-000000000001"), "USerS", listOf(TicketSort.NUMBER_ASC))
+
+            assertEquals(4, tickets.size)
+            assertEquals(tickets.map { it.number }, listOf(2, 3, 4, 5))
+        }
+    }
+
+    @Test(expected = org.springframework.security.access.AccessDeniedException::class)
+    fun `listTicketsFuzzy should only work for project members`() {
+        withUser(UUID.fromString("00000000-0001-0000-0000-000000000004")) { ->
+            ticketController.listTicketsFuzzy(UUID.fromString("00000000-0002-0000-0000-000000000001"), "USerS", listOf(TicketSort.NUMBER_ASC))
+        }
+    }
 
 }

@@ -26,11 +26,11 @@
 import * as models from './models';
 
 export interface UpdateTicketTagRequestJson {
-    name: string;
+    name?: string;
 
-    color: string;
+    color?: string;
 
-    order: number;
+    order?: number;
 
 }
 
