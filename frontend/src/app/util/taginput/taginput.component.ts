@@ -1,6 +1,8 @@
 import {
-  Component, Input, OnChanges, Output, EventEmitter
+  Component, Input, OnChanges, Output, EventEmitter, SimpleChanges
 } from '@angular/core';
+import { findValue } from '../listmaputils';
+import * as imm from 'immutable';
 
 export interface Tag {
   id: string;
@@ -18,29 +20,26 @@ export interface Tag {
   styleUrls: ['./taginput.component.scss'],
 })
 export class TaginputComponent implements OnChanges {
-  @Input() allTags: Tag[];
-  private allTagsMap: {[id: string]: Tag};
+  @Input() allTags: imm.Map<string, Tag>;
 
   // Array of `Tag.id` values of `allTags`.
-  @Input() tags: string[];
+  @Input() tags: imm.List<string>;
   @Output() readonly tagsChange = new EventEmitter<string[]>();
   @Output() readonly tagAdd = new EventEmitter<string>();
   @Output() readonly tagRemove = new EventEmitter<string>();
-  private sortedTags: Tag[];
+  private sortedTags: imm.List<Tag>;
 
   private newTagName = '';
   private editing = false;
 
-  ngOnChanges(): void {
-    this.allTagsMap = {};
-    for (let tag of this.allTags) {
-      this.allTagsMap[tag.id] = tag;
+  ngOnChanges(changes: SimpleChanges): void {
+    if ('tags' in changes || 'allTags' in changes) {
+      this.sortedTags = this.tags
+        .map(id => this.allTags.get(id))
+        .filter(tag => !!tag)
+        .sort((a, b) => (a.order < b.order) ? -1 : (a.order === b.order ? 0 : 1))
+        .toList();
     }
-
-    this.sortedTags = this.tags.map(id => this.allTagsMap[id]).filter(tag => tag);
-    this.sortedTags.sort((a, b) => {
-      return (a.order < b.order) ? -1 : (a.order === b.order ? 0 : 1);
-    });
   }
 
   onDeleteClick(tag: Tag) {
@@ -62,7 +61,7 @@ export class TaginputComponent implements OnChanges {
   }
 
   onAdd() {
-    let tag = this.allTags.find(t => t.name.toLowerCase() === this.newTagName.toLowerCase());
+    let tag = findValue(this.allTags, t => t.name.toLowerCase() === this.newTagName.toLowerCase());
     if (tag) {
       let alreadyAdded = this.tags.indexOf(tag.id);
       if (alreadyAdded < 0) {

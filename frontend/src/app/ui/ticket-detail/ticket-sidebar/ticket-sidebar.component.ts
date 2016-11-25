@@ -1,11 +1,7 @@
 import { Component, Input, EventEmitter, Output, OnChanges, SimpleChanges } from '@angular/core';
-import { UserResultJson, TicketResultJson, TicketAssignmentJson, AssignmentTagResultJson } from '../../../api';
-import { using } from '../../../util/using';
-
-interface Assignment {
-  user: UserResultJson;
-  tags: string[];
-}
+import { TicketAssignmentJson } from '../../../api';
+import * as imm from 'immutable';
+import { TicketDetail, TicketDetailAssTag, TicketDetailUser } from '../ticket-detail';
 
 @Component({
   selector: 'tt-ticket-sidebar',
@@ -13,9 +9,9 @@ interface Assignment {
   styleUrls: ['./ticket-sidebar.component.scss']
 })
 export class TicketSidebarComponent implements OnChanges {
-  @Input() ticket: TicketResultJson;
-  @Input() allAssignmentTags = new Array<AssignmentTagResultJson>();
-  @Input() assignedUsers = new Array<UserResultJson>();
+  @Input() ticket: TicketDetail;
+  @Input() allAssignmentTags = imm.Map<string, TicketDetailAssTag>();
+  private assignments: imm.List<{ user: TicketDetailUser, tags: imm.List<string> }>;
 
   @Output() readonly assignmentAdd = new EventEmitter<TicketAssignmentJson>();
   @Output() readonly assignmentRemove = new EventEmitter<TicketAssignmentJson>();
@@ -23,11 +19,12 @@ export class TicketSidebarComponent implements OnChanges {
   private adding = false;
   private newUserName = '';
 
-  // Variables updated in ngOnChanges
-  private assignments = new Array<Assignment>();
-
-  ngOnChanges(changes: SimpleChanges): void {
-    this.assignments = this.calculateAssignments();
+  ngOnChanges(changes: SimpleChanges) {
+    if ('ticket' in changes || 'allAssignmentTags' in changes) {
+      this.assignments = this.ticket.users
+        .map((tags, user) => ({ user: user, tags: tags.map(t => t.id).toList() }))
+        .toList();
+    }
   }
 
   onTagAdd(userId: string, tagId: string) {
@@ -47,34 +44,8 @@ export class TicketSidebarComponent implements OnChanges {
   }
 
   onAdd() {
-  }
-
-  private calculateAssignments(): Assignment[] {
-    let map: {[key: string]: Assignment} = {};
-    let result = new Array<Assignment>();
-
-    // I love implementing left joins in JavaScript!
-    for (let ta of this.ticket.ticketAssignments) {
-      if (!map[ta.userId]) {
-        let user = this.assignedUsers.find(u => u.id === ta.userId);
-        if (!user) {
-          continue;
-        }
-        map[ta.userId] = { user: user, tags: [] };
-        result.push(map[ta.userId]);
-      }
-      let entry = map[ta.userId];
-      if (!entry) {
-        continue;
-      }
-      let tag = this.allAssignmentTags.find(tag => tag.id === ta.assignmentTagId);
-      if (!tag) {
-        continue;
-      }
-      entry.tags.push(tag.id);
+    if (this.newUserName) {
     }
-
-    result.sort(using<Assignment>(a => a.user.name));
-    return result;
+    this.newUserName = '';
   }
 }

@@ -1,6 +1,6 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
-import { UserResultJson, AssignmentTagResultJson } from '../../../api';
-import { Tag } from '../../../util/taginput/taginput.component';
+import { TicketDetailAssTag, TicketDetailUser } from '../ticket-detail';
+import * as imm from 'immutable';
 
 @Component({
   selector: 'tt-assigned-user',
@@ -8,19 +8,10 @@ import { Tag } from '../../../util/taginput/taginput.component';
   styleUrls: ['./assigned-user.component.scss']
 })
 export class AssignedUserComponent {
-  @Input() user: UserResultJson;
+  @Input() user: TicketDetailUser;
   @Input() tags: string[];
-  @Input() allTags: AssignmentTagResultJson[];
+  @Input() allTags: imm.Map<string, TicketDetailAssTag>;
 
   @Output() readonly tagAdd = new EventEmitter<string>();
   @Output() readonly tagRemove = new EventEmitter<string>();
-
-  get allTagsWrapped(): Tag[] {
-    return this.allTags.map((t, i) => ({
-      id: t.id,
-      color: t.color,
-      name: t.name,
-      order: i,
-    }));
-  }
 }

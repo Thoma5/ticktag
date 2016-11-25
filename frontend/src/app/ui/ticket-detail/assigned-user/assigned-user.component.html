@@ -7,11 +7,10 @@
         <div class='tags'>
             <tt-taginput
                 [tags]="tags"
-                [allTags]="allTagsWrapped" 
+                [allTags]="allTags" 
                 (tagAdd)="tagAdd.emit($event)"
                 (tagRemove)="tagRemove.emit($event)"
             ></tt-taginput>
         </div>
-        <span *ngFor="let tag of tags">{{ tag.name }}</span>
     </div>
 </div>

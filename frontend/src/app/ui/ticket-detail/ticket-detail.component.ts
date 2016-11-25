@@ -5,23 +5,17 @@ import { TaskQueue } from '../../util/task-queue';
 import {
   TicketApi, TicketResultJson, CommentsApi, AssignmenttagApi,
   AssignmentTagResultJson, CommentResultJson, TicketTagResultJson,
-  TickettagApi, TimeCategoryJson, TimecategoryApi, UserResultJson,
+  TickettagApi, TimeCategoryJson, TimecategoryApi,
   GetApi, GetResultJson, UpdateTicketRequestJson, TicketAssignmentJson,
-  TicketassignmentApi, TicketAssignmentResultJson, ValidationErrorJson
+  TicketassignmentApi, ValidationErrorJson
 } from '../../api';
 import { Observable } from 'rxjs';
-
-class TicketDetailResult {
-  constructor(
-    public ticket: TicketResultJson,
-    public comments: CommentResultJson[],
-    public allAssignmentTags: AssignmentTagResultJson[],
-    public allTicketTags: TicketTagResultJson[],
-    public allTimeCategories: TimeCategoryJson[],
-    public assignedUsers: UserResultJson[],
-    public ticketCreator: UserResultJson,
-  ) { }
-}
+import {
+  TicketDetail, TicketDetailTag, TicketDetailAssTag, TicketDetailComment,
+  TicketDetailUser, TicketDetailTimeCategory
+} from './ticket-detail';
+import { idListToMap } from '../../util/listmaputils';
+import * as imm from 'immutable';
 
 @Component({
   selector: 'tt-ticket-detail',
@@ -32,7 +26,10 @@ export class TicketDetailComponent implements OnInit {
   private queue = new TaskQueue();
 
   private loading = true;
-  private ticketDetail: TicketDetailResult | null = null;
+  private ticketDetail: TicketDetail = null;
+  private allTicketTags: imm.Map<string, TicketDetailTag>;
+  private allAssignmentTags: imm.Map<string, TicketDetailAssTag>;
+  private allTimeCategories: imm.Map<string, TicketDetailTimeCategory>;
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(
@@ -51,16 +48,12 @@ export class TicketDetailComponent implements OnInit {
   ngOnInit(): void {
     this.route.params
       .do(() => { this.loading = true; })
-      .switchMap(params => {
+      .flatMap(params => {
         let ticketId = '' + params['ticketNumber'];
         let projectId = '' + params['projectId'];
-
-        return this.getTicketDetail(projectId, ticketId);
+        return this.refresh(projectId, ticketId);
       })
-      .subscribe(ticketDetail => {
-        this.ticketDetail = ticketDetail;
-        this.loading = false;
-      });
+      .subscribe(() => { this.loading = false; });
   }
 
   onTitleChange(val: string): void {
@@ -173,47 +166,46 @@ export class TicketDetailComponent implements OnInit {
     };
   }
 
-  private getTicketDetail(projectId: string, ticketId: string): Observable<TicketDetailResult> {
-    let ticketObs = this.apiCallService
+  private refresh(projectId: string, ticketId: string): Observable<void> {
+    let rawTicketObs = this.apiCallService
       .callNoError<TicketResultJson>(p => this.ticketApi.getTicketUsingGETWithHttpInfo(ticketId, p));
-    let commentsObs = this.apiCallService
+    let rawCommentsObs = this.apiCallService
       .callNoError<CommentResultJson[]>(p => this.commentsApi.listCommentsUsingGETWithHttpInfo(ticketId, p));
     let assignmentTagsObs = this.apiCallService
-      .callNoError<AssignmentTagResultJson[]>(p => this.assigmentTagsApi.listAssignmentTagsUsingGETWithHttpInfo(projectId, p));
+      .callNoError<AssignmentTagResultJson[]>(p => this.assigmentTagsApi.listAssignmentTagsUsingGETWithHttpInfo(projectId, p))
+      .map(ats => idListToMap(ats).map(at => new TicketDetailAssTag(at, 0)).toMap());  // TODO ordering
     let ticketTagsObs = this.apiCallService
-      .callNoError<TicketTagResultJson[]>(p => this.ticketTagsApi.listTicketTagsUsingGETWithHttpInfo(null, projectId, p));
+      .callNoError<TicketTagResultJson[]>(p => this.ticketTagsApi.listTicketTagsUsingGETWithHttpInfo(null, projectId, p))
+      .map(tts => idListToMap(tts).map(tt => new TicketDetailTag(tt)).toMap());
     let timeCategoriesObs = this.apiCallService
-      .callNoError<TimeCategoryJson[]>(p => this.timeCategoryApi.listProjectTimeCategoriesUsingGETWithHttpInfo(projectId, p));
+      .callNoError<TimeCategoryJson[]>(p => this.timeCategoryApi.listProjectTimeCategoriesUsingGETWithHttpInfo(projectId, p))
+      .map(tcs => idListToMap(tcs).map(tc => new TicketDetailTimeCategory(tc)).toMap());
 
     // There is no dependency between these requests so we can execute them in paralell
-    let zipped = Observable.zip(ticketObs, commentsObs, assignmentTagsObs, ticketTagsObs, timeCategoriesObs);
+    return Observable
+      .zip(rawTicketObs, rawCommentsObs, assignmentTagsObs, ticketTagsObs, timeCategoriesObs)
+      .flatMap(tuple => {
+        let ticketResult = tuple[0];
+        // We need all assigned users
+        let wantedUserIds = ticketResult.ticketAssignments.map(ta => ta.userId);
+        // And the comment authors
+        tuple[1].forEach(c => { wantedUserIds.push(c.userId); });
+        // And the person who created it
+        wantedUserIds.push(ticketResult.createdBy);
 
-    return zipped.flatMap(tuple => {
-      let ticketResult = tuple[0];
-      // We need all assigned users
-      let wantedUserIds = ticketResult.ticketAssignments.map(ta => ta.userId);
-      // And the person who created it
-      wantedUserIds.push(ticketResult.createdBy);
+        let getObs = this.apiCallService
+          .callNoError<GetResultJson>(p => this.getApi.getUsingGETWithHttpInfo(wantedUserIds, p));
 
-      let obs = this.apiCallService
-        .callNoError<GetResultJson>(p => this.getApi.getUsingGETWithHttpInfo(wantedUserIds, p));
-
-      // Transform the result into a nice dto
-      return obs.map(getResult => {
-        // filter(it => it) removes null/undefined
-        let assignedUsers = ticketResult.ticketAssignments.map(ta => getResult.users[ta.userId]).filter(it => it);
-        let creator = getResult.users[ticketResult.createdBy];
-
-        return new TicketDetailResult(
-          tuple[0],
-          tuple[1],
-          tuple[2],
-          tuple[3],
-          tuple[4],
-          assignedUsers,
-          creator
-        );
-      });
-    });
+        return Observable.zip(Observable.of(tuple), getObs);
+      })
+      .do(tuple => {
+        let users = imm.Map(tuple[1].users).map(u => new TicketDetailUser(u)).toMap();
+        let comments = idListToMap(tuple[0][1]).map(c => new TicketDetailComment(c, users)).toMap();
+        this.allTicketTags = tuple[0][3];
+        this.allAssignmentTags = tuple[0][2];
+        this.allTimeCategories = tuple[0][4];
+        this.ticketDetail = new TicketDetail(tuple[0][0], comments, users, tuple[0][3], tuple[0][2]);
+      })
+      .map(it => undefined);
   }
 }

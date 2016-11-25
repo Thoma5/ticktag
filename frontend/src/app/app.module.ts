@@ -54,7 +54,7 @@ import { TaginputComponent } from './util/taginput/taginput.component';
 import { SelectAllDirective } from './util/select-all.directive';
 import { EditButtonComponent } from './util/edit-button/edit-button.component';
 import { LoadingComponent } from './util/loading/loading.component';
-import { RichTextviewComponent } from './util/rich-textview/rich-textview.component';
+import { CommentTextviewComponent } from './ui/ticket-detail/comment-textview/comment-textview.component';
 
 
 @NgModule({
@@ -95,7 +95,7 @@ import { RichTextviewComponent } from './util/rich-textview/rich-textview.compon
     TicketCommentComponent,
     TicketCommentInputComponent,
     EditButtonComponent,
-    RichTextviewComponent,
+    CommentTextviewComponent,
 
     HumanizeDurationPipe,
     FormatMomentPipe,

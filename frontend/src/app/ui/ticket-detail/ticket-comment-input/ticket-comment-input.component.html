@@ -1,13 +1,10 @@
 <div class='comment-input'>
-    <tt-rich-textview
+    <tt-comment-textview
         [initialContent]="'Type a comment here...'"
+        [ticket]="ticket"
         [allTicketTags]="allTicketTags"
-        [ticketTags]="ticketTags"
         [allTimeCategories]="allTimeCategories"
-        [projectId]="ticket.projectId"
         [allAssignmentTags]="allAssignmentTags"
-        [assignedUsers]="assignedUsers"
-        [assignments]="ticket.ticketAssignments"
     >
-    </tt-rich-textview>
+    </tt-comment-textview>
 </div>

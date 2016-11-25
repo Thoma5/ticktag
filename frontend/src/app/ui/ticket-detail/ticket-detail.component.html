@@ -5,37 +5,35 @@
     <div *ngIf="!loading" class='content row'>
         <div class='left col-md-8'>
             <tt-ticket-core
-                [open]='ticketDetail.ticket.open'
-                [number]='ticketDetail.ticket.number'
-                [title]='ticketDetail.ticket.title' (titleChange)='onTitleChange($event)'
-                [(description)]='ticketDetail.ticket.description' (descriptionChange)='onDescriptionChange($event)'
-                [(storypoints)]='ticketDetail.ticket.storyPoints' (storypointsChange)='onStorypointsChange($event)'
-                [(tagIds)]='ticketDetail.ticket.tagIds' (tagAdd)='onTagAdd($event)' (tagRemove)='onTagRemove($event)'
-                [initialEstimatedTime]='ticketDetail.ticket.initialEstimatedTime'
-                [currentEstimatedTime]='ticketDetail.ticket.currentEstimatedTime'
-                [dueDate]='ticketDetail.ticket.dueDate'
-                [creator]='ticketDetail.ticketCreator'
-                [createTime]='ticketDetail.ticket.createTime'
+                [open]='ticketDetail.open'
+                [number]='ticketDetail.number'
+                [title]='ticketDetail.title' (titleChange)='onTitleChange($event)'
+                [description]='ticketDetail.description' (descriptionChange)='onDescriptionChange($event)'
+                [storypoints]='ticketDetail.storyPoints' (storypointsChange)='onStorypointsChange($event)'
+                [tags]='ticketDetail.tags' (tagAdd)='onTagAdd($event)' (tagRemove)='onTagRemove($event)'
+                [initialEstimatedTime]='ticketDetail.initialEstimatedTime'
+                [currentEstimatedTime]='ticketDetail.currentEstimatedTime'
+                [dueDate]='ticketDetail.dueDate'
+                [creator]='ticketDetail.createdBy'
+                [createTime]='ticketDetail.createTime'
 
-                [allTags]='ticketDetail.allTicketTags'
-                ></tt-ticket-core>
+                [allTags]='allTicketTags'
+            ></tt-ticket-core>
 
             <div class='comments-wrapper'>
-                <tt-ticket-comments [comments]='comments'></tt-ticket-comments>
+                <tt-ticket-comments [comments]='ticketDetail.comments'></tt-ticket-comments>
                 <tt-ticket-comment-input
-                    [allTicketTags]='ticketDetail.allTicketTags'
-                    [ticket]='ticketDetail.ticket'
-                    [allTimeCategories]='ticketDetail.allTimeCategories'
-                    [allAssignmentTags]='ticketDetail.allAssignmentTags'
-                    [assignedUsers]='ticketDetail.assignedUsers'
+                    [allTicketTags]='allTicketTags'
+                    [ticket]='ticketDetail'
+                    [allTimeCategories]='allTimeCategories'
+                    [allAssignmentTags]='allAssignmentTags'
                 ></tt-ticket-comment-input>
             </div>
         </div>
         <div class='right col-md-4'>
             <tt-ticket-sidebar
-                [ticket]="ticketDetail.ticket"
-                [allAssignmentTags]="ticketDetail.allAssignmentTags"
-                [assignedUsers]="ticketDetail.assignedUsers"
+                [ticket]="ticketDetail"
+                [allAssignmentTags]="allAssignmentTags"
                 (assignmentAdd)="onAssignmentAdd($event)"
                 (assignmentRemove)="onAssignmentRemove($event)"
             ></tt-ticket-sidebar>
