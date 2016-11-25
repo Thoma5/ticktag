@@ -11,6 +11,11 @@ import javax.inject.Inject
 class UserServiceTest : ServiceBaseTest() {
     @Inject lateinit var userService: UserService
 
+
+    override fun loadTestData(): List<String> {
+        return arrayListOf("sql/testBaseSamples.sql")
+    }
+
     @Test
     fun test_update_withNewPassword_shouldUpdateCurrentToken() {
         val id = ADMIN_ID

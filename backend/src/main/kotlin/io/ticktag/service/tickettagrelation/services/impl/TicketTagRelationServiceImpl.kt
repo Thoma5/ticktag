@@ -3,8 +3,7 @@ package io.ticktag.service.tickettagrelation.services.impl
 import io.ticktag.TicktagService
 import io.ticktag.persistence.ticket.TicketRepository
 import io.ticktag.persistence.tickettag.TicketTagRepository
-import io.ticktag.service.AuthExpr
-import io.ticktag.service.NotFoundException
+import io.ticktag.service.*
 import io.ticktag.service.tickettagrelation.dto.TicketTagRelationResult
 import io.ticktag.service.tickettagrelation.services.TicketTagRelationService
 import org.springframework.security.access.method.P
@@ -32,6 +31,13 @@ open class TicketTagRelationServiceImpl(
 
         val assignedTag = ticket.tags.find { it.id == tagId }
         if (assignedTag == null) {
+            if (tag.ticketTagGroup.exclusive) {
+                for (t in tag.ticketTagGroup.ticketTags) {
+                    if (ticket.tags.contains(t)) {
+                        throw TicktagValidationException(listOf(ValidationError("tag.id", ValidationErrorDetail.Other("nonexclusive"))))
+                    }
+                }
+            }
             ticket.tags.add(tag)
         }
 

@@ -8,14 +8,18 @@ import io.ticktag.restinterface.loggedtime.schema.UpdateLoggedTimeJson
 import io.ticktag.service.NotFoundException
 import junit.framework.Assert.assertEquals
 import org.junit.Test
+import org.springframework.security.access.AccessDeniedException
 import java.time.Duration
 import java.util.*
 import javax.inject.Inject
-import org.springframework.security.access.AccessDeniedException
 
 class LoggedTimeApiTest : ApiBaseTest() {
     @Inject
     lateinit var loggedTimeController: LoggedTimeController
+
+    override fun loadTestData(): List<String> {
+        return arrayListOf("sql/testBaseSamples.sql", "sql/WILL_BE_DELETED_SOON.sql")
+    }
 
     @Test
     fun `createLoggTime positiv`() {

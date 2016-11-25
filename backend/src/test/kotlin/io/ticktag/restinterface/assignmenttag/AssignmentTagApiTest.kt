@@ -1,7 +1,5 @@
 package io.ticktag.restinterface.assignmenttag
 
-import io.ticktag.OBSERVER_ID
-import io.ticktag.USER_ID
 import io.ticktag.restinterface.ApiBaseTest
 import io.ticktag.restinterface.assignmenttag.controllers.AssignmentTagController
 import io.ticktag.restinterface.assignmenttag.schema.CreateAssignmentTagRequestJson
@@ -13,6 +11,11 @@ import java.util.*
 import javax.inject.Inject
 
 class AssignmentTagApiTest : ApiBaseTest() {
+
+    override fun loadTestData(): List<String> {
+        return arrayListOf("sql/testBaseSamples.sql", "sql/WILL_BE_DELETED_SOON.sql")
+    }
+
     @Inject lateinit var assignmentTagController: AssignmentTagController
 
     var assignmentTagId = UUID.fromString("00000000-0006-0000-0000-000000000001")
@@ -23,9 +26,13 @@ class AssignmentTagApiTest : ApiBaseTest() {
     var name2 = "Changed Assignment Tag"
     var color2 = "ffffff"
 
+    val LOCAL_ADMIN_ID: UUID = UUID.fromString("00000000-0001-0000-0000-000000000001")
+    val LOCAL_OBSERVER_ID: UUID = UUID.fromString("00000000-0001-0000-0000-000000000003")
+    val LOCAL_USER_ID: UUID = UUID.fromString("00000000-0001-0000-0000-000000000002")
+
     @Test
     fun create_assignmenttag_positive() {
-        withUser(USER_ID) { principal ->
+        withUser(LOCAL_USER_ID) { principal ->
             val req = CreateAssignmentTagRequestJson(projectId, name, color)
             assignmentTagController.createAssignmentTag(req)
 
@@ -44,7 +51,7 @@ class AssignmentTagApiTest : ApiBaseTest() {
 
     @Test(expected = org.springframework.security.access.AccessDeniedException::class)
     fun create_assignmenttag_negative() {
-        withUser(OBSERVER_ID) { principal ->
+        withUser(LOCAL_OBSERVER_ID) { principal ->
             val req = CreateAssignmentTagRequestJson(projectId, name, color)
             assignmentTagController.createAssignmentTag(req)
         }
@@ -52,7 +59,7 @@ class AssignmentTagApiTest : ApiBaseTest() {
 
     @Test
     fun get_assignmenttag_positive() {
-        withUser(USER_ID) { principal ->
+        withUser(LOCAL_USER_ID) { principal ->
             val assignmentTag = assignmentTagController.getAssignmentTag(assignmentTagId)
 
             if (assignmentTag != null) {
@@ -74,7 +81,7 @@ class AssignmentTagApiTest : ApiBaseTest() {
 
     @Test
     fun update_assignmenttag_positive() {
-        withUser(USER_ID) { principal ->
+        withUser(LOCAL_USER_ID) { principal ->
             val req = UpdateAssignmentRequestJson(name2, color2)
 
             val updatedTag = assignmentTagController.updateAssignmentTag(assignmentTagId, req)
@@ -90,7 +97,7 @@ class AssignmentTagApiTest : ApiBaseTest() {
 
     @Test(expected = org.springframework.security.access.AccessDeniedException::class)
     fun update_assignmenttag_negative() {
-        withUser(OBSERVER_ID) { principal ->
+        withUser(LOCAL_OBSERVER_ID) { principal ->
             val req = UpdateAssignmentRequestJson(name2, color2)
             val updatedTag = assignmentTagController.updateAssignmentTag(assignmentTagId, req)
         }
@@ -98,7 +105,7 @@ class AssignmentTagApiTest : ApiBaseTest() {
 
     @Test
     fun list_assignmenttag_positive() {
-        withUser(USER_ID) { principal ->
+        withUser(LOCAL_USER_ID) { principal ->
             val list = assignmentTagController.listAssignmentTags(projectId)
             assertEquals(list.size, 6)
         }
@@ -116,7 +123,7 @@ class AssignmentTagApiTest : ApiBaseTest() {
     /**
     @Test
     fun search_assignmenttag_positive() {
-        withUser(USER_ID) { principal ->
+    withUser(LOCAL_USER_ID) { principal ->
             val list = assignmentTagController.searchAssignmentTags(projectId, "t%")
             assertEquals(list.size, 2)
         }

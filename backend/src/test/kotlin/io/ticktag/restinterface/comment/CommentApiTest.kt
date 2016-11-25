@@ -1,5 +1,6 @@
 package io.ticktag.restinterface.comment
 
+import io.ticktag.ADMIN_ID
 import io.ticktag.service.NotFoundException
 import io.ticktag.service.ServiceBaseTest
 import io.ticktag.service.comment.dto.CreateComment
@@ -19,10 +20,14 @@ class CommentApiTest : ServiceBaseTest() {
 
     @Inject lateinit private var ticketService: TicketService
 
+    override fun loadTestData(): List<String> {
+        return arrayListOf("sql/testBaseSamples.sql", "sql/WILL_BE_DELETED_SOON.sql")
+    }
+
 
     @Test
     fun test_check_updateComment() {
-        val id = UUID.fromString("00000000-0001-0000-0000-000000000001")
+        val id = ADMIN_ID
         val comment_id = UUID.fromString("00000000-0004-0000-0000-000000000006")
         withUser(id) { principal ->
             commentService.updateComment(comment_id, UpdateComment("test", null, null))

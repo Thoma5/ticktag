@@ -1,17 +1,23 @@
 package io.ticktag.restinterface.auth
 
 import io.ticktag.ADMIN_ID
-import io.ticktag.restinterface.auth.controllers.AuthController
-import io.ticktag.restinterface.auth.schema.LoginRequestJson
 import io.ticktag.USER_ID
 import io.ticktag.restinterface.ApiBaseTest
-import org.hamcrest.CoreMatchers.*
+import io.ticktag.restinterface.auth.controllers.AuthController
+import io.ticktag.restinterface.auth.schema.LoginRequestJson
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.CoreMatchers.not
 import org.junit.Assert.*
 import org.junit.Test
 import javax.inject.Inject
 
 class AuthApiTest : ApiBaseTest() {
     @Inject lateinit var authController: AuthController
+
+    override fun loadTestData(): List<String> {
+        return arrayListOf("sql/testBaseSamples.sql")
+    }
+
 
     @Test
     fun `Login with invalid credentials should fail`() {
@@ -25,7 +31,7 @@ class AuthApiTest : ApiBaseTest() {
     @Test
     fun `Login with valid credentials should return auth token`() {
         withoutUser {
-            val request = LoginRequestJson("a@a.a", "aaaa")
+            val request = LoginRequestJson("admin@ticktag.a", "aaaa")
             val result = authController.login(request)
             assertNotNull(result.token)
             assertThat(result.token, `is`(not("")))

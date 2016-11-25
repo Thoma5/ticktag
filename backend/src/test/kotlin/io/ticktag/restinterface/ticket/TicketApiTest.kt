@@ -5,9 +5,9 @@ import io.ticktag.USER_ID
 import io.ticktag.restinterface.ApiBaseTest
 import io.ticktag.restinterface.ticket.controllers.TicketController
 import io.ticktag.restinterface.ticket.schema.CreateTicketRequestJson
-import io.ticktag.restinterface.ticketuserrelation.schema.CreateTicketUserRelationRequestJson
 import io.ticktag.restinterface.ticket.schema.TicketSort
 import io.ticktag.restinterface.ticket.schema.UpdateTicketRequestJson
+import io.ticktag.restinterface.ticketuserrelation.schema.CreateTicketUserRelationRequestJson
 import io.ticktag.service.NotFoundException
 import io.ticktag.service.TicktagValidationException
 import org.hamcrest.CoreMatchers.`is`
@@ -24,6 +24,10 @@ import javax.inject.Inject
 class TicketApiTest : ApiBaseTest() {
     @Inject
     lateinit var ticketController: TicketController
+
+    override fun loadTestData(): List<String> {
+        return arrayListOf("sql/testBaseSamples.sql", "sql/WILL_BE_DELETED_SOON.sql")
+    }
 
     @Test
     fun `createTicket positiv`() {
