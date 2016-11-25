@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiCallService } from '../../service';
-import { TaskQueue, Task } from '../../util/task-queue';
+import { TaskQueue } from '../../util/task-queue';
 import {
   TicketApi, TicketResultJson, CommentsApi, AssignmenttagApi,
   AssignmentTagResultJson, CommentResultJson, TicketTagResultJson,
   TickettagApi, TimeCategoryJson, TimecategoryApi, UserResultJson,
-  GetApi, GetResultJson, UpdateTicketRequestJson, TicketAssignmentJson
+  GetApi, GetResultJson, UpdateTicketRequestJson, TicketAssignmentJson,
+  TicketassignmentApi, TicketAssignmentResultJson, ValidationErrorJson
 } from '../../api';
-import { Observable, Subscriber } from 'rxjs';
+import { Observable } from 'rxjs';
 
 class TicketDetailResult {
   constructor(
@@ -43,7 +44,8 @@ export class TicketDetailComponent implements OnInit {
     private assigmentTagsApi: AssignmenttagApi,
     private ticketTagsApi: TickettagApi,
     private timeCategoryApi: TimecategoryApi,
-    private getApi: GetApi) {
+    private getApi: GetApi,
+    private ticketAssignmentApi: TicketassignmentApi) {
   }
 
   ngOnInit(): void {
@@ -88,28 +90,50 @@ export class TicketDetailComponent implements OnInit {
   }
 
   onTagRemove(val: string): void {
-    // TODO endpoint missing...
     console.log('TODO remove tag');
   }
 
-  onAssignmentAdd(value: TicketAssignmentJson) {
-    console.dir(value);
+  onAssignmentAdd(ass: TicketAssignmentJson) {
+    console.dir(ass);
   }
 
-  onAssignmentRemove(value: TicketAssignmentJson) {
-    console.dir(value);
+  onAssignmentRemove(ass: TicketAssignmentJson) {
+    let obs = this.apiCallService
+      .call<void>(p => this.ticketAssignmentApi.deleteTicketAssignmentUsingDELETEWithHttpInfo(
+        this.ticketDetail.ticket.id,
+        ass.assignmentTagId,
+        ass.userId,
+        p));
+    this.queue.push(obs)
+      .flatMap<ValidationErrorJson[] | TicketDetailResult>(result => {
+        if (result.isValid) {
+          return this.getTicketDetail(this.ticketDetail.ticket.projectId, this.ticketDetail.ticket.id);
+        } else {
+          return Observable.of(result.error);
+        }
+      })
+      .subscribe(result => {
+        if (result instanceof TicketDetailResult) {
+          this.ticketDetail = result;
+        } else {
+          // TODO nice message
+          console.dir(result);
+          console.warn('ASDFASDFA SFSDA FSDAF SDA ASDFK sdj falsdf');
+        }
+      });
   }
 
   private updateTicket(req: UpdateTicketRequestJson): void {
     let ticketId = this.ticketDetail.ticket.id;
 
-    let sub = new Subscriber((ticket: TicketResultJson) => {
-      this.ticketDetail.ticket = ticket;
-      console.log(ticket);
-    });
+    // TODO: callNoError is wrong here
     let updateObs = this.apiCallService
       .callNoError<TicketResultJson>(p => this.ticketApi.updateTicketUsingPUTWithHttpInfo(req, ticketId, p));
-    this.queue.push(new Task(updateObs, sub));
+    this.queue.push(updateObs)
+      .subscribe((ticket: TicketResultJson) => {
+        this.ticketDetail.ticket = ticket;
+        console.log(ticket);
+      });
   }
 
   private getEmptyUpdateRequest(): UpdateTicketRequestJson {
@@ -158,15 +182,15 @@ export class TicketDetailComponent implements OnInit {
         let assignedUsers = ticketResult.ticketAssignments.map(ta => getResult.users[ta.userId]).filter(it => it);
         let creator = getResult.users[ticketResult.createdBy];
 
-        return {
-          ticket: tuple[0],
-          comments: tuple[1],
-          allAssignmentTags: tuple[2],
-          allTicketTags: tuple[3],
-          allTimeCategories: tuple[4],
-          assignedUsers: assignedUsers,
-          ticketCreator: creator,
-        };
+        return new TicketDetailResult(
+          tuple[0],
+          tuple[1],
+          tuple[2],
+          tuple[3],
+          tuple[4],
+          assignedUsers,
+          creator
+        );
       });
     });
   }

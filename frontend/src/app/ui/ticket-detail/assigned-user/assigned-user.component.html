@@ -6,7 +6,7 @@
         <div class='name'>{{ user.name }}</div>
         <div class='tags'>
             <tt-taginput
-                [(tags)]="tags"
+                [tags]="tags"
                 [allTags]="allTagsWrapped" 
                 (tagAdd)="tagAdd.emit($event)"
                 (tagRemove)="tagRemove.emit($event)"

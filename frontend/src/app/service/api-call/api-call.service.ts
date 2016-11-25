@@ -73,7 +73,7 @@ export class ApiCallService {
 
     return apiCall({headers: headers})
       .map(resp => {
-        return new ApiCallResult<T>(apiCall, extraHeaders || null, true, resp.json());
+        return new ApiCallResult<T>(apiCall, extraHeaders || null, true, (resp.text().length === 0) ? null : resp.json());
       })
       .catch(resp => {
         if (resp instanceof Response) {
