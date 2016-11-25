@@ -1,8 +1,5 @@
 package io.ticktag.service.ticket.dto
 
-import io.ticktag.persistence.ticket.entity.Comment
-import io.ticktag.persistence.ticket.entity.Ticket
-import io.ticktag.persistence.ticket.entity.TicketTag
 import io.ticktag.service.ticketassignment.dto.TicketAssignmentResult
 import java.time.Duration
 import java.time.Instant
@@ -21,20 +18,12 @@ data class TicketResult(
         val dueDate: Instant?,
         val description: String,
         val projectId: UUID,
-        var ticketAssignments: List<TicketAssignmentResult>,
-        var subTicketIds: List<UUID>,
+        val ticketAssignments: List<TicketAssignmentResult>,
+        val subTicketIds: List<UUID>,
         val parentTicketId: UUID?,
         val createdBy: UUID,
         val tagIds: List<UUID>?,
-        val mentoningCommentIds: List<UUID>,
-        //TODO: Do, we want mentioningTickets?(computed)
+        val referencingTicketIds: List<UUID>,
+        val referencedTicketIds: List<UUID>,
         val commentIds: List<UUID>
-
-
-) {
-    constructor(t: Ticket) : this(id = t.id, number = t.number, createTime = t.createTime, title = t.title,
-            open = t.open, storyPoints = t.storyPoints, initialEstimatedTime = t.initialEstimatedTime, currentEstimatedTime = t.currentEstimatedTime,
-            dueDate = t.dueDate, description = t.descriptionComment.text, projectId = t.project.id, ticketAssignments = t.assignedTicketUsers.map(::TicketAssignmentResult), subTicketIds = t.subTickets.map(Ticket::id),
-            parentTicketId = t.parentTicket?.id, createdBy = t.createdBy.id, tagIds = t.tags.map(TicketTag::id), commentIds = t.comments.filter { c -> c.describedTicket == null }.map(Comment::id),
-            mentoningCommentIds = t.mentioningComments.map(Comment::id))
-}
+)

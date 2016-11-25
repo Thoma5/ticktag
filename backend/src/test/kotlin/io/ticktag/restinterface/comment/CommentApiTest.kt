@@ -2,21 +2,18 @@ package io.ticktag.restinterface.comment
 
 import io.ticktag.service.NotFoundException
 import io.ticktag.service.ServiceBaseTest
-
-import io.ticktag.service.TicktagValidationException
 import io.ticktag.service.comment.dto.CreateComment
 import io.ticktag.service.comment.dto.UpdateComment
 import io.ticktag.service.comment.service.CommentService
 import io.ticktag.service.ticket.service.TicketService
-import org.junit.Assert
+import org.hamcrest.CoreMatchers.hasItem
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThat
 import org.junit.Test
 import java.util.*
 import javax.inject.Inject
-import org.junit.Assert.assertThat
-import org.junit.Assert.assertEquals
-import org.hamcrest.CoreMatchers.*
 
-class CommentTest : ServiceBaseTest() {
+class CommentApiTest : ServiceBaseTest() {
 
     @Inject lateinit private var commentService: CommentService
 
@@ -28,7 +25,7 @@ class CommentTest : ServiceBaseTest() {
         val id = UUID.fromString("00000000-0001-0000-0000-000000000001")
         val comment_id = UUID.fromString("00000000-0004-0000-0000-000000000006")
         withUser(id) { principal ->
-            commentService.updateComment(comment_id, UpdateComment("test",null,null))
+            commentService.updateComment(comment_id, UpdateComment("test", null, null))
             val comment = commentService.getComment(comment_id) ?: throw NotFoundException()
             assertEquals(comment.text, "test")
         }
@@ -60,7 +57,7 @@ class CommentTest : ServiceBaseTest() {
         val id = UUID.fromString("00000000-0001-0000-0000-000000000001")
         val comment_id = UUID.fromString("00000000-0004-0000-0000-000000000001")
         withUser(id) { principal ->
-            commentService.updateComment(comment_id, UpdateComment("test", emptyList(),null))
+            commentService.updateComment(comment_id, UpdateComment("test", emptyList(), null))
 
         }
     }
@@ -90,12 +87,12 @@ class CommentTest : ServiceBaseTest() {
         val ownerTicketId = UUID.fromString("00000000-0003-0000-0000-000000000001")
         val referenceTicketId = UUID.fromString("00000000-0003-0000-0000-000000000002")
         withUser(id) { principal ->
-            val createComment = CreateComment("test",ownerTicketId, listOf(referenceTicketId), emptyList())
-            val createResult = commentService.createComment(createComment,principal,ownerTicketId)
-            assertEquals(createResult.mentionedTicketIds.size,1)
+            val createComment = CreateComment("test", ownerTicketId, listOf(referenceTicketId), emptyList())
+            val createResult = commentService.createComment(createComment, principal, ownerTicketId)
+            assertEquals(createResult.mentionedTicketIds.size, 1)
             assertThat(createResult.mentionedTicketIds, `hasItem`(referenceTicketId))
             val referenceTicket = ticketService.getTicket(referenceTicketId)
-            assertThat(referenceTicket.mentoningCommentIds, `hasItem`(createResult.id))//check if Comment ID is referencedTicket Test may fail if Tickets were reworked
+            assertThat(referenceTicket.referencingTicketIds, `hasItem`(createResult.ticketId))
         }
     }
 }

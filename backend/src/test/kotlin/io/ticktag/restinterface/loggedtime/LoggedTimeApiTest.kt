@@ -13,7 +13,7 @@ import java.util.*
 import javax.inject.Inject
 import org.springframework.security.access.AccessDeniedException
 
-class LoggTimeTest : ApiBaseTest() {
+class LoggedTimeApiTest : ApiBaseTest() {
     @Inject
     lateinit var loggedTimeController: LoggedTimeController
 

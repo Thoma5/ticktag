@@ -6,6 +6,7 @@ import io.ticktag.persistence.project.ProjectRepository
 import io.ticktag.persistence.ticket.TicketRepository
 import io.ticktag.persistence.ticket.entity.Comment
 import io.ticktag.persistence.ticket.entity.Ticket
+import io.ticktag.persistence.ticket.entity.TicketTag
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.*
 import io.ticktag.service.ticket.dto.CreateTicket
@@ -34,17 +35,17 @@ open class TicketServiceImpl @Inject constructor(
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listTicketsFuzzy(@P("authProjectId") project: UUID, query: String, pageable: Pageable): List<TicketResult> {
         val result = tickets.findByProjectIdAndFuzzy(project, "%$query%", "%$query%", pageable)
-        return result.map(::TicketResult)
+        return result.map { toResultDTO(it) }
     }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listTickets(@P("authProjectId") project: UUID): List<TicketResult> {
-        return tickets.findByProjectId(project).map(::TicketResult)
+        return tickets.findByProjectId(project).map { toResultDTO(it) }
     }
 
     @PreAuthorize(AuthExpr.READ_TICKET)
     override fun getTicket(@P("authTicketId") id: UUID): TicketResult {
-        return TicketResult(tickets.findOne(id) ?: throw NotFoundException())
+        return toResultDTO(tickets.findOne(id) ?: throw NotFoundException())
     }
 
 
@@ -118,9 +119,9 @@ open class TicketServiceImpl @Inject constructor(
             subTicket.parentTicket = newTicket
         }
 
-        val ticketResult = TicketResult(newTicket) //Weder EM noch via UPDATECASCADE kann das ticket neu geladen werden
-        ticketResult.subTicketIds = newSubs
-        ticketResult.ticketAssignments = ticketAssignmentList
+        // Neither EM nor UPDATECASCADE can reload the ticket
+        val ticketResult = toResultDTO(newTicket)
+                .copy(subTicketIds = newSubs, ticketAssignments = ticketAssignmentList)
         return ticketResult
     }
 
@@ -160,13 +161,38 @@ open class TicketServiceImpl @Inject constructor(
         if (updateTicket.description != null) {
             ticket.descriptionComment.text = updateTicket.description
         }
-        val ticketResult = TicketResult(ticket)
 
-        return ticketResult
+        return toResultDTO(ticket)
     }
 
     @PreAuthorize(AuthExpr.WRITE_TICKET)
     override fun deleteTicket(@P("authTicketId") id: UUID) {
         tickets.delete(tickets.findOne(id) ?: throw NotFoundException())
+    }
+
+    private fun toResultDTO(t: Ticket): TicketResult {
+        val realCommentIds = t.comments.filter { c -> c.describedTicket == null }.map(Comment::id)
+        val referencingTicketIds = t.mentioningComments.map { it.ticket.id }
+        val referencedTicketIds = t.comments.flatMap { it.mentionedTickets }.map(Ticket::id)
+
+        return TicketResult(id = t.id,
+                number = t.number,
+                createTime = t.createTime,
+                title = t.title,
+                open = t.open,
+                storyPoints = t.storyPoints,
+                initialEstimatedTime = t.initialEstimatedTime,
+                currentEstimatedTime = t.currentEstimatedTime,
+                dueDate = t.dueDate,
+                description = t.descriptionComment.text,
+                projectId = t.project.id,
+                ticketAssignments = t.assignedTicketUsers.map(::TicketAssignmentResult),
+                subTicketIds = t.subTickets.map(Ticket::id),
+                parentTicketId = t.parentTicket?.id,
+                createdBy = t.createdBy.id,
+                tagIds = t.tags.map(TicketTag::id),
+                referencedTicketIds = referencedTicketIds,
+                referencingTicketIds = referencingTicketIds,
+                commentIds = realCommentIds)
     }
 }
