@@ -2,14 +2,12 @@ package io.ticktag.restinterface.ticket.controllers
 
 import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
-import io.ticktag.restinterface.ticket.schema.CreateTicketRequestJson
-import io.ticktag.restinterface.ticket.schema.TicketResultJson
-import io.ticktag.restinterface.ticket.schema.TicketSort
-import io.ticktag.restinterface.ticket.schema.UpdateTicketRequestJson
+import io.ticktag.restinterface.ticket.schema.*
 import io.ticktag.service.Principal
 import io.ticktag.service.ticket.dto.CreateTicket
 import io.ticktag.service.ticket.dto.UpdateTicket
 import io.ticktag.service.ticket.service.TicketService
+import io.ticktag.service.tickettag.services.TicketTagService
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.security.core.annotation.AuthenticationPrincipal

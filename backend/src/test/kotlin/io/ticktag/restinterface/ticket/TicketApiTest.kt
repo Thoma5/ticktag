@@ -5,7 +5,7 @@ import io.ticktag.USER_ID
 import io.ticktag.restinterface.ApiBaseTest
 import io.ticktag.restinterface.ticket.controllers.TicketController
 import io.ticktag.restinterface.ticket.schema.CreateTicketRequestJson
-import io.ticktag.restinterface.ticket.schema.TicketAssignmentJson
+import io.ticktag.restinterface.ticketuserrelation.schema.CreateTicketUserRelationRequestJson
 import io.ticktag.restinterface.ticket.schema.TicketSort
 import io.ticktag.restinterface.ticket.schema.UpdateTicketRequestJson
 import io.ticktag.service.NotFoundException
@@ -49,9 +49,9 @@ class TicketApiTest : ApiBaseTest() {
     fun `createTicketWithAssignments positiv`() {
         withUser(ADMIN_ID) { principal ->
             val now = Instant.now()
-            val assignments = ArrayList<TicketAssignmentJson>()
-            assignments.add(TicketAssignmentJson(UUID.fromString("00000000-0006-0000-0000-000000000006"), UUID.fromString("00000000-0001-0000-0000-000000000001")))
-            assignments.add(TicketAssignmentJson(UUID.fromString("00000000-0006-0000-0000-000000000005"), UUID.fromString("00000000-0001-0000-0000-000000000002")))
+            val assignments = ArrayList<CreateTicketUserRelationRequestJson>()
+            assignments.add(CreateTicketUserRelationRequestJson(UUID.fromString("00000000-0006-0000-0000-000000000006"), UUID.fromString("00000000-0001-0000-0000-000000000001")))
+            assignments.add(CreateTicketUserRelationRequestJson(UUID.fromString("00000000-0006-0000-0000-000000000005"), UUID.fromString("00000000-0001-0000-0000-000000000002")))
             val req = CreateTicketRequestJson("ticket", true, 4, Duration.ofDays(1), Duration.ofDays(1),
                     now, "description", UUID.fromString("00000000-0002-0000-0000-000000000001"), assignments, emptyList(), emptyList(), null)
 
@@ -64,7 +64,7 @@ class TicketApiTest : ApiBaseTest() {
             assertThat(result.dueDate, `is`(now))
             assertThat(result.description, `is`("description"))
             assertThat(result.projectId, `is`(UUID.fromString("00000000-0002-0000-0000-000000000001")))
-            assertThat(result.ticketAssignments!!.size, `is`(2))
+            assertThat(result.tickerUserRelations!!.size, `is`(2))
 
         }
     }
