@@ -1,7 +1,6 @@
 import {
   Component, Input, OnChanges, Output, EventEmitter, SimpleChanges
 } from '@angular/core';
-import { findValue } from '../listmaputils';
 import * as imm from 'immutable';
 
 export interface Tag {
@@ -24,7 +23,7 @@ export class TaginputComponent implements OnChanges {
 
   // Array of `Tag.id` values of `allTags`.
   @Input() tags: imm.List<string>;
-  @Output() readonly tagsChange = new EventEmitter<string[]>();
+  @Output() readonly tagsChange = new EventEmitter<imm.List<string>>();
   @Output() readonly tagAdd = new EventEmitter<string>();
   @Output() readonly tagRemove = new EventEmitter<string>();
   private sortedTags: imm.List<Tag>;
@@ -43,13 +42,8 @@ export class TaginputComponent implements OnChanges {
   }
 
   onDeleteClick(tag: Tag) {
-    let newTags = this.tags.slice();
-    let index = newTags.indexOf(tag.id);
-    if (index >= 0) {
-      newTags.splice(index, 1);
-      this.tagsChange.emit(newTags);
-      this.tagRemove.emit(tag.id);
-    }
+    this.tagsChange.emit(this.tags.filter(tid => tid === tag.id).toList());
+    this.tagRemove.emit(tag.id);
   }
 
   onShowAdd() {
@@ -61,13 +55,11 @@ export class TaginputComponent implements OnChanges {
   }
 
   onAdd() {
-    let tag = findValue(this.allTags, t => t.name.toLowerCase() === this.newTagName.toLowerCase());
+    let tag = this.allTags.find(t => t.name.toLowerCase() === this.newTagName.toLowerCase());
     if (tag) {
       let alreadyAdded = this.tags.indexOf(tag.id);
       if (alreadyAdded < 0) {
-        let newTags = this.tags.slice();
-        newTags.push(tag.id);
-        this.tagsChange.emit(newTags);
+        this.tagsChange.emit(this.tags.push(tag.id));
         this.tagAdd.emit(tag.id);
       }
     }

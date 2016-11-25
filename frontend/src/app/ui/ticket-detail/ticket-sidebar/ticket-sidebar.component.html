@@ -6,8 +6,8 @@
                 [user]="a.user"
                 [tags]="a.tags"
                 [allTags]="allAssignmentTags"
-                (tagAdd)="onTagAdd(a[0].id, $event)"
-                (tagRemove)="onTagRemove(a[0].id, $event)"
+                (tagAdd)="onTagAdd(a.user.id, $event)"
+                (tagRemove)="onTagRemove(a.user.id, $event)"
             ></tt-assigned-user>
         </div>
         <div class="add-assigned-user">

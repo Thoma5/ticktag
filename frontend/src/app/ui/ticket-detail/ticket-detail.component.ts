@@ -7,7 +7,7 @@ import {
   AssignmentTagResultJson, CommentResultJson, TicketTagResultJson,
   TickettagApi, TimeCategoryJson, TimecategoryApi,
   GetApi, GetResultJson, UpdateTicketRequestJson, TicketAssignmentJson,
-  TicketassignmentApi, ValidationErrorJson
+  TicketassignmentApi
 } from '../../api';
 import { Observable } from 'rxjs';
 import {
@@ -57,24 +57,15 @@ export class TicketDetailComponent implements OnInit {
   }
 
   onTitleChange(val: string): void {
-    this.ticketDetail.ticket.title = val;
-    let req = this.getEmptyUpdateRequest();
-    req.title = val;
-    this.updateTicket(req);
+    this.updateTicket({ title: val });
   }
 
   onDescriptionChange(val: string): void {
-    this.ticketDetail.ticket.description = val;
-    let req = this.getEmptyUpdateRequest();
-    req.description = val;
-    this.updateTicket(req);
+    this.updateTicket({ description: val });
   }
 
   onStorypointsChange(val: number): void {
-    this.ticketDetail.ticket.storyPoints = val;
-    let req = this.getEmptyUpdateRequest();
-    req.storyPoints = val;
-    this.updateTicket(req);
+    this.updateTicket({ storyPoints: val });
   }
 
   onTagAdd(val: string): void {
@@ -89,25 +80,19 @@ export class TicketDetailComponent implements OnInit {
   onAssignmentAdd(ass: TicketAssignmentJson) {
     let obs = this.apiCallService
       .call<void>(p => this.ticketAssignmentApi.createTicketAssignmentUsingPOSTWithHttpInfo(
-        this.ticketDetail.ticket.id,
+        this.ticketDetail.id,
         ass.assignmentTagId,
         ass.userId,
         p));
     this.queue.push(obs)
-      .flatMap<ValidationErrorJson[] | TicketDetailResult>(result => {
-        if (result.isValid) {
-          return this.getTicketDetail(this.ticketDetail.ticket.projectId, this.ticketDetail.ticket.id);
-        } else {
-          return Observable.of(result.error);
-        }
-      })
       .subscribe(result => {
-        if (result instanceof TicketDetailResult) {
-          this.ticketDetail = result;
+        if (result.isValid) {
+          // TODO is this clever?
+          this.refresh(this.ticketDetail.projectId, this.ticketDetail.id).subscribe();
         } else {
           // TODO nice message
           console.dir(result);
-          console.warn('asldöf jasldfkj sdaölfaj sdölsajdl aösdfas');
+          window.alert('😥');
         }
       });
   }
@@ -115,55 +100,38 @@ export class TicketDetailComponent implements OnInit {
   onAssignmentRemove(ass: TicketAssignmentJson) {
     let obs = this.apiCallService
       .call<void>(p => this.ticketAssignmentApi.deleteTicketAssignmentUsingDELETEWithHttpInfo(
-        this.ticketDetail.ticket.id,
+        this.ticketDetail.id,
         ass.assignmentTagId,
         ass.userId,
         p));
     this.queue.push(obs)
-      .flatMap<ValidationErrorJson[] | TicketDetailResult>(result => {
-        if (result.isValid) {
-          return this.getTicketDetail(this.ticketDetail.ticket.projectId, this.ticketDetail.ticket.id);
-        } else {
-          return Observable.of(result.error);
-        }
-      })
       .subscribe(result => {
-        if (result instanceof TicketDetailResult) {
-          this.ticketDetail = result;
+        if (result.isValid) {
+          // TODO is this clever?
+          this.refresh(this.ticketDetail.projectId, this.ticketDetail.id).subscribe();
         } else {
           // TODO nice message
           console.dir(result);
-          console.warn('ASDFASDFA SFSDA FSDAF SDA ASDFK sdj falsdf');
+          window.alert('😥');
         }
       });
   }
 
   private updateTicket(req: UpdateTicketRequestJson): void {
-    let ticketId = this.ticketDetail.ticket.id;
-
     // TODO: callNoError is wrong here
     let updateObs = this.apiCallService
-      .callNoError<TicketResultJson>(p => this.ticketApi.updateTicketUsingPUTWithHttpInfo(req, ticketId, p));
+      .call<void>(p => this.ticketApi.updateTicketUsingPUTWithHttpInfo(req, this.ticketDetail.id, p));
     this.queue.push(updateObs)
-      .subscribe((ticket: TicketResultJson) => {
-        this.ticketDetail.ticket = ticket;
-        console.log(ticket);
+      .subscribe((result) => {
+        if (result.isValid) {
+          // TODO is this clever?
+          this.refresh(this.ticketDetail.projectId, this.ticketDetail.id).subscribe();
+        } else {
+          // TODO nice message
+          console.dir(result);
+          window.alert('😥');
+        }
       });
-  }
-
-  private getEmptyUpdateRequest(): UpdateTicketRequestJson {
-    return {
-      title: null,
-      open: null,
-      storyPoints: null,
-      currentEstimatedTime: null,
-      dueDate: null,
-      description: null,
-      ticketAssignments: null,
-      subTickets: null,
-      existingSubTicketIds: null,
-      partenTicketId: null,
-    };
   }
 
   private refresh(projectId: string, ticketId: string): Observable<void> {
