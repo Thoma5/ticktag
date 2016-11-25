@@ -11,8 +11,5 @@ data class UpdateTicketRequestJson(
         val currentEstimatedTime: Duration?,
         val dueDate: Instant?,
         val description: String?,
-        val ticketAssignments: List<TicketAssignmentJson>?,
-        val subTickets: List<CreateTicketRequestJson>?,
-        val existingSubTicketIds: List<UUID>?,
         val parentTicketId: UUID?
 )

@@ -3,13 +3,12 @@ package io.ticktag.service.ticket.service.impl
 import io.ticktag.TicktagService
 import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.project.ProjectRepository
+import io.ticktag.persistence.ticket.TicketRepository
 import io.ticktag.persistence.ticket.entity.Comment
 import io.ticktag.persistence.ticket.entity.Ticket
-import io.ticktag.persistence.ticket.TicketRepository
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.*
 import io.ticktag.service.ticket.dto.CreateTicket
-import io.ticktag.service.ticket.dto.TicketAssignment
 import io.ticktag.service.ticket.dto.TicketResult
 import io.ticktag.service.ticket.dto.UpdateTicket
 import io.ticktag.service.ticket.service.TicketService
@@ -54,7 +53,7 @@ open class TicketServiceImpl @Inject constructor(
     override fun createTicket(@Valid createTicket: CreateTicket, principal: Principal, @P("authProjectId") projectId: UUID): TicketResult {
 
         val wantToSetParentTicket = createTicket.parentTicket != null
-        val dontWantToCreateSubTicketsInThisUpdate =  createTicket.subTickets.isEmpty()
+        val dontWantToCreateSubTicketsInThisUpdate = createTicket.subTickets.isEmpty()
         val dontWantToReferenceSubTicketsInThisUpdate = createTicket.existingSubTicketIds.isEmpty()
 
         //implies(q,p) is only false if q is true and p is false
@@ -107,16 +106,12 @@ open class TicketServiceImpl @Inject constructor(
 
         //SubTickets
         val newSubs: MutableList<UUID> = emptyList<UUID>().toMutableList()
-        if (createTicket.subTickets != null) {
-            newSubs.addAll(createTicket.subTickets.map({ sub ->
-                sub.parentTicket = newTicket.id
-                createTicket(sub, principal, projectId).id
-            }))
-        }
+        newSubs.addAll(createTicket.subTickets.map({ sub ->
+            sub.parentTicket = newTicket.id
+            createTicket(sub, principal, projectId).id
+        }))
 
-        if (createTicket.existingSubTicketIds != null) {
-            newSubs.addAll(createTicket.existingSubTicketIds)
-        }
+        newSubs.addAll(createTicket.existingSubTicketIds)
 
         newSubs.forEach { subID ->
             val subTicket = tickets.findOne(subID) ?: throw NotFoundException()
@@ -139,26 +134,6 @@ open class TicketServiceImpl @Inject constructor(
 
         val ticket = tickets.findOne(ticketId) ?: throw NotFoundException()
 
-        val wantToSetParentTicket = updateTicket.parentTicket != null
-        val dontWantToCreateSubTicketsInThisUpdate = updateTicket.subTickets == null || updateTicket.subTickets.isEmpty()
-        val dontWantToReferenceSubTicketsInThisUpdate = updateTicket.existingSubTicketIds == null || (updateTicket.existingSubTicketIds.isEmpty())
-
-        val noSubTicketsArePresentBeforeUpdate = (ticket.subTickets.size == 0)
-
-        //implies(q,p) is only false if q is true and p is false
-        if (!(implies(wantToSetParentTicket, (noSubTicketsArePresentBeforeUpdate || (dontWantToCreateSubTicketsInThisUpdate && dontWantToReferenceSubTicketsInThisUpdate))))) {
-            throw TicktagValidationException(listOf(ValidationError("updateUser.parentTicket", ValidationErrorDetail.Other("subTickets are Set"))))
-        }
-
-        val wantToSetSubTickets = (updateTicket.subTickets != null && updateTicket.subTickets.isNotEmpty()) || //creates New SubTickets
-                (updateTicket.existingSubTicketIds != null && updateTicket.existingSubTicketIds.isNotEmpty())  // references SubTickets
-        val dontWantToSetParentTicket = updateTicket.parentTicket == null
-        val noParentTicketIsPresentBeforeUpdate = ticket.parentTicket == null
-
-        if (!(implies(wantToSetSubTickets, (dontWantToSetParentTicket || noParentTicketIsPresentBeforeUpdate)))) {
-            throw TicktagValidationException(listOf(ValidationError("updateUser.subTickets", ValidationErrorDetail.Other("tickets are Set"))))
-        }
-
 
         if (updateTicket.title != null) {
             ticket.title = updateTicket.title
@@ -175,53 +150,14 @@ open class TicketServiceImpl @Inject constructor(
         if (updateTicket.dueDate != null) {
             ticket.dueDate = updateTicket.dueDate
         }
-
         if (updateTicket.parentTicket != null) {
             ticket.parentTicket = tickets.findOne(updateTicket.parentTicket)
         }
-
         //Comment
         if (updateTicket.description != null) {
             ticket.descriptionComment.text = updateTicket.description
         }
         val ticketResult = TicketResult(ticket)
-
-        //Assignee
-        if (updateTicket.ticketAssignments != null) {
-            val ticketAssignmentList = emptyList<TicketAssignmentResult>().toMutableList()
-            for ((assignmentTagId, userId) in updateTicket.ticketAssignments) {
-                ticketAssignmentList.add(ticketAssignmentService.createOrGetIfExistsTicketAssignment(ticket.id, assignmentTagId, userId))
-            }
-            val ticketAssignmentDtos = ticket.assignedTicketUsers.map(::TicketAssignment)
-            for ((assignmentTagId, userId) in ticketAssignmentDtos) {
-                if (!ticketAssignmentList.contains(TicketAssignmentResult(ticket.id, assignmentTagId, userId))) {
-                    ticketAssignmentService.deleteTicketAssignment(ticket.id, assignmentTagId, userId)
-                }
-            }
-            ticketResult.ticketAssignments = ticketAssignmentList
-        }
-
-        //SubTickets
-        if (updateTicket.subTickets != null || updateTicket.existingSubTicketIds != null) {
-            ticket.subTickets.forEach { t -> t.parentTicket = null }
-            val newSubs: MutableList<UUID> = emptyList<UUID>().toMutableList()
-            if (updateTicket.subTickets != null) {
-                newSubs.addAll(updateTicket.subTickets.map({ sub ->
-                    sub.parentTicket = ticket.id
-                    createTicket(sub, principal, ticket.project.id).id
-                }))
-            }
-
-            if (updateTicket.existingSubTicketIds != null) {
-                newSubs.addAll(updateTicket.existingSubTicketIds)
-            }
-
-            newSubs.forEach { subID ->
-                val subTicket = tickets.findOne(subID) ?: throw NotFoundException()
-                subTicket.parentTicket = ticket
-            }
-            ticketResult.subTicketIds = newSubs
-        }
 
         return ticketResult
     }
