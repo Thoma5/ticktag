@@ -145,13 +145,14 @@ class TicketApiTest : ApiBaseTest() {
     fun `updateTicket positiv`() {
         withUser(ADMIN_ID) { principal ->
             val now = Instant.now()
-            val req = UpdateTicketRequestJson("ticket", true, 4, Duration.ofDays(1),
+            val req = UpdateTicketRequestJson("ticket", true, 4, Duration.ofDays(1), Duration.ofDays(2),
                     now, "description", null)
             val result = ticketController.updateTicket(req, UUID.fromString("00000000-0003-0000-0000-000000000001"), principal)
             assertEquals(result.title, "ticket")
             assertEquals(result.open, true)
             assertEquals(result.storyPoints, 4)
-            assertEquals(result.currentEstimatedTime, (Duration.ofDays(1)))
+            assertEquals(result.initialEstimatedTime, (Duration.ofDays(1)))
+            assertEquals(result.currentEstimatedTime, (Duration.ofDays(2)))
             assertEquals(result.dueDate, (now))
             assertEquals(result.description, ("description"))
 

@@ -144,6 +144,9 @@ open class TicketServiceImpl @Inject constructor(
         if (updateTicket.storyPoints != null) {
             ticket.storyPoints = updateTicket.storyPoints
         }
+        if (updateTicket.initialEstimatedTime != null) {
+            ticket.initialEstimatedTime = updateTicket.initialEstimatedTime
+        }
         if (updateTicket.currentEstimatedTime != null) {
             ticket.currentEstimatedTime = updateTicket.currentEstimatedTime
         }
