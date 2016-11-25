@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule
+import io.ticktag.ApplicationProperties
 import io.ticktag.service.NotFoundException
 import io.ticktag.service.TicktagValidationException
 import io.ticktag.service.ValidationErrorDetail
@@ -34,7 +35,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @EnableWebMvc
 open class RestConfig : WebMvcConfigurerAdapter() {
     @Bean
-    open fun restRequestLoggingAspect() = RestRequestLoggingAspect()
+    open fun restRequestLoggingAspect(props: ApplicationProperties) = RestRequestLoggingAspect(props)
 
     @Bean
     open fun objectMapper(): ObjectMapper {
@@ -83,7 +84,7 @@ open class RestExceptionHandlers {
 
 @Order(100)
 @Aspect
-class RestRequestLoggingAspect {
+class RestRequestLoggingAspect(private val props: ApplicationProperties) {
     companion object {
         private val LOG = LoggerFactory.getLogger(RestRequestLoggingAspect::class.java)
         private const val MAX_CLASS_NAME_LENGTH = 30
@@ -101,7 +102,11 @@ class RestRequestLoggingAspect {
         LOG.info("=== REST request to $name ===")
         val start = System.nanoTime()
         try {
-            return pjp.proceed()
+            val result = pjp.proceed()
+            if (props.httpSlow) {
+                Thread.sleep(50 + (Math.random() * 100).toLong())
+            }
+            return result
         } finally {
             val end = System.nanoTime()
             LOG.info("=== REST request processed in ${(end - start) / 1000000} ms ===")
