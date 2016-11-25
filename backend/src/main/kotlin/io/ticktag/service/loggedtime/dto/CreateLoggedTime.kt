@@ -1,7 +1,7 @@
 package io.ticktag.service.loggedtime.dto
 
 
-import io.ticktag.service.comment.dto.CreateLoggedTimeJson
+import io.ticktag.restinterface.loggedtime.schema.CreateLoggedTimeJson
 import java.time.Duration
 import java.util.*
 

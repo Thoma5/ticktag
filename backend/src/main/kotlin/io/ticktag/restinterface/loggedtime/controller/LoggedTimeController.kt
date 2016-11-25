@@ -2,10 +2,10 @@ package io.ticktag.restinterface.loggedtime.controller
 
 import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
+import io.ticktag.restinterface.loggedtime.schema.CreateLoggedTimeJson
 import io.ticktag.restinterface.loggedtime.schema.LoggedTimeResultJson
 import io.ticktag.restinterface.loggedtime.schema.UpdateLoggedTimeJson
 import io.ticktag.service.NotFoundException
-import io.ticktag.service.comment.dto.CreateLoggedTimeJson
 import io.ticktag.service.loggedtime.dto.CreateLoggedTime
 import io.ticktag.service.loggedtime.dto.UpdateLoggedTime
 import io.ticktag.service.loggedtime.service.LoggedTimeService

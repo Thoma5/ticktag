@@ -1,6 +1,6 @@
 package io.ticktag.restinterface.comment.schema
 
-import io.ticktag.service.comment.dto.CreateLoggedTimeJson
+import io.ticktag.restinterface.loggedtime.schema.CreateLoggedTimeJson
 import java.util.*
 
 

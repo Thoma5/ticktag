@@ -3,9 +3,9 @@ package io.ticktag.restinterface.loggedtime
 import io.ticktag.ADMIN_ID
 import io.ticktag.restinterface.ApiBaseTest
 import io.ticktag.restinterface.loggedtime.controller.LoggedTimeController
+import io.ticktag.restinterface.loggedtime.schema.CreateLoggedTimeJson
 import io.ticktag.restinterface.loggedtime.schema.UpdateLoggedTimeJson
 import io.ticktag.service.NotFoundException
-import io.ticktag.service.comment.dto.CreateLoggedTimeJson
 import junit.framework.Assert.assertEquals
 import org.junit.Test
 import java.time.Duration
