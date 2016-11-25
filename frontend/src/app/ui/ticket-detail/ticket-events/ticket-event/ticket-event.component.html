@@ -6,12 +6,26 @@
     </div>
     <div class='date'>{{ dateFromEvent() | date:'medium' }}</div>
   </div>
-  <div ng-switch='event.type'>
-    <div ng-switch-when='TicketEventTitleChangedResultJson'>
+  <div [ngSwitch]='event.type'>
+    <div *ngSwitchCase="'TicketEventTitleChangedResultJson'">
       <tt-ticket-event-old-new
-        [title]="'Title changed'"
-        [oldString]='event.srcTitle'
-        [newString]='event.dstTitle'
+      [title]="'Title changed'"
+      [oldString]='event.srcTitle'
+      [newString]='event.dstTitle'
+      ></tt-ticket-event-old-new>
+    </div>
+    <div *ngSwitchCase="'TicketEventCurrentEstimatedTimeChangedResultJson'">
+      <tt-ticket-event-old-new
+      [title]="'Current estimated time changed'"
+      [oldString]='event.srcCurrentEstimatedTime'
+      [newString]='event.dstCurrentEstimatedTime'
+      ></tt-ticket-event-old-new>
+    </div>
+    <div *ngSwitchCase="'TicketEventParentChangedResultJson'">
+      <tt-ticket-event-old-new
+        [title]="'Parent ticket changed'"
+        [oldString]='event.srcParentNumber'
+        [newString]='event.dstParentNumber'
       ></tt-ticket-event-old-new>
     </div>
   </div>
