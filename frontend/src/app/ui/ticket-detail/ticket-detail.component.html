@@ -19,6 +19,7 @@
                 [assignedUsers]='assignedUsers'
               ></tt-ticket-comment-input>
             </div>
+            </tab>
             <tab heading='Activity'>
               <div>
                 <tt-ticket-events [events]='ticketEvents'></tt-ticket-events>
@@ -26,12 +27,9 @@
             </tab>
         </tabset>
       </div>
-      <div class='right col-md-4'>
-        <tt-ticket-sidebar [ticket]="ticket"></tt-ticket-sidebar>
-      </div>
     </div>
-
-    <pre>{{ticket | json}}</pre>
-    <pre>{{comments | json}}</pre>
+    <div class='right col-md-4'>
+      <tt-ticket-sidebar [ticket]="ticket"></tt-ticket-sidebar>
+    </div>
   </div>
 </div>
