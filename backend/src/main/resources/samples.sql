@@ -691,6 +691,7 @@ INSERT INTO public.ticket_event_initial_estimated_time_changed (id, src_initial_
 INSERT INTO public.ticket_event_state_changed (id, src_state, dst_state) VALUES ('dfc0f306-9b53-4002-9cf7-2d2a4dbf8be7', false, true);
 INSERT INTO public.ticket_event_state_changed (id, src_state, dst_state) VALUES ('957dfea0-0da4-49ce-9460-037219eee366', true, false);
 INSERT INTO public.ticket_event_state_changed (id, src_state, dst_state) VALUES ('a94a570d-02c1-49ac-b558-e455036a9303', false, true);
+
 -- Ticket Event User Added
 INSERT INTO public.ticket_event_user_added (id, user_id, assignment_tag_id) VALUES ('799ee2dd-2168-46cf-84e2-b6a6395c4801', '00000000-0001-0000-0000-000000000001', '00000000-0006-0000-0000-000000000001');
 INSERT INTO public.ticket_event_user_added (id, user_id, assignment_tag_id) VALUES ('0e842df3-2308-4a12-beba-cacbdf4eeccf', '00000000-0001-0000-0000-000000000001', '00000000-0006-0000-0000-000000000002');

@@ -7,5 +7,5 @@ import java.util.*
 
 @TicktagRepository
 interface TicketEventRepository : TicktagCrudRepository<TicketEvent, UUID> {
-    fun findByTicketId(ticketId: UUID): List<TicketEvent>
+    fun findByTicketIdOrderByTimeAsc(ticketId: UUID): List<TicketEvent>
 }

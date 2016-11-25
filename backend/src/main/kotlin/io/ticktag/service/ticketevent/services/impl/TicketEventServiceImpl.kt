@@ -18,7 +18,7 @@ open class TicketEventServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.READ_TICKET)
     override fun listTicketEvents(@P("authTicketId") ticketId: UUID): List<TicketEventResult> {
-        return ticketEvents.findByTicketId(ticketId).map { e ->
+        return ticketEvents.findByTicketIdOrderByTimeAsc(ticketId).map { e ->
             when (e) {
                 is TicketEventTitleChanged -> TicketEventTitleChangedResult(e)
                 is TicketEventCommentTextChanged -> TicketEventCommentTextChangedResult(e)

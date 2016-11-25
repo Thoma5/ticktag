@@ -59,6 +59,7 @@ import {TicketEventsComponent} from './ui/ticket-detail/ticket-events/ticket-eve
 import {TicketEventOldNewComponent} from './ui/ticket-detail/ticket-events/ticket-event-old-new/ticket-event-old-new.component';
 import {TicketeventApi} from './api/api/TicketeventApi';
 import {TicketEventComponent} from './ui/ticket-detail/ticket-events/ticket-event/ticker-event.component';
+import {TicketEventUserComponent} from './ui/ticket-detail/ticket-events/ticket-event-user/ticket-event-user.component';
 
 
 @NgModule({
@@ -100,6 +101,7 @@ import {TicketEventComponent} from './ui/ticket-detail/ticket-events/ticket-even
     TicketEventsComponent,
     TicketEventComponent,
     TicketEventOldNewComponent,
+    TicketEventUserComponent,
     TicketCommentInputComponent,
     EditButtonComponent,
     RichTextviewComponent,

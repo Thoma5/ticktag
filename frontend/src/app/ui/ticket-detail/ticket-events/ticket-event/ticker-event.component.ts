@@ -9,7 +9,7 @@ import {TicketEventResultJson} from '../../../../api/model/TicketEventResultJson
 export class TicketEventComponent {
   @Input() event: TicketEventResultJson;
 
-  dateFromEvent() {
-    return new Date(this.event.time);
+  dateFromInstant(date: number) {
+    return new Date(date);
   }
 }
