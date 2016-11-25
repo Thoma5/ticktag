@@ -1,27 +1,26 @@
-import { Component, Input, OnInit, ElementRef } from '@angular/core';
-import { UserResultJson } from '../../../api';
-
-// TODO remove this is a mock
-export type AssignmentTagResultJson = {
-  id: string,
-  name: string,
-  color: string,
-  order: number,
-};
+import { Component, Input, EventEmitter, Output } from '@angular/core';
+import { UserResultJson, AssignmentTagResultJson } from '../../../api';
+import { Tag } from '../../../util/taginput/taginput.component';
 
 @Component({
   selector: 'tt-assigned-user',
   templateUrl: './assigned-user.component.html',
   styleUrls: ['./assigned-user.component.scss']
 })
-export class AssignedUserComponent implements OnInit {
+export class AssignedUserComponent {
   @Input() user: UserResultJson;
   @Input() tags: string[];
   @Input() allTags: AssignmentTagResultJson[];
 
-  constructor(private element: ElementRef) {
-  }
+  @Output() readonly tagAdd = new EventEmitter<string>();
+  @Output() readonly tagRemove = new EventEmitter<string>();
 
-  ngOnInit(): void {
+  get allTagsWrapped(): Tag[] {
+    return this.allTags.map((t, i) => ({
+      id: t.id,
+      color: t.color,
+      name: t.name,
+      order: i,
+    }));
   }
 }

@@ -28,8 +28,8 @@ export class TaginputComponent implements OnChanges {
   @Output() readonly tagRemove = new EventEmitter<string>();
   private sortedTags: Tag[];
 
-  private newTagName: string;
-  private editing: boolean = false;
+  private newTagName = '';
+  private editing = false;
 
   ngOnChanges(): void {
     this.allTagsMap = {};

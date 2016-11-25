@@ -6,7 +6,7 @@ import {
   TicketApi, TicketResultJson, CommentsApi, AssignmenttagApi,
   AssignmentTagResultJson, CommentResultJson, TicketTagResultJson,
   TickettagApi, TimeCategoryJson, TimecategoryApi, UserResultJson,
-  GetApi, GetResultJson, UpdateTicketRequestJson,
+  GetApi, GetResultJson, UpdateTicketRequestJson, TicketAssignmentJson
 } from '../../api';
 import { Observable, Subscriber } from 'rxjs';
 
@@ -90,6 +90,14 @@ export class TicketDetailComponent implements OnInit {
   onTagRemove(val: string): void {
     // TODO endpoint missing...
     console.log('TODO remove tag');
+  }
+
+  onAssignmentAdd(value: TicketAssignmentJson) {
+    console.dir(value);
+  }
+
+  onAssignmentRemove(value: TicketAssignmentJson) {
+    console.dir(value);
   }
 
   private updateTicket(req: UpdateTicketRequestJson): void {

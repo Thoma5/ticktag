@@ -1,77 +1,80 @@
-import { Component, Input } from '@angular/core';
-import { UserResultJson, TicketResultJson } from '../../../api';
-import { AssignmentTagResultJson } from '../assigned-user/assigned-user.component';
+import { Component, Input, EventEmitter, Output, OnChanges, SimpleChanges } from '@angular/core';
+import { UserResultJson, TicketResultJson, TicketAssignmentJson, AssignmentTagResultJson } from '../../../api';
+import { using } from '../../../util/using';
 
-let userMock1: UserResultJson = {
-  username: 'maxmustermann',
-  id: '123q4123412341324',
-  mail: 'mail@maililili.com',
-  name: 'Max Mustermann',
-  role: UserResultJson.RoleEnum.USER,
-};
-let userMock2: UserResultJson = {
-  username: 'maxmustermann',
-  id: 'asdfasdfasdf',
-  mail: 'mail@mailasdilili.com',
-  name: 'Alan Turing',
-  role: UserResultJson.RoleEnum.USER,
-};
-let tagsMock1 = ['asdfasdfasdfasdf', '0938rfgjhsd0wsafd'];
-let tagsMock2 = ['0sdfsfsdfsdfsdfasdfd', '0938rfasdfasddf0wsafd'];
-let allTagsMock: AssignmentTagResultJson[] = [
-  {id: 'asdfasdfasdfasdf', name: 'Developer', color: 'ffff00', order: 1},
-  {id: '0938rfgjhsd0wsafd', name: 'Reviewer', color: 'ff00ff', order: 2},
-  {id: '0sdfsfsdfsdfsdfasdfd', name: 'Owner', color: 'ffff00', order: 3},
-  {id: '0938rfasdfasddf0wsafd', name: 'Blaa', color: 'ffffff', order: 4},
-];
-let referencedTicketsMock: {number: number, title: string}[] = [
-  {number: 234, title: 'Fix this ugly thing there'},
-  {number: 4, title: 'World domination'},
-  {number: 5587, title: 'Just do something... please!'},
-];
-let referencedByTicketsMock: {number: number, title: string}[] = [
-  {number: 234, title: 'Fix this ugly thing there'},
-  {number: 78, title: 'This is a ticket'},
-  {number: 999, title: 'Implement UI for tickets'},
-  {number: 754, title: 'Automatically close super-ticket when all suptickets are done'},
-];
+interface Assignment {
+  user: UserResultJson;
+  tags: string[];
+}
 
 @Component({
   selector: 'tt-ticket-sidebar',
   templateUrl: './ticket-sidebar.component.html',
   styleUrls: ['./ticket-sidebar.component.scss']
 })
-export class TicketSidebarComponent {
-    @Input() ticket: TicketResultJson;
-    assigned = [{user: userMock1, tags: tagsMock1}, {user: userMock2, tags: tagsMock2}];
-    allTags = allTagsMock;
-    referencedTickets = referencedTicketsMock;
-    referencedByTickets = referencedByTicketsMock;
+export class TicketSidebarComponent implements OnChanges {
+  @Input() ticket: TicketResultJson;
+  @Input() allAssignmentTags = new Array<AssignmentTagResultJson>();
+  @Input() assignedUsers = new Array<UserResultJson>();
 
-    private adding = false;
-    private newUserName = '';
+  @Output() readonly assignmentAdd = new EventEmitter<TicketAssignmentJson>();
+  @Output() readonly assignmentRemove = new EventEmitter<TicketAssignmentJson>();
 
-    onShowAdd() {
-      this.adding = true;
+  private adding = false;
+  private newUserName = '';
+
+  // Variables updated in ngOnChanges
+  private assignments = new Array<Assignment>();
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.assignments = this.calculateAssignments();
+  }
+
+  onTagAdd(userId: string, tagId: string) {
+    this.assignmentAdd.emit({ userId: userId, assignmentTagId: tagId });
+  }
+
+  onTagRemove(userId: string, tagId: string) {
+    this.assignmentRemove.emit({ userId: userId, assignmentTagId: tagId });
+  }
+
+  onShowAdd() {
+    this.adding = true;
+  }
+
+  onHideAdd() {
+    this.adding = false;
+  }
+
+  onAdd() {
+  }
+
+  private calculateAssignments(): Assignment[] {
+    let map: {[key: string]: Assignment} = {};
+    let result = new Array<Assignment>();
+
+    // I love implementing left joins in JavaScript!
+    for (let ta of this.ticket.ticketAssignments) {
+      if (!map[ta.userId]) {
+        let user = this.assignedUsers.find(u => u.id === ta.userId);
+        if (!user) {
+          continue;
+        }
+        map[ta.userId] = { user: user, tags: [] };
+        result.push(map[ta.userId]);
+      }
+      let entry = map[ta.userId];
+      if (!entry) {
+        continue;
+      }
+      let tag = this.allAssignmentTags.find(tag => tag.id === ta.assignmentTagId);
+      if (!tag) {
+        continue;
+      }
+      entry.tags.push(tag.id);
     }
 
-    onHideAdd() {
-      this.adding = false;
-    }
-
-    onAdd() {
-      // TODO username
-      // TODO database checks and so on
-      this.assigned.push({
-        user: {
-          username: 'todo',
-          id: Math.random() + '',
-          mail: 'aa.aaa',
-          name: this.newUserName,
-          role: UserResultJson.RoleEnum.USER,
-        },
-        tags: [],
-      });
-      this.newUserName = '';
-    }
+    result.sort(using<Assignment>(a => a.user.name));
+    return result;
+  }
 }

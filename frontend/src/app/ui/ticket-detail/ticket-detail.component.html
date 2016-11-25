@@ -32,7 +32,13 @@
             </div>
         </div>
         <div class='right col-md-4'>
-            <tt-ticket-sidebar [ticket]="ticketDetail.ticket"></tt-ticket-sidebar>
+            <tt-ticket-sidebar
+                [ticket]="ticketDetail.ticket"
+                [allAssignmentTags]="ticketDetail.allAssignmentTags"
+                [assignedUsers]="ticketDetail.assignedUsers"
+                (assignmentAdd)="onAssignmentAdd($event)"
+                (assignmentRemove)="onAssignmentRemove($event)"
+            ></tt-ticket-sidebar>
         </div>
     </div>
     <pre>{{ ticketDetail | json }}</pre>
