@@ -10,6 +10,8 @@ import io.ticktag.service.Principal
 import io.ticktag.service.ticket.dto.CreateTicket
 import io.ticktag.service.ticket.dto.UpdateTicket
 import io.ticktag.service.ticket.service.TicketService
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -28,10 +30,12 @@ open class TicketController @Inject constructor(
     open fun listTickets(@RequestParam(name = "projectId") req: UUID,
                          @RequestParam(name = "page", defaultValue = "0", required = false) page: Int,
                          @RequestParam(name = "size", defaultValue = "50", required = false) size: Int,
-                         @RequestParam(name = "order", required = true) order: List<TicketSort>): List<TicketResultJson> {
+                         @RequestParam(name = "order", required = true) order: List<TicketSort>): Page<TicketResultJson> {
 
         val pageRequest = PageRequest(page, size, Sort(order.map { it.order }))
-        return ticketService.listTickets(req, pageRequest).map(::TicketResultJson)
+        val page = ticketService.listTickets(req, pageRequest)
+        val content = page.content.map(::TicketResultJson)
+        return PageImpl(content,pageRequest,page.totalElements)
     }
 
 

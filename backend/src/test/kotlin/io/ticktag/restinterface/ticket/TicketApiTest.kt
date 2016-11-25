@@ -310,12 +310,12 @@ class TicketApiTest : ApiBaseTest() {
     fun `listTicket test sorting Number positiv`() {
         withUser(ADMIN_ID) { principal ->
             val list1 = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), 0, 50, listOf(TicketSort.NUMBER_ASC))
-            if (list1.size <= 2) {
+            if (list1.content.size <= 2) {
                 fail()
             }
             var i = 1
-            while (i < list1.size) {
-                assertNotEquals(list1.get(i).number.compareTo(list1.get(i - 1).number), -1)
+            while (i < list1.content.size) {
+                assertNotEquals(list1.content.get(i).number.compareTo(list1.content.get(i - 1).number), -1)
                 i++
             }
 
@@ -326,13 +326,13 @@ class TicketApiTest : ApiBaseTest() {
     fun `listTicket test sorting dueDate positiv`() {
         withUser(ADMIN_ID) { principal ->
             val list1 = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), 0, 50, listOf(TicketSort.DUE_DATE_ASC))
-            if (list1.size <= 2) {
+            if (list1.content.size <= 2) {
                 fail()
             }
             var i = 1
-            while (i < list1.size) {
-                val dueDate2 = list1.get(i).dueDate
-                val dueDate1 = list1.get(i - 1).dueDate
+            while (i < list1.content.size) {
+                val dueDate2 = list1.content.get(i).dueDate
+                val dueDate1 = list1.content.get(i - 1).dueDate
                 if (dueDate1 != null && dueDate2 != null) {
                     assertNotEquals(dueDate2.compareTo(dueDate1), -1)
                 }
@@ -347,12 +347,12 @@ class TicketApiTest : ApiBaseTest() {
     fun `listTicket test sorting title positiv`() {
         withUser(ADMIN_ID) { principal ->
             val list1 = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), 0, 50, listOf(TicketSort.TITLE_ASC))
-            if (list1.size <= 2) {
+            if (list1.content.size <= 2) {
                 fail()
             }
             var i = 1
-            while (i < list1.size) {
-                assertNotEquals(list1.get(i).title.compareTo(list1.get(i - 1).title), -1)
+            while (i < list1.content.size) {
+                assertNotEquals(list1.content.get(i).title.compareTo(list1.content.get(i - 1).title), -1)
                 i++
             }
 
@@ -363,13 +363,13 @@ class TicketApiTest : ApiBaseTest() {
     fun `listTicket test sorting storypoints positiv`() {
         withUser(ADMIN_ID) { principal ->
             val list1 = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), 0, 50, listOf(TicketSort.STORY_POINTS_ASC))
-            if (list1.size <= 2) {
+            if (list1.content.size <= 2) {
                 fail()
             }
             var i = 1
-            while (i < list1.size) {
-                val storyPoints2 = list1.get(i).storyPoints
-                val storyPoints1 = list1.get(i - 1).storyPoints
+            while (i < list1.content.size) {
+                val storyPoints2 = list1.content.get(i).storyPoints
+                val storyPoints1 = list1.content.get(i - 1).storyPoints
                 if (storyPoints1 != null && storyPoints2 != null) {
                     assertNotEquals(storyPoints2.compareTo(storyPoints1), -1)
                 }
