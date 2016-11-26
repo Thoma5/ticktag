@@ -35,7 +35,7 @@ class TicketEventApiTest : ApiBaseTest() {
     val ticketId = UUID.fromString("00000000-0003-0000-0000-000000000006")
     val parentTicketId = UUID.fromString("00000000-0003-0000-0000-000000000001")
     val commendId = UUID.fromString("00000000-0004-0000-0000-000000000008")
-    val assignmentTagId = UUID.fromString("00000000-0006-0000-0000-000000000001")
+    val assignmentTagId = UUID.fromString("00000000-0006-0000-0000-000000000003")
 
     @Test
     fun test_ticketDescriptionChangedShouldAddEvent() {
@@ -143,7 +143,6 @@ class TicketEventApiTest : ApiBaseTest() {
 
     //TODO Tags removed
 
-    /** Todo Check
     @Test
     fun test_ticketUserAddedChangedShouldAddEvent() {
         withUser(USER_ID) { principal ->
@@ -161,7 +160,7 @@ class TicketEventApiTest : ApiBaseTest() {
             ticketAssignmentController.deleteTicketAssignment(ticketId, assignmentTagId, principal.id, principal)
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
         }
-    }**/
+    }
 
     /** Negative Test for all Events **/
 

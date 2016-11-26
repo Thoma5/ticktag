@@ -23,7 +23,7 @@ open class TicketAssignmentServiceImpl @Inject constructor(
         private val tickets: TicketRepository,
         private val users: UserRepository,
         private val assignmentTags: AssignmentTagRepository,
-        private val ticketEvent: TicketEventRepository
+        private val ticketEvents: TicketEventRepository
 ) : TicketAssignmentService {
     @PreAuthorize(AuthExpr.READ_TICKET_ASSIGNMENT)
     override fun getTicketAssignment(@P("authTicketId") ticketId: UUID, tagId: UUID, userId: UUID): TicketAssignmentResult {
@@ -66,7 +66,7 @@ open class TicketAssignmentServiceImpl @Inject constructor(
         }
         ticketAssignment = AssignedTicketUser.create(ticket, assignmentTag, user)
         ticketAssignments.insert(ticketAssignment)
-        TicketEventUserAdded.create(ticket, userSelf, user, assignmentTag)
+        ticketEvents.insert(TicketEventUserAdded.create(ticket, userSelf, user, assignmentTag))
         return TicketAssignmentResult(ticketAssignment)
     }
 
@@ -78,8 +78,7 @@ open class TicketAssignmentServiceImpl @Inject constructor(
         val user = users.findOne(userId) ?: throw NotFoundException()
         val ticketAssignmentToDelete = ticketAssignments.findOne(AssignedTicketUserKey.create(ticket, assignmentTag, user)) ?: throw NotFoundException()
         ticketAssignments.delete(ticketAssignmentToDelete)
-        TicketEventUserRemoved.create(ticket, userSelf, user, assignmentTag)
-
+        ticketEvents.insert(TicketEventUserRemoved.create(ticket, userSelf, user, assignmentTag))
     }
 }
 
