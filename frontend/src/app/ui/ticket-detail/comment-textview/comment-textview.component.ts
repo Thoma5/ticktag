@@ -131,7 +131,7 @@ export class CommentTextviewComponent implements AfterViewInit, OnChanges, OnDes
 
         let isAddRemoveTag = new RegExp(String.raw`${grammar.SEPERATOR_FRONT_REGEX}!(-?)tag:(${grammar.TAG_LETTER}*)$`, 'ui').exec(text);
         if (isAddRemoveTag) {
-            let tags = (isAddRemoveTag[1] ? this.ticket.tags : this.allTicketTags)
+            let tags = (isAddRemoveTag[1] ? this.ticket.tags.map(tag => tag.value) : this.allTicketTags)
                 .valueSeq()
                 .sort(using<TicketDetailTag>(tag => tag.normalizedName))
                 .toArray();
