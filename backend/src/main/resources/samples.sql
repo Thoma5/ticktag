@@ -1,4 +1,4 @@
-BEGIN;
+﻿BEGIN;
 
 DELETE FROM "logged_time";
 DELETE FROM "time_category";
@@ -16,10 +16,7 @@ DELETE FROM "ticket_tag_group";
 DELETE FROM "member";
 DELETE FROM "project";
 DELETE FROM "user";
-COMMIT;
 
-
-BEGIN;
 INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, profile_pic) VALUES
   ('00000000-0001-0000-0000-000000000001', 'user_a', 'a@a.a', 'Mr. A',
    '$2a$10$mTEkiQq2Wo./aqfekJHPk.5sG8JLWqWYbtMODwk9xQwQp0GtkCiM.', 'ADMIN', '00000000-0001-0000-0000-abcdef123641',
@@ -154,8 +151,6 @@ INSERT INTO "member" VALUES
   ('00000000-0001-0000-0000-000000000103', '00000000-0002-0000-0000-000000000103', 'USER',
    to_date('2016-10-13', 'YYYY-MM-DD'));
 -- END all role/project role permutations DO NOT ALTER
-
-COMMIT;
 
 --TICKETS
 
@@ -351,8 +346,6 @@ INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
   ('00000000-0004-0000-0000-000000000008', '660f2968-aa46-4870-bcc5-a3805366cff2',
    '00000000-0003-0000-0000-000000000006', '2016-11-16 20:09:59.019000', 'There is still so much todo');
 
-COMMIT;
-
 -- BEGIN Role Based Ticket Testdata DO NOT ALTER
 INSERT INTO PUBLIC.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, OPEN, story_points, initial_estimated_time, current_estimated_time, due_date)
 VALUES ('00000000-0003-0000-0000-000000000101', 1, NULL, '00000000-0002-0000-0000-000000000101',
@@ -404,7 +397,6 @@ WHERE id = '00000000-0003-0000-0000-000000000104';
 -- END Role Based Ticket Testdata DO NOT ALTER
 
 --TICKET TAG GROUPS
-BEGIN;
 
 INSERT INTO public.ticket_tag_group (id, project_id, default_ticket_tag_id, name, exclusive)
 VALUES ('00000000-0009-0000-0000-000000000001', '00000000-0002-0000-0000-000000000001', NULL, 'Agile', TRUE);
@@ -483,9 +475,7 @@ VALUES ('00000000-0003-0000-0000-000000000006', '00000000-0005-0000-0000-0000000
 INSERT INTO public.assigned_ticket_tag (ticket_id, ticket_tag_id)
 VALUES ('00000000-0003-0000-0000-000000000006', '00000000-0005-0000-0001-000000000002');
 
-COMMIT;
 
-BEGIN;
 --Assignment-Tag
 
 INSERT INTO public.assignment_tag (id, project_id, name, normalized_name, color)
