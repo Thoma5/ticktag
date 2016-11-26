@@ -13,7 +13,17 @@
         <div class="add-assigned-user">
             <a *ngIf="!adding" href="javascript:void(0)" (click)="onShowAdd()">Add&nbsp;User</a>
             <div *ngIf="adding">
-                <input type="text" value="" placeholder="User Name" [(ngModel)]="newUserName" ttFocus ttSelectAll (blur)="onHideAdd()" (keydown.enter)="onAdd()">
+                <input
+                    type="text"
+                    value=""
+                    placeholder="Username"
+                    [(ngModel)]="newUserName"
+                    ttFocus
+                    ttSelectAll
+                    (blur)="onHideAdd()"
+                    (keydown.enter)="onAdd()"
+                    [disabled]="checking">
+                <span *ngIf="checking">SPINNER</span>
             </div>
         </div>
     </div>

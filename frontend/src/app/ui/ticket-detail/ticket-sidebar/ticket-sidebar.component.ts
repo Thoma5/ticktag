@@ -1,5 +1,7 @@
 import { Component, Input, EventEmitter, Output, OnChanges, SimpleChanges } from '@angular/core';
-import { TicketAssignmentJson } from '../../../api';
+import { UserApi, UserResultJson } from '../../../api';
+import { ApiCallService } from '../../../service';
+import { using } from '../../../util/using';
 import * as imm from 'immutable';
 import { TicketDetail, TicketDetailAssTag, TicketDetailUser } from '../ticket-detail';
 
@@ -13,26 +15,34 @@ export class TicketSidebarComponent implements OnChanges {
   @Input() allAssignmentTags = imm.Map<string, TicketDetailAssTag>();
   private assignments: imm.List<{ user: TicketDetailUser, tags: imm.List<string> }>;
 
-  @Output() readonly assignmentAdd = new EventEmitter<TicketAssignmentJson>();
-  @Output() readonly assignmentRemove = new EventEmitter<TicketAssignmentJson>();
+  @Output() readonly assignmentAdd = new EventEmitter<{user: string, tag: string}>();
+  @Output() readonly assignmentRemove = new EventEmitter<{user: string, tag: string}>();
+  @Output() readonly userAdd = new EventEmitter<TicketDetailUser>();
 
   private adding = false;
+  private checking = false;
   private newUserName = '';
+
+  constructor(
+    private userApi: UserApi,
+    private apiCallService: ApiCallService) {
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     if ('ticket' in changes || 'allAssignmentTags' in changes) {
       this.assignments = this.ticket.users
         .map((tags, user) => ({ user: user, tags: tags.map(t => t.id).toList() }))
+        .sort(using<{ user: TicketDetailUser, tags: imm.List<string> }>(it => it.user.name.toLocaleLowerCase()))
         .toList();
     }
   }
 
   onTagAdd(userId: string, tagId: string) {
-    this.assignmentAdd.emit({ userId: userId, assignmentTagId: tagId });
+    this.assignmentAdd.emit({ user: userId, tag: tagId });
   }
 
   onTagRemove(userId: string, tagId: string) {
-    this.assignmentRemove.emit({ userId: userId, assignmentTagId: tagId });
+    this.assignmentRemove.emit({ user: userId, tag: tagId });
   }
 
   onShowAdd() {
@@ -44,8 +54,18 @@ export class TicketSidebarComponent implements OnChanges {
   }
 
   onAdd() {
-    if (this.newUserName) {
+    this.checking = true;
+    let username = this.newUserName.trim();
+    if (username) {
+      // TODO graceful error handling
+      this.apiCallService
+        .callNoError<UserResultJson>(p => this.userApi.getUserByUsernameUsingGETWithHttpInfo(username, p))
+        .map(user => new TicketDetailUser(user))
+        .subscribe(user => {
+          this.checking = false;
+          this.userAdd.emit(user);
+          this.newUserName = '';
+        });
     }
-    this.newUserName = '';
   }
 }

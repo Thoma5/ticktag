@@ -30,6 +30,12 @@ export class TicketDetailComponent implements OnInit {
   private allTicketTags: imm.Map<string, TicketDetailTag>;
   private allAssignmentTags: imm.Map<string, TicketDetailAssTag>;
   private allTimeCategories: imm.Map<string, TicketDetailTimeCategory>;
+  private interestingUsers: imm.Map<string, TicketDetailUser>;
+  private comments: imm.Map<string, TicketDetailComment>;
+
+  // Internal state
+  private currentTicketJson: TicketResultJson;  // Only use to recreate the ticket
+  private transientUsers = imm.Set<string>();
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(
@@ -77,12 +83,22 @@ export class TicketDetailComponent implements OnInit {
     console.log('TODO remove tag');
   }
 
-  onAssignmentAdd(ass: TicketAssignmentJson) {
+  onAssignmentAdd(ass: {user: string, tag: string}) {
+    if (this.transientUsers.contains(ass.user)) {
+      this.transientUsers = this.transientUsers.remove(ass.user);
+      this.ticketDetail = new TicketDetail(
+        this.currentTicketJson,
+        this.comments,
+        this.interestingUsers,
+        this.allTicketTags,
+        this.allAssignmentTags,
+        this.transientUsers);
+    }
     let obs = this.apiCallService
       .call<void>(p => this.ticketAssignmentApi.createTicketAssignmentUsingPOSTWithHttpInfo(
         this.ticketDetail.id,
-        ass.assignmentTagId,
-        ass.userId,
+        ass.tag,
+        ass.user,
         p));
     this.queue.push(obs)
       .subscribe(result => {
@@ -97,24 +113,43 @@ export class TicketDetailComponent implements OnInit {
       });
   }
 
-  onAssignmentRemove(ass: TicketAssignmentJson) {
+  onAssignmentRemove(ass: {user: string, tag: string}) {
+    let userBackup = this.interestingUsers.get(ass.user);
     let obs = this.apiCallService
       .call<void>(p => this.ticketAssignmentApi.deleteTicketAssignmentUsingDELETEWithHttpInfo(
         this.ticketDetail.id,
-        ass.assignmentTagId,
-        ass.userId,
+        ass.tag,
+        ass.user,
         p));
     this.queue.push(obs)
       .subscribe(result => {
         if (result.isValid) {
-          // TODO is this clever?
-          this.refresh(this.ticketDetail.projectId, this.ticketDetail.id).subscribe();
+          // TODO is this clever? racy racy?
+          this.refresh(this.ticketDetail.projectId, this.ticketDetail.id).subscribe(() => {
+            this.onAssignmentUserAdd(userBackup);
+          });
         } else {
           // TODO nice message
           console.dir(result);
           window.alert('😥');
         }
       });
+  }
+
+  onAssignmentUserAdd(user: TicketDetailUser) {
+    if (!this.ticketDetail.users.findKey((_, k) => k.id === user.id)) {
+      if (!this.interestingUsers.has(user.id)) {
+        this.interestingUsers = this.interestingUsers.set(user.id, user);
+      }
+      this.transientUsers = this.transientUsers.add(user.id);
+      this.ticketDetail = new TicketDetail(
+        this.currentTicketJson,
+        this.comments,
+        this.interestingUsers,
+        this.allTicketTags,
+        this.allAssignmentTags,
+        this.transientUsers);
+    }
   }
 
   private updateTicket(req: UpdateTicketRequestJson): void {
@@ -158,6 +193,8 @@ export class TicketDetailComponent implements OnInit {
         let wantedUserIds = ticketResult.ticketAssignments.map(ta => ta.userId);
         // And the comment authors
         tuple[1].forEach(c => { wantedUserIds.push(c.userId); });
+        // And transient users
+        this.transientUsers.forEach(uid => { wantedUserIds.push(uid); });
         // And the person who created it
         wantedUserIds.push(ticketResult.createdBy);
 
@@ -167,12 +204,19 @@ export class TicketDetailComponent implements OnInit {
         return Observable.zip(Observable.of(tuple), getObs);
       })
       .do(tuple => {
-        let users = imm.Map(tuple[1].users).map(u => new TicketDetailUser(u)).toMap();
-        let comments = idListToMap(tuple[0][1]).map(c => new TicketDetailComment(c, users)).toMap();
+        this.currentTicketJson = tuple[0][0];
+        this.interestingUsers = imm.Map(tuple[1].users).map(u => new TicketDetailUser(u)).toMap();
+        this.comments = idListToMap(tuple[0][1]).map(c => new TicketDetailComment(c, this.interestingUsers)).toMap();
         this.allTicketTags = tuple[0][3];
         this.allAssignmentTags = tuple[0][2];
         this.allTimeCategories = tuple[0][4];
-        this.ticketDetail = new TicketDetail(tuple[0][0], comments, users, tuple[0][3], tuple[0][2]);
+        this.ticketDetail = new TicketDetail(
+          this.currentTicketJson,
+          this.comments,
+          this.interestingUsers,
+          this.allTicketTags,
+          this.allAssignmentTags,
+          this.transientUsers);
       })
       .map(it => undefined);
   }

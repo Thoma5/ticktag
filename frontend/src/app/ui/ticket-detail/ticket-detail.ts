@@ -109,7 +109,8 @@ export class TicketDetail {
       comments: imm.Map<string, TicketDetailComment>,
       users: imm.Map<string, TicketDetailUser>,
       ticketTags: imm.Map<string, TicketDetailTag>,
-      assignmentTags: imm.Map<string, TicketDetailAssTag>) {
+      assignmentTags: imm.Map<string, TicketDetailAssTag>,
+      transientUsers: imm.Set<string>) {
     this.comments = imm.List(ticket.commentIds)
       .map(cid => comments.get(cid))
       .filter(it => !!it)
@@ -134,7 +135,14 @@ export class TicketDetail {
       .filter(as => !!as.user && !!as.tag)
       .groupBy(as => as.user)
       .map(entry => entry.map(as => as.tag).toList())
-      .toMap();
+      .toMap()
+      .withMutations(us => {
+        transientUsers.forEach(userId => {
+          if (users.has(userId)) {
+            us.set(users.get(userId), imm.List<TicketDetailAssTag>());
+          }
+        });
+      });
     this.projectId = ticket.projectId;
     Object.freeze(this);
   }
