@@ -5,6 +5,11 @@ import { using } from '../../../util/using';
 import * as imm from 'immutable';
 import { TicketDetail, TicketDetailAssTag, TicketDetailUser } from '../ticket-detail';
 
+type Assignment = {
+  user: TicketDetailUser,
+  tags: imm.List<{ id: string, transient: boolean }>
+}
+
 @Component({
   selector: 'tt-ticket-sidebar',
   templateUrl: './ticket-sidebar.component.html',
@@ -13,7 +18,7 @@ import { TicketDetail, TicketDetailAssTag, TicketDetailUser } from '../ticket-de
 export class TicketSidebarComponent implements OnChanges {
   @Input() ticket: TicketDetail;
   @Input() allAssignmentTags = imm.Map<string, TicketDetailAssTag>();
-  private assignments: imm.List<{ user: TicketDetailUser, tags: imm.List<{ id: string, transient: boolean }> }>;
+  private assignments: imm.List<Assignment>;
 
   @Output() readonly assignmentAdd = new EventEmitter<{user: string, tag: string}>();
   @Output() readonly assignmentRemove = new EventEmitter<{user: string, tag: string}>();
@@ -35,7 +40,7 @@ export class TicketSidebarComponent implements OnChanges {
           user: user,
           tags: tags.map(t => ({id: t.tag.id, transient: t.transient})).toList()
         }))
-        .sort(using<{user: TicketDetailUser}>(it => it.user.name.toLocaleLowerCase()))
+        .sort(using<Assignment>(it => it.user.name.toLocaleLowerCase()))
         .toList();
     }
   }
@@ -70,5 +75,9 @@ export class TicketSidebarComponent implements OnChanges {
           this.newUserName = '';
         });
     }
+  }
+
+  assignedUserTrackBy(index: number, item: Assignment): string {
+    return item.user.id;
   }
 }
