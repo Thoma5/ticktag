@@ -5,6 +5,7 @@
     <div class='info'>
         <div class='name'>{{ user.name }}</div>
         <div class='tags'>
+            <span class='hint' *ngIf='tags.size === 0'>This user has no tags assigned and therefore is not associated with this ticket.</span>
             <tt-taginput
                 [tags]="tags"
                 [allTags]="allTags" 
