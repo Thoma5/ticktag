@@ -1,10 +1,12 @@
 <div class="tags">
-  <div *ngFor="let tag of sortedTags" class="tag" [style.backgroundColor]="'#' + tag.tag.color">
-      <span class="name">{{ tag.tag.name }}</span>
-      <a *ngIf="!tag.transient" href="javascript:void(0)" class="delete" (click)="onDeleteClick(tag.tag)">&#x2716;</a>
-      <span *ngIf="tag.transient" class="loading">LOADING</span>
-  </div>
-  <div *ngIf="!editing" class="add-button"><a href="javascript:void(0)" (click)="onShowAdd()">Add&nbsp;Tag</a></div>
+    <div *ngFor="let tag of sortedTags" class="tag" [style.backgroundColor]="'#' + tag.tag.color">
+        <span class="name">{{ tag.tag.name }}</span>
+        <a *ngIf="!tag.transient" href="javascript:void(0)" class="delete" (click)="onDeleteClick(tag.tag)">&#x2716;</a>
+        <div *ngIf="tag.transient" class="loading">
+            <tt-spinner></tt-spinner>
+        </div>
+    </div>
+    <div *ngIf="!editing" class="add-button"><a href="javascript:void(0)" (click)="onShowAdd()">Add&nbsp;Tag</a></div>
 </div>
 
 <div *ngIf="editing" class="add-form">
