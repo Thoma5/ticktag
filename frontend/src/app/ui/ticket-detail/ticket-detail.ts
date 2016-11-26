@@ -123,6 +123,20 @@ export class TicketDetailAssTag implements Tag {
 }
 Object.freeze(TicketDetailAssTag.prototype);
 
+export class TicketDetailSubticket {
+  readonly id: string;
+  readonly number: number;
+  readonly title: string;
+
+  constructor(ticket: TicketResultJson) {
+    this.id = ticket.id;
+    this.number = ticket.number;
+    this.title = ticket.title;
+    Object.freeze(this);
+  }
+}
+Object.freeze(TicketDetailSubticket.prototype);
+
 export class TicketDetail {
   readonly comments: imm.List<TicketDetailComment>;
   readonly createTime: number;  // TODO convert
@@ -139,10 +153,12 @@ export class TicketDetail {
   readonly title: string;
   readonly users: imm.Map<TicketDetailUser, imm.List<TicketDetailAssignment>>;
   readonly projectId: string;
+  readonly subtickets: imm.List<TicketDetailSubticket>;
 
   constructor(
       ticket: TicketResultJson,
       comments: imm.Map<string, TicketDetailComment>,
+      subtickets: imm.List<TicketDetailSubticket>,
       users: imm.Map<string, TicketDetailUser>,
       ticketTags: imm.Map<string, TicketDetailTag>,
       assignmentTags: imm.Map<string, TicketDetailAssTag>,
@@ -211,6 +227,7 @@ export class TicketDetail {
         });
       });
     this.projectId = ticket.projectId;
+    this.subtickets = subtickets;
     Object.freeze(this);
   }
 }

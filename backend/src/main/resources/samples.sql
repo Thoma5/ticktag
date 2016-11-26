@@ -346,6 +346,32 @@ INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
   ('00000000-0004-0000-0000-000000000008', '660f2968-aa46-4870-bcc5-a3805366cff2',
    '00000000-0003-0000-0000-000000000006', '2016-11-16 20:09:59.019000', 'There is still so much todo');
 
+
+INSERT INTO public.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, open, story_points, initial_estimated_time, current_estimated_time, due_date)
+VALUES ('00000000-0003-0000-0000-000000000007', 7, '00000000-0003-0000-0000-000000000006', '00000000-0002-0000-0000-000000000001',
+                                                '93ef43d9-20b7-461a-b960-2d1e89ba099f',
+                                                NULL, '2016-11-16 18:06:07.221000',
+                                                'Subticket 1', FALSE, 20, 3.6e+13, 5.4e+13, '2015-4-20 17:07:05.554000');
+INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
+  ('00000000-0004-0000-0000-000000000009', '93ef43d9-20b7-461a-b960-2d1e89ba099f',
+   '00000000-0003-0000-0000-000000000007', '2016-11-16 17:09:59.019', 'Subticket 1');
+UPDATE public.ticket
+SET description_comment_id = '00000000-0004-0000-0000-000000000009'
+WHERE id = '00000000-0003-0000-0000-000000000007';
+
+
+INSERT INTO public.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, open, story_points, initial_estimated_time, current_estimated_time, due_date)
+VALUES ('00000000-0003-0000-0000-000000000008', 8, '00000000-0003-0000-0000-000000000006', '00000000-0002-0000-0000-000000000001',
+                                                '93ef43d9-20b7-461a-b960-2d1e89ba099f',
+                                                NULL, '2016-11-16 18:06:07.221000',
+                                                'Subticket 2', FALSE, 20, 3.6e+13, 5.4e+13, '2015-4-20 17:07:05.554000');
+INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
+  ('00000000-0004-0000-0000-000000000010', '93ef43d9-20b7-461a-b960-2d1e89ba099f',
+   '00000000-0003-0000-0000-000000000008', '2016-11-16 17:09:59.019', 'Subticket 2');
+UPDATE public.ticket
+SET description_comment_id = '00000000-0004-0000-0000-000000000010'
+WHERE id = '00000000-0003-0000-0000-000000000008';
+
 -- BEGIN Role Based Ticket Testdata DO NOT ALTER
 INSERT INTO PUBLIC.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, OPEN, story_points, initial_estimated_time, current_estimated_time, due_date)
 VALUES ('00000000-0003-0000-0000-000000000101', 1, NULL, '00000000-0002-0000-0000-000000000101',

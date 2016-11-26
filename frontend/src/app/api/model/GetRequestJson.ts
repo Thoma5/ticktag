@@ -25,10 +25,10 @@
 
 import * as models from './models';
 
-export interface GetResultJson {
-    tickets: { [key: string]: models.TicketResultJson; };
+export interface GetRequestJson {
+    userIds?: Array<string>;
 
-    users: { [key: string]: models.UserResultJson; };
+    ticketIds?: Array<string>;
 
 }
 

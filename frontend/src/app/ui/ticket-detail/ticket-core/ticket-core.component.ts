@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { TicketDetailTag, TicketDetailTransient, TicketDetailUser } from '../ticket-detail';
+import { TicketDetailTag, TicketDetailTransient, TicketDetailUser, TicketDetailSubticket } from '../ticket-detail';
 import * as imm from 'immutable';
 
 @Component({
@@ -25,6 +25,8 @@ export class TicketCoreComponent implements OnChanges {
     @Input() currentEstimatedTime: number;
     // TODO no output
     @Input() dueDate: number;
+    // TODO no output
+    @Input() subtickets: TicketDetailSubticket[];
     // TODO no output
 
     // Readonly

@@ -30,7 +30,10 @@
                 </tt-taginput>
             </div>
         </div>
-        <div class='subtickets'>Subtickets</div>
+        <div class='subtickets'>
+            <tt-subtickets [tickets]='subtickets'>
+            </tt-subtickets>
+        </div>
         <div class='status'>
             <div class='initial-estimation'>
                 Initial estimation: {{initialEstimatedTime | ttHumanizeDuration}}

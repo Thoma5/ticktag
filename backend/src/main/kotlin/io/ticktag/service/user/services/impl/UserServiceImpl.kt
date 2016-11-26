@@ -33,6 +33,9 @@ open class UserServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.USER)  // TODO maybe refine
     override fun getUsers(ids: Collection<UUID>): Map<UUID, UserResult> {
+        if (ids.isEmpty()) {
+            return emptyMap()
+        }
         return users.findByIds(ids).map(::UserResult).associateBy { it.id }
     }
 

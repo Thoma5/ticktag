@@ -13,6 +13,7 @@ export * from './CreateTicketTagRequestJson';
 export * from './CreateTicketUserRelationRequestJson';
 export * from './CreateTimeCategoryRequestJson';
 export * from './CreateUserRequestJson';
+export * from './GetRequestJson';
 export * from './GetResultJson';
 export * from './LoggedTimeResultJson';
 export * from './LoginRequestJson';

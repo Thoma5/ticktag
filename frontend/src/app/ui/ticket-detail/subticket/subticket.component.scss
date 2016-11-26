@@ -1,0 +1,14 @@
+@import '../../../../style/constants.scss';
+
+.subticket-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.number {
+}
+
+.title {
+  margin-left: $internal-gap;
+}

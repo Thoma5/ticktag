@@ -80,8 +80,7 @@ data class Principal(
 
     fun hasProjectRoleForAssignmentTag(assignmentTagId: UUID, roleString: String): Boolean {
         if (assignmenttags == null) return false
-        val assignmenttag = assignmenttags.findOne(assignmentTagId)
-        if (assignmenttag == null) return false
+        val assignmenttag = assignmenttags.findOne(assignmentTagId) ?: return false
         return hasProjectRole(assignmenttag.project.id, roleString)
     }
 
@@ -116,52 +115,59 @@ data class Principal(
     }
 
 }
-
 class AuthExpr private constructor() {
     companion object {
+        const val ROLE_GLOBAL_ADMIN = "ADMIN"
+        const val ROLE_GLOBAL_OBSERVER = "OBSERVER"
+        const val ROLE_GLOBAL_USER = "USER"
+
+        const val ROLE_PROJECT_ADMIN = "ADMIN"
+        const val ROLE_PROJECT_OBSERVER = "OBSERVER"
+        const val ROLE_PROJECT_USER = "USER"
+
         const val ANONYMOUS = "true"
         const val NOBODY = "false"
         const val INTERNAL = "principal.isInternal()"
 
-        const val USER = "principal.hasRole('USER')"
-        const val OBSERVER = "principal.hasRole('OBSERVER')"
-        const val ADMIN = "principal.hasRole('ADMIN')"
+        const val USER = "principal.hasRole('$ROLE_GLOBAL_USER')"
+        const val OBSERVER = "principal.hasRole('$ROLE_GLOBAL_OBSERVER')"
+        const val ADMIN = "principal.hasRole('$ROLE_GLOBAL_ADMIN')"
 
-        const val PROJECT_OBSERVER = "principal.hasRole('OBSERVER') || principal.hasProjectRole(#authProjectId, 'OBSERVER')"
-        const val PROJECT_USER = "principal.hasRole('ADMIN') || principal.hasProjectRole(#authProjectId, 'USER')"
-        const val PROJECT_ADMIN = "principal.hasRole('ADMIN') || principal.hasProjectRole(#authProjectId, 'ADMIN')"
-        const val READ_TICKET = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForTicket(#authTicketId, 'OBSERVER')"
-        const val WRITE_TICKET = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicket(#authTicketId, 'USER')"
+        const val PROJECT_OBSERVER = "principal.hasRole('$ROLE_GLOBAL_OBSERVER') || principal.hasProjectRole(#authProjectId, '$ROLE_PROJECT_OBSERVER')"
+        const val PROJECT_USER = "principal.hasRole('$ROLE_GLOBAL_ADMIN') || principal.hasProjectRole(#authProjectId, '$ROLE_PROJECT_USER')"
+        const val PROJECT_ADMIN = "principal.hasRole('$ROLE_GLOBAL_ADMIN') || principal.hasProjectRole(#authProjectId, '$ROLE_PROJECT_ADMIN')"
+        const val READ_TICKET = "principal.hasRole('$ROLE_GLOBAL_OBSERVER') || principal.hasProjectRoleForTicket(#authTicketId, '$ROLE_PROJECT_OBSERVER')"
+        const val WRITE_TICKET = "principal.hasRole('$ROLE_GLOBAL_ADMIN') || principal.hasProjectRoleForTicket(#authTicketId, '$ROLE_PROJECT_USER')"
 
-        const val READ_COMMENT = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForComment(#authCommentId, 'OBSERVER')"
-        const val CREATE_COMMENT = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicket(#authTicketId, 'USER') "
-        const val EDIT_COMMENT = "principal.hasRole('ADMIN') || principal.hasProjectRoleForComment(#authCommentId, 'ADMIN') || principal.isId(principal.userIdForCommentId(#authCommentId))"
-        const val EDIT_TIME_LOG = "principal.hasRole('ADMIN') || principal.hasProjectRoleForLoggedTime(#authLoggedTimeId, 'ADMIN') || principal.isId(principal.userIdForLoggedTimeId(#authLoggedTimeId))"
-        const val READ_TIME_LOG = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForLoggedTime(#authLoggedTimeId, 'OBSERVER') || principal.isId(principal.userIdForLoggedTimeId(#authLoggedTimeId))"
+        const val READ_COMMENT = "principal.hasRole('$ROLE_GLOBAL_OBSERVER') || principal.hasProjectRoleForComment(#authCommentId, '$ROLE_PROJECT_OBSERVER')"
+        const val CREATE_COMMENT = "principal.hasRole('$ROLE_GLOBAL_ADMIN') || principal.hasProjectRoleForTicket(#authTicketId, '$ROLE_PROJECT_USER') "
+        const val EDIT_COMMENT = "principal.hasRole('$ROLE_GLOBAL_ADMIN') || principal.hasProjectRoleForComment(#authCommentId, '$ROLE_PROJECT_ADMIN') || principal.isId(principal.userIdForCommentId(#authCommentId))"
+        const val EDIT_TIME_LOG = "principal.hasRole('$ROLE_GLOBAL_ADMIN') || principal.hasProjectRoleForLoggedTime(#authLoggedTimeId, '$ROLE_PROJECT_ADMIN') || principal.isId(principal.userIdForLoggedTimeId(#authLoggedTimeId))"
+        const val READ_TIME_LOG = "principal.hasRole('$ROLE_GLOBAL_OBSERVER') || principal.hasProjectRoleForLoggedTime(#authLoggedTimeId, '$ROLE_PROJECT_OBSERVER') || principal.isId(principal.userIdForLoggedTimeId(#authLoggedTimeId))"
 
 
-        const val READ_TICKET_TAG_GROUP = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForTicketTagGroup(#authTicketTagGroupId, 'OBSERVER')"
-        const val CREATE_TICKET_TAG_GROUP = "principal.hasRole('ADMIN') || principal.hasProjectRole(#authProjectId, 'ADMIN')"
-        const val EDIT_TICKET_TAG_GROUP = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicketTagGroup(#authTicketTagGroupId, 'ADMIN')"
+        const val READ_TICKET_TAG_GROUP = "principal.hasRole('$ROLE_GLOBAL_OBSERVER') || principal.hasProjectRoleForTicketTagGroup(#authTicketTagGroupId, '$ROLE_PROJECT_OBSERVER')"
+        const val CREATE_TICKET_TAG_GROUP = "principal.hasRole('$ROLE_GLOBAL_ADMIN') || principal.hasProjectRole(#authProjectId, '$ROLE_PROJECT_ADMIN')"
+        const val EDIT_TICKET_TAG_GROUP = "principal.hasRole('$ROLE_GLOBAL_ADMIN') || principal.hasProjectRoleForTicketTagGroup(#authTicketTagGroupId, '$ROLE_PROJECT_ADMIN')"
 
-        const val READ_TICKET_TAG = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForTicketTag(#authTicketTagId, 'OBSERVER')"
-        const val READ_TICKET_TAG_FOR_GROUP = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForTicketTagGroup(#authTicketTagGroupId, 'OBSERVER')"
-        const val CREATE_TICKET_TAG = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicketTagGroup(#authTicketTagGroupId, 'ADMIN')"
-        const val EDIT_TICKET_TAG = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicketTag(#authTicketTagId, 'ADMIN')"
+        const val READ_TICKET_TAG = "principal.hasRole('$ROLE_GLOBAL_OBSERVER') || principal.hasProjectRoleForTicketTag(#authTicketTagId, '$ROLE_PROJECT_OBSERVER')"
+        const val READ_TICKET_TAG_FOR_GROUP = "principal.hasRole('$ROLE_GLOBAL_OBSERVER') || principal.hasProjectRoleForTicketTagGroup(#authTicketTagGroupId, '$ROLE_PROJECT_OBSERVER')"
+        const val CREATE_TICKET_TAG = "principal.hasRole('$ROLE_GLOBAL_ADMIN') || principal.hasProjectRoleForTicketTagGroup(#authTicketTagGroupId, '$ROLE_PROJECT_ADMIN')"
+        const val EDIT_TICKET_TAG = "principal.hasRole('$ROLE_GLOBAL_ADMIN') || principal.hasProjectRoleForTicketTag(#authTicketTagId, '$ROLE_PROJECT_ADMIN')"
 
-        const val READ_ASSIGNMENTTAG = "principal.hasRole('ADMIN') || principal.hasProjectRoleForAssignmentTag(#authAssignmentTagId, 'OBSERVER')"
-        const val EDIT_ASSIGNMENTTAG = "principal.hasRole('ADMIN') || principal.hasProjectRoleForAssignmentTag(#authAssignmentTagId, 'USER')"
+        const val READ_ASSIGNMENTTAG = "principal.hasRole('$ROLE_GLOBAL_ADMIN') || principal.hasProjectRoleForAssignmentTag(#authAssignmentTagId, '$ROLE_PROJECT_OBSERVER')"
+        const val EDIT_ASSIGNMENTTAG = "principal.hasRole('$ROLE_GLOBAL_ADMIN') || principal.hasProjectRoleForAssignmentTag(#authAssignmentTagId, '$ROLE_PROJECT_USER')"
 
-        const val READ_TIMECATEGORY = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForTimeCategory(#authTimeCategoryId, 'OBSERVER')"
-        const val WRITE_TIMECATEGORY = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTimeCategory(#authTimeCategoryId, 'ADMIN')"
+        const val READ_TIMECATEGORY = "principal.hasRole('$ROLE_GLOBAL_OBSERVER') || principal.hasProjectRoleForTimeCategory(#authTimeCategoryId, '$ROLE_PROJECT_OBSERVER')"
+        const val WRITE_TIMECATEGORY = "principal.hasRole('$ROLE_GLOBAL_ADMIN') || principal.hasProjectRoleForTimeCategory(#authTimeCategoryId, '$ROLE_PROJECT_ADMIN')"
 
-        const val READ_TICKET_ASSIGNMENT = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForTicketAssignment(#authTicketId, 'OBSERVER')"
-        const val WRITE_TICKET_ASSIGNMENT = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicketAssignment(#authTicketId, 'USER')"
+        const val READ_TICKET_ASSIGNMENT = "principal.hasRole('$ROLE_GLOBAL_OBSERVER') || principal.hasProjectRoleForTicketAssignment(#authTicketId, '$ROLE_PROJECT_OBSERVER')"
+        const val WRITE_TICKET_ASSIGNMENT = "principal.hasRole('$ROLE_GLOBAL_ADMIN') || principal.hasProjectRoleForTicketAssignment(#authTicketId, '$ROLE_PROJECT_USER')"
 
-        const val READ_TICKET_TAG_RELATION = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForTicketTagRelation(#authTicketId, 'OBSERVER')"
-        const val WRITE_TICKET_TAG_RELATION = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicketTagRelation(#authTicketId, 'USER')"
+        const val READ_TICKET_TAG_RELATION = "principal.hasRole('$ROLE_GLOBAL_OBSERVER') || principal.hasProjectRoleForTicketTagRelation(#authTicketId, '$ROLE_PROJECT_OBSERVER')"
+        const val WRITE_TICKET_TAG_RELATION = "principal.hasRole('$ROLE_GLOBAL_ADMIN') || principal.hasProjectRoleForTicketTagRelation(#authTicketId, '$ROLE_PROJECT_USER')"
 
-        const val ADMIN_OR_SELF = "principal.hasRole('ADMIN') || principal.isId(#userId)"
+        const val ADMIN_OR_SELF = "principal.hasRole('$ROLE_GLOBAL_ADMIN') || principal.isId(#userId)"
 
     }
 }

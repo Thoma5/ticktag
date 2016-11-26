@@ -12,7 +12,8 @@ import {
 import { Observable } from 'rxjs';
 import {
   TicketDetail, TicketDetailTag, TicketDetailAssTag, TicketDetailComment,
-  TicketDetailUser, TicketDetailTimeCategory, TicketDetailTransientUser
+  TicketDetailUser, TicketDetailTimeCategory, TicketDetailTransientUser,
+  TicketDetailSubticket
 } from './ticket-detail';
 import { idListToMap } from '../../util/listmaputils';
 import * as imm from 'immutable';
@@ -32,6 +33,7 @@ export class TicketDetailComponent implements OnInit {
   private allTimeCategories: imm.Map<string, TicketDetailTimeCategory>;
   private interestingUsers: imm.Map<string, TicketDetailUser>;
   private comments: imm.Map<string, TicketDetailComment>;
+  private subtickets: imm.Map<string, TicketDetailSubticket>;
 
   // Internal state
   private currentTicketJson: TicketResultJson;  // Only use to recreate the ticket
@@ -114,7 +116,7 @@ export class TicketDetailComponent implements OnInit {
     });
   }
 
-  onAssignmentAdd(ass: {user: string, tag: string}) {
+  onAssignmentAdd(ass: { user: string, tag: string }) {
     let user = this.interestingUsers.get(ass.user);
     this.addTransientTagNoUpdate(user, ass.tag);
     this.newTicketDetail();
@@ -138,7 +140,7 @@ export class TicketDetailComponent implements OnInit {
     });
   }
 
-  onAssignmentRemove(ass: {user: string, tag: string}) {
+  onAssignmentRemove(ass: { user: string, tag: string }) {
     let userBackup = this.interestingUsers.get(ass.user);
     this.addTransientTagNoUpdate(userBackup, ass.tag);
     this.newTicketDetail();
@@ -227,6 +229,7 @@ export class TicketDetailComponent implements OnInit {
     this.ticketDetail = new TicketDetail(
       this.currentTicketJson,
       this.comments,
+      this.subtickets.toList(),
       this.interestingUsers,
       this.allTicketTags,
       this.allAssignmentTags,
@@ -251,7 +254,7 @@ export class TicketDetailComponent implements OnInit {
       .callNoError<TimeCategoryJson[]>(p => this.timeCategoryApi.listProjectTimeCategoriesUsingGETWithHttpInfo(projectId, p))
       .map(tcs => idListToMap(tcs).map(tc => new TicketDetailTimeCategory(tc)).toMap());
 
-    // There is no dependency between these requests so we can execute them in paralell
+    // There is no dependency between these requests so we can execute them in parallel
     return Observable
       .zip(rawTicketObs, rawCommentsObs, assignmentTagsObs, ticketTagsObs, timeCategoriesObs)
       .flatMap(tuple => {
@@ -264,15 +267,18 @@ export class TicketDetailComponent implements OnInit {
         transientUsers.forEach(tu => { wantedUserIds.push(tu.user.id); });
         // And the person who created it
         wantedUserIds.push(ticketResult.createdBy);
+        // And the subtickets
+        let wantedTicketIds = ticketResult.subTicketIds;
 
         let getObs = this.apiCallService
-          .callNoError<GetResultJson>(p => this.getApi.getUsingGETWithHttpInfo(wantedUserIds, p));
+          .callNoError<GetResultJson>(p => this.getApi.getUsingPOSTWithHttpInfo({ userIds: wantedUserIds, ticketIds: wantedTicketIds }, p));
 
         return Observable.zip(Observable.of(tuple), getObs);
       })
       .do(tuple => {
         this.currentTicketJson = tuple[0][0];
         this.interestingUsers = imm.Map(tuple[1].users).map(u => new TicketDetailUser(u)).toMap();
+        this.subtickets = imm.Map(tuple[1].tickets).map(t => new TicketDetailSubticket(t)).toMap();
         this.comments = idListToMap(tuple[0][1]).map(c => new TicketDetailComment(c, this.interestingUsers)).toMap();
         this.allTicketTags = tuple[0][3];
         this.allAssignmentTags = tuple[0][2];

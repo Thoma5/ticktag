@@ -41,6 +41,8 @@ import {
   StorypointsTextviewReadComponent
 } from './ui/ticket-detail/ticket-storypoints/ticket-storypoints.component';
 import { AssignedUserComponent } from './ui/ticket-detail/assigned-user/assigned-user.component';
+import { SubticketsComponent } from './ui/ticket-detail/subtickets/subtickets.component';
+import { SubticketComponent } from './ui/ticket-detail/subticket/subticket.component';
 import { Ng2BootstrapModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { Angular2DataTableModule } from 'angular2-data-table';
 import { MaterialModule } from '@angular/material';
@@ -91,6 +93,8 @@ import { CommentTextviewComponent } from './ui/ticket-detail/comment-textview/co
     StorypointsTextviewEditComponent,
     StorypointsTextviewReadComponent,
     AssignedUserComponent,
+    SubticketsComponent,
+    SubticketComponent,
     TaginputComponent,
     TicketCommentsComponent,
     TicketCommentComponent,
