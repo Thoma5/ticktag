@@ -2,10 +2,12 @@ import io.ticktag.USER_ID
 import io.ticktag.restinterface.ApiBaseTest
 import io.ticktag.restinterface.comment.controllers.CommentController
 import io.ticktag.restinterface.comment.schema.UpdateCommentRequestJson
+import io.ticktag.restinterface.loggedTime.controller.LoggedTimeController
 import io.ticktag.restinterface.ticket.controllers.TicketController
 import io.ticktag.restinterface.ticket.schema.UpdateTicketRequestJson
 import io.ticktag.restinterface.ticketevent.controllers.TicketEventController
 import io.ticktag.service.Principal
+import io.ticktag.service.comment.dto.CreateLoggedTimeJson
 import org.junit.Assert
 import org.junit.Test
 import java.time.Duration
@@ -17,6 +19,7 @@ class TicketEventApiTest : ApiBaseTest() {
     @Inject lateinit var ticketEventController: TicketEventController
     @Inject lateinit var ticketController: TicketController
     @Inject lateinit var commentController: CommentController
+    @Inject lateinit var loggedTimeController: LoggedTimeController
 
     val ticketId = UUID.fromString("00000000-0003-0000-0000-000000000006")
     val commendId = UUID.fromString("00000000-0004-0000-0000-000000000008")
@@ -32,7 +35,7 @@ class TicketEventApiTest : ApiBaseTest() {
     }
 
     fun updateComment(principal: Principal) {
-      //  commentController.updateComment(UpdateCommentRequestJson("Changed Comment"), , commendId, principal)
+        //  commentController.updateComment(UpdateCommentRequestJson("Changed Comment"), , commendId, principal)
     }
 
     fun keepCommentSame(principal: Principal) {
@@ -45,7 +48,31 @@ class TicketEventApiTest : ApiBaseTest() {
     fun test_ticketEventCommentChangedShouldAddEvent() {
         withUser(USER_ID) { principal ->
             val sizeBefore = ticketEventController.listTicketEvents(ticketId).size
-            updateComment(principal)
+            val comment = commentController.getComment(commendId)
+            commentController.updateComment(UpdateCommentRequestJson("New Comment Text", comment.mentionedTicketId, null), commendId, principal)
+            Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
+        }
+    }
+
+    @Test
+    fun test_ticketCurrentEstimatedTimeChangedShouldAddEvent() {
+        withUser(USER_ID) { principal ->
+            val sizeBefore = ticketEventController.listTicketEvents(ticketId).size
+            val ticket = ticketController.getTicket(ticketId)
+            ticketController.updateTicket(UpdateTicketRequestJson(ticket.title, ticket.open, ticket.storyPoints, ticket.initialEstimatedTime, Duration.ofHours(10), ticket.dueDate, ticket.description, null, null, null, null), ticketId, principal)
+            Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
+        }
+    }
+
+    @Test
+    fun test_ticketLoggedTimeAddedShouldAddEvent() {
+        val categoryId = UUID.fromString("00000000-0007-0000-0000-000000000001")
+
+        withUser(USER_ID) { principal ->
+            val sizeBefore = ticketEventController.listTicketEvents(ticketId).size
+            loggedTimeController.createLoggedTime(CreateLoggedTimeJson(Duration.ofHours(1), commendId, categoryId))
+
+            val ticket = ticketController.getTicket(ticketId)
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
         }
     }
@@ -55,17 +82,8 @@ class TicketEventApiTest : ApiBaseTest() {
         withUser(USER_ID) { principal ->
             val sizeBefore = ticketEventController.listTicketEvents(ticketId).size
             val ticket = ticketController.getTicket(ticketId)
-            ticketController.updateTicket(UpdateTicketRequestJson("New Title", true, ticket.storyPoints, ticket.initialEstimatedTime,ticket.currentEstimatedTime, ticket.dueDate, ticket.description, null, null, null, null), ticketId, principal)
+            ticketController.updateTicket(UpdateTicketRequestJson("New Title", ticket.open, ticket.storyPoints, ticket.initialEstimatedTime, ticket.currentEstimatedTime, ticket.dueDate, ticket.description, null, null, null, null), ticketId, principal)
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
-        }
-    }
-
-    @Test
-    fun test_ticketEventTitleChangedShouldNotAddEvent() {
-        withUser(USER_ID) { principal ->
-            val sizeBefore = ticketEventController.listTicketEvents(ticketId).size
-            keepTicketSame(principal)
-            Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore)
         }
     }
 
@@ -74,19 +92,31 @@ class TicketEventApiTest : ApiBaseTest() {
         withUser(USER_ID) { principal ->
             val sizeBefore = ticketEventController.listTicketEvents(ticketId).size
             val ticket = ticketController.getTicket(ticketId)
-            ticketController.updateTicket(UpdateTicketRequestJson(ticket.title, true, ticket.storyPoints, ticket.initialEstimatedTime, ticket.currentEstimatedTime, ticket.dueDate, "New Description", null, null, null, null), ticketId, principal)
+            ticketController.updateTicket(UpdateTicketRequestJson(ticket.title, ticket.open, ticket.storyPoints, ticket.initialEstimatedTime, ticket.currentEstimatedTime, ticket.dueDate, "New Description", null, null, null, null), ticketId, principal)
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
         }
     }
 
-    /** Negative Test for all Events
+    /** Negative Test for all Events **/
 
     @Test
-    fun test_ticketDescriptionChangedShouldNotAddEvent() {
+    fun test_keepTicketSameShouldNotAddEvent() {
         withUser(USER_ID) { principal ->
             val sizeBefore = ticketEventController.listTicketEvents(ticketId).size
-            keepTicketSame(principal)
+            val ticket = ticketController.getTicket(ticketId)
+            ticketController.updateTicket(UpdateTicketRequestJson(ticket.title, ticket.open, ticket.storyPoints, ticket.initialEstimatedTime, ticket.currentEstimatedTime, ticket.dueDate, ticket.description, null, null, null, null), ticketId, principal)
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore)
         }
-    }**/
+    }
+
+    @Test
+    fun test_ticketEventCommentChangedShouldNotAddEvent() {
+        withUser(USER_ID) { principal ->
+            val sizeBefore = ticketEventController.listTicketEvents(ticketId).size
+            val comment = commentController.getComment(commendId)
+            commentController.updateComment(UpdateCommentRequestJson(comment.text, comment.mentionedTicketId, null), commendId, principal)
+            Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore)
+        }
+    }
+
 }
