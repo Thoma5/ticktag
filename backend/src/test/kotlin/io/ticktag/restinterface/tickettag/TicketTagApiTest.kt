@@ -10,6 +10,7 @@ import io.ticktag.restinterface.tickettag.schema.CreateTicketTagRequestJson
 import io.ticktag.restinterface.tickettag.schema.UpdateTicketTagRequestJson
 import org.junit.Assert
 import org.junit.Assert.assertEquals
+import org.junit.Ignore
 import org.junit.Test
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.AccessDeniedException
@@ -27,19 +28,20 @@ class TicketTagApiTest : ApiBaseTest() {
         return arrayListOf("sql/testBaseSamples.sql", "sql/WILL_BE_DELETED_SOON.sql")
     }
 
-    /* FAILING BECAUSE OF TAG ID NOT MATCHING WITH NEW DATA
-        @Test
-        fun getTicketTag_positive() {
-            withUser(LOCAL_USER_ID) { ->
-                val tag = ticketTagRepo.findAll().first()
-                val resp = ticketTagController.getTicketTag(tag.id)
-                assertEquals(tag.id, resp.id)
-                assertEquals(tag.name, resp.name)
-                assertEquals(tag.color, resp.color)
-                assertEquals(tag.order, resp.order)
-            }
+    // TODO
+    @Ignore("Failing because of tag id not matching new data")
+    @Test
+    fun getTicketTag_positive() {
+        withUser(LOCAL_USER_ID) { ->
+            val tag = ticketTagRepo.findAll().first()
+            val resp = ticketTagController.getTicketTag(tag.id)
+            assertEquals(tag.id, resp.id)
+            assertEquals(tag.name, resp.name)
+            assertEquals(tag.color, resp.color)
+            assertEquals(tag.order, resp.order)
         }
-    */
+    }
+
     @Test(expected = AccessDeniedException::class)
     fun getTicketTag_negative() {
         withoutUser { ->
@@ -127,16 +129,17 @@ class TicketTagApiTest : ApiBaseTest() {
         }
     }
 
-    /* FAILING BECAUSE OF TAG ID NOT MATCHING WITH NEW DATA
-        @Test
-        fun `listTicketTags should pass with ticketTagGroupId parameter`() {
-            withUser(LOCAL_USER_ID) { ->
-                val group = ticketTagGroupRepo.findAll().first()
-                val result = ticketTagController.listTicketTags(ticketTagGroupId = group.id, projectId = null)
-                assertEquals(result.statusCode, HttpStatus.OK)
-            }
+    // TODO
+    @Ignore("Failing because of tag id not matching new data")
+    @Test
+    fun `listTicketTags should pass with ticketTagGroupId parameter`() {
+        withUser(LOCAL_USER_ID) { ->
+            val group = ticketTagGroupRepo.findAll().first()
+            val result = ticketTagController.listTicketTags(ticketTagGroupId = group.id, projectId = null)
+            assertEquals(result.statusCode, HttpStatus.OK)
         }
-    */
+    }
+
     @Test
     fun `listTicketTags should pass with projectId parameter`() {
         withUser(USER_ID) { ->

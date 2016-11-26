@@ -118,7 +118,9 @@ class AssignmentTagApiTest : ApiBaseTest() {
         }
     }
 
-    //No function to search assignmenttags server site
+    // TODO
+    // No function to search assignmenttags server site
+    // Can't @Ignore because the method is actually missingg
 
     /**
     @Test
