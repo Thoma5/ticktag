@@ -17,6 +17,7 @@ import io.ticktag.restinterface.ticketassignment.controllers.TicketAssignmentCon
 import io.ticktag.restinterface.ticketevent.controllers.TicketEventController
 import io.ticktag.service.Principal
 import io.ticktag.service.comment.dto.CreateLoggedTimeJson
+import org.eclipse.jetty.http.HttpMethod
 import org.junit.Assert
 import org.junit.Test
 import java.time.Duration
@@ -36,6 +37,7 @@ class TicketEventApiTest : ApiBaseTest() {
     val parentTicketId = UUID.fromString("00000000-0003-0000-0000-000000000001")
     val commendId = UUID.fromString("00000000-0004-0000-0000-000000000008")
     val assignmentTagId = UUID.fromString("00000000-0006-0000-0000-000000000003")
+    val loggedTimeId = UUID.fromString("00000000-0008-0000-0000-000000000001")
 
     @Test
     fun test_ticketDescriptionChangedShouldAddEvent() {
@@ -78,22 +80,31 @@ class TicketEventApiTest : ApiBaseTest() {
     }
 
 
-    /** Todo- Implement this feature
     @Test
     fun test_ticketLoggedTimeAddedShouldAddEvent() {
-    val categoryId = UUID.fromString("00000000-0007-0000-0000-000000000001")
+        val categoryId = UUID.fromString("00000000-0007-0000-0000-000000000001")
 
-    withUser(USER_ID) { principal ->
-    val sizeBefore = ticketEventController.listTicketEvents(ticketId).size
-    loggedTimeController.createLoggedTime(CreateLoggedTimeJson(Duration.ofHours(1), commendId, categoryId))
+        withUser(USER_ID) { principal ->
+            val sizeBefore = ticketEventController.listTicketEvents(ticketId).size
+            loggedTimeController.createLoggedTime(CreateLoggedTimeJson(Duration.ofHours(1), commendId, categoryId))
 
-    val ticket = ticketController.getTicket(ticketId)
-    Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
+            val ticket = ticketController.getTicket(ticketId)
+            Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
+        }
     }
-    }
-     **/
 
-    //TODO logged time removed
+    @Test
+    fun test_ticketLoggedTimeRemovedShouldAddEvent() {
+        val categoryId = UUID.fromString("00000000-0007-0000-0000-000000000001")
+
+        withUser(USER_ID) { principal ->
+            val sizeBefore = ticketEventController.listTicketEvents(ticketId).size
+            loggedTimeController.deleteLoggedTime(loggedTimeId)
+
+            val ticket = ticketController.getTicket(ticketId)
+            Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
+        }
+    }
 
     //TODO mention added
 
@@ -147,7 +158,7 @@ class TicketEventApiTest : ApiBaseTest() {
     fun test_ticketUserAddedChangedShouldAddEvent() {
         withUser(USER_ID) { principal ->
             val sizeBefore = ticketEventController.listTicketEvents(ticketId).size
-             ticketAssignmentController.createTicketAssignment(ticketId, assignmentTagId, principal.id, principal)
+            ticketAssignmentController.createTicketAssignment(ticketId, assignmentTagId, principal.id, principal)
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
         }
     }

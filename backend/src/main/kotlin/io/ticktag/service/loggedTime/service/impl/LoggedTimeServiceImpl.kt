@@ -50,7 +50,7 @@ open class LoggedTimeServiceImpl @Inject constructor(
         val category = timeCategorys.findOne(createLoggedTime.categoryId) ?: throw NotFoundException()
         val newLoggedTime = LoggedTime.create(duration, comment, category)
         loggedTimes.insert(newLoggedTime)
-        //ticketEvents.insert(TicketEventLoggedTimeAdded.create(comment.ticket, null, comment, category, duration))
+        ticketEvents.insert(TicketEventLoggedTimeAdded.create(comment.ticket, comment.user, comment, category, duration))
         return LoggedTimeResult(newLoggedTime)
     }
 
@@ -62,8 +62,8 @@ open class LoggedTimeServiceImpl @Inject constructor(
         val categoryChanged = updateLoggedTime.categoryId != null && loggedTime.category != timeCategorys.findOne(updateLoggedTime.categoryId)
         if (timeChanged || categoryChanged) {
             val category = timeCategorys.findOne(updateLoggedTime.categoryId ?: loggedTime.category.id) ?: throw NotFoundException()
-            //   ticketEvents.insert(TicketEventLoggedTimeRemoved.create(loggedTime.comment.ticket, null, loggedTime.comment, loggedTime.category, loggedTimeToDelete.time))
-            //ticketEvents.insert(TicketEventLoggedTimeAdded.create(loggedTime.comment.ticket, null, loggedTime.comment, category, updateLoggedTime.time ?: loggedTime.time))
+            ticketEvents.insert(TicketEventLoggedTimeRemoved.create(loggedTime.comment.ticket, loggedTime.comment.user, loggedTime.comment, loggedTime.category, loggedTime.time))
+            ticketEvents.insert(TicketEventLoggedTimeAdded.create(loggedTime.comment.ticket, loggedTime.comment.user, loggedTime.comment, category, updateLoggedTime.time ?: loggedTime.time))
         }
 
         if (updateLoggedTime.time != null) {
@@ -81,6 +81,6 @@ open class LoggedTimeServiceImpl @Inject constructor(
     override fun deleteLoggedTime(@P("authLoggedTimeId") loggedTimeId: UUID) {
         val loggedTimeToDelete = loggedTimes.findOne(loggedTimeId) ?: throw NotFoundException()
         loggedTimes.delete(loggedTimeToDelete)
-        //  ticketEvents.insert(TicketEventLoggedTimeRemoved.create(loggedTimeToDelete.comment.ticket, null, loggedTimeToDelete.comment, loggedTimeToDelete.category, loggedTimeToDelete.time))
+        ticketEvents.insert(TicketEventLoggedTimeRemoved.create(loggedTimeToDelete.comment.ticket, loggedTimeToDelete.comment.user, loggedTimeToDelete.comment, loggedTimeToDelete.category, loggedTimeToDelete.time))
     }
 }
