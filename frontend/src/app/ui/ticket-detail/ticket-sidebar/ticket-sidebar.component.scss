@@ -46,3 +46,10 @@ h2 {
 .ticket-ref .title {
     display: table-cell;
 }
+
+.loading {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-left: $internal-gap;
+}

@@ -23,7 +23,10 @@
                     (blur)="onHideAdd()"
                     (keydown.enter)="onAdd()"
                     [disabled]="checking">
-                <span *ngIf="checking">SPINNER</span>
+                <div *ngIf="checking" class="loading">
+                    <tt-spinner>
+                    </tt-spinner>
+                </div>
             </div>
         </div>
     </div>
