@@ -490,25 +490,25 @@ BEGIN;
 
 INSERT INTO public.assignment_tag (id, project_id, name, normalized_name, color)
 VALUES ('00000000-0006-0000-0000-000000000001', '00000000-0002-0000-0000-000000000001', 'Implementing', 'implementing',
-        '0000ff');
+        '2196F3');
 
 INSERT INTO public.assignment_tag (id, project_id, name, normalized_name, color)
-VALUES ('00000000-0006-0000-0000-000000000002', '00000000-0002-0000-0000-000000000001', 'Testing', 'testing', '00ff00');
+VALUES ('00000000-0006-0000-0000-000000000002', '00000000-0002-0000-0000-000000000001', 'Testing', 'testing', '4CAF50');
 
 INSERT INTO public.assignment_tag (id, project_id, name, normalized_name, color)
 VALUES
-  ('00000000-0006-0000-0000-000000000003', '00000000-0002-0000-0000-000000000001', 'Bug Fixing', 'bugfixing', 'ff0000');
+  ('00000000-0006-0000-0000-000000000003', '00000000-0002-0000-0000-000000000001', 'Bug Fixing', 'bugfixing', 'F44336');
 
 INSERT INTO public.assignment_tag (id, project_id, name, normalized_name, color)
 VALUES ('00000000-0006-0000-0000-000000000004', '00000000-0002-0000-0000-000000000001', 'Ticket Owner', 'ticketowner',
-        'ff0000');
+        'FF9800');
 
 INSERT INTO public.assignment_tag (id, project_id, name, normalized_name, color)
 VALUES
-  ('00000000-0006-0000-0000-000000000005', '00000000-0002-0000-0000-000000000001', 'Document', 'document', 'ff0000');
+  ('00000000-0006-0000-0000-000000000005', '00000000-0002-0000-0000-000000000001', 'Document', 'document', '00BCD4');
 
 INSERT INTO public.assignment_tag (id, project_id, name, normalized_name, color)
-VALUES ('00000000-0006-0000-0000-000000000006', '00000000-0002-0000-0000-000000000001', 'Review', 'review', 'ff0000');
+VALUES ('00000000-0006-0000-0000-000000000006', '00000000-0002-0000-0000-000000000001', 'Review', 'review', '9C27B0');
 
 --BEGIN Assignment-Tag Data for rolebased testing DO NOT ALTER
 INSERT INTO PUBLIC.assignment_tag (id, project_id, NAME, normalized_name, color)
