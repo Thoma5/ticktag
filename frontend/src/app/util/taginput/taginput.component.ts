@@ -8,6 +8,7 @@ export interface Tag {
   name: string;
   color: string;
   order: number;
+  normalizedName: string;
 }
 
 export type TagRef =
@@ -62,7 +63,7 @@ export class TaginputComponent implements OnChanges {
   }
 
   onAdd() {
-    let tag = this.allTags.find(t => t.name.toLowerCase() === this.newTagName.toLowerCase());
+    let tag = this.allTags.find(t => t.normalizedName.toLowerCase() === this.newTagName.toLowerCase());
     if (tag) {
       let alreadyAdded = this.tags.findIndex(t => typeof t === 'string' ? t === tag.id : t.id === tag.id);
       if (alreadyAdded < 0) {
