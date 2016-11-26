@@ -1,6 +1,6 @@
 package io.ticktag.service
 
-import io.ticktag.persistence.LoggedTime.LoggedTimeRepository
+import io.ticktag.persistence.loggedtime.LoggedTimeRepository
 import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.member.MemberRepository
 import io.ticktag.persistence.member.entity.ProjectRole
@@ -97,6 +97,11 @@ data class Principal(
         return member.role.includesRole(ProjectRole.valueOf(roleString))
     }
 
+    fun hasProjectRoleForTicketTagRelation(ticketId: UUID, roleString: String): Boolean {
+        if (members == null) return false
+        val member = members.findByUserIdAndTicketId(this.id, ticketId) ?: return false
+        return member.role.includesRole(ProjectRole.valueOf(roleString))
+    }
 
     fun hasProjectRoleForTicketTagGroup(ticketTagGroupId: UUID, roleString: String): Boolean {
         if (members == null) return false
@@ -152,6 +157,9 @@ class AuthExpr private constructor() {
 
         const val READ_TICKET_ASSIGNMENT = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForTicketAssignment(#authTicketId, 'OBSERVER')"
         const val WRITE_TICKET_ASSIGNMENT = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicketAssignment(#authTicketId, 'USER')"
+
+        const val READ_TICKET_TAG_RELATION = "principal.hasRole('OBSERVER') || principal.hasProjectRoleForTicketTagRelation(#authTicketId, 'OBSERVER')"
+        const val WRITE_TICKET_TAG_RELATION = "principal.hasRole('ADMIN') || principal.hasProjectRoleForTicketTagRelation(#authTicketId, 'USER')"
 
         const val ADMIN_OR_SELF = "principal.hasRole('ADMIN') || principal.isId(#userId)"
 

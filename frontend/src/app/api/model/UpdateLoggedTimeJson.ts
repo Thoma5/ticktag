@@ -26,9 +26,9 @@
 import * as models from './models';
 
 export interface UpdateLoggedTimeJson {
-    time: number;
+    time?: number;
 
-    categoryId: string;
+    categoryId?: string;
 
 }
 

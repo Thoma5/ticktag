@@ -44,7 +44,10 @@ INSERT INTO public."user" (id, username, mail, name, password_hash, role, curren
   ('93ef43d9-20b7-461a-b960-2d1e89ba099f', 'heinzl', 'michael.heinzl@test.de', 'Michael Heinzl',
    '$2a$10$.dLg4Vgt7JrP.564p/tPQOm.TLoy3HieFP1ZpnyWVPkJDYrG6r.Ce', 'OBSERVER', '370f4e86-1ebf-4b70-a113-add96d0905e1',
    E'\\x'); --michael-supersecure
-
+INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, profile_pic) VALUES
+  ('00000000-0001-0000-0000-000000000004', 'cannot', 'adsf@asdf.ad', 'I Can Nothing the Second',
+   '$2a$10$mTEkiQq2Wo./aqfekJHPk.5sG8JLWqWYbtMODwk9xQwQp0GtkCiM.', 'USER', '4aa33174-0001-4d33-0000-add96d0905e1',
+   NULL); --aaaa
 
 -- BEGIN all role/project role member permutations DO NOT ALTER
 INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, profile_pic) VALUES
@@ -177,7 +180,7 @@ INSERT INTO public.ticket (id, number, parent_ticket_id, project_id, created_by,
 VALUES ('00000000-0003-0000-0000-000000000002', 2, NULL, '00000000-0002-0000-0000-000000000001',
                                                 '660f2968-aa46-4870-bcc5-a3805366cff2',
                                                 NULL, '2016-11-16 18:06:07.221000',
-                                                'Create Users View', TRUE, 10, 20, 25, '2016-11-20 17:07:05.554000');
+                                                'Create Users View', TRUE, 10, 20, 25, '2016-11-21 17:07:05.554000');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text)
 VALUES ('00000000-0004-0000-0000-000000000002', '660f2968-aa46-4870-bcc5-a3805366cff2',
         '00000000-0003-0000-0000-000000000002', '2016-11-16 17:09:59.019000', 'You have to do 3 sub Tasks');
@@ -191,7 +194,7 @@ VALUES ('00000000-0003-0000-0000-000000000003', 3, '00000000-0003-0000-0000-0000
                                                 '00000000-0002-0000-0000-000000000001',
                                                 '660f2968-aa46-4870-bcc5-a3805366cff2',
                                                 NULL, '2016-11-16 18:06:07.221000',
-                                                'UI Users View', FALSE, 10, 10, 10, '2016-11-20 17:07:05.554000');
+                                                'UI Users View', FALSE, 10, 10, 10, '2016-11-22 17:07:05.554000');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
   ('00000000-0004-0000-0000-000000000003', '660f2968-aa46-4870-bcc5-a3805366cff2',
    '00000000-0003-0000-0000-000000000003', '2016-11-16 17:09:59.019000',
@@ -210,7 +213,7 @@ VALUES ('00000000-0003-0000-0000-000000000004', 4, '00000000-0003-0000-0000-0000
                                                 '00000000-0002-0000-0000-000000000001',
                                                 '660f2968-aa46-4870-bcc5-a3805366cff2',
                                                 NULL, '2016-11-16 18:06:07.221000',
-                                                'Implement Users View', TRUE, 4, 25, 25, '2016-11-20 17:07:05.554000');
+                                                'Implement Users View', TRUE, 4, 25, 25, '2016-12-20 17:07:05.554000');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
   ('00000000-0004-0000-0000-000000000004', '660f2968-aa46-4870-bcc5-a3805366cff2',
    '00000000-0003-0000-0000-000000000004', '2016-11-16 17:09:59.019000', 'Implement Users View');
@@ -224,7 +227,7 @@ VALUES ('00000000-0003-0000-0000-000000000005', 5, '00000000-0003-0000-0000-0000
                                                 '00000000-0002-0000-0000-000000000001',
                                                 '660f2968-aa46-4870-bcc5-a3805366cff2',
                                                 NULL, '2016-11-16 18:06:07.221000',
-                                                'Test Users View', FALSE, 20, 20, 25, '2016-11-20 17:07:05.554000');
+                                                'Test Users View', FALSE, 20, 20, 25, '2016-9-20 17:07:05.554000');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
   ('00000000-0004-0000-0000-000000000005', '660f2968-aa46-4870-bcc5-a3805366cff2',
    '00000000-0003-0000-0000-000000000005', '2016-11-16 17:09:59.019000', 'Test Users View');
@@ -237,7 +240,7 @@ INSERT INTO public.ticket (id, number, parent_ticket_id, project_id, created_by,
 VALUES ('00000000-0003-0000-0000-000000000006', 6, NULL, '00000000-0002-0000-0000-000000000001',
                                                 '93ef43d9-20b7-461a-b960-2d1e89ba099f',
                                                 NULL, '2016-11-16 18:06:07.221000',
-                                                'Set UP CI', FALSE, 20, 3.6e+13, 5.4e+13, '2016-11-20 17:07:05.554000');
+                                                'Set UP CI', FALSE, 20, 3.6e+13, 5.4e+13, '2015-4-20 17:07:05.554000');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES
   ('00000000-0004-0000-0000-000000000007', '93ef43d9-20b7-461a-b960-2d1e89ba099f',
    '00000000-0003-0000-0000-000000000006', '2016-11-16 17:09:59.019', '# An exhibit of Markdown
@@ -312,18 +315,31 @@ It''s sometimes handy for breaking things up.
 
 ## Images
 
-Markdown can also contain images. I''ll need to add something here sometime.
+![Cat](http://lorempixel.com/400/400/cats)
+
+## Code
+
+```haskell
+quicksort :: (Ord a) => [a] -> [a]
+quicksort [] = []
+quicksort (x:xs) =
+    let smallerSorted = quicksort [a | a <- xs, a <= x]
+        biggerSorted = quicksort [a | a <- xs, a > x]
+    in  smallerSorted ++ [x] ++ biggerSorted
+```
 
 ## Finally
 
-There''s actually a lot more to Markdown than this. See the official [introduction][4] and [syntax][5] for more information. However, be aware that this is not using the official implementation, and this might work subtly differently in some of the little things.
+
+  This is the XSS test:
+  <script>alert("xss")</script>
+  [XSS](javascript&#58this;alert(1&#41;)
+  [XSS](javascript&#58;alert(1&#41;)
+  ![XSS](javascript:alert())
 
 
-  [1]: http://daringfireball.net/projects/markdown/
-  [2]: http://www.fileformat.info/info/unicode/char/2163/index.htm
-  [3]: http://www.markitdown.net/
-  [4]: http://daringfireball.net/projects/markdown/basics
-  [5]: http://daringfireball.net/projects/markdown/syntax
+  This is the linkify test: https://www.google.com
+  And this is the normal link test: [Link](https://www.google.com)
 ');
 
 UPDATE public.ticket
@@ -460,6 +476,12 @@ VALUES ('00000000-0003-0000-0000-000000000003', '00000000-0005-0000-0000-0000000
 
 INSERT INTO public.assigned_ticket_tag (ticket_id, ticket_tag_id)
 VALUES ('00000000-0003-0000-0000-000000000004', '00000000-0005-0000-0000-000000000001');
+
+
+INSERT INTO public.assigned_ticket_tag (ticket_id, ticket_tag_id)
+VALUES ('00000000-0003-0000-0000-000000000006', '00000000-0005-0000-0000-000000000001');
+INSERT INTO public.assigned_ticket_tag (ticket_id, ticket_tag_id)
+VALUES ('00000000-0003-0000-0000-000000000006', '00000000-0005-0000-0001-000000000002');
 
 COMMIT;
 

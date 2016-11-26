@@ -30,25 +30,25 @@ export interface CreateTicketRequestJson {
 
     open: boolean;
 
-    storyPoints: number;
+    storyPoints?: number;
 
-    initialEstimatedTime: number;
+    initialEstimatedTime?: number;
 
-    currentEstimatedTime: number;
+    currentEstimatedTime?: number;
 
-    dueDate: number;
+    dueDate?: number;
 
     description: string;
 
     projectId: string;
 
-    ticketAssignments: Array<models.TicketAssignmentJson>;
+    ticketAssignments: Array<models.CreateTicketUserRelationRequestJson>;
 
     subTickets: Array<models.CreateTicketRequestJson>;
 
     existingSubTicketIds: Array<string>;
 
-    partenTicketId: string;
+    parentTicketId?: string;
 
 }
 

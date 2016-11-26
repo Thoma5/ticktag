@@ -2,13 +2,15 @@
 export * from './AssignmenttagApi';
 export * from './AuthApi';
 export * from './CommentsApi';
-export * from './LoggedTimeApi';
+export * from './GetApi';
+export * from './LoggedtimeApi';
 export * from './MemberApi';
 export * from './ProjectApi';
 export * from './TicketApi';
-export * from './TicketassignmentApi';
 export * from './TickettagApi';
 export * from './TickettaggroupApi';
+export * from './TickettagrelationApi';
+export * from './TicketuserrelationApi';
 export * from './TimecategoryApi';
 export * from './UserApi';
 

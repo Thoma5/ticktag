@@ -48,6 +48,7 @@ open class RestConfig : WebMvcConfigurerAdapter() {
                 .configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true)
                 .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true)
                 .configure(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false)
+                .configure(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS, false)
         return mapper
     }
 

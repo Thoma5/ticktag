@@ -1,8 +1,8 @@
 package io.ticktag
 
 import com.google.common.io.Resources
-import io.ticktag.persistence.LoggedTime.LoggedTimeRepository
 import io.ticktag.persistence.comment.CommentRepository
+import io.ticktag.persistence.loggedtime.LoggedTimeRepository
 import io.ticktag.persistence.member.MemberRepository
 import io.ticktag.persistence.ticket.AssignmentTagRepository
 import io.ticktag.persistence.timecategory.TimeCategoryRepository
@@ -62,9 +62,12 @@ abstract class BaseTest {
     fun setUp() {
         datasource.connection.tryw({
             initDb(it)
-            execResource(it, "samples.sql")
+            for (sql in loadTestData())
+                execResource(it, sql)
         })
     }
+
+    abstract protected fun loadTestData(): List<String>
 
     protected fun <T> withUser(userId: UUID, proc: () -> T): T {
         return withUser(userId) { principal ->

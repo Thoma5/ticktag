@@ -1,10 +1,10 @@
 package io.ticktag.service.comment.service.impl
 
 import io.ticktag.TicktagService
-import io.ticktag.persistence.LoggedTime.LoggedTimeRepository
+import io.ticktag.persistence.loggedtime.LoggedTimeRepository
 import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.ticket.entity.Comment
-import io.ticktag.persistence.ticket.entity.TicketRepository
+import io.ticktag.persistence.ticket.TicketRepository
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.AuthExpr
 import io.ticktag.service.NotFoundException
@@ -12,11 +12,11 @@ import io.ticktag.service.Principal
 import io.ticktag.service.comment.dto.CommentResult
 import io.ticktag.service.comment.dto.CreateComment
 
-import io.ticktag.service.loggedTime.dto.CreateLoggedTime
+import io.ticktag.service.loggedtime.dto.CreateLoggedTime
 
 import io.ticktag.service.comment.dto.UpdateComment
 import io.ticktag.service.comment.service.CommentService
-import io.ticktag.service.loggedTime.service.LoggedTimeService
+import io.ticktag.service.loggedtime.service.LoggedTimeService
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
 import java.time.Instant

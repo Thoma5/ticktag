@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @TicktagRestInterface
 @RequestMapping("/assignmenttag")
-@Api(tags = arrayOf("assignmenttag"), description = "assignment tags describes the relation between a user and a ticket")
+@Api(tags = arrayOf("assignmenttag"), description = "relation between user and ticket")
 open class AssignmentTagController @Inject constructor(
         private val assignmentTagService: AssignmentTagService
 ) {
