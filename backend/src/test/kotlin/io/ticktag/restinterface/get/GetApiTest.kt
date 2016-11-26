@@ -3,13 +3,18 @@ package io.ticktag.restinterface.get
 import io.ticktag.ADMIN_ID
 import io.ticktag.restinterface.ApiBaseTest
 import io.ticktag.restinterface.get.controllers.GetController
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.*
 import javax.inject.Inject
-import org.junit.Assert.*
 
 class GetApiTest : ApiBaseTest() {
     @Inject lateinit var getController: GetController
+
+    override fun loadTestData(): List<String> {
+        return arrayListOf("sql/testBaseSamples.sql", "sql/WILL_BE_DELETED_SOON.sql")
+    }
 
     @Test
     fun `should return users`() {

@@ -136,6 +136,8 @@ export class CommentTextviewComponent implements AfterViewInit, OnChanges, OnDes
                 .sort(using<TicketDetailTag>(tag => tag.normalizedName))
                 .toArray();
             if (tags.length === 0) { return; }
+            tags = tags.slice();
+            tags.sort(using<TicketDetailTag>(tag => tag.normalizedName));
             this.instance.showHint({
                 hint: () => ({
                     list: tags.map(tt => tt.normalizedName + ' '),

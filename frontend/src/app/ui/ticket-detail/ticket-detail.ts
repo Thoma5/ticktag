@@ -154,7 +154,7 @@ export class TicketDetail {
       .filter(it => !!it)
       .toList();
     this.title = ticket.title;
-    this.users = imm.List(ticket.ticketAssignments)
+    this.users = imm.List(ticket.ticketUserRelations)
       .map(as => ({ user: users.get(as.userId), tag: assignmentTags.get(as.assignmentTagId) }))
       .filter(as => !!as.user && !!as.tag)
       .groupBy(as => as.user)

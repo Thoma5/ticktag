@@ -1,14 +1,14 @@
 package io.ticktag.service.ticket.dto
 
 import io.ticktag.persistence.ticket.entity.AssignedTicketUser
-import io.ticktag.restinterface.ticket.schema.TicketAssignmentJson
+import io.ticktag.restinterface.ticketuserrelation.schema.CreateTicketUserRelationRequestJson
 import java.util.*
 
 data class TicketAssignment(
         val assignmentTagId: UUID,
         val userId: UUID
 ) {
-    constructor(req: TicketAssignmentJson) : this(
+    constructor(req: CreateTicketUserRelationRequestJson) : this(
             assignmentTagId = req.assignmentTagId, userId = req.userId)
 
     constructor(req: AssignedTicketUser) : this(

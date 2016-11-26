@@ -7,7 +7,7 @@ import {
   AssignmentTagResultJson, CommentResultJson, TicketTagResultJson,
   TickettagApi, TimeCategoryJson, TimecategoryApi,
   GetApi, GetResultJson, UpdateTicketRequestJson,
-  TicketassignmentApi
+  TicketuserrelationApi,
 } from '../../api';
 import { Observable } from 'rxjs';
 import {
@@ -48,13 +48,13 @@ export class TicketDetailComponent implements OnInit {
     private ticketTagsApi: TickettagApi,
     private timeCategoryApi: TimecategoryApi,
     private getApi: GetApi,
-    private ticketAssignmentApi: TicketassignmentApi) {
+    private ticketAssignmentApi: TicketuserrelationApi) {
   }
 
   ngOnInit(): void {
     this.route.params
       .do(() => { this.loading = true; })
-      .flatMap(params => {
+      .switchMap(params => {
         let ticketId = '' + params['ticketNumber'];
         let projectId = '' + params['projectId'];
         return this.refresh(projectId, ticketId);
@@ -225,7 +225,7 @@ export class TicketDetailComponent implements OnInit {
       .flatMap(tuple => {
         let ticketResult = tuple[0];
         // We need all assigned users
-        let wantedUserIds = ticketResult.ticketAssignments.map(ta => ta.userId);
+        let wantedUserIds = ticketResult.ticketUserRelations.map(ta => ta.userId);
         // And the comment authors
         tuple[1].forEach(c => { wantedUserIds.push(c.userId); });
         // And transient users
