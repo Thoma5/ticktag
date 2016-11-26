@@ -10,6 +10,10 @@ export interface Tag {
   order: number;
 }
 
+export type TagRef =
+  string |
+  { id: string, transient: boolean };
+
 /**
  * Tag Input Element.
  */
@@ -22,11 +26,11 @@ export class TaginputComponent implements OnChanges {
   @Input() allTags: imm.Map<string, Tag>;
 
   // Array of `Tag.id` values of `allTags`.
-  @Input() tags: imm.List<string>;
-  @Output() readonly tagsChange = new EventEmitter<imm.List<string>>();
+  @Input() tags: imm.List<TagRef>;
+  @Output() readonly tagsChange = new EventEmitter<imm.List<TagRef>>();
   @Output() readonly tagAdd = new EventEmitter<string>();
   @Output() readonly tagRemove = new EventEmitter<string>();
-  private sortedTags: imm.List<Tag>;
+  private sortedTags: imm.List<{ tag: Tag, transient: boolean }>;
 
   private newTagName = '';
   private editing = false;
@@ -34,15 +38,18 @@ export class TaginputComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if ('tags' in changes || 'allTags' in changes) {
       this.sortedTags = this.tags
-        .map(id => this.allTags.get(id))
-        .filter(tag => !!tag)
-        .sort((a, b) => (a.order < b.order) ? -1 : (a.order === b.order ? 0 : 1))
+        .map(tag => ({
+          tag: typeof tag === 'string' ? this.allTags.get(tag) : this.allTags.get(tag.id),
+          transient: typeof tag !== 'string' && tag.transient,
+        }))
+        .filter(tag => !!tag.tag)
+        .sort((a, b) => (a.tag.order < b.tag.order) ? -1 : (a.tag.order === b.tag.order ? 0 : 1))
         .toList();
     }
   }
 
   onDeleteClick(tag: Tag) {
-    this.tagsChange.emit(this.tags.filter(tid => tid === tag.id).toList());
+    this.tagsChange.emit(this.tags.filter(tid => typeof tid === 'string' ? tid === tag.id : tid.id === tag.id).toList());
     this.tagRemove.emit(tag.id);
   }
 
@@ -57,7 +64,7 @@ export class TaginputComponent implements OnChanges {
   onAdd() {
     let tag = this.allTags.find(t => t.name.toLowerCase() === this.newTagName.toLowerCase());
     if (tag) {
-      let alreadyAdded = this.tags.indexOf(tag.id);
+      let alreadyAdded = this.tags.findIndex(t => typeof t === 'string' ? t === tag.id : t.id === tag.id);
       if (alreadyAdded < 0) {
         this.tagsChange.emit(this.tags.push(tag.id));
         this.tagAdd.emit(tag.id);

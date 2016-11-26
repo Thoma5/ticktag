@@ -224,9 +224,9 @@ export class CommentTextviewComponent implements AfterViewInit, OnChanges, OnDes
         ).exec(text);
         if (isUnassign) {
             let aus = this.ticket.users
-                .map((tags, user) => tags.map(tag => ({
-                    text: `${user.username}@${tag.normalizedName} `,
-                    displayText: `${user.username}@${tag.normalizedName} (${user.name} <${user.mail}>)`,
+                .map((assignments, user) => assignments.map(ass => ({
+                    text: `${user.username}@${ass.tag.normalizedName} `,
+                    displayText: `${user.username}@${ass.tag.normalizedName} (${user.name} <${user.mail}>)`,
                 })))
                 .valueSeq()
                 .flatMap(it => it)

@@ -1,7 +1,8 @@
 <div class="tags">
-  <div *ngFor="let tag of sortedTags" class="tag" [style.backgroundColor]="'#' + tag.color">
-      <span class="name">{{ tag.name }}</span>
-      <a href="javascript:void(0)" class="delete" (click)="onDeleteClick(tag)">&#x2716;</a>
+  <div *ngFor="let tag of sortedTags" class="tag" [style.backgroundColor]="'#' + tag.tag.color">
+      <span class="name">{{ tag.tag.name }}</span>
+      <a *ngIf="!tag.transient" href="javascript:void(0)" class="delete" (click)="onDeleteClick(tag.tag)">&#x2716;</a>
+      <span *ngIf="tag.transient" class="loading">LOADING</span>
   </div>
   <div *ngIf="!editing" class="add-button"><a href="javascript:void(0)" (click)="onShowAdd()">Add&nbsp;Tag</a></div>
 </div>

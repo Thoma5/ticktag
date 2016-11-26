@@ -13,7 +13,7 @@ import { TicketDetail, TicketDetailAssTag, TicketDetailUser } from '../ticket-de
 export class TicketSidebarComponent implements OnChanges {
   @Input() ticket: TicketDetail;
   @Input() allAssignmentTags = imm.Map<string, TicketDetailAssTag>();
-  private assignments: imm.List<{ user: TicketDetailUser, tags: imm.List<string> }>;
+  private assignments: imm.List<{ user: TicketDetailUser, tags: imm.List<{ id: string, transient: boolean }> }>;
 
   @Output() readonly assignmentAdd = new EventEmitter<{user: string, tag: string}>();
   @Output() readonly assignmentRemove = new EventEmitter<{user: string, tag: string}>();
@@ -31,8 +31,11 @@ export class TicketSidebarComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if ('ticket' in changes || 'allAssignmentTags' in changes) {
       this.assignments = this.ticket.users
-        .map((tags, user) => ({ user: user, tags: tags.map(t => t.id).toList() }))
-        .sort(using<{ user: TicketDetailUser, tags: imm.List<string> }>(it => it.user.name.toLocaleLowerCase()))
+        .map((tags, user) => ({
+          user: user,
+          tags: tags.map(t => ({id: t.tag.id, transient: t.transient})).toList()
+        }))
+        .sort(using<{user: TicketDetailUser}>(it => it.user.name.toLocaleLowerCase()))
         .toList();
     }
   }

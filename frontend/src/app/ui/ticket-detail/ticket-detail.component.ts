@@ -6,13 +6,13 @@ import {
   TicketApi, TicketResultJson, CommentsApi, AssignmenttagApi,
   AssignmentTagResultJson, CommentResultJson, TicketTagResultJson,
   TickettagApi, TimeCategoryJson, TimecategoryApi,
-  GetApi, GetResultJson, UpdateTicketRequestJson, TicketAssignmentJson,
+  GetApi, GetResultJson, UpdateTicketRequestJson,
   TicketassignmentApi
 } from '../../api';
 import { Observable } from 'rxjs';
 import {
   TicketDetail, TicketDetailTag, TicketDetailAssTag, TicketDetailComment,
-  TicketDetailUser, TicketDetailTimeCategory
+  TicketDetailUser, TicketDetailTimeCategory, TicketDetailTransientUser
 } from './ticket-detail';
 import { idListToMap } from '../../util/listmaputils';
 import * as imm from 'immutable';
@@ -35,7 +35,7 @@ export class TicketDetailComponent implements OnInit {
 
   // Internal state
   private currentTicketJson: TicketResultJson;  // Only use to recreate the ticket
-  private transientUsers = imm.Set<string>();
+  private transientUsers = imm.List<TicketDetailTransientUser>();
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(
@@ -84,51 +84,48 @@ export class TicketDetailComponent implements OnInit {
   }
 
   onAssignmentAdd(ass: {user: string, tag: string}) {
-    if (this.transientUsers.contains(ass.user)) {
-      this.transientUsers = this.transientUsers.remove(ass.user);
-      this.ticketDetail = new TicketDetail(
-        this.currentTicketJson,
-        this.comments,
-        this.interestingUsers,
-        this.allTicketTags,
-        this.allAssignmentTags,
-        this.transientUsers);
-    }
+    let user = this.interestingUsers.get(ass.user);
+    this.addTransientTagNoUpdate(user, ass.tag);
+    this.newTicketDetail();
     let obs = this.apiCallService
       .call<void>(p => this.ticketAssignmentApi.createTicketAssignmentUsingPOSTWithHttpInfo(
         this.ticketDetail.id,
         ass.tag,
         ass.user,
-        p));
-    this.queue.push(obs)
-      .subscribe(result => {
-        if (result.isValid) {
-          // TODO is this clever?
-          this.refresh(this.ticketDetail.projectId, this.ticketDetail.id).subscribe();
-        } else {
-          // TODO nice message
-          console.dir(result);
-          window.alert('😥');
-        }
-      });
+        p))
+      .flatMap(result => this
+        .refresh(this.ticketDetail.projectId, this.ticketDetail.id)
+        .map(() => result));
+    this.queue.push(obs).subscribe(result => {
+      this.removeTransientTagNoUpdate(user, ass.tag);
+      this.newTicketDetail();
+      if (!result.isValid) {
+        // TODO nice message
+        console.dir(result);
+        window.alert('😥');
+      }
+    });
   }
 
   onAssignmentRemove(ass: {user: string, tag: string}) {
     let userBackup = this.interestingUsers.get(ass.user);
+    this.addTransientTagNoUpdate(userBackup, ass.tag);
+    this.newTicketDetail();
     let obs = this.apiCallService
       .call<void>(p => this.ticketAssignmentApi.deleteTicketAssignmentUsingDELETEWithHttpInfo(
         this.ticketDetail.id,
         ass.tag,
         ass.user,
-        p));
+        p))
+      .flatMap(result => this
+        .refresh(this.ticketDetail.projectId, this.ticketDetail.id)
+        .map(() => result));
     this.queue.push(obs)
       .subscribe(result => {
-        if (result.isValid) {
-          // TODO is this clever? racy racy?
-          this.refresh(this.ticketDetail.projectId, this.ticketDetail.id).subscribe(() => {
-            this.onAssignmentUserAdd(userBackup);
-          });
-        } else {
+        this.removeTransientTagNoUpdate(userBackup, ass.tag);
+        this.addTransientUserNoUpdate(userBackup);
+        this.newTicketDetail();
+        if (!result.isValid) {
           // TODO nice message
           console.dir(result);
           window.alert('😥');
@@ -137,19 +134,8 @@ export class TicketDetailComponent implements OnInit {
   }
 
   onAssignmentUserAdd(user: TicketDetailUser) {
-    if (!this.ticketDetail.users.findKey((_, k) => k.id === user.id)) {
-      if (!this.interestingUsers.has(user.id)) {
-        this.interestingUsers = this.interestingUsers.set(user.id, user);
-      }
-      this.transientUsers = this.transientUsers.add(user.id);
-      this.ticketDetail = new TicketDetail(
-        this.currentTicketJson,
-        this.comments,
-        this.interestingUsers,
-        this.allTicketTags,
-        this.allAssignmentTags,
-        this.transientUsers);
-    }
+    this.addTransientUserNoUpdate(user);
+    this.newTicketDetail();
   }
 
   private updateTicket(req: UpdateTicketRequestJson): void {
@@ -169,7 +155,56 @@ export class TicketDetailComponent implements OnInit {
       });
   }
 
+  private addTransientUserNoUpdate(user: TicketDetailUser) {
+    let knownUser = this.interestingUsers.get(user.id);
+    if (!knownUser) {
+      this.interestingUsers = this.interestingUsers.set(user.id, user);
+      knownUser = user;
+    }
+
+    if (!this.transientUsers.find(v => v.user.id === knownUser.id)) {
+      this.transientUsers = this.transientUsers.push(new TicketDetailTransientUser(knownUser, imm.Set<string>()));
+    }
+  }
+
+  private addTransientTagNoUpdate(user: TicketDetailUser, tagId: string) {
+    this.addTransientUserNoUpdate(user);
+    let i = this.transientUsers.findIndex(v => v.user.id === user.id);
+    let old = this.transientUsers.get(i);
+    if (!old.tags.contains(tagId)) {
+      this.transientUsers = this.transientUsers.set(i, new TicketDetailTransientUser(
+        old.user,
+        old.tags.add(tagId),
+      ));
+    }
+  }
+
+  private removeTransientTagNoUpdate(user: TicketDetailUser, tagId: string) {
+    let i = this.transientUsers.findIndex(v => v.user.id === user.id);
+    if (i >= 0) {
+      let old = this.transientUsers.get(i);
+      if (old.tags.contains(tagId)) {
+        this.transientUsers = this.transientUsers.set(i, new TicketDetailTransientUser(
+          old.user,
+          old.tags.remove(tagId)
+        ));
+      }
+    }
+  }
+
+  private newTicketDetail() {
+    this.ticketDetail = new TicketDetail(
+      this.currentTicketJson,
+      this.comments,
+      this.interestingUsers,
+      this.allTicketTags,
+      this.allAssignmentTags,
+      this.transientUsers);
+  }
+
   private refresh(projectId: string, ticketId: string): Observable<void> {
+    let transientUsers = this.transientUsers;  // Backup to avoid data races
+
     let rawTicketObs = this.apiCallService
       .callNoError<TicketResultJson>(p => this.ticketApi.getTicketUsingGETWithHttpInfo(ticketId, p));
     let rawCommentsObs = this.apiCallService
@@ -194,7 +229,7 @@ export class TicketDetailComponent implements OnInit {
         // And the comment authors
         tuple[1].forEach(c => { wantedUserIds.push(c.userId); });
         // And transient users
-        this.transientUsers.forEach(uid => { wantedUserIds.push(uid); });
+        transientUsers.forEach(tu => { wantedUserIds.push(tu.user.id); });
         // And the person who created it
         wantedUserIds.push(ticketResult.createdBy);
 
@@ -210,13 +245,7 @@ export class TicketDetailComponent implements OnInit {
         this.allTicketTags = tuple[0][3];
         this.allAssignmentTags = tuple[0][2];
         this.allTimeCategories = tuple[0][4];
-        this.ticketDetail = new TicketDetail(
-          this.currentTicketJson,
-          this.comments,
-          this.interestingUsers,
-          this.allTicketTags,
-          this.allAssignmentTags,
-          this.transientUsers);
+        this.newTicketDetail();
       })
       .map(it => undefined);
   }

@@ -11,8 +11,8 @@
             ></tt-assigned-user>
         </div>
         <div class="add-assigned-user">
-            <a *ngIf="!adding" href="javascript:void(0)" (click)="onShowAdd()">Add&nbsp;User</a>
-            <div *ngIf="adding">
+            <a *ngIf="!adding && !checking" href="javascript:void(0)" (click)="onShowAdd()">Add&nbsp;User</a>
+            <div *ngIf="adding || checking">
                 <input
                     type="text"
                     value=""

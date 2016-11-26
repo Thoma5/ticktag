@@ -9,7 +9,7 @@ import * as imm from 'immutable';
 })
 export class AssignedUserComponent {
   @Input() user: TicketDetailUser;
-  @Input() tags: string[];
+  @Input() tags: imm.List<{ id: string, transient: boolean }>;
   @Input() allTags: imm.Map<string, TicketDetailAssTag>;
 
   @Output() readonly tagAdd = new EventEmitter<string>();

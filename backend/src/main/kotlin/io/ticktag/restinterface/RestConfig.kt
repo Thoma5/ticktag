@@ -104,7 +104,7 @@ class RestRequestLoggingAspect(private val props: ApplicationProperties) {
         try {
             val result = pjp.proceed()
             if (props.httpSlow) {
-                Thread.sleep(50 + (Math.random() * 100).toLong())
+                Thread.sleep(1000 + (Math.random() * 500).toLong())
             }
             return result
         } finally {

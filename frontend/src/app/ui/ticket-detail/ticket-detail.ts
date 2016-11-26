@@ -5,6 +5,30 @@ import {
 import * as imm from 'immutable';
 import { Tag } from '../../util/taginput/taginput.component';
 
+export class TicketDetailAssignment {
+  readonly tag: TicketDetailAssTag;
+  readonly transient: boolean;
+
+  constructor(tag: TicketDetailAssTag, transient: boolean) {
+    this.tag = tag;
+    this.transient = transient;
+    Object.freeze(this);
+  }
+}
+Object.freeze(TicketDetailAssignment.prototype);
+
+export class TicketDetailTransientUser {
+  readonly user: TicketDetailUser;
+  readonly tags: imm.Set<string>;  // This does not need to be a rich object, because all tags are known.
+
+  constructor(user: TicketDetailUser, tags: imm.Set<string>) {
+    this.user = user;
+    this.tags = tags;
+    Object.freeze(this);
+  }
+}
+Object.freeze(TicketDetailTransientUser.prototype);
+
 export class TicketDetailTimeCategory {
   readonly id: string;
   readonly normalizedName: string;
@@ -101,7 +125,7 @@ export class TicketDetail {
   readonly storyPoints: number|undefined;
   readonly tags: imm.List<TicketDetailTag>;
   readonly title: string;
-  readonly users: imm.Map<TicketDetailUser, imm.List<TicketDetailAssTag>>;
+  readonly users: imm.Map<TicketDetailUser, imm.List<TicketDetailAssignment>>;
   readonly projectId: string;
 
   constructor(
@@ -110,7 +134,7 @@ export class TicketDetail {
       users: imm.Map<string, TicketDetailUser>,
       ticketTags: imm.Map<string, TicketDetailTag>,
       assignmentTags: imm.Map<string, TicketDetailAssTag>,
-      transientUsers: imm.Set<string>) {
+      transientUsers: imm.List<TicketDetailTransientUser>) {
     this.comments = imm.List(ticket.commentIds)
       .map(cid => comments.get(cid))
       .filter(it => !!it)
@@ -134,13 +158,29 @@ export class TicketDetail {
       .map(as => ({ user: users.get(as.userId), tag: assignmentTags.get(as.assignmentTagId) }))
       .filter(as => !!as.user && !!as.tag)
       .groupBy(as => as.user)
-      .map(entry => entry.map(as => as.tag).toList())
+      .map(entry => entry.map(as => new TicketDetailAssignment(as.tag, false)).toList())
       .toMap()
       .withMutations(us => {
-        transientUsers.forEach(userId => {
-          if (users.has(userId)) {
-            us.set(users.get(userId), imm.List<TicketDetailAssTag>());
+        transientUsers.forEach(transientUser => {
+          let key = us.findKey((_, k) => k.id === transientUser.user.id);
+          if (!key) {
+            key = transientUser.user;
+            us.set(key, imm.List<TicketDetailAssignment>());
           }
+          us.set(key, us.get(key).withMutations((assignments) => {
+            transientUser.tags.forEach((tagId) => {
+              let i = assignments.findIndex(ass => ass.tag.id === tagId);
+              if (i >= 0) {
+                let old = assignments.get(i);
+                assignments.set(i, new TicketDetailAssignment(old.tag, true));
+              } else {
+                let tag = assignmentTags.get(tagId);
+                if (tag) {
+                  assignments.push(new TicketDetailAssignment(tag, true));
+                }
+              }
+            });
+          }));
         });
       });
     this.projectId = ticket.projectId;
