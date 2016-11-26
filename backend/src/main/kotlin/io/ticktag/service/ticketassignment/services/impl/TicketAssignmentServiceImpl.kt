@@ -6,7 +6,7 @@ import io.ticktag.persistence.member.entity.ProjectRole
 import io.ticktag.persistence.ticket.AssignmentTagRepository
 import io.ticktag.persistence.ticket.entity.AssignedTicketUser
 import io.ticktag.persistence.ticket.entity.AssignedTicketUserKey
-import io.ticktag.persistence.ticket.entity.TicketAssignmentRepository
+import io.ticktag.persistence.ticketassignment.TicketAssignmentRepository
 import io.ticktag.persistence.ticket.TicketRepository
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.*

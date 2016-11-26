@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import {
     TicketTagResultJson, UserResultJson, TimeCategoryJson, UserApi,
-    AssignmentTagResultJson, TicketAssignmentJson, TicketApi, TicketResultJson
+    AssignmentTagResultJson, TicketUserRelationResultJson, TicketApi, TicketResultJson
 } from '../../api';
 import { ApiCallService } from '../../service';
 import * as grammar from './grammar';
@@ -47,7 +47,7 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
     @Input() allTimeCategories = new Array<TimeCategoryJson>();
     @Input() allAssignmentTags = new Array<AssignmentTagResultJson>();
     @Input() assignedUsers = new Array<UserResultJson>();
-    @Input() assignments = new Array<TicketAssignmentJson>();
+    @Input() assignments = new Array<TicketUserRelationResultJson>();
 
     private content: string;
     private instance: any;

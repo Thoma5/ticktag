@@ -32,19 +32,15 @@ export interface UpdateTicketRequestJson {
 
     storyPoints?: number;
 
+    initialEstimatedTime?: number;
+
     currentEstimatedTime?: number;
 
     dueDate?: number;
 
     description?: string;
 
-    ticketAssignments?: Array<models.TicketAssignmentJson>;
-
-    subTickets?: Array<models.CreateTicketRequestJson>;
-
-    existingSubTicketIds?: Array<string>;
-
-    partenTicketId?: string;
+    parentTicketId?: string;
 
 }
 

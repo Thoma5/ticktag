@@ -142,7 +142,7 @@ export class TicketApi {
      * @param page page
      * @param size size
      */
-    public listTicketsUsingGET(projectId: string, order: Array<string>, page?: number, size?: number, extraHttpRequestParams?: any): Observable<Array<models.TicketResultJson>> {
+    public listTicketsUsingGET(projectId: string, order: Array<string>, page?: number, size?: number, extraHttpRequestParams?: any): Observable<models.PageTicketResultJson> {
         return this.listTicketsUsingGETWithHttpInfo(projectId, order, page, size, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {

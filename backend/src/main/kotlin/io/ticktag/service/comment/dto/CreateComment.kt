@@ -1,6 +1,6 @@
 package io.ticktag.service.comment.dto
 
-import io.ticktag.service.loggedTime.dto.CreateLoggedTime
+import io.ticktag.service.loggedtime.dto.CreateLoggedTime
 import java.util.*
 import javax.validation.constraints.Size
 
