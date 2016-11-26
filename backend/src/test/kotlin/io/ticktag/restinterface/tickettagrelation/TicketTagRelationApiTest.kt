@@ -5,7 +5,6 @@ import io.ticktag.*
 import io.ticktag.restinterface.ApiBaseTest
 import io.ticktag.restinterface.tickettagrelation.controllers.TicketTagRelationController
 import io.ticktag.service.NotFoundException
-import io.ticktag.service.TicktagValidationException
 import junit.framework.Assert.fail
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
@@ -13,6 +12,7 @@ import org.junit.Test
 import org.springframework.security.access.AccessDeniedException
 import java.util.*
 import javax.inject.Inject
+import kotlin.test.assertFailsWith
 
 class TicketTagRelationApiTest : ApiBaseTest() {
     @Inject lateinit var ticketTagRelationController: TicketTagRelationController
@@ -39,11 +39,16 @@ class TicketTagRelationApiTest : ApiBaseTest() {
     }
 
 
-    @Test(expected = TicktagValidationException::class)
-    fun `breaking exclusive Tag Group Constraint should fail`() {
+    @Test
+    fun `create relation with existing relation from exclusive group should replace it`() {
         withUser(ADMIN_ID) { principal ->
             ticketTagRelationController.setTicketTagRelation(TICKET_PROJECT_AOU_AUO_2_ID, TAG_AOU_AUO_G1[0])
             ticketTagRelationController.setTicketTagRelation(TICKET_PROJECT_AOU_AUO_2_ID, TAG_AOU_AUO_G1[1])
+
+            ticketTagRelationController.getTicketTagRelation(TICKET_PROJECT_AOU_AUO_2_ID, TAG_AOU_AUO_G1[1])
+            assertFailsWith(NotFoundException::class, {
+                ticketTagRelationController.getTicketTagRelation(TICKET_PROJECT_AOU_AUO_2_ID, TAG_AOU_AUO_G1[0])
+            })
         }
     }
 
