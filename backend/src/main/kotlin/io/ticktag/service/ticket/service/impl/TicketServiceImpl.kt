@@ -35,17 +35,17 @@ open class TicketServiceImpl @Inject constructor(
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listTicketsFuzzy(@P("authProjectId") project: UUID, query: String, pageable: Pageable): List<TicketResult> {
         val result = tickets.findByProjectIdAndFuzzy(project, "%$query%", "%$query%", pageable)
-        return result.map { toResultDTO(it) }
+        return result.map { toResultDto(it) }
     }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listTickets(@P("authProjectId") project: UUID): List<TicketResult> {
-        return tickets.findByProjectId(project).map { toResultDTO(it) }
+        return tickets.findByProjectId(project).map { toResultDto(it) }
     }
 
     @PreAuthorize(AuthExpr.READ_TICKET)
     override fun getTicket(@P("authTicketId") id: UUID): TicketResult {
-        return toResultDTO(tickets.findOne(id) ?: throw NotFoundException())
+        return toResultDto(tickets.findOne(id) ?: throw NotFoundException())
     }
 
 
@@ -120,7 +120,7 @@ open class TicketServiceImpl @Inject constructor(
         }
 
         // Neither EM nor UPDATECASCADE can reload the ticket
-        val ticketResult = toResultDTO(newTicket)
+        val ticketResult = toResultDto(newTicket)
                 .copy(subTicketIds = newSubs, ticketAssignments = ticketAssignmentList)
         return ticketResult
     }
@@ -162,7 +162,7 @@ open class TicketServiceImpl @Inject constructor(
             ticket.descriptionComment.text = updateTicket.description
         }
 
-        return toResultDTO(ticket)
+        return toResultDto(ticket)
     }
 
     @PreAuthorize(AuthExpr.WRITE_TICKET)
@@ -170,7 +170,7 @@ open class TicketServiceImpl @Inject constructor(
         tickets.delete(tickets.findOne(id) ?: throw NotFoundException())
     }
 
-    private fun toResultDTO(t: Ticket): TicketResult {
+    private fun toResultDto(t: Ticket): TicketResult {
         val realCommentIds = t.comments.filter { c -> c.describedTicket == null }.map(Comment::id)
         val referencingTicketIds = t.mentioningComments.map { it.ticket.id }
         val referencedTicketIds = t.comments.flatMap { it.mentionedTickets }.map(Ticket::id)

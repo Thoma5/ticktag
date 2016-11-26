@@ -5,7 +5,6 @@ import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.comment.schema.CommentResultJson
 import io.ticktag.restinterface.comment.schema.CreateCommentRequestJson
 import io.ticktag.restinterface.comment.schema.UpdateCommentRequestJson
-import io.ticktag.restinterface.loggedtime.schema.CreateLoggedTimeJson
 import io.ticktag.service.NotFoundException
 import io.ticktag.service.Principal
 import io.ticktag.service.comment.dto.CreateComment

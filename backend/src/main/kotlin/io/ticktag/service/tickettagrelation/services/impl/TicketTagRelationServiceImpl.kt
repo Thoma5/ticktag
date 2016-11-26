@@ -28,10 +28,11 @@ open class TicketTagRelationServiceImpl(
     override fun createOrGetIfExistsTicketTagRelation(@P("authTicketId") ticketId: UUID, tagId: UUID): TicketTagRelationResult {
         val ticket = tickets.findOne(ticketId) ?: throw NotFoundException()
         val tag = tags.findOne(tagId) ?: throw NotFoundException()
-        if (!tag.ticketTagGroup.project.id.equals(ticket.project.id)) {
+        if (tag.ticketTagGroup.project.id != ticket.project.id) {
             throw NotFoundException()
         }
 
+        // TODO maybe automatically replace it?
         val assignedTag = ticket.tags.find { it.id == tagId }
         if (assignedTag == null) {
             if (tag.ticketTagGroup.exclusive) {
