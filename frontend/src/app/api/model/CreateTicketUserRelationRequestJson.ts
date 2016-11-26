@@ -25,7 +25,7 @@
 
 import * as models from './models';
 
-export interface TicketAssignmentJson {
+export interface CreateTicketUserRelationRequestJson {
     assignmentTagId: string;
 
     userId: string;

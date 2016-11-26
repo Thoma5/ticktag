@@ -67,7 +67,7 @@ class TicketApiTest : ApiBaseTest() {
             assertThat(result.dueDate, `is`(now))
             assertThat(result.description, `is`("description"))
             assertThat(result.projectId, `is`(UUID.fromString("00000000-0002-0000-0000-000000000001")))
-            assertThat(result.tickerUserRelations.size, `is`(2))
+            assertThat(result.ticketUserRelations.size, `is`(2))
 
         }
     }

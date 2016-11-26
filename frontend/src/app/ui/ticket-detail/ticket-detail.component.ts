@@ -57,7 +57,7 @@ export class TicketDetailComponent implements OnInit {
         return Observable.zip(ticketObs, commentsObs, assignmentTagsObs, ticketTagsObs, timeCategoriesObs);
       })
       .switchMap(tuple => {
-        let wantedUsers = tuple[0].ticketAssignments.map(ta => ta.userId);
+        let wantedUsers = tuple[0].ticketUserRelations.map(ta => ta.userId);
         let obs = this.apiCallService
           .callNoError<GetResultJson>(p => this.getApi.getUsingGETWithHttpInfo(wantedUsers, p));
         return Observable.zip(Observable.of(tuple), obs);
@@ -69,7 +69,7 @@ export class TicketDetailComponent implements OnInit {
         this.allAssignmentTags = assignmentTags;
         this.allTicketTags = ticketTags;
         this.allTimeCategories = timeCategories;
-        this.assignedUsers = ticket.ticketAssignments.map(ta => joined.users[ta.userId]).filter(it => it);
+        this.assignedUsers = ticket.ticketUserRelations.map(ta => joined.users[ta.userId]).filter(it => it);
         this.loading = false;
       });
   }

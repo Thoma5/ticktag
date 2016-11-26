@@ -25,12 +25,24 @@
 
 import * as models from './models';
 
-export interface TicketAssignmentResultJson {
-    assignmentTagId: string;
+export interface PageTicketResultJson {
+    content?: Array<models.TicketResultJson>;
 
-    ticketId: string;
+    first?: boolean;
 
-    userId: string;
+    last?: boolean;
+
+    number?: number;
+
+    numberOfElements?: number;
+
+    size?: number;
+
+    sort?: models.Sort;
+
+    totalElements?: number;
+
+    totalPages?: number;
 
 }
 

@@ -39,7 +39,7 @@ import { Configuration }                                     from '../configurat
 
 
 @Injectable()
-export class LoggedTimeApi {
+export class LoggedtimeApi {
     protected basePath = 'http://localhost:8080/';
     public defaultHeaders: Headers = new Headers();
     public configuration: Configuration = new Configuration();
@@ -87,10 +87,10 @@ export class LoggedTimeApi {
     /**
      * deleteLoggedTime
      * 
-     * @param loggedTimeId loggedTimeId
+     * @param id id
      */
-    public deleteLoggedTimeUsingDELETE(loggedTimeId: string, extraHttpRequestParams?: any): Observable<{}> {
-        return this.deleteLoggedTimeUsingDELETEWithHttpInfo(loggedTimeId, extraHttpRequestParams)
+    public deleteLoggedTimeUsingDELETE(id: string, extraHttpRequestParams?: any): Observable<{}> {
+        return this.deleteLoggedTimeUsingDELETEWithHttpInfo(id, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -119,10 +119,10 @@ export class LoggedTimeApi {
     /**
      * getLoggedTimesForId
      * 
-     * @param loggTimeId loggTimeId
+     * @param id id
      */
-    public getLoggedTimesForIdUsingGET(loggTimeId: string, extraHttpRequestParams?: any): Observable<models.LoggedTimeResultJson> {
-        return this.getLoggedTimesForIdUsingGETWithHttpInfo(loggTimeId, extraHttpRequestParams)
+    public getLoggedTimesForIdUsingGET(id: string, extraHttpRequestParams?: any): Observable<models.LoggedTimeResultJson> {
+        return this.getLoggedTimesForIdUsingGETWithHttpInfo(id, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -154,10 +154,10 @@ export class LoggedTimeApi {
      * updateLoggedTime
      * 
      * @param req req
-     * @param loggedTimeId loggedTimeId
+     * @param id id
      */
-    public updateLoggedTimeUsingPUT(req: models.UpdateLoggedTimeJson, loggedTimeId: string, extraHttpRequestParams?: any): Observable<models.LoggedTimeResultJson> {
-        return this.updateLoggedTimeUsingPUTWithHttpInfo(req, loggedTimeId, extraHttpRequestParams)
+    public updateLoggedTimeUsingPUT(req: models.UpdateLoggedTimeJson, id: string, extraHttpRequestParams?: any): Observable<models.LoggedTimeResultJson> {
+        return this.updateLoggedTimeUsingPUTWithHttpInfo(req, id, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -174,7 +174,7 @@ export class LoggedTimeApi {
      * @param req req
      */
     public createLoggedTimeUsingPOSTWithHttpInfo(req: models.CreateLoggedTimeJson, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/logged_time`;
+        const path = this.basePath + `/loggedtime`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -217,19 +217,19 @@ export class LoggedTimeApi {
     /**
      * deleteLoggedTime
      * 
-     * @param loggedTimeId loggedTimeId
+     * @param id id
      */
-    public deleteLoggedTimeUsingDELETEWithHttpInfo(loggedTimeId: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/logged_time/${loggedTimeId}`;
+    public deleteLoggedTimeUsingDELETEWithHttpInfo(id: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/loggedtime/${id}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'loggedTimeId' is not null or undefined
-        if (loggedTimeId === null || loggedTimeId === undefined) {
-            throw new Error('Required parameter loggedTimeId was null or undefined when calling deleteLoggedTimeUsingDELETE.');
+        // verify required parameter 'id' is not null or undefined
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling deleteLoggedTimeUsingDELETE.');
         }
-        if (loggedTimeId !== undefined) {
-            queryParameters.set('loggedTimeId', <any>loggedTimeId);
+        if (id !== undefined) {
+            queryParameters.set('id', <any>id);
         }
 
 
@@ -267,7 +267,7 @@ export class LoggedTimeApi {
      * @param commentId commentId
      */
     public getLoggedTimesForCommentUsingGETWithHttpInfo(commentId: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/logged_time`;
+        const path = this.basePath + `/loggedtime`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -311,19 +311,19 @@ export class LoggedTimeApi {
     /**
      * getLoggedTimesForId
      * 
-     * @param loggTimeId loggTimeId
+     * @param id id
      */
-    public getLoggedTimesForIdUsingGETWithHttpInfo(loggTimeId: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/logged_time/${loggTimeId}`;
+    public getLoggedTimesForIdUsingGETWithHttpInfo(id: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/loggedtime/${id}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'loggTimeId' is not null or undefined
-        if (loggTimeId === null || loggTimeId === undefined) {
-            throw new Error('Required parameter loggTimeId was null or undefined when calling getLoggedTimesForIdUsingGET.');
+        // verify required parameter 'id' is not null or undefined
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling getLoggedTimesForIdUsingGET.');
         }
-        if (loggTimeId !== undefined) {
-            queryParameters.set('loggTimeId', <any>loggTimeId);
+        if (id !== undefined) {
+            queryParameters.set('id', <any>id);
         }
 
 
@@ -363,7 +363,7 @@ export class LoggedTimeApi {
      * @param categoryId categoryId
      */
     public getLoggedTimesForProjectAndUserAndCategoryUsingGETWithHttpInfo(projectId?: string, userId?: string, categoryId?: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/logged_time/search`;
+        const path = this.basePath + `/loggedtime/search`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -410,10 +410,10 @@ export class LoggedTimeApi {
      * updateLoggedTime
      * 
      * @param req req
-     * @param loggedTimeId loggedTimeId
+     * @param id id
      */
-    public updateLoggedTimeUsingPUTWithHttpInfo(req: models.UpdateLoggedTimeJson, loggedTimeId: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/logged_time/${loggedTimeId}`;
+    public updateLoggedTimeUsingPUTWithHttpInfo(req: models.UpdateLoggedTimeJson, id: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/loggedtime/${id}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -421,12 +421,12 @@ export class LoggedTimeApi {
         if (req === null || req === undefined) {
             throw new Error('Required parameter req was null or undefined when calling updateLoggedTimeUsingPUT.');
         }
-        // verify required parameter 'loggedTimeId' is not null or undefined
-        if (loggedTimeId === null || loggedTimeId === undefined) {
-            throw new Error('Required parameter loggedTimeId was null or undefined when calling updateLoggedTimeUsingPUT.');
+        // verify required parameter 'id' is not null or undefined
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling updateLoggedTimeUsingPUT.');
         }
-        if (loggedTimeId !== undefined) {
-            queryParameters.set('loggedTimeId', <any>loggedTimeId);
+        if (id !== undefined) {
+            queryParameters.set('id', <any>id);
         }
 
 

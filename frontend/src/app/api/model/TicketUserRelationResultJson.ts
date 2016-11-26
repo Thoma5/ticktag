@@ -25,22 +25,12 @@
 
 import * as models from './models';
 
-export interface UpdateTicketRequestJson {
-    title?: string;
+export interface TicketUserRelationResultJson {
+    assignmentTagId: string;
 
-    open?: boolean;
+    ticketId: string;
 
-    storyPoints?: number;
-
-    initialEstimatedTime?: number;
-
-    currentEstimatedTime?: number;
-
-    dueDate?: number;
-
-    description?: string;
-
-    parentTicketId?: string;
+    userId: string;
 
 }
 

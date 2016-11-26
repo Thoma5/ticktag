@@ -3,7 +3,7 @@ package io.ticktag.restinterface.ticketuserrelation.schema
 import io.ticktag.service.ticketassignment.dto.TicketAssignmentResult
 import java.util.*
 
-data class TickerUserRelationResultJson(
+data class TicketUserRelationResultJson(
         val ticketId: UUID,
         val assignmentTagId: UUID,
         val userId: UUID

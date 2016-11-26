@@ -39,7 +39,7 @@ import { Configuration }                                     from '../configurat
 
 
 @Injectable()
-export class TicketassignmentApi {
+export class TickettagrelationApi {
     protected basePath = 'http://localhost:8080/';
     public defaultHeaders: Headers = new Headers();
     public configuration: Configuration = new Configuration();
@@ -69,14 +69,13 @@ export class TicketassignmentApi {
     }
 
     /**
-     * createTicketAssignment
+     * deleteTicketTagRelation
      * 
      * @param ticketId ticketId
-     * @param assignmentTagId assignmentTagId
-     * @param userId userId
+     * @param tagId tagId
      */
-    public createTicketAssignmentUsingPOST(ticketId: string, assignmentTagId: string, userId: string, extraHttpRequestParams?: any): Observable<models.TicketAssignmentResultJson> {
-        return this.createTicketAssignmentUsingPOSTWithHttpInfo(ticketId, assignmentTagId, userId, extraHttpRequestParams)
+    public deleteTicketTagRelationUsingDELETE(ticketId: string, tagId: string, extraHttpRequestParams?: any): Observable<{}> {
+        return this.deleteTicketTagRelationUsingDELETEWithHttpInfo(ticketId, tagId, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -87,14 +86,13 @@ export class TicketassignmentApi {
     }
 
     /**
-     * deleteTicketAssignment
+     * getTicketTagRelation
      * 
      * @param ticketId ticketId
-     * @param assignmentTagId assignmentTagId
-     * @param userId userId
+     * @param tagId tagId
      */
-    public deleteTicketAssignmentUsingDELETE(ticketId: string, assignmentTagId: string, userId: string, extraHttpRequestParams?: any): Observable<{}> {
-        return this.deleteTicketAssignmentUsingDELETEWithHttpInfo(ticketId, assignmentTagId, userId, extraHttpRequestParams)
+    public getTicketTagRelationUsingGET(ticketId: string, tagId: string, extraHttpRequestParams?: any): Observable<models.TicketTagRelationResultJson> {
+        return this.getTicketTagRelationUsingGETWithHttpInfo(ticketId, tagId, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -105,14 +103,13 @@ export class TicketassignmentApi {
     }
 
     /**
-     * getTicketAssignment
+     * setTicketTagRelation
      * 
      * @param ticketId ticketId
-     * @param assignmentTagId assignmentTagId
-     * @param userId userId
+     * @param tagId tagId
      */
-    public getTicketAssignmentUsingGET(ticketId: string, assignmentTagId: string, userId: string, extraHttpRequestParams?: any): Observable<models.TicketAssignmentResultJson> {
-        return this.getTicketAssignmentUsingGETWithHttpInfo(ticketId, assignmentTagId, userId, extraHttpRequestParams)
+    public setTicketTagRelationUsingPUT(ticketId: string, tagId: string, extraHttpRequestParams?: any): Observable<models.TicketTagRelationResultJson> {
+        return this.setTicketTagRelationUsingPUTWithHttpInfo(ticketId, tagId, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -124,82 +121,23 @@ export class TicketassignmentApi {
 
 
     /**
-     * createTicketAssignment
+     * deleteTicketTagRelation
      * 
      * @param ticketId ticketId
-     * @param assignmentTagId assignmentTagId
-     * @param userId userId
+     * @param tagId tagId
      */
-    public createTicketAssignmentUsingPOSTWithHttpInfo(ticketId: string, assignmentTagId: string, userId: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/ticket/${ticketId}/tag/${assignmentTagId}/user/${userId}`;
+    public deleteTicketTagRelationUsingDELETEWithHttpInfo(ticketId: string, tagId: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/ticket/${ticketId}/tickettag/${tagId}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         // verify required parameter 'ticketId' is not null or undefined
         if (ticketId === null || ticketId === undefined) {
-            throw new Error('Required parameter ticketId was null or undefined when calling createTicketAssignmentUsingPOST.');
+            throw new Error('Required parameter ticketId was null or undefined when calling deleteTicketTagRelationUsingDELETE.');
         }
-        // verify required parameter 'assignmentTagId' is not null or undefined
-        if (assignmentTagId === null || assignmentTagId === undefined) {
-            throw new Error('Required parameter assignmentTagId was null or undefined when calling createTicketAssignmentUsingPOST.');
-        }
-        // verify required parameter 'userId' is not null or undefined
-        if (userId === null || userId === undefined) {
-            throw new Error('Required parameter userId was null or undefined when calling createTicketAssignmentUsingPOST.');
-        }
-
-
-        // to determine the Content-Type header
-        let consumes: string[] = [
-            'application/json'
-        ];
-
-        // to determine the Accept header
-        let produces: string[] = [
-            'application/json'
-        ];
-        
-            
-
-
-
-        let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Post,
-            headers: headers,
-            search: queryParameters
-        });
-        
-        // https://github.com/swagger-api/swagger-codegen/issues/4037
-        if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
-        }
-
-        return this.http.request(path, requestOptions);
-    }
-
-    /**
-     * deleteTicketAssignment
-     * 
-     * @param ticketId ticketId
-     * @param assignmentTagId assignmentTagId
-     * @param userId userId
-     */
-    public deleteTicketAssignmentUsingDELETEWithHttpInfo(ticketId: string, assignmentTagId: string, userId: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/ticket/${ticketId}/tag/${assignmentTagId}/user/${userId}`;
-
-        let queryParameters = new URLSearchParams();
-        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'ticketId' is not null or undefined
-        if (ticketId === null || ticketId === undefined) {
-            throw new Error('Required parameter ticketId was null or undefined when calling deleteTicketAssignmentUsingDELETE.');
-        }
-        // verify required parameter 'assignmentTagId' is not null or undefined
-        if (assignmentTagId === null || assignmentTagId === undefined) {
-            throw new Error('Required parameter assignmentTagId was null or undefined when calling deleteTicketAssignmentUsingDELETE.');
-        }
-        // verify required parameter 'userId' is not null or undefined
-        if (userId === null || userId === undefined) {
-            throw new Error('Required parameter userId was null or undefined when calling deleteTicketAssignmentUsingDELETE.');
+        // verify required parameter 'tagId' is not null or undefined
+        if (tagId === null || tagId === undefined) {
+            throw new Error('Required parameter tagId was null or undefined when calling deleteTicketTagRelationUsingDELETE.');
         }
 
 
@@ -232,28 +170,23 @@ export class TicketassignmentApi {
     }
 
     /**
-     * getTicketAssignment
+     * getTicketTagRelation
      * 
      * @param ticketId ticketId
-     * @param assignmentTagId assignmentTagId
-     * @param userId userId
+     * @param tagId tagId
      */
-    public getTicketAssignmentUsingGETWithHttpInfo(ticketId: string, assignmentTagId: string, userId: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/ticket/${ticketId}/tag/${assignmentTagId}/user/${userId}`;
+    public getTicketTagRelationUsingGETWithHttpInfo(ticketId: string, tagId: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/ticket/${ticketId}/tickettag/${tagId}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         // verify required parameter 'ticketId' is not null or undefined
         if (ticketId === null || ticketId === undefined) {
-            throw new Error('Required parameter ticketId was null or undefined when calling getTicketAssignmentUsingGET.');
+            throw new Error('Required parameter ticketId was null or undefined when calling getTicketTagRelationUsingGET.');
         }
-        // verify required parameter 'assignmentTagId' is not null or undefined
-        if (assignmentTagId === null || assignmentTagId === undefined) {
-            throw new Error('Required parameter assignmentTagId was null or undefined when calling getTicketAssignmentUsingGET.');
-        }
-        // verify required parameter 'userId' is not null or undefined
-        if (userId === null || userId === undefined) {
-            throw new Error('Required parameter userId was null or undefined when calling getTicketAssignmentUsingGET.');
+        // verify required parameter 'tagId' is not null or undefined
+        if (tagId === null || tagId === undefined) {
+            throw new Error('Required parameter tagId was null or undefined when calling getTicketTagRelationUsingGET.');
         }
 
 
@@ -273,6 +206,55 @@ export class TicketassignmentApi {
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
+            headers: headers,
+            search: queryParameters
+        });
+        
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * setTicketTagRelation
+     * 
+     * @param ticketId ticketId
+     * @param tagId tagId
+     */
+    public setTicketTagRelationUsingPUTWithHttpInfo(ticketId: string, tagId: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/ticket/${ticketId}/tickettag/${tagId}`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'ticketId' is not null or undefined
+        if (ticketId === null || ticketId === undefined) {
+            throw new Error('Required parameter ticketId was null or undefined when calling setTicketTagRelationUsingPUT.');
+        }
+        // verify required parameter 'tagId' is not null or undefined
+        if (tagId === null || tagId === undefined) {
+            throw new Error('Required parameter tagId was null or undefined when calling setTicketTagRelationUsingPUT.');
+        }
+
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json'
+        ];
+        
+            
+
+
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Put,
             headers: headers,
             search: queryParameters
         });
