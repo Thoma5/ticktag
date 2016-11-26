@@ -6,9 +6,9 @@ val ADMIN_ID: UUID = UUID.fromString("00000000-0001-0000-0000-000000000101")
 val OBSERVER_ID: UUID = UUID.fromString("00000000-0001-0000-0000-000000000102")
 val USER_ID: UUID = UUID.fromString("00000000-0001-0000-0000-000000000103")
 
-val ADMIN_PWD: String = "aaaa"
-val OBSERVER_PWD: String = "bbbb"
-val USER_PWD: String = "cccc"
+val ADMIN_PASSWORD: String = "aaaa"
+val OBSERVER_PASSWORD: String = "bbbb"
+val USER_PASSWORD: String = "cccc"
 
 //AOU_AUO is Admin has Admin ProjectRole, Observer has User ProjectRole, USER has Observer Projectrole
 val PROJECT_AOU_AUO_ID: UUID = UUID.fromString("00000000-0002-0000-0000-000000000101")

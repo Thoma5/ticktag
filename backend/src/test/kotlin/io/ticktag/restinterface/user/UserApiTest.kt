@@ -2,7 +2,7 @@ package io.ticktag.restinterface.user
 
 import io.ticktag.ADMIN_ID
 import io.ticktag.OBSERVER_ID
-import io.ticktag.OBSERVER_PWD
+import io.ticktag.OBSERVER_PASSWORD
 import io.ticktag.USER_ID
 import io.ticktag.persistence.user.entity.Role
 import io.ticktag.restinterface.ApiBaseTest
@@ -92,7 +92,7 @@ class UserApiTest : ApiBaseTest() {
         val newPassword = "password"
 
         withUser(id) { principal ->
-            userController.updateUser(id, UpdateUserRequestJson(oldPassword = OBSERVER_PWD, password = newPassword, mail = mail, role = null, profilePic = null, name = name), principal)
+            userController.updateUser(id, UpdateUserRequestJson(oldPassword = OBSERVER_PASSWORD, password = newPassword, mail = mail, role = null, profilePic = null, name = name), principal)
 
             val user = userController.getUser(id)
 
