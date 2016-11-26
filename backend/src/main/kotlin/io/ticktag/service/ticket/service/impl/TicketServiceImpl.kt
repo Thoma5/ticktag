@@ -15,6 +15,8 @@ import io.ticktag.service.ticket.dto.UpdateTicket
 import io.ticktag.service.ticket.service.TicketService
 import io.ticktag.service.ticketassignment.dto.TicketAssignmentResult
 import io.ticktag.service.ticketassignment.services.TicketAssignmentService
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
@@ -39,8 +41,10 @@ open class TicketServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
-    override fun listTickets(@P("authProjectId") project: UUID): List<TicketResult> {
-        return tickets.findByProjectId(project).map { toResultDto(it) }
+    override fun listTickets(@P("authProjectId") project: UUID, pageable: Pageable): Page<TicketResult> {
+        val page = tickets.findByProjectId(project, pageable)
+        val content = page.content.map { toResultDto(it) }
+        return PageImpl(content, pageable, page.totalElements)
     }
 
     @PreAuthorize(AuthExpr.READ_TICKET)

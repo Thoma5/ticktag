@@ -12,8 +12,7 @@ import io.ticktag.service.NotFoundException
 import io.ticktag.service.TicktagValidationException
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.hasItem
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertThat
+import org.junit.Assert.*
 import org.junit.Test
 import org.springframework.security.access.AccessDeniedException
 import java.time.Duration
@@ -68,7 +67,7 @@ class TicketApiTest : ApiBaseTest() {
             assertThat(result.dueDate, `is`(now))
             assertThat(result.description, `is`("description"))
             assertThat(result.projectId, `is`(UUID.fromString("00000000-0002-0000-0000-000000000001")))
-            assertThat(result.tickerUserRelations!!.size, `is`(2))
+            assertThat(result.tickerUserRelations.size, `is`(2))
 
         }
     }
@@ -76,7 +75,8 @@ class TicketApiTest : ApiBaseTest() {
     @Test
     fun `listTicket positiv`() {
         withUser(ADMIN_ID) { principal ->
-            ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"))
+            val list = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), 0, 2, listOf(TicketSort.TITLE_ASC))
+            assertEquals(list.size, 2)
         }
     }
 
@@ -176,7 +176,7 @@ class TicketApiTest : ApiBaseTest() {
     @Test(expected = AccessDeniedException::class)
     fun `listTicket Permission negativ`() {
         withUser(USER_ID) { principal ->
-            ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000004"))
+            ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000004"), 0, 2, listOf(TicketSort.STORY_POINTS_ASC))
         }
     }
 
@@ -188,6 +188,90 @@ class TicketApiTest : ApiBaseTest() {
         }
     }
 
+    @Test
+    fun `listTicket test page number positiv`() {
+        withUser(ADMIN_ID) { principal ->
+            val list1 = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), 0, 2, listOf(TicketSort.TITLE_ASC))
+            val list2 = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), 1, 2, listOf(TicketSort.TITLE_ASC))
+
+            assertEquals(list1.contains(list2.elementAt(0)), false)
+            assertEquals(list1.contains(list2.elementAt(1)), false)
+        }
+    }
+
+
+    @Test
+    fun `listTicket test sorting Number positiv`() {
+        withUser(ADMIN_ID) { principal ->
+            val list1 = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), 0, 50, listOf(TicketSort.NUMBER_ASC))
+            if (list1.content.size <= 2) {
+                fail()
+            }
+            var i = 1
+            while (i < list1.content.size) {
+                assertNotEquals(list1.content[i].number.compareTo(list1.content.get(i - 1).number), -1)
+                i++
+            }
+
+        }
+    }
+
+    @Test
+    fun `listTicket test sorting dueDate positiv`() {
+        withUser(ADMIN_ID) { principal ->
+            val list1 = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), 0, 50, listOf(TicketSort.DUE_DATE_ASC))
+            if (list1.content.size <= 2) {
+                fail()
+            }
+            var i = 1
+            while (i < list1.content.size) {
+                val dueDate2 = list1.content[i].dueDate
+                val dueDate1 = list1.content[i - 1].dueDate
+                if (dueDate1 != null && dueDate2 != null) {
+                    assertNotEquals(dueDate2.compareTo(dueDate1), -1)
+                }
+                i++
+            }
+
+        }
+    }
+
+
+    @Test
+    fun `listTicket test sorting title positiv`() {
+        withUser(ADMIN_ID) { principal ->
+            val list1 = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), 0, 50, listOf(TicketSort.TITLE_ASC))
+            if (list1.content.size <= 2) {
+                fail()
+            }
+            var i = 1
+            while (i < list1.content.size) {
+                assertNotEquals(list1.content.get(i).title.compareTo(list1.content.get(i - 1).title), -1)
+                i++
+            }
+
+        }
+    }
+
+    @Test
+    fun `listTicket test sorting storypoints positiv`() {
+        withUser(ADMIN_ID) { principal ->
+            val list1 = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), 0, 50, listOf(TicketSort.STORY_POINTS_ASC))
+            if (list1.content.size <= 2) {
+                fail()
+            }
+            var i = 1
+            while (i < list1.content.size) {
+                val storyPoints2 = list1.content.get(i).storyPoints
+                val storyPoints1 = list1.content.get(i - 1).storyPoints
+                if (storyPoints1 != null && storyPoints2 != null) {
+                    assertNotEquals(storyPoints2.compareTo(storyPoints1), -1)
+                }
+                i++
+            }
+
+        }
+    }
     @Test
     fun `listTicketsFuzzy should find some tickets`() {
         withUser(ADMIN_ID) { ->
