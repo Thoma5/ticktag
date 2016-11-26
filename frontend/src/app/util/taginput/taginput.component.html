@@ -10,5 +10,5 @@
 </div>
 
 <div *ngIf="editing" class="add-form">
-    <input type="text" [(ngModel)]="newTagName" (keydown.enter)="onAdd()" (blur)="onHideAdd()" ttFocus ttSelectAll>
+    <input type="text" ttFocus ttSelectAll>
 </div>

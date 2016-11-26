@@ -1,7 +1,9 @@
 import {
-  Component, Input, OnChanges, Output, EventEmitter, SimpleChanges
+  Component, Input, OnChanges, Output, EventEmitter, SimpleChanges, ElementRef
 } from '@angular/core';
 import * as imm from 'immutable';
+
+const Awesomplete = require('awesomplete/awesomplete');
 
 export interface Tag {
   id: string;
@@ -33,8 +35,11 @@ export class TaginputComponent implements OnChanges {
   @Output() readonly tagRemove = new EventEmitter<string>();
   private sortedTags: imm.List<{ tag: Tag, transient: boolean }>;
 
-  private newTagName = '';
   private editing = false;
+  private lastEditedText = '';
+
+  constructor(private elementRef: ElementRef) {
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if ('tags' in changes || 'allTags' in changes) {
@@ -56,14 +61,38 @@ export class TaginputComponent implements OnChanges {
 
   onShowAdd() {
     this.editing = true;
+    window.setTimeout(() => {
+      let input: HTMLInputElement = this.elementRef.nativeElement.querySelector('.add-form input');
+      let result = new Awesomplete(input, {
+        list: this.allTags.map(tag => tag.normalizedName).toArray(),
+        minChars: 0,
+        autoFirst: true,
+      });
+      input = result.input;
+      input.value = this.lastEditedText;
+      input.select();
+      input.addEventListener('keydown', (ev: KeyboardEvent) => {
+        if (ev.key === 'Enter') {
+          this.onAdd(input.value);
+          input.value = '';
+        }
+      });
+      input.addEventListener('blur', () => {
+        this.editing = false;
+      });
+      input.addEventListener('input', () => {
+        this.lastEditedText = input.value;
+      });
+      result.open();
+    });
   }
 
   onHideAdd() {
     this.editing = false;
   }
 
-  onAdd() {
-    let tag = this.allTags.find(t => t.normalizedName.toLowerCase() === this.newTagName.toLowerCase());
+  onAdd(newTagName: string) {
+    let tag = this.allTags.find(t => t.normalizedName.toLowerCase() === newTagName.toLowerCase());
     if (tag) {
       let alreadyAdded = this.tags.findIndex(t => typeof t === 'string' ? t === tag.id : t.id === tag.id);
       if (alreadyAdded < 0) {
@@ -71,6 +100,5 @@ export class TaginputComponent implements OnChanges {
         this.tagAdd.emit(tag.id);
       }
     }
-    this.newTagName = '';
   }
 }
