@@ -7,7 +7,7 @@ import {
   AssignmentTagResultJson, CommentResultJson, TicketTagResultJson,
   TickettagApi, TimeCategoryJson, TimecategoryApi,
   GetApi, GetResultJson, UpdateTicketRequestJson,
-  TicketuserrelationApi,
+  TicketuserrelationApi, TickettagrelationApi
 } from '../../api';
 import { Observable } from 'rxjs';
 import {
@@ -36,6 +36,7 @@ export class TicketDetailComponent implements OnInit {
   // Internal state
   private currentTicketJson: TicketResultJson;  // Only use to recreate the ticket
   private transientUsers = imm.List<TicketDetailTransientUser>();
+  private transientTags = imm.Set<string>();
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(
@@ -48,7 +49,8 @@ export class TicketDetailComponent implements OnInit {
     private ticketTagsApi: TickettagApi,
     private timeCategoryApi: TimecategoryApi,
     private getApi: GetApi,
-    private ticketAssignmentApi: TicketuserrelationApi) {
+    private ticketAssignmentApi: TicketuserrelationApi,
+    private ticketTagRelationApi: TickettagrelationApi) {
   }
 
   ngOnInit(): void {
@@ -74,13 +76,42 @@ export class TicketDetailComponent implements OnInit {
     this.updateTicket({ storyPoints: val });
   }
 
-  onTagAdd(val: string): void {
-    // TODO endpoint missing...
-    console.log('TODO add tag');
+  onTagAdd(tagId: string): void {
+    this.transientTags = this.transientTags.add(tagId);
+    this.newTicketDetail();
+    let obs = this.apiCallService
+      .call<void>(p => this.ticketTagRelationApi.setTicketTagRelationUsingPUTWithHttpInfo(this.ticketDetail.id, tagId, p))
+      .flatMap(result => this
+        .refresh(this.ticketDetail.projectId, this.ticketDetail.id)
+        .map(() => result));
+    this.queue.push(obs).subscribe(result => {
+      this.transientTags = this.transientTags.remove(tagId);
+      this.newTicketDetail();
+      if (!result.isValid) {
+        // TODO nice message
+        console.dir(result);
+        window.alert('😥');
+      }
+    });
   }
 
-  onTagRemove(val: string): void {
-    console.log('TODO remove tag');
+  onTagRemove(tagId: string): void {
+    this.transientTags = this.transientTags.add(tagId);
+    this.newTicketDetail();
+    let obs = this.apiCallService
+      .call<void>(p => this.ticketTagRelationApi.deleteTicketTagRelationUsingDELETEWithHttpInfo(this.ticketDetail.id, tagId, p))
+      .flatMap(result => this
+        .refresh(this.ticketDetail.projectId, this.ticketDetail.id)
+        .map(() => result));
+    this.queue.push(obs).subscribe(result => {
+      this.transientTags = this.transientTags.remove(tagId);
+      this.newTicketDetail();
+      if (!result.isValid) {
+        // TODO nice message
+        console.dir(result);
+        window.alert('😥');
+      }
+    });
   }
 
   onAssignmentAdd(ass: {user: string, tag: string}) {
@@ -199,7 +230,8 @@ export class TicketDetailComponent implements OnInit {
       this.interestingUsers,
       this.allTicketTags,
       this.allAssignmentTags,
-      this.transientUsers);
+      this.transientUsers,
+      this.transientTags);
   }
 
   private refresh(projectId: string, ticketId: string): Observable<void> {

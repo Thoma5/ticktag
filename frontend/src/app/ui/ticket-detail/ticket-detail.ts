@@ -17,6 +17,18 @@ export class TicketDetailAssignment {
 }
 Object.freeze(TicketDetailAssignment.prototype);
 
+export class TicketDetailTransient<T> {
+  value: T;
+  transient: boolean;
+
+  constructor(value: T, transient: boolean) {
+    this.value = value;
+    this.transient = transient;
+    Object.freeze(this);
+  }
+}
+Object.freeze(TicketDetailTransient.prototype);
+
 export class TicketDetailTransientUser {
   readonly user: TicketDetailUser;
   readonly tags: imm.Set<string>;  // This does not need to be a rich object, because all tags are known.
@@ -123,7 +135,7 @@ export class TicketDetail {
   readonly number: number;
   readonly open: boolean;
   readonly storyPoints: number|undefined;
-  readonly tags: imm.List<TicketDetailTag>;
+  readonly tags: imm.List<TicketDetailTransient<TicketDetailTag>>;
   readonly title: string;
   readonly users: imm.Map<TicketDetailUser, imm.List<TicketDetailAssignment>>;
   readonly projectId: string;
@@ -134,7 +146,8 @@ export class TicketDetail {
       users: imm.Map<string, TicketDetailUser>,
       ticketTags: imm.Map<string, TicketDetailTag>,
       assignmentTags: imm.Map<string, TicketDetailAssTag>,
-      transientUsers: imm.List<TicketDetailTransientUser>) {
+      transientUsers: imm.List<TicketDetailTransientUser>,
+      transientTags: imm.Set<string>) {
     this.comments = imm.List(ticket.commentIds)
       .map(cid => comments.get(cid))
       .filter(it => !!it)
@@ -150,9 +163,23 @@ export class TicketDetail {
     this.open = ticket.open;
     this.storyPoints = ticket.storyPoints;
     this.tags = imm.List(ticket.tagIds)
-      .map(tid => ticketTags.get(tid))
-      .filter(it => !!it)
-      .toList();
+      .map(tid => new TicketDetailTransient(ticketTags.get(tid), false))
+      .filter(it => !!it.value)
+      .toList()
+      .withMutations(tags => {
+        transientTags.forEach(transientTag => {
+          let i = tags.findIndex(tag => tag.value.id === transientTag);
+          if (i >= 0) {
+            let old = tags.get(i);
+            tags.set(i, new TicketDetailTransient(old.value, true));
+          } else {
+            let tag = ticketTags.get(transientTag);
+            if (tag) {
+              tags.push(new TicketDetailTransient(tag, true));
+            }
+          }
+        });
+      });
     this.title = ticket.title;
     this.users = imm.List(ticket.ticketUserRelations)
       .map(as => ({ user: users.get(as.userId), tag: assignmentTags.get(as.assignmentTagId) }))
