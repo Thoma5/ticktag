@@ -14,21 +14,21 @@ import javax.inject.Inject
 open class TicketTagRelationController @Inject constructor(
         private val ticketTagRelationService: TicketTagRelationService
 ) {
-    @GetMapping(value = "{ticketId}/tag/{tagId}")
+    @GetMapping(value = "{ticketId}/tickettag/{tagId}")
     open fun getTicketTagRelation(
             @PathVariable ticketId: UUID,
             @PathVariable tagId: UUID): TicketTagRelationResultJson {
         return TicketTagRelationResultJson(ticketTagRelationService.getTicketTagRelation(ticketId, tagId))
     }
 
-    @PutMapping(value = "{ticketId}/tag/{tagId}")
+    @PutMapping(value = "{ticketId}/tickettag/{tagId}")
     open fun setTicketTagRelation(
             @PathVariable ticketId: UUID,
             @PathVariable tagId: UUID): TicketTagRelationResultJson {
         return TicketTagRelationResultJson(ticketTagRelationService.createOrGetIfExistsTicketTagRelation(ticketId, tagId))
     }
 
-    @DeleteMapping(value = "{ticketId}/tag/{tagId}")
+    @DeleteMapping(value = "{ticketId}/tickettag/{tagId}")
     open fun deleteTicketTagRelation(
             @PathVariable ticketId: UUID,
             @PathVariable tagId: UUID) {

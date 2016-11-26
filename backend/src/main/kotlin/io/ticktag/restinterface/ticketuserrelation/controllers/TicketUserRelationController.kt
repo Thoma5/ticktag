@@ -14,7 +14,7 @@ import javax.inject.Inject
 open class TicketUserRelationController @Inject constructor(
         private val ticketAssignmentService: TicketAssignmentService
 ) {
-    @GetMapping(value = "{ticketId}/tag/{assignmentTagId}/user/{userId}")
+    @GetMapping(value = "{ticketId}/assignmenttag/{assignmentTagId}/user/{userId}")
     open fun getTicketAssignment(
             @PathVariable ticketId: UUID,
             @PathVariable assignmentTagId: UUID,
@@ -23,7 +23,7 @@ open class TicketUserRelationController @Inject constructor(
         return TickerUserRelationResultJson(ticketAssignment)
     }
 
-    @PostMapping(value = "{ticketId}/tag/{assignmentTagId}/user/{userId}")
+    @PostMapping(value = "{ticketId}/assignmenttag/{assignmentTagId}/user/{userId}")
     open fun createTicketAssignment(
             @PathVariable ticketId: UUID,
             @PathVariable assignmentTagId: UUID,
@@ -32,7 +32,7 @@ open class TicketUserRelationController @Inject constructor(
         return TickerUserRelationResultJson(ticketAssignment)
     }
 
-    @DeleteMapping(value = "{ticketId}/tag/{assignmentTagId}/user/{userId}")
+    @DeleteMapping(value = "{ticketId}/assignmenttag/{assignmentTagId}/user/{userId}")
     open fun deleteTicketAssignment(
             @PathVariable ticketId: UUID,
             @PathVariable assignmentTagId: UUID,
