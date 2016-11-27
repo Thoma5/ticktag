@@ -40,14 +40,13 @@ export class CommentTextviewComponent implements AfterViewInit, OnChanges, OnDes
     @Input() allAssignmentTags: imm.Map<string, TicketDetailAssTag>;
     @Input() working = false;
 
-    @Output() readonly save = new EventEmitter<CommentTextviewSaveEvent>();
+    @Output() readonly contentChange = new EventEmitter<CommentTextviewSaveEvent>();
 
     private content = '';
     private instance: any = null;
     private commands = imm.List<grammar.Cmd>();
 
     private refreshTimeout: number = null;
-    private wantEmitSave: boolean = false;
 
     constructor(
         private element: ElementRef,
@@ -70,12 +69,11 @@ export class CommentTextviewComponent implements AfterViewInit, OnChanges, OnDes
             if (this.refreshTimeout === null) {
                 this.refreshTimeout = window.setTimeout(() => {
                     this.refreshTimeout = null;
-                    this.updateCommands();
-                    this.showHints();
-                    this.emitSave();
+                    this.processChanges();
                 }, 100);
             }
         });
+        this.processChanges();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -90,23 +88,17 @@ export class CommentTextviewComponent implements AfterViewInit, OnChanges, OnDes
         this.instance.toTextArea();
     }
 
-    onSubmitClick(): void {
-        this.wantEmitSave = true;
-        // Do not directly emit the event if a refresh is still pending. In this
-        // case the event will be emittet after the next refresh.
-        if (this.refreshTimeout === null) {
-            this.emitSave();
-        }
+    private processChanges(): void {
+      this.updateCommands();
+      this.showHints();
+      this.emitChange();
     }
 
-    private emitSave(): void {
-        if (this.wantEmitSave) {
-            this.wantEmitSave = false;
-            this.save.emit({
-                commands: this.commands,
-                text: this.content,
-            });
-        }
+    private emitChange(): void {
+      this.contentChange.emit({
+          commands: this.commands,
+          text: this.content,
+      });
     }
 
     private updateCommands() {

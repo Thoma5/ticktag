@@ -5,7 +5,10 @@
         [allTicketTags]="allTicketTags"
         [allTimeCategories]="allTimeCategories"
         [allAssignmentTags]="allAssignmentTags"
-        (save)="commentCreate.emit($event)"
+        (contentChange)="this.content = $event"
     >
     </tt-comment-textview>
+    <div class="buttons">
+      <input type='button' class='btn btn-primary button-submit' value='Submit' (click)="onSubmit()">
+    </div>
 </div>
