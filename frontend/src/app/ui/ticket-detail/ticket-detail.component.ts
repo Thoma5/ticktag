@@ -17,8 +17,8 @@ import {
 } from './ticket-detail';
 import { idListToMap } from '../../util/listmaputils';
 import * as imm from 'immutable';
-import { CommentTextviewSaveEvent } from './comment-textview/comment-textview.component';
-import { RefTicketCmd } from './comment-textview/grammar';
+import { CommentTextviewSaveEvent } from './command-textview/command-textview.component';
+import { RefTicketCmd } from './command-textview/grammar';
 
 @Component({
   selector: 'tt-ticket-detail',

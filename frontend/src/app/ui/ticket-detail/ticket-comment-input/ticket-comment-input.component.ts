@@ -3,7 +3,7 @@ import {
   TicketDetail, TicketDetailTag, TicketDetailAssTag, TicketDetailTimeCategory
 } from '../ticket-detail';
 import * as imm from 'immutable';
-import { CommentTextviewSaveEvent } from '../comment-textview/comment-textview.component';
+import { CommentTextviewSaveEvent } from '../command-textview/command-textview.component';
 
 @Component({
   selector: 'tt-ticket-comment-input',

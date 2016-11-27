@@ -28,11 +28,11 @@ export type CommentTextviewSaveEvent = {
 }
 
 @Component({
-    selector: 'tt-comment-textview',
-    templateUrl: './comment-textview.component.html',
-    styleUrls: ['./comment-textview.component.scss']
+    selector: 'tt-command-textview',
+    templateUrl: './command-textview.component.html',
+    styleUrls: ['./command-textview.component.scss']
 })
-export class CommentTextviewComponent implements AfterViewInit, OnChanges, OnDestroy {
+export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDestroy {
     @Input() initialContent: string;
     @Input() ticket: TicketDetail;
     @Input() allTicketTags: imm.Map<string, TicketDetailTag>;

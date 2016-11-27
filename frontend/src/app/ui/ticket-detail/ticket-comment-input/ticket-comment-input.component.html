@@ -1,5 +1,5 @@
 <div class='comment-input'>
-    <tt-comment-textview
+    <tt-command-textview
         [initialContent]="''"
         [ticket]="ticket"
         [allTicketTags]="allTicketTags"
@@ -7,7 +7,7 @@
         [allAssignmentTags]="allAssignmentTags"
         (contentChange)="this.content = $event"
     >
-    </tt-comment-textview>
+    </tt-command-textview>
     <div class="buttons">
       <input type='button' class='btn btn-primary button-submit' value='Submit' (click)="onSubmit()">
     </div>

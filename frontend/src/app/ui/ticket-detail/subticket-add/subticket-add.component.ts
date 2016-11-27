@@ -10,7 +10,6 @@ import * as imm from 'immutable';
   styleUrls: ['./subticket-add.component.scss']
 })
 export class SubticketAddComponent {
-  // TODO
   @Input() parentTicket: TicketDetail;
   @Input() allTicketTags: imm.Map<string, TicketDetailTag>;
   @Input() allTimeCategories: imm.Map<string, TicketDetailTimeCategory>;
