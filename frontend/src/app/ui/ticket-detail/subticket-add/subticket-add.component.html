@@ -1,5 +1,5 @@
 <div class='wrapper'>
-  <a *ngIf='!editing' href='javascript:void(0)' (click)='startEditing()' class='header'>Add</a>
+  <a *ngIf='!editing' href='javascript:void(0)' (click)='startEditing()' class='header'>Add Subticket</a>
   <div class='input' *ngIf='editing'>
     <div class='title-input'>
       <input ttFocus type='text' [(ngModel)]='title' placeholder='Title'>
@@ -20,6 +20,7 @@
     </div>
     <div class="buttons">
       <input type='button' class='btn btn-primary button-submit' value='Add' (click)="onSubmit()">
+      <a href='javascript:void(0)' class='button-abort' value='Abort' (click)="onAbort()">Abort</a>
     </div>
   </div>
 </div>

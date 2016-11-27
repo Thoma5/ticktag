@@ -1,5 +1,6 @@
 package io.ticktag.restinterface.ticket.schema
 
+import io.ticktag.restinterface.comment.schema.CommandJson
 import io.ticktag.restinterface.ticketuserrelation.schema.CreateTicketUserRelationRequestJson
 import java.time.Duration
 import java.time.Instant
@@ -17,5 +18,6 @@ data class CreateTicketRequestJson(
         val ticketAssignments: List<CreateTicketUserRelationRequestJson>,
         val subTickets: List<CreateTicketRequestJson>,
         val existingSubTicketIds: List<UUID>,
-        val parentTicketId: UUID?
+        val parentTicketId: UUID?,
+        val commands: List<CommandJson>
 )

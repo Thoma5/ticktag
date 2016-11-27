@@ -36,8 +36,6 @@ export const EXPR_REGEX = r(String.raw`${SEPERATOR_FRONT_REGEX}(${COMMAND_REGEX}
 
 export const COMMAND_STRINGS = ['time', 'assign', '-assign', 'close', 'reopen', 'tag', '-tag', 'est'];
 
-console.log('EXPR_REGEX = ' + EXPR_REGEX);
-
 // TypeScript discriminated union over the `cmd` field.
 export type TimeCmd = {
   cmd: 'time',

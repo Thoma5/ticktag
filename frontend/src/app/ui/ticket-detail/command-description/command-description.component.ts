@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import * as imm from 'immutable';
-import { Cmd } from '../command-textview/grammar';
+import { Cmd } from '../../../service/command/grammar';
 
 @Component({
   selector: 'tt-command-description',

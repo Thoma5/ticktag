@@ -4,7 +4,7 @@ import {
 } from '../ticket-detail';
 import * as imm from 'immutable';
 import { CommentTextviewSaveEvent } from '../command-textview/command-textview.component';
-import { Cmd } from '../command-textview/grammar';
+import * as grammar from '../../../service/command/grammar';
 
 @Component({
   selector: 'tt-ticket-comment-input',
@@ -19,7 +19,7 @@ export class TicketCommentInputComponent {
 
   @Output() commentCreate = new EventEmitter<CommentTextviewSaveEvent>();
 
-  content: CommentTextviewSaveEvent = { commands: imm.List<Cmd>(), text: '' };
+  content: CommentTextviewSaveEvent = { commands: imm.List<grammar.Cmd>(), text: '' };
 
   onSubmit(): void {
     if (this.content != null) {

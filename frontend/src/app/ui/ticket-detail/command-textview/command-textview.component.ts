@@ -5,7 +5,7 @@ import {
 import { UserResultJson, UserApi, TicketApi, TicketResultJson } from '../../../api';
 import { ApiCallService } from '../../../service';
 import { using } from '../../../util/using';
-import * as grammar from './grammar';
+import * as grammar from '../../../service/command/grammar';
 import * as imm from 'immutable';
 import {
     TicketDetailAssTag, TicketDetailTimeCategory, TicketDetailTag,

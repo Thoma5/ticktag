@@ -9,6 +9,7 @@ import io.ticktag.persistence.ticket.entity.Ticket
 import io.ticktag.persistence.ticket.entity.TicketTag
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.*
+import io.ticktag.service.command.service.CommandService
 import io.ticktag.service.ticket.dto.CreateTicket
 import io.ticktag.service.ticket.dto.TicketResult
 import io.ticktag.service.ticket.dto.UpdateTicket
@@ -31,8 +32,8 @@ open class TicketServiceImpl @Inject constructor(
         private val projects: ProjectRepository,
         private val users: UserRepository,
         private val comments: CommentRepository,
-        private val ticketAssignmentService: TicketAssignmentService
-
+        private val ticketAssignmentService: TicketAssignmentService,
+        private val commandService: CommandService
 ) : TicketService {
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listTicketsFuzzy(@P("authProjectId") project: UUID, query: String, pageable: Pageable): List<TicketResult> {
@@ -132,6 +133,9 @@ open class TicketServiceImpl @Inject constructor(
             val subTicket = tickets.findOne(subID) ?: throw NotFoundException()
             subTicket.parentTicket = newTicket
         }
+
+        // Execute commands
+        commandService.applyCommands(newComment, createTicket.commands, principal)
 
         // Neither EM nor UPDATECASCADE can reload the ticket
         val ticketResult = toResultDto(newTicket)

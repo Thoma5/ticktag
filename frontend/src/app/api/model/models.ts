@@ -1,6 +1,6 @@
 /* tslint:disable */
 export * from './AssignmentTagResultJson';
-export * from './CommentCommandJson';
+export * from './CommandJson';
 export * from './CommentResultJson';
 export * from './CountJson';
 export * from './CreateAssignmentTagRequestJson';

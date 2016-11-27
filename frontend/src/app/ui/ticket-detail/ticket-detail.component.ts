@@ -18,7 +18,6 @@ import {
 import { idListToMap } from '../../util/listmaputils';
 import * as imm from 'immutable';
 import { CommentTextviewSaveEvent } from './command-textview/command-textview.component';
-import { RefTicketCmd } from './command-textview/grammar';
 
 @Component({
   selector: 'tt-ticket-detail',
@@ -179,8 +178,7 @@ export class TicketDetailComponent implements OnInit {
       .call<void>(p => this.commentsApi.createCommentUsingPOSTWithHttpInfo({
         text: event.text,
         ticketId: this.ticketDetail.id,
-        commands: event.commands.filterNot(cmd => cmd.cmd === 'refTicket').toArray(),
-        mentionedTicketNumbers: event.commands.filter(cmd => cmd.cmd === 'refTicket').map(cmd => (<RefTicketCmd>cmd).ticket).toArray(),
+        commands: event.commands.toArray(),
       }, p))
       .flatMap(result => this
         .refresh(this.ticketDetail.projectId, this.ticketDetail.id)
