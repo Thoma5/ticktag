@@ -43,6 +43,7 @@ import {
 import { AssignedUserComponent } from './ui/ticket-detail/assigned-user/assigned-user.component';
 import { SubticketsComponent } from './ui/ticket-detail/subtickets/subtickets.component';
 import { SubticketComponent } from './ui/ticket-detail/subticket/subticket.component';
+import { SubticketAddComponent } from './ui/ticket-detail/subticket-add/subticket-add.component';
 import { Ng2BootstrapModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { Angular2DataTableModule } from 'angular2-data-table';
 import { MaterialModule } from '@angular/material';
@@ -95,6 +96,7 @@ import { CommentTextviewComponent } from './ui/ticket-detail/comment-textview/co
     AssignedUserComponent,
     SubticketsComponent,
     SubticketComponent,
+    SubticketAddComponent,
     TaginputComponent,
     TicketCommentsComponent,
     TicketCommentComponent,

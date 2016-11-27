@@ -1,0 +1,13 @@
+<div class='title-input'>
+  <input type='text' [(ngModel)]='title' (focus)='startEditing()'>
+</div>
+<div class='description-input' *ngIf='editing'>
+    <tt-comment-textview
+        [initialContent]="'Description'"
+        [ticket]="parentTicket"
+        [allTicketTags]="allTicketTags"
+        [allTimeCategories]="allTimeCategories"
+        [allAssignmentTags]="allAssignmentTags"
+    >
+    </tt-comment-textview>
+</div>

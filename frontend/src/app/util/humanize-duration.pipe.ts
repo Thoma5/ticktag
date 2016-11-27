@@ -24,7 +24,7 @@ moment.locale('precise-short-en', {
 @Pipe({ name: 'ttHumanizeDuration' })
 export class HumanizeDurationPipe implements PipeTransform {
   transform(value: number): string {
-    moment.lang('precise-short-en');
+    moment.locale('precise-short-en');
     return moment.duration(value, 'ms').humanize();
   }
 }
