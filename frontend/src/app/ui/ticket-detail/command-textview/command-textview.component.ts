@@ -61,12 +61,17 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
 
     ngAfterViewInit(): void {
         let ta: HTMLTextAreaElement = this.element.nativeElement.querySelector('textarea');
-        ta.value = this.initialContent || '';
-        this.content = this.initialContent || '';
+        ta.value = '';
+        this.content = '';
         this.instance = codemirror.fromTextArea(ta, {
             mode: 'text',
             lineWrapping: true,
             autofocus: false,
+            extraKeys: {
+              Tab: false,
+              'Shift-Tab': false,
+              'Ctrl-Enter': () => this.save.emit(),
+            },
         });
         this.instance.on('changes', () => {
             this.content = this.instance.getValue();
@@ -80,9 +85,6 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (this.instance && 'initialContent' in changes) {
-            this.instance.setValue(changes['initialContent']);
-        }
     }
 
     ngOnDestroy(): void {

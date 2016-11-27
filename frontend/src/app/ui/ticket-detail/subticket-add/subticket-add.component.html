@@ -1,17 +1,25 @@
-<div class='title-input'>
-  <input type='text' [(ngModel)]='title' (focus)='startEditing()'>
-</div>
-<div class='description-input' *ngIf='editing'>
-    <tt-command-textview
-        [initialContent]="'Description'"
-        [projectId]="parentTicket.projectId"
-        [activeTags]="activeTags"
-        [assignedUsers]="assignedUsers"
-        [allTicketTags]="allTicketTags"
-        [allTimeCategories]="allTimeCategories"
-        [allAssignmentTags]="allAssignmentTags"
-        (contentChange)="this.content = $event"
-        (save)="onSubmit()"
-    >
-    </tt-command-textview>
+<div class='wrapper'>
+  <a *ngIf='!editing' href='javascript:void(0)' (click)='startEditing()' class='header'>Add</a>
+  <div class='input' *ngIf='editing'>
+    <div class='title-input'>
+      <input ttFocus type='text' [(ngModel)]='title' placeholder='Title'>
+    </div>
+    <div class='description-input'>
+        <tt-command-textview
+            [initialContent]="'Description text...'"
+            [projectId]="parentTicket.projectId"
+            [activeTags]="activeTags"
+            [assignedUsers]="assignedUsers"
+            [allTicketTags]="allTicketTags"
+            [allTimeCategories]="allTimeCategories"
+            [allAssignmentTags]="allAssignmentTags"
+            (contentChange)="this.content = $event"
+            (save)="onSubmit()"
+        >
+        </tt-command-textview>
+    </div>
+    <div class="buttons">
+      <input type='button' class='btn btn-primary button-submit' value='Add' (click)="onSubmit()">
+    </div>
+  </div>
 </div>

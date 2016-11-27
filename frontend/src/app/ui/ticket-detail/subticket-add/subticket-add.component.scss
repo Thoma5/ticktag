@@ -1,9 +1,28 @@
 @import '../../../../style/constants.scss';
 
+.header {
+  @extend %edit-a;
+}
+
+.input {
+  margin-left: $internal-gap;
+}
+
 .title-input > input {
   border: $thin-line solid palette(Grey, 300);
+  padding: 0.2em;
 }
 
 .description-input {
   border: $thin-line solid palette(Grey, 300);
+  margin-top: $small-gap;
+  padding: 0.2em;
+}
+
+.buttons {
+  width: 100%;
+  margin-top: $small-gap;
+  display: flex;
+  flex-direction: row-reverse;
+  flex-wrap: nowrap;
 }
