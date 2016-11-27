@@ -39,6 +39,7 @@
               [allTicketTags]='allTicketTags'
               [allTimeCategories]='allTimeCategories'
               [allAssignmentTags]='allAssignmentTags'
+              (ticketAdd)='subticketAdd.emit($event)'
             ></tt-subticket-add>
         </div>
         <div class='section-header'>Status</div>

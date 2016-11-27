@@ -15,6 +15,7 @@ import {
   TicketDetailUser, TicketDetailTimeCategory, TicketDetailTransientUser,
   TicketDetailRelated, TicketDetailLoggedTime
 } from './ticket-detail';
+import { SubticketCreateEvent } from './subticket-add/subticket-add.component';
 import { idListToMap } from '../../util/listmaputils';
 import * as imm from 'immutable';
 import { CommentTextviewSaveEvent } from './command-textview/command-textview.component';
@@ -179,6 +180,36 @@ export class TicketDetailComponent implements OnInit {
         text: event.text,
         ticketId: this.ticketDetail.id,
         commands: event.commands.toArray(),
+      }, p))
+      .flatMap(result => this
+        .refresh(this.ticketDetail.projectId, this.ticketDetail.id)
+        .map(() => result));
+    this.queue.push(obs).subscribe(result => {
+      if (!result.isValid) {
+        // TODO nice message
+        console.dir(result);
+        window.alert('😥');
+      }
+    });
+  }
+
+  onSubticketAdd(val: SubticketCreateEvent): void {
+    // TODO define default values
+    let obs = this.apiCallService
+      .call(p => this.ticketApi.createTicketUsingPOSTWithHttpInfo({
+        title: val.title,
+        open: true,
+        storyPoints: null,
+        initialEstimatedTime: null,
+        currentEstimatedTime: null,
+        dueDate: this.ticketDetail.dueDate,
+        projectId: val.projectId,
+        description: val.description,
+        ticketAssignments: [],
+        subTickets: [],
+        existingSubTicketIds: [],
+        parentTicketId: val.parentTicketId,
+        commands: val.commands.toArray(),
       }, p))
       .flatMap(result => this
         .refresh(this.ticketDetail.projectId, this.ticketDetail.id)

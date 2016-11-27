@@ -16,7 +16,7 @@
                 [dueDate]='ticketDetail.dueDate'
                 [creator]='ticketDetail.createdBy'
                 [createTime]='ticketDetail.createTime'
-                [subtickets]='ticketDetail.subtickets'
+                [subtickets]='ticketDetail.subtickets' (subticketAdd)='onSubticketAdd($event)'
 
                 [ticket]='ticketDetail'
                 [allTicketTags]='allTicketTags'

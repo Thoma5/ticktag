@@ -4,6 +4,7 @@ import {
   TicketDetailUser, TicketDetailRelated, TicketDetailTimeCategory,
   TicketDetailAssTag
 } from '../ticket-detail';
+import { SubticketCreateEvent } from '../subticket-add/subticket-add.component';
 import * as imm from 'immutable';
 
 @Component({
@@ -32,6 +33,7 @@ export class TicketCoreComponent implements OnChanges {
   // TODO no output
   @Input() subtickets: imm.List<TicketDetailRelated>;
   // TODO no output
+  @Output() subticketAdd = new EventEmitter<SubticketCreateEvent>();
 
   // Readonly
   @Input() ticket: TicketDetail;
