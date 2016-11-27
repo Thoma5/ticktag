@@ -20,3 +20,14 @@
 .title {
   margin-left: $internal-gap;
 }
+
+.progress-bar {
+  height: 100%;
+  flex-grow: 1;
+  background-color: palette(Light Blue, 500);
+  margin-left: $internal-gap;
+}
+
+.progress-numbers {
+  margin-left: $internal-gap;
+}

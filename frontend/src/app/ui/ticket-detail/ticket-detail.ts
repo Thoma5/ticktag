@@ -129,6 +129,8 @@ export class TicketDetailSubticket {
   readonly number: number;
   readonly title: string;
   readonly open: boolean;
+  readonly currentEstimatedTime: number;
+  readonly loggedTime: number;
 
   constructor(ticket: TicketResultJson) {
     this.id = ticket.id;
@@ -136,6 +138,9 @@ export class TicketDetailSubticket {
     this.number = ticket.number;
     this.title = ticket.title;
     this.open = ticket.open;
+    this.currentEstimatedTime = ticket.currentEstimatedTime;
+    // TODO real value here!!!
+    this.loggedTime = this.currentEstimatedTime / 2;
     Object.freeze(this);
   }
 }
