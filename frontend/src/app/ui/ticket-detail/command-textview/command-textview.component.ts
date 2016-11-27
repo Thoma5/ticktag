@@ -73,7 +73,6 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
                 }, 100);
             }
         });
-        this.processChanges();
     }
 
     ngOnChanges(changes: SimpleChanges): void {

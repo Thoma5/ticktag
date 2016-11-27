@@ -1,0 +1,16 @@
+@import '../../../../style/constants.scss';
+
+.help {
+    flex-grow: 1;
+    flex-shrink: 1;
+
+    .commands {
+        font-size: 75%;
+        color: $edit-font-color;
+        code {
+            color: $edit-font-color-focus;
+            background-color: transparent;
+            font-weight: bold;
+        }
+    }
+}

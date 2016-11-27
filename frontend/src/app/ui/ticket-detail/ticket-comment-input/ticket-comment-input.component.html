@@ -8,7 +8,16 @@
         (contentChange)="this.content = $event"
     >
     </tt-command-textview>
-    <div class="buttons">
-      <input type='button' class='btn btn-primary button-submit' value='Submit' (click)="onSubmit()">
+    <div class="under">
+      <div class="help">
+        <tt-command-description
+            [commands]="content.commands"
+        >
+        </tt-command-description>
+        <tt-command-help></tt-command-help>
+      </div>
+      <div class="buttons">
+        <input type='button' class='btn btn-primary button-submit' value='Submit' (click)="onSubmit()">
+      </div>
     </div>
 </div>

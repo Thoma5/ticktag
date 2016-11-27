@@ -59,6 +59,8 @@ import { EditButtonComponent } from './util/edit-button/edit-button.component';
 import { LoadingComponent } from './util/loading/loading.component';
 import { SpinnerComponent } from './util/spinner/spinner.component';
 import { CommandTextviewComponent } from './ui/ticket-detail/command-textview/command-textview.component';
+import { CommandDescriptionComponent } from './ui/ticket-detail/command-description/command-description.component';
+import { CommandHelpComponent } from './ui/ticket-detail/command-help/command-help.component';
 
 
 @NgModule({
@@ -103,6 +105,8 @@ import { CommandTextviewComponent } from './ui/ticket-detail/command-textview/co
     TicketCommentInputComponent,
     EditButtonComponent,
     CommandTextviewComponent,
+    CommandDescriptionComponent,
+    CommandHelpComponent,
 
     HumanizeDurationPipe,
     FormatMomentPipe,

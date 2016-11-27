@@ -1,35 +1,3 @@
 <div class="editor">
   <textarea></textarea>
 </div>
-
-<div class="under">
-  <div class="help">
-    <div class="itwill">
-      <p *ngFor="let command of commands" [ngSwitch]="command.cmd">
-        <span *ngSwitchCase="'time'">This comment will <code>log {{ command.minutes }} minutes</code> of <code>{{ command.category }}</code> time.</span>
-        <span *ngSwitchCase="'assign'">This comment will <code>assign {{ command.user }}</code> with the tag <code>{{ command.tag }}</code>.</span>
-        <span *ngSwitchCase="'unassign'">
-          <span *ngIf="command.tag">This comment will <code>unassign {{ command.user }}</code> with the tag <code>{{ command.tag }}</code>.</span>
-          <span *ngIf="!command.tag">This comment will completely <code>unassign {{ command.user }}</code>.</span>
-        </span>
-        <span *ngSwitchCase="'close'">This comment will <code>close</code> this ticket.</span>
-        <span *ngSwitchCase="'reopen'">This comment will <code>reopen</code> this ticket.</span>
-        <span *ngSwitchCase="'tag'">This comment will <code>add</code> the tag <code>{{ command.tag }}</code> to this ticket.</span>
-        <span *ngSwitchCase="'untag'">This comment will <code>remove</code> the tag <code>{{ command.tag }}</code> from this ticket.</span>
-        <span *ngSwitchCase="'est'">This comment will change the <code>estimated time</code> to <code>{{ command.minutes }} minutes</code>.</span>
-        <span *ngSwitchCase="'refTicket'">This comment will <code>reference ticket #{{ command.ticket }}</code>.</span>
-        <span *ngSwitchDefault>???</span>
-      </p>
-    </div>
-    <div class="commands">
-      <p><code>!tag:example</code>, <code>!-tag:example</code>: add or remove a tag</p>
-      <p><code>!close</code>, <code>!reopen</code>: close or reopen this ticket</p>
-      <p><code>!time:2h5min@develop</code>: log time with the given category</p>
-      <p><code>!assign:dave@owner</code>, <code>!-assign:dave@owner</code>: assign or unassign a user with the given tag to this ticket</p>
-      <p><code>!-assign:user</code>: unassign a user completely from this ticket</p>
-      <p><code>!est:2h5min</code>: change the estimated time</p>
-      <p><code>#1234</code>: reference ticket 1234</p>
-      <p>You can use <code>Markdown</code> to format the text</p>
-    </div>
-  </div>
-</div>
