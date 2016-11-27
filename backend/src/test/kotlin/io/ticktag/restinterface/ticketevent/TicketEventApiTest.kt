@@ -35,8 +35,11 @@ class TicketEventApiTest : ApiBaseTest() {
     val user = UUID.fromString("00000000-0001-0000-0000-000000000001")
 
     @Test
-    fun dummy_test(){
-        println("hallo")
+    fun test(){
+        withUser(user) { principal ->
+            val ticket = ticketController.getTicket(ticketId)
+            ticketController.updateTicket(UpdateTicketRequestJson(ticket.title, ticket.open, ticket.storyPoints, ticket.initialEstimatedTime, ticket.currentEstimatedTime, ticket.dueDate, "New Description", null), ticketId, principal)
+        }
     }
 
 /**   @Test
