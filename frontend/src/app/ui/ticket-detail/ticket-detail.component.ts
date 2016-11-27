@@ -13,7 +13,7 @@ import { Observable } from 'rxjs';
 import {
   TicketDetail, TicketDetailTag, TicketDetailAssTag, TicketDetailComment,
   TicketDetailUser, TicketDetailTimeCategory, TicketDetailTransientUser,
-  TicketDetailSubticket
+  TicketDetailSubticket, TicketDetailLoggedTime
 } from './ticket-detail';
 import { idListToMap } from '../../util/listmaputils';
 import * as imm from 'immutable';
@@ -34,6 +34,7 @@ export class TicketDetailComponent implements OnInit {
   private allAssignmentTags: imm.Map<string, TicketDetailAssTag>;
   private allTimeCategories: imm.Map<string, TicketDetailTimeCategory>;
   private interestingUsers: imm.Map<string, TicketDetailUser>;
+  private interestingLoggedTimes: imm.Map<string, TicketDetailLoggedTime>;
   private comments: imm.Map<string, TicketDetailComment>;
   private subtickets: imm.Map<string, TicketDetailSubticket>;
 
@@ -302,14 +303,25 @@ export class TicketDetailComponent implements OnInit {
 
         return Observable.zip(Observable.of(tuple), getObs);
       })
+      .flatMap(tuple => {
+        let wantedLoggedTimeIds = new Array<string>().concat(...tuple[0][1].map(c => c.loggedTimeIds));
+        let getObs = this.apiCallService
+          .callNoError<GetResultJson>(p => this.getApi.getUsingPOSTWithHttpInfo({ loggedTimeIds: wantedLoggedTimeIds }, p));
+          return Observable.zip(Observable.of(tuple[0]), Observable.of(tuple[1]), getObs);
+      })
       .do(tuple => {
-        this.currentTicketJson = tuple[0][0];
-        this.interestingUsers = imm.Map(tuple[1].users).map(u => new TicketDetailUser(u)).toMap();
-        this.subtickets = imm.Map(tuple[1].tickets).map(t => new TicketDetailSubticket(t)).toMap();
-        this.comments = idListToMap(tuple[0][1]).map(c => new TicketDetailComment(c, this.interestingUsers)).toMap();
         this.allTicketTags = tuple[0][3];
         this.allAssignmentTags = tuple[0][2];
         this.allTimeCategories = tuple[0][4];
+        this.currentTicketJson = tuple[0][0];
+        this.interestingUsers = imm.Map(tuple[1].users).map(u => new TicketDetailUser(u)).toMap();
+        this.subtickets = imm.Map(tuple[1].tickets).map(t => new TicketDetailSubticket(t)).toMap();
+        this.interestingLoggedTimes = imm.Map(tuple[2].loggedTimes)
+          .map(lt => new TicketDetailLoggedTime(lt, this.allTimeCategories))
+          .toMap();
+        this.comments = idListToMap(tuple[0][1])
+          .map(c => new TicketDetailComment(c, this.interestingUsers, this.interestingLoggedTimes))
+          .toMap();
         this.newTicketDetail();
       })
       .map(it => undefined);

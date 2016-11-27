@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { TicketDetailComment, TicketDetailAssTag, TicketDetailTime } from '../ticket-detail';
+import { TicketDetailComment, TicketDetailAssTag } from '../ticket-detail';
 import * as imm from 'immutable';
 
 @Component({
@@ -10,5 +10,4 @@ import * as imm from 'immutable';
 export class TicketCommentComponent {
     @Input() comment: TicketDetailComment;
     @Input() userTags: imm.List<TicketDetailAssTag>;
-    @Input() times: imm.List<TicketDetailTime>;
 }

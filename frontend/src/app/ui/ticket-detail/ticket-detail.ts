@@ -29,7 +29,7 @@ export class TicketDetailTransient<T> {
 }
 Object.freeze(TicketDetailTransient.prototype);
 
-export class TicketDetailTime {
+export class TicketDetailLoggedTime {
   readonly id: string;
   readonly category: TicketDetailTimeCategory;
   readonly time: number;
@@ -41,7 +41,7 @@ export class TicketDetailTime {
     Object.freeze(this);
   }
 }
-Object.freeze(TicketDetailTime.prototype);
+Object.freeze(TicketDetailLoggedTime.prototype);
 
 export class TicketDetailTransientUser {
   readonly user: TicketDetailUser;
@@ -63,7 +63,7 @@ export class TicketDetailTimeCategory {
   constructor(category: TimeCategoryJson) {
     this.id = category.id;
     this.normalizedName = category.normalizedName;
-    this.name = name;
+    this.name = category.name;
     Object.freeze(this);
   }
 }
@@ -74,12 +74,17 @@ export class TicketDetailComment {
   readonly createTime: number;
   readonly text: string;
   readonly user: TicketDetailUser;
+  readonly loggedTimes: imm.List<TicketDetailLoggedTime>;
 
-  constructor(comment: CommentResultJson, users: imm.Map<string, TicketDetailUser>) {
+  constructor(comment: CommentResultJson, users: imm.Map<string, TicketDetailUser>, times: imm.Map<string, TicketDetailLoggedTime>) {
     this.id = comment.id;
     this.createTime = comment.createTime;
     this.text = comment.text;
     this.user = users.get(comment.userId);  // TODO do something if the user does not exist
+    this.loggedTimes = imm.Seq(comment.loggedTimeIds)
+      .map(id => times.get(id))
+      .filter(it => !!it)
+      .toList();
     Object.freeze(this);
   }
 }

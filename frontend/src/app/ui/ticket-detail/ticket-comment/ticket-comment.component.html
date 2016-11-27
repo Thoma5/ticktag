@@ -11,9 +11,11 @@
     <div class="content">
         <tt-markdown-textview-read [content]='comment.text'></tt-markdown-textview-read>
     </div>
-    <p class="time-info">
-        This comment logged <strong>1:00 h</strong> in the category <strong>asdf</strong>.
-    </p>
+    <div class="time-info">
+        <p *ngFor="let loggedTime of comment.loggedTimes">
+            This comment logged <strong>{{ loggedTime.time | ttHumanizeDuration }}</strong> in the category <strong>{{ loggedTime.category.name }}</strong>.
+        </p>
+    </div>
     <p class="bottom-info">
         Created on {{ comment.createTime | ttFormatMoment }}
     </p>
