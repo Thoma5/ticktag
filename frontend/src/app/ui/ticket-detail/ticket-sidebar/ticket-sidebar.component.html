@@ -31,7 +31,7 @@
         </div>
     </div>
 
-    <div class='references' *ngIf="ticket.referenced">
+    <div class='references' *ngIf="ticket.referenced.size > 0">
         <h2>Referenced Tickets</h2>
         <ul class="ticket-refs">
             <li *ngFor="let ticket of ticket.referenced" class="ticket-ref">
@@ -41,7 +41,7 @@
         </ul>
     </div>
 
-    <div class='referenced-by' *ngIf="ticket.referencedBy">
+    <div class='referenced-by' *ngIf="ticket.referencedBy.size > 0">
         <h2>Referenced by</h2>
         <ul class="ticket-refs">
             <li *ngFor="let ticket of ticket.referencedBy" class="ticket-ref">
