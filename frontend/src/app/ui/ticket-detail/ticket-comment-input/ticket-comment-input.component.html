@@ -1,11 +1,14 @@
 <div class='comment-input'>
     <tt-command-textview
         [initialContent]="''"
-        [ticket]="ticket"
+        [projectId]="ticket.projectId"
+        [activeTags]="ticket.tags"
+        [assignedUsers]="ticket.users"
         [allTicketTags]="allTicketTags"
         [allTimeCategories]="allTimeCategories"
         [allAssignmentTags]="allAssignmentTags"
         (contentChange)="this.content = $event"
+        (save)="onSubmit()"
     >
     </tt-command-textview>
     <div class="under">

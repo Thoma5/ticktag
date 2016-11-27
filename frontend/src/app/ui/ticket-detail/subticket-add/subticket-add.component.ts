@@ -3,6 +3,8 @@ import {
   TicketDetailAssTag, TicketDetail, TicketDetailTimeCategory, TicketDetailTag
 } from '../ticket-detail';
 import * as imm from 'immutable';
+import { CommentTextviewSaveEvent } from '../command-textview/command-textview.component';
+import { Cmd } from '../command-textview/grammar';
 
 @Component({
   selector: 'tt-subticket-add',
@@ -14,10 +16,14 @@ export class SubticketAddComponent {
   @Input() allTicketTags: imm.Map<string, TicketDetailTag>;
   @Input() allTimeCategories: imm.Map<string, TicketDetailTimeCategory>;
   @Input() allAssignmentTags: imm.Map<string, TicketDetailAssTag>;
-  @Output() ticketAdd = new EventEmitter<void>();
+  readonly activeTags = imm.List.of();
+  readonly assignedUsers = imm.List.of();
+
+  @Output() readonly ticketAdd = new EventEmitter<void>();
 
   editing: boolean = false;
   title: string | null = null;
+  description: CommentTextviewSaveEvent = { commands: imm.List.of<Cmd>(), text: '' };
 
   startEditing() {
     this.editing = true;
@@ -25,5 +31,12 @@ export class SubticketAddComponent {
 
   finishEditing() {
     this.editing = false;
+  }
+
+  onSubmit(): void {
+    if (this.title != null && this.description != null) {
+      // TODO
+      this.ticketAdd.emit();
+    }
   }
 }

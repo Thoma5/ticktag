@@ -8,7 +8,8 @@ import { using } from '../../../util/using';
 import * as grammar from './grammar';
 import * as imm from 'immutable';
 import {
-    TicketDetailAssTag, TicketDetail, TicketDetailTimeCategory, TicketDetailTag
+    TicketDetailAssTag, TicketDetailTimeCategory, TicketDetailTag,
+    TicketDetailTransient, TicketDetailUser, TicketDetailAssignment
 } from '../ticket-detail';
 
 const codemirror = require('codemirror');
@@ -34,13 +35,16 @@ export type CommentTextviewSaveEvent = {
 })
 export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDestroy {
     @Input() initialContent: string;
-    @Input() ticket: TicketDetail;
+    @Input() projectId: string;
+    @Input() activeTags: imm.List<TicketDetailTransient<TicketDetailTag>>;
+    @Input() assignedUsers: imm.Map<TicketDetailUser, imm.List<TicketDetailAssignment>>;
     @Input() allTicketTags: imm.Map<string, TicketDetailTag>;
     @Input() allTimeCategories: imm.Map<string, TicketDetailTimeCategory>;
     @Input() allAssignmentTags: imm.Map<string, TicketDetailAssTag>;
     @Input() working = false;
 
     @Output() readonly contentChange = new EventEmitter<CommentTextviewSaveEvent>();
+    @Output() readonly save = new EventEmitter<void>();
 
     private content = '';
     private instance: any = null;
@@ -126,7 +130,7 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
         if (isTicket) {
             this.instance.showHint({
                 hint: () => {
-                    let projectId = this.ticket.projectId;
+                    let projectId = this.projectId;
                     return this.apiCallService
                         .callNoError<TicketResultJson[]>(p => this.ticketApi.listTicketsFuzzyUsingGETWithHttpInfo(
                             projectId,
@@ -151,7 +155,7 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
 
         let isAddRemoveTag = new RegExp(String.raw`${grammar.SEPERATOR_FRONT_REGEX}!(-?)tag:(${grammar.TAG_LETTER}*)$`, 'ui').exec(text);
         if (isAddRemoveTag) {
-            let tags = (isAddRemoveTag[1] ? this.ticket.tags.map(tag => tag.value) : this.allTicketTags)
+            let tags = (isAddRemoveTag[1] ? this.activeTags.map(tag => tag.value) : this.allTicketTags)
                 .valueSeq()
                 .sort(using<TicketDetailTag>(tag => tag.normalizedName))
                 .toArray();
@@ -195,7 +199,7 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
         if (isAssign) {
             this.instance.showHint({
                 hint: () => {
-                    let projectId = this.ticket.projectId;
+                    let projectId = this.projectId;
                     return this.apiCallService
                         .callNoError<UserResultJson[]>(p => this.userApi.listUsersFuzzyUsingGETWithHttpInfo(
                             projectId,
@@ -245,7 +249,7 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
             'ui'
         ).exec(text);
         if (isUnassign) {
-            let aus = this.ticket.users
+            let aus = this.assignedUsers
                 .map((assignments, user) => assignments.map(ass => ({
                     text: `${user.username}@${ass.tag.normalizedName} `,
                     displayText: `${user.username}@${ass.tag.normalizedName} (${user.name} <${user.mail}>)`,

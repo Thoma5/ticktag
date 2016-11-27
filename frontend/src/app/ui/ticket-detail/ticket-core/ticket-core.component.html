@@ -26,7 +26,7 @@
         </div>
         <div class='sub-header-row'>
             <div class='tags'>
-                <tt-taginput [tags]='tagIds' (tagAdd)='tagAdd.emit($event)' (tagRemove)='tagRemove.emit($event)' [allTags]='allTags'>
+                <tt-taginput [tags]='tagIds' (tagAdd)='tagAdd.emit($event)' (tagRemove)='tagRemove.emit($event)' [allTags]='allTicketTags'>
                 </tt-taginput>
             </div>
         </div>
@@ -34,7 +34,12 @@
         <div class='subtickets'>
             <tt-subtickets [tickets]='subtickets'>
             </tt-subtickets>
-            <tt-subticket-add></tt-subticket-add>
+            <tt-subticket-add
+              [parentTicket]='ticket'
+              [allTicketTags]='allTicketTags'
+              [allTimeCategories]='allTimeCategories'
+              [allAssignmentTags]='allAssignmentTags'
+            ></tt-subticket-add>
         </div>
         <div class='section-header'>Status</div>
         <div class='status'>

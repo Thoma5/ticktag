@@ -4,10 +4,14 @@
 <div class='description-input' *ngIf='editing'>
     <tt-command-textview
         [initialContent]="'Description'"
-        [ticket]="parentTicket"
+        [projectId]="parentTicket.projectId"
+        [activeTags]="activeTags"
+        [assignedUsers]="assignedUsers"
         [allTicketTags]="allTicketTags"
         [allTimeCategories]="allTimeCategories"
         [allAssignmentTags]="allAssignmentTags"
+        (contentChange)="this.content = $event"
+        (save)="onSubmit()"
     >
     </tt-command-textview>
 </div>

@@ -1,1 +1,9 @@
 @import '../../../../style/constants.scss';
+
+.title-input > input {
+  border: $thin-line solid palette(Grey, 300);
+}
+
+.description-input {
+  border: $thin-line solid palette(Grey, 300);
+}
