@@ -8,4 +8,5 @@ interface TicketAssignmentService {
     fun createTicketAssignment(ticketId: UUID, tagId: UUID, userId: UUID): TicketAssignmentResult
     fun createOrGetIfExistsTicketAssignment(ticketId: UUID, tagId: UUID, userId: UUID): TicketAssignmentResult
     fun deleteTicketAssignment(ticketId: UUID, tagId: UUID, userId: UUID)
+    fun deleteTicketAssignments(ticketId: UUID, userId: UUID)
 }

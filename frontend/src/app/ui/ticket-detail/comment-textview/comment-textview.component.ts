@@ -1,6 +1,6 @@
 import {
     Component, Input, ElementRef, AfterViewInit, OnChanges, SimpleChanges,
-    OnDestroy
+    OnDestroy, EventEmitter, Output
 } from '@angular/core';
 import { UserResultJson, UserApi, TicketApi, TicketResultJson } from '../../../api';
 import { ApiCallService } from '../../../service';
@@ -22,6 +22,11 @@ const COMMAND_COMPLETIONS = grammar.COMMAND_STRINGS.map(c => {
     }
 }).sort(using<string>(c => c.replace('-', '')));
 
+export type CommentTextviewSaveEvent = {
+    commands: imm.List<grammar.Cmd>,
+    text: string,
+}
+
 @Component({
     selector: 'tt-comment-textview',
     templateUrl: './comment-textview.component.html',
@@ -33,12 +38,16 @@ export class CommentTextviewComponent implements AfterViewInit, OnChanges, OnDes
     @Input() allTicketTags: imm.Map<string, TicketDetailTag>;
     @Input() allTimeCategories: imm.Map<string, TicketDetailTimeCategory>;
     @Input() allAssignmentTags: imm.Map<string, TicketDetailAssTag>;
+    @Input() working = false;
 
-    private content: string;
-    private instance: any;
-    private commands: grammar.Cmd[];
+    @Output() readonly save = new EventEmitter<CommentTextviewSaveEvent>();
+
+    private content = '';
+    private instance: any = null;
+    private commands = imm.List<grammar.Cmd>();
 
     private refreshTimeout: number = null;
+    private wantEmitSave: boolean = false;
 
     constructor(
         private element: ElementRef,
@@ -63,6 +72,7 @@ export class CommentTextviewComponent implements AfterViewInit, OnChanges, OnDes
                     this.refreshTimeout = null;
                     this.updateCommands();
                     this.showHints();
+                    this.emitSave();
                 }, 100);
             }
         });
@@ -78,6 +88,25 @@ export class CommentTextviewComponent implements AfterViewInit, OnChanges, OnDes
         window.clearTimeout(this.refreshTimeout);
         this.refreshTimeout = null;
         this.instance.toTextArea();
+    }
+
+    onSubmitClick(): void {
+        this.wantEmitSave = true;
+        // Do not directly emit the event if a refresh is still pending. In this
+        // case the event will be emittet after the next refresh.
+        if (this.refreshTimeout === null) {
+            this.emitSave();
+        }
+    }
+
+    private emitSave(): void {
+        if (this.wantEmitSave) {
+            this.wantEmitSave = false;
+            this.save.emit({
+                commands: this.commands,
+                text: this.content,
+            });
+        }
     }
 
     private updateCommands() {

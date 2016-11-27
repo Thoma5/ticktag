@@ -1,7 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import {
   TicketDetail, TicketDetailTag, TicketDetailAssTag, TicketDetailTimeCategory
 } from '../ticket-detail';
+import { CommentTextviewSaveEvent } from '../comment-textview/comment-textview.component';
 import * as imm from 'immutable';
 
 @Component({
@@ -14,4 +15,6 @@ export class TicketCommentInputComponent {
   @Input() allTicketTags: imm.Map<string, TicketDetailTag>;
   @Input() allAssignmentTags: imm.Map<string, TicketDetailAssTag>;
   @Input() allTimeCategories: imm.Map<string, TicketDetailTimeCategory>;
+
+  @Output() commentCreate = new EventEmitter<CommentTextviewSaveEvent>();
 }

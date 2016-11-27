@@ -1,10 +1,11 @@
 <div class='comment-input'>
     <tt-comment-textview
-        [initialContent]="'Type a comment here...'"
+        [initialContent]="''"
         [ticket]="ticket"
         [allTicketTags]="allTicketTags"
         [allTimeCategories]="allTimeCategories"
         [allAssignmentTags]="allAssignmentTags"
+        (save)="commentCreate.emit($event)"
     >
     </tt-comment-textview>
 </div>

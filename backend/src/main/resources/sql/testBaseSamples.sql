@@ -115,7 +115,7 @@ WHERE id = '00000000-0003-0000-0000-000000000104';
 -- ######
 
 INSERT INTO PUBLIC.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, OPEN, story_points, initial_estimated_time, current_estimated_time, due_date)
-VALUES ('00000000-0003-0000-0000-000000000105', 1, NULL, '00000000-0002-0000-0000-000000000101',
+VALUES ('00000000-0003-0000-0000-000000000105', 2, NULL, '00000000-0002-0000-0000-000000000101',
                                                 '00000000-0001-0000-0000-000000000101', NULL,
                                                 '2016-11-16 17:06:07.221000', 'Project 1 Ticket Two', TRUE, 10, 20, 25,
         '2016-11-20 17:07:05.554000');

@@ -33,4 +33,6 @@ interface TicketRepository : TicktagCrudRepository<Ticket, UUID> {
 
     @Query("select t from Ticket t where t.id in :ids")
     fun findByIds(@Param("ids") ids: Collection<UUID>): List<Ticket>
+
+    fun findByNumber(number: Int): Ticket?
 }

@@ -7,9 +7,9 @@ import java.util.*
 data class CommentCommandJson(
         val cmd: String,
         val minutes: Long?,
-        val category: UUID?,
-        val user: UUID?,
-        val tag: UUID?
+        val category: String?,
+        val user: String?,
+        val tag: String?
 ) {
     fun toCommentCommand(): CommentCommand? {
         return when (cmd) {

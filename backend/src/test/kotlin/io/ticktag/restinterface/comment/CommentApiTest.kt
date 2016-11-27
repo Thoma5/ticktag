@@ -90,7 +90,7 @@ class CommentApiTest : ApiBaseTest() {
     fun `createComment with a time command should log time`() {
         withUser(ADMIN_ID) { principal ->
 
-            val id = createCommentCmd(principal, CommentCommandJson("time", 90, TIMECAT_PROJECT_AOU_AUO_IDS[0], null, null))
+            val id = createCommentCmd(principal, CommentCommandJson("time", 90, TIMECAT_CONTENT[0], null, null))
 
             val comment = commentController.getComment(id)
             assertThat(comment.loggedTimeIds.size, `is`(1))
@@ -104,14 +104,14 @@ class CommentApiTest : ApiBaseTest() {
     fun `createComment with an assign command should assing the user`() {
         withUser(ADMIN_ID) { principal ->
 
-            val id = createCommentCmd(principal, CommentCommandJson("assign", null, null, USER_ID, ASSTAG_PROJECT_AOU_AUO_IDS[0]))
+            val id = createCommentCmd(principal, CommentCommandJson("assign", null, null, "obelix", ASSTAG_CONTENT[0]))
 
             commentController.getComment(id)
             val ticket = ticketController.getTicket(TEST_TICKET)
             assertThat(ticket.ticketUserRelations, hasItem(TicketUserRelationResultJson(
                     ticketId = TEST_TICKET,
                     assignmentTagId = ASSTAG_PROJECT_AOU_AUO_IDS[0],
-                    userId = USER_ID
+                    userId = OBSERVER_ID
             )))
         }
     }
@@ -120,7 +120,7 @@ class CommentApiTest : ApiBaseTest() {
     fun `createComment with an unassign command should unassign the user`() {
         withUser(ADMIN_ID) { principal ->
 
-            val id = createCommentCmd(principal, CommentCommandJson("unassign", null, null, ADMIN_ID, UUID.fromString("00000000-0006-0000-0000-000000000101")))
+            val id = createCommentCmd(principal, CommentCommandJson("unassign", null, null, "admit", ASSTAG_CONTENT[0]))
 
             commentController.getComment(id)
             val ticket = ticketController.getTicket(TEST_TICKET)
@@ -132,7 +132,7 @@ class CommentApiTest : ApiBaseTest() {
     fun `createComment with an unassign command without tag should unassign the user`() {
         withUser(ADMIN_ID) { principal ->
 
-            val id = createCommentCmd(principal, CommentCommandJson("unassign", null, null, ADMIN_ID, null))
+            val id = createCommentCmd(principal, CommentCommandJson("unassign", null, null, "admit", null))
 
             commentController.getComment(id)
             val ticket = ticketController.getTicket(TEST_TICKET)
@@ -162,7 +162,7 @@ class CommentApiTest : ApiBaseTest() {
     fun `createComment with a tag command should assign the tag`() {
         withUser(ADMIN_ID) { principal ->
 
-            val id = createCommentCmd(principal, CommentCommandJson("tag", null, null, null, UUID.fromString("00000000-0005-0000-0000-000000000102")))
+            val id = createCommentCmd(principal, CommentCommandJson("tag", null, null, null, "bug"))
 
             commentController.getComment(id)
             val ticket = ticketController.getTicket(TEST_TICKET)
@@ -174,7 +174,7 @@ class CommentApiTest : ApiBaseTest() {
     fun `createComment with an untag command should remove the tag`() {
         withUser(ADMIN_ID) { principal ->
 
-            val id = createCommentCmd(principal, CommentCommandJson("untag", null, null, null, UUID.fromString("00000000-0005-0000-0000-000000000101")))
+            val id = createCommentCmd(principal, CommentCommandJson("untag", null, null, null, "feature"))
 
             commentController.getComment(id)
             val ticket = ticketController.getTicket(TEST_TICKET)
@@ -191,6 +191,23 @@ class CommentApiTest : ApiBaseTest() {
             commentController.getComment(id)
             val ticket = ticketController.getTicket(TEST_TICKET)
             assertThat(ticket.currentEstimatedTime, `is`(Duration.ofMinutes(1234)))
+        }
+    }
+
+    @Test
+    fun `createComment with references should reference other tickets`() {
+        withUser(ADMIN_ID) { principal ->
+
+            val result = commentController.createComment(CreateCommentRequestJson(
+                    text = "Text",
+                    ticketId = TEST_TICKET,
+                    mentionedTicketNumbers = listOf(2),
+                    commands = emptyList()
+            ), principal)
+
+            commentController.getComment(result.body.id)
+            val ticket = ticketController.getTicket(TEST_TICKET)
+            assertThat(ticket.referencedTicketIds, hasItem(UUID.fromString("00000000-0003-0000-0000-000000000105")))
         }
     }
 

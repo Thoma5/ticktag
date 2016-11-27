@@ -17,6 +17,8 @@ import {
 } from './ticket-detail';
 import { idListToMap } from '../../util/listmaputils';
 import * as imm from 'immutable';
+import { CommentTextviewSaveEvent } from './comment-textview/comment-textview.component';
+import { RefTicketCmd } from './comment-textview/grammar';
 
 @Component({
   selector: 'tt-ticket-detail',
@@ -169,6 +171,26 @@ export class TicketDetailComponent implements OnInit {
   onAssignmentUserAdd(user: TicketDetailUser) {
     this.addTransientUserNoUpdate(user);
     this.newTicketDetail();
+  }
+
+  onCommentCreate(event: CommentTextviewSaveEvent): void {
+    let obs = this.apiCallService
+      .call<void>(p => this.commentsApi.createCommentUsingPOSTWithHttpInfo({
+        text: event.text,
+        ticketId: this.ticketDetail.id,
+        commands: event.commands.filterNot(cmd => cmd.cmd === 'refTicket').toArray(),
+        mentionedTicketNumbers: event.commands.filter(cmd => cmd.cmd === 'refTicket').map(cmd => (<RefTicketCmd>cmd).ticket).toArray(),
+      }, p))
+      .flatMap(result => this
+        .refresh(this.ticketDetail.projectId, this.ticketDetail.id)
+        .map(() => result));
+    this.queue.push(obs).subscribe(result => {
+      if (!result.isValid) {
+        // TODO nice message
+        console.dir(result);
+        window.alert('😥');
+      }
+    });
   }
 
   private updateTicket(req: UpdateTicketRequestJson): void {
