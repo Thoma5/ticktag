@@ -142,7 +142,7 @@ export class TicketDetailAssTag implements Tag {
 }
 Object.freeze(TicketDetailAssTag.prototype);
 
-export class TicketDetailSubticket {
+export class TicketDetailRelated {
   readonly id: string;
   readonly projectId: string;
   readonly number: number;
@@ -163,7 +163,7 @@ export class TicketDetailSubticket {
     Object.freeze(this);
   }
 }
-Object.freeze(TicketDetailSubticket.prototype);
+Object.freeze(TicketDetailRelated.prototype);
 
 export class TicketDetail {
   readonly comments: imm.List<TicketDetailComment>;
@@ -181,12 +181,12 @@ export class TicketDetail {
   readonly title: string;
   readonly users: imm.Map<TicketDetailUser, imm.List<TicketDetailAssignment>>;
   readonly projectId: string;
-  readonly subtickets: imm.List<TicketDetailSubticket>;
+  readonly subtickets: imm.List<TicketDetailRelated>;
 
   constructor(
       ticket: TicketResultJson,
       comments: imm.Map<string, TicketDetailComment>,
-      subtickets: imm.List<TicketDetailSubticket>,
+      relatedTickets: imm.Map<string, TicketDetailRelated>,
       users: imm.Map<string, TicketDetailUser>,
       ticketTags: imm.Map<string, TicketDetailTag>,
       assignmentTags: imm.Map<string, TicketDetailAssTag>,
@@ -255,7 +255,10 @@ export class TicketDetail {
         });
       });
     this.projectId = ticket.projectId;
-    this.subtickets = subtickets;
+    this.subtickets = imm.Seq(ticket.subTicketIds)
+      .map(id => relatedTickets.get(id))
+      .filter(t => !!t)
+      .toList();
     Object.freeze(this);
   }
 }

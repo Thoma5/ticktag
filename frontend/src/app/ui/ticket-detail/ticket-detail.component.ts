@@ -13,7 +13,7 @@ import { Observable } from 'rxjs';
 import {
   TicketDetail, TicketDetailTag, TicketDetailAssTag, TicketDetailComment,
   TicketDetailUser, TicketDetailTimeCategory, TicketDetailTransientUser,
-  TicketDetailSubticket, TicketDetailLoggedTime
+  TicketDetailRelated, TicketDetailLoggedTime
 } from './ticket-detail';
 import { idListToMap } from '../../util/listmaputils';
 import * as imm from 'immutable';
@@ -36,7 +36,7 @@ export class TicketDetailComponent implements OnInit {
   private interestingUsers: imm.Map<string, TicketDetailUser>;
   private interestingLoggedTimes: imm.Map<string, TicketDetailLoggedTime>;
   private comments: imm.Map<string, TicketDetailComment>;
-  private subtickets: imm.Map<string, TicketDetailSubticket>;
+  private relatedTickets: imm.Map<string, TicketDetailRelated>;
 
   // Internal state
   private currentTicketJson: TicketResultJson;  // Only use to recreate the ticket
@@ -252,7 +252,7 @@ export class TicketDetailComponent implements OnInit {
     this.ticketDetail = new TicketDetail(
       this.currentTicketJson,
       this.comments,
-      this.subtickets.toList(),
+      this.relatedTickets,
       this.interestingUsers,
       this.allTicketTags,
       this.allAssignmentTags,
@@ -287,6 +287,7 @@ export class TicketDetailComponent implements OnInit {
       .zip(rawTicketObs, rawCommentsObs, assignmentTagsObs, ticketTagsObs, timeCategoriesObs)
       .flatMap(tuple => {
         let ticketResult = tuple[0];
+
         // We need all assigned users
         let wantedUserIds = ticketResult.ticketUserRelations.map(ta => ta.userId);
         // And the comment authors
@@ -295,12 +296,19 @@ export class TicketDetailComponent implements OnInit {
         transientUsers.forEach(tu => { wantedUserIds.push(tu.user.id); });
         // And the person who created it
         wantedUserIds.push(ticketResult.createdBy);
-        // And the subtickets
-        let wantedTicketIds = ticketResult.subTicketIds;
+
+        // We need the subtickets
+        let wantedTicketIds = ticketResult.subTicketIds.slice();
+        // And referenced tickets
+        wantedTicketIds.push(...ticketResult.referencedTicketIds);
+        // And tickets that reference this ticket
+        wantedTicketIds.push(...ticketResult.referencingTicketIds);
 
         let getObs = this.apiCallService
-          .callNoError<GetResultJson>(p => this.getApi.getUsingPOSTWithHttpInfo({ userIds: wantedUserIds, ticketIds: wantedTicketIds }, p));
-
+          .callNoError<GetResultJson>(p => this.getApi.getUsingPOSTWithHttpInfo({
+            userIds: wantedUserIds,
+            ticketIds: wantedTicketIds
+          }, p));
         return Observable.zip(Observable.of(tuple), getObs);
       })
       .flatMap(tuple => {
@@ -315,7 +323,7 @@ export class TicketDetailComponent implements OnInit {
         this.allTimeCategories = tuple[0][4];
         this.currentTicketJson = tuple[0][0];
         this.interestingUsers = imm.Map(tuple[1].users).map(u => new TicketDetailUser(u)).toMap();
-        this.subtickets = imm.Map(tuple[1].tickets).map(t => new TicketDetailSubticket(t)).toMap();
+        this.relatedTickets = imm.Map(tuple[1].tickets).map(t => new TicketDetailRelated(t)).toMap();
         this.interestingLoggedTimes = imm.Map(tuple[2].loggedTimes)
           .map(lt => new TicketDetailLoggedTime(lt, this.allTimeCategories))
           .toMap();
