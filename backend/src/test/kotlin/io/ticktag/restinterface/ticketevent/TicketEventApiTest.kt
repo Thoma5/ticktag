@@ -38,7 +38,7 @@ class TicketEventApiTest : ApiBaseTest() {
     fun test(){
         withUser(user) { principal ->
             val ticket = ticketController.getTicket(ticketId)
-            ticketController.updateTicket(UpdateTicketRequestJson(ticket.title, ticket.open, ticket.storyPoints, ticket.initialEstimatedTime, ticket.currentEstimatedTime, ticket.dueDate, "New Description", null), ticketId, principal)
+     //       ticketController.updateTicket(UpdateTicketRequestJson(ticket.title, ticket.open, ticket.storyPoints, ticket.initialEstimatedTime, ticket.currentEstimatedTime, ticket.dueDate, "New Description", null), ticketId, principal)
         }
     }
 
