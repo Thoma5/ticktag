@@ -33,17 +33,18 @@ class TicketApiTest : ApiBaseTest() {
         withUser(ADMIN_ID) { principal ->
             val now = Instant.now()
             val req = CreateTicketRequestJson("test", true, 4, Duration.ofDays(1), Duration.ofDays(1),
-                    now, "description", UUID.fromString("00000000-0002-0000-0000-000000000001"), emptyList(), emptyList(), emptyList(), null, emptyList())
+                    now, "description", UUID.fromString("00000000-0002-0000-0000-000000000101"), emptyList(), emptyList(), emptyList(), null, emptyList())
 
             val result = ticketController.createTicket(req, principal).body!!
             assertEquals(result.title, ("test"))
+            assertEquals(result.number, 3)
             assertEquals(result.open, true)
             assertEquals(result.storyPoints, 4)
             assertEquals(result.initialEstimatedTime, (Duration.ofDays(1)))
             assertEquals(result.currentEstimatedTime, (Duration.ofDays(1)))
             assertEquals(result.dueDate, now)
             assertEquals(result.description, "description")
-            assertEquals(result.projectId, UUID.fromString("00000000-0002-0000-0000-000000000001"))
+            assertEquals(result.projectId, UUID.fromString("00000000-0002-0000-0000-000000000101"))
 
         }
     }

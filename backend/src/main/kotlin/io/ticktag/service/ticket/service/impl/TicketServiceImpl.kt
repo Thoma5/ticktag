@@ -86,7 +86,7 @@ open class TicketServiceImpl @Inject constructor(
         }
 
 
-        val number = tickets.findNewTicketNumber(createTicket.projectID) ?: 1
+        val number = (tickets.findHighestTicketNumberInProject(createTicket.projectID) ?: 0) + 1
         val createTime = Instant.now()
         val title = createTicket.title
         val open: Boolean = createTicket.open
