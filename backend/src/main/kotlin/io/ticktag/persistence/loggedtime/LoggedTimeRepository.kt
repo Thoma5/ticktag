@@ -15,4 +15,7 @@ interface LoggedTimeRepository : TicktagCrudRepository<LoggedTime, UUID> {
             "AND (coalesce(:userId ,null) is null OR t.project.id = :projectId) " +
             "AND (coalesce(:categoryId,null) is null  OR l.category.id = :categoryId)")
     fun findByProjectIdOrUserIdOrCategoryId(@Param("projectId") projectId: UUID?, @Param("userId") userId: UUID?, @Param("categoryId") categoryId: UUID?): List<LoggedTime>
+
+    @Query("select t from LoggedTime t where t.id in :ids")
+    fun findByIds(@Param("ids") ids: Collection<UUID>): List<LoggedTime>
 }

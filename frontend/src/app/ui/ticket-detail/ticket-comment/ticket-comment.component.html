@@ -1,7 +1,20 @@
 <div class='comment'>
     <div class='header-row'>
         <div class='user-icon'><img src='http://lorempixel.com/100/100/cats'/></div>
-        <div class='user-name'><span>{{comment.user.name}}</span></div>
+        <div class='user-info'><div>
+            <span class='user-name'>{{comment.user.name}}</span>
+            <span *ngFor="let tag of userTags" class='user-tag' [style.backgroundColor]="'#' + tag.color">
+                {{ tag.name }}
+            </span>
+        </div></div>
     </div>
-    <tt-markdown-textview-read [content]='comment.text'></tt-markdown-textview-read>
+    <div class="content">
+        <tt-markdown-textview-read [content]='comment.text'></tt-markdown-textview-read>
+    </div>
+    <p class="time-info">
+        This comment logged <strong>1:00 h</strong> in the category <strong>asdf</strong>.
+    </p>
+    <p class="bottom-info">
+        Created on {{ comment.createTime | ttFormatMoment }}
+    </p>
 </div>

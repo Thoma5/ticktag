@@ -1,5 +1,6 @@
 package io.ticktag.service.loggedtime.service
 
+import io.ticktag.service.Principal
 import io.ticktag.service.loggedtime.dto.CreateLoggedTime
 import io.ticktag.service.loggedtime.dto.LoggedTimeResult
 import io.ticktag.service.loggedtime.dto.UpdateLoggedTime
@@ -13,4 +14,5 @@ interface LoggedTimeService {
     fun updateLoggedTime(updateLoggedTime: UpdateLoggedTime, loggedTimeId: UUID): LoggedTimeResult
     fun deleteLoggedTime(loggedTimeId: UUID)
     fun getLoggedTime(loggedTimeId: UUID): LoggedTimeResult
+    fun getLoggedTimes(ids: List<UUID>, principal: Principal): Map<UUID, LoggedTimeResult>
 }

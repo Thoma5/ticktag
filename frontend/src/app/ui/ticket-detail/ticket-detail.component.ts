@@ -268,7 +268,12 @@ export class TicketDetailComponent implements OnInit {
       .callNoError<CommentResultJson[]>(p => this.commentsApi.listCommentsUsingGETWithHttpInfo(ticketId, p));
     let assignmentTagsObs = this.apiCallService
       .callNoError<AssignmentTagResultJson[]>(p => this.assigmentTagsApi.listAssignmentTagsUsingGETWithHttpInfo(projectId, p))
-      .map(ats => idListToMap(ats).map(at => new TicketDetailAssTag(at, 0)).toMap());  // TODO ordering
+      .map(ats => imm.List(ats)
+        .sortBy(at => at.name.toLocaleLowerCase())
+        .map((at, i) => new TicketDetailAssTag(at, i))
+        .groupBy(at => at.id)
+        .map(at => at.get(0))
+        .toMap());
     let ticketTagsObs = this.apiCallService
       .callNoError<TicketTagResultJson[]>(p => this.ticketTagsApi.listTicketTagsUsingGETWithHttpInfo(null, projectId, p))
       .map(tts => idListToMap(tts).map(tt => new TicketDetailTag(tt)).toMap());

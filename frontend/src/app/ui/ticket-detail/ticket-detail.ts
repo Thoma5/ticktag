@@ -1,6 +1,6 @@
 import {
   TicketResultJson, CommentResultJson, UserResultJson, TicketTagResultJson,
-  AssignmentTagResultJson, TimeCategoryJson
+  AssignmentTagResultJson, TimeCategoryJson, LoggedTimeResultJson
 } from '../../api';
 import * as imm from 'immutable';
 import { Tag } from '../../util/taginput/taginput.component';
@@ -18,8 +18,8 @@ export class TicketDetailAssignment {
 Object.freeze(TicketDetailAssignment.prototype);
 
 export class TicketDetailTransient<T> {
-  value: T;
-  transient: boolean;
+  readonly value: T;
+  readonly transient: boolean;
 
   constructor(value: T, transient: boolean) {
     this.value = value;
@@ -28,6 +28,20 @@ export class TicketDetailTransient<T> {
   }
 }
 Object.freeze(TicketDetailTransient.prototype);
+
+export class TicketDetailTime {
+  readonly id: string;
+  readonly category: TicketDetailTimeCategory;
+  readonly time: number;
+
+  constructor(time: LoggedTimeResultJson, cats: imm.Map<string, TicketDetailTimeCategory>) {
+    this.id = time.id;
+    this.category = cats.get(time.categoryId);  // TODO error handling or dummy time category
+    this.time = time.time;
+    Object.freeze(this);
+  }
+}
+Object.freeze(TicketDetailTime.prototype);
 
 export class TicketDetailTransientUser {
   readonly user: TicketDetailUser;

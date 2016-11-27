@@ -22,7 +22,7 @@
             ></tt-ticket-core>
 
             <div class='comments-wrapper'>
-                <tt-ticket-comments [comments]='ticketDetail.comments'></tt-ticket-comments>
+                <tt-ticket-comments [ticket]='ticketDetail' [allAssignmentTags]='allAssignmentTags'></tt-ticket-comments>
                 <tt-ticket-comment-input
                     [allTicketTags]='allTicketTags'
                     [ticket]='ticketDetail'
