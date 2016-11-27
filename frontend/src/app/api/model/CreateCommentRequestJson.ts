@@ -30,9 +30,9 @@ export interface CreateCommentRequestJson {
 
     ticketId: string;
 
-    mentionedTicketIds: Array<string>;
+    mentionedTicketNumbers: Array<number>;
 
-    loggedTime: Array<models.CreateLoggedTimeJson>;
+    commands: Array<models.CommentCommandJson>;
 
 }
 

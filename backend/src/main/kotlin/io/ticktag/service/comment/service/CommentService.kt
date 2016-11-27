@@ -11,7 +11,6 @@ interface CommentService {
     fun listCommentsForTicket(ticketId: UUID): List<CommentResult>
     fun getComment(commentId: UUID): CommentResult?
     fun createComment(createComment: CreateComment, principal: Principal, ticketId: UUID): CommentResult
-    fun updateComment(commentId: UUID, updateComment: UpdateComment, principal: Principal): CommentResult?
+    fun updateComment(commentId: UUID, updateComment: UpdateComment): CommentResult?
     fun deleteComment(commentId: UUID)
-
 }

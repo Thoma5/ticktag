@@ -1,22 +1,29 @@
 package io.ticktag.service.comment.service.impl
 
 import io.ticktag.TicktagService
-import io.ticktag.persistence.LoggedTime.LoggedTimeRepository
+import io.ticktag.library.unicode.NameNormalizationLibrary
+import io.ticktag.persistence.loggedtime.LoggedTimeRepository
 import io.ticktag.persistence.comment.CommentRepository
-import io.ticktag.persistence.ticket.TicketEventRepository
-import io.ticktag.persistence.ticket.TicketRepository
+import io.ticktag.persistence.ticket.AssignmentTagRepository
 import io.ticktag.persistence.ticket.entity.Comment
-import io.ticktag.persistence.ticket.entity.TicketEventCommentTextChanged
+import io.ticktag.persistence.ticket.TicketRepository
+import io.ticktag.persistence.tickettag.TicketTagRepository
+import io.ticktag.persistence.timecategory.TimeCategoryRepository
 import io.ticktag.persistence.user.UserRepository
-import io.ticktag.service.AuthExpr
-import io.ticktag.service.NotFoundException
-import io.ticktag.service.Principal
+import io.ticktag.service.*
+import io.ticktag.service.comment.dto.CommentCommand
 import io.ticktag.service.comment.dto.CommentResult
 import io.ticktag.service.comment.dto.CreateComment
+
+import io.ticktag.service.loggedtime.dto.CreateLoggedTime
+
 import io.ticktag.service.comment.dto.UpdateComment
 import io.ticktag.service.comment.service.CommentService
-import io.ticktag.service.loggedTime.dto.CreateLoggedTime
-import io.ticktag.service.loggedTime.service.LoggedTimeService
+import io.ticktag.service.loggedtime.service.LoggedTimeService
+import io.ticktag.service.ticket.dto.UpdateTicket
+import io.ticktag.service.ticket.service.TicketService
+import io.ticktag.service.ticketassignment.services.TicketAssignmentService
+import io.ticktag.service.tickettagrelation.services.TicketTagRelationService
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
 import java.time.Instant
@@ -28,11 +35,16 @@ import javax.validation.Valid
 open class CommentServiceImpl @Inject constructor(
         private val comments: CommentRepository,
         private val tickets: TicketRepository,
-        private val ticketEvents: TicketEventRepository,
         private val users: UserRepository,
         private val loggedTimeService: LoggedTimeService,
-        private val loggedTimes: LoggedTimeRepository
-
+        private val loggedTimes: LoggedTimeRepository,
+        private val ticketTags: TicketTagRepository,
+        private val timeCategories: TimeCategoryRepository,
+        private val assignmentTags: AssignmentTagRepository,
+        private val ticketService: TicketService,
+        private val nn: NameNormalizationLibrary,
+        private val ticketTagRelationService: TicketTagRelationService,
+        private val ticketAssignmentService: TicketAssignmentService
 ) : CommentService {
 
     @PreAuthorize(AuthExpr.READ_TICKET)
@@ -41,29 +53,114 @@ open class CommentServiceImpl @Inject constructor(
         return ticket.comments.filter { c -> c.describedTicket == null }.map(::CommentResult)
     }
 
+    // TODO change events?
     @PreAuthorize(AuthExpr.CREATE_COMMENT)
     override fun createComment(@Valid createComment: CreateComment, principal: Principal, @P("authTicketId") ticketId: UUID): CommentResult {
-
         val text = createComment.text
         val ticket = tickets.findOne(createComment.ticketId) ?: throw NotFoundException()
         val user = users.findOne(principal.id) ?: throw NotFoundException()
         val creationTime = Instant.now()
         val newComment = Comment.create(creationTime, text, user, ticket)
         comments.insert(newComment)
-        if (createComment.mentionedTicketIds != null) {
-            for (ticketId: UUID in createComment.mentionedTicketIds) {
-                val ticket = tickets.findOne(ticketId) ?: throw NotFoundException()
-                newComment.mentionedTickets.add(ticket)
+
+        val errors = mutableListOf<ValidationError>()
+
+        for ((index, command) in createComment.commands.withIndex()) {
+            when (command) {
+                is CommentCommand.Assign -> {
+                    val assignUser = users.findByUsername(command.user)
+                    val assignTag = assignmentTags.findByNormalizedNameAndProjectId(nn.normalize(command.tag), ticket.project.id)
+                    if (assignUser != null && assignTag != null) {
+                        tryCommand(errors, index) {
+                            ticketAssignmentService.createOrGetIfExistsTicketAssignment(ticket.id, assignTag.id, assignUser.id, principal)
+                        }
+                    } else {
+                        failedCommand(errors, index)
+                    }
+                }
+                is CommentCommand.Unassign -> {
+                    val removeUser = users.findByUsername(command.user)
+                    if (removeUser != null) {
+                        if (command.tag == null) {
+                            tryCommand(errors, index) {
+                                ticketAssignmentService.deleteTicketAssignments(ticket.id, removeUser.id,principal)
+                            }
+                        } else {
+                            val removeTag = assignmentTags.findByNormalizedNameAndProjectId(nn.normalize(command.tag), ticket.project.id)
+                            if (removeTag != null) {
+                                tryCommand(errors, index) {
+                                    ticketAssignmentService.deleteTicketAssignment(ticket.id, removeTag.id, removeUser.id, principal)
+                                }
+                            } else {
+                                failedCommand(errors, index)
+                            }
+                        }
+                    } else {
+                        failedCommand(errors, index)
+                    }
+                }
+                is CommentCommand.Close -> {
+                    tryCommand(errors, index) {
+                        ticketService.updateTicket(UpdateTicket(null, false, null, null, null, null, null, null), ticket.id, principal)
+                    }
+                }
+                is CommentCommand.Reopen -> {
+                    tryCommand(errors, index) {
+                        ticketService.updateTicket(UpdateTicket(null, true, null, null, null, null, null, null), ticket.id, principal)
+                    }
+                }
+                is CommentCommand.Tag -> {
+                    val tag = ticketTags.findByNormalizedNameAndProjectId(nn.normalize(command.tag), ticket.project.id)
+                    if (tag != null) {
+                        tryCommand(errors, index) {
+                            ticketTagRelationService.createOrGetIfExistsTicketTagRelation(ticket.id, tag.id)
+                        }
+                    } else {
+                        failedCommand(errors, index)
+                    }
+                }
+                is CommentCommand.Untag -> {
+                    val tag = ticketTags.findByNormalizedNameAndProjectId(nn.normalize(command.tag), ticket.project.id)
+                    if (tag != null) {
+                        tryCommand(errors, index) {
+                            ticketTagRelationService.deleteTicketTagRelation(ticket.id, tag.id)
+                        }
+                    } else {
+                        failedCommand(errors, index)
+                    }
+                }
+                is CommentCommand.Est -> {
+                    tryCommand(errors, index) {
+                        ticketService.updateTicket(UpdateTicket(null, null, null, null, command.duration, null, null, null), ticket.id, principal)
+                    }
+                }
+                is CommentCommand.Time -> {
+                    val cat = timeCategories.findByNormalizedNameAndProjectId(nn.normalize(command.category), ticket.project.id)
+                    if (cat != null) {
+                        tryCommand(errors, index) {
+                            // TODO why needs createLoggedTime the comment id twice???
+                            loggedTimeService.createLoggedTime(CreateLoggedTime(command.duration, newComment.id, cat.id), newComment.id)
+                        }
+                    } else {
+                        failedCommand(errors, index)
+                    }
+                }
             }
         }
 
-        if (createComment.loggedTime != null) {
-            for (createLoggedTime: CreateLoggedTime in createComment.loggedTime) {
-                val result = loggedTimeService.createLoggedTime(createLoggedTime, newComment.id)
-                val loggedTime = loggedTimes.findOne(result.id) ?: throw NotFoundException()
-                newComment.loggedTimes.add(loggedTime)
+        for (reference in createComment.mentionedTicketNumbers) {
+            val referencedTicket = tickets.findByNumber(reference)
+            if (referencedTicket != null) {
+                newComment.mentionedTickets.add(referencedTicket)
+            } else {
+                errors.add(ValidationError("createComment.mentionedTicketNumbers", ValidationErrorDetail.Other("$reference")))
             }
         }
+
+        if (errors.isNotEmpty()) {
+            throw TicktagValidationException(errors)
+        }
+
         return CommentResult(newComment)
     }
 
@@ -77,15 +174,13 @@ open class CommentServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.EDIT_COMMENT)
-    override fun updateComment(@P("authCommentId") commentId: UUID, @Valid updateComment: UpdateComment, principal: Principal): CommentResult? {
-        val user = users.findOne(principal.id) ?: throw NotFoundException()
+    override fun updateComment(@P("authCommentId") commentId: UUID, @Valid updateComment: UpdateComment): CommentResult? {
+
         val comment = comments.findOne(commentId) ?: throw NotFoundException()
         if (comment.describedTicket != null) {
             throw NotFoundException()
         }
         if (updateComment.text != null) {
-            if (comment.text != updateComment.text)
-                ticketEvents.insert(TicketEventCommentTextChanged.create(comment.ticket, user, comment, comment.text, updateComment.text))
             comment.text = updateComment.text
         }
         if (updateComment.mentionedTicketIds != null) {
@@ -120,4 +215,17 @@ open class CommentServiceImpl @Inject constructor(
         comments.delete(comment)
     }
 
+    private fun failedCommand(errors: MutableList<ValidationError>, index: Int) {
+        errors.add(ValidationError("createComment.commands", ValidationErrorDetail.Other("$index")))
+    }
+
+    private fun tryCommand(errors: MutableList<ValidationError>, index: Int, fn: () -> Unit) {
+        try {
+            fn()
+        } catch (ex: TicktagValidationException) {
+            failedCommand(errors, index)
+        } catch (ex: NotFoundException) {
+            failedCommand(errors, index)
+        }
+    }
 }

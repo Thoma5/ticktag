@@ -40,13 +40,7 @@ export interface UpdateTicketRequestJson {
 
     description?: string;
 
-    ticketAssignments?: Array<models.TicketAssignmentJson>;
-
-    subTickets?: Array<models.CreateTicketRequestJson>;
-
-    existingSubTicketIds?: Array<string>;
-
-    partenTicketId?: string;
+    parentTicketId?: string;
 
 }
 

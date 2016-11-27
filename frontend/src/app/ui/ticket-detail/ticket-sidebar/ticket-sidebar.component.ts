@@ -1,77 +1,83 @@
-import { Component, Input } from '@angular/core';
-import { UserResultJson, TicketResultJson } from '../../../api';
-import { AssignmentTagResultJson } from '../assigned-user/assigned-user.component';
+import { Component, Input, EventEmitter, Output, OnChanges, SimpleChanges } from '@angular/core';
+import { UserApi, UserResultJson } from '../../../api';
+import { ApiCallService } from '../../../service';
+import { using } from '../../../util/using';
+import * as imm from 'immutable';
+import { TicketDetail, TicketDetailAssTag, TicketDetailUser } from '../ticket-detail';
 
-let userMock1: UserResultJson = {
-  username: 'maxmustermann',
-  id: '123q4123412341324',
-  mail: 'mail@maililili.com',
-  name: 'Max Mustermann',
-  role: UserResultJson.RoleEnum.USER,
-};
-let userMock2: UserResultJson = {
-  username: 'maxmustermann',
-  id: 'asdfasdfasdf',
-  mail: 'mail@mailasdilili.com',
-  name: 'Alan Turing',
-  role: UserResultJson.RoleEnum.USER,
-};
-let tagsMock1 = ['asdfasdfasdfasdf', '0938rfgjhsd0wsafd'];
-let tagsMock2 = ['0sdfsfsdfsdfsdfasdfd', '0938rfasdfasddf0wsafd'];
-let allTagsMock: AssignmentTagResultJson[] = [
-  {id: 'asdfasdfasdfasdf', name: 'Developer', color: 'ffff00', order: 1},
-  {id: '0938rfgjhsd0wsafd', name: 'Reviewer', color: 'ff00ff', order: 2},
-  {id: '0sdfsfsdfsdfsdfasdfd', name: 'Owner', color: 'ffff00', order: 3},
-  {id: '0938rfasdfasddf0wsafd', name: 'Blaa', color: 'ffffff', order: 4},
-];
-let referencedTicketsMock: {number: number, title: string}[] = [
-  {number: 234, title: 'Fix this ugly thing there'},
-  {number: 4, title: 'World domination'},
-  {number: 5587, title: 'Just do something... please!'},
-];
-let referencedByTicketsMock: {number: number, title: string}[] = [
-  {number: 234, title: 'Fix this ugly thing there'},
-  {number: 78, title: 'This is a ticket'},
-  {number: 999, title: 'Implement UI for tickets'},
-  {number: 754, title: 'Automatically close super-ticket when all suptickets are done'},
-];
+type Assignment = {
+  user: TicketDetailUser,
+  tags: imm.List<{ id: string, transient: boolean }>
+}
 
 @Component({
   selector: 'tt-ticket-sidebar',
   templateUrl: './ticket-sidebar.component.html',
   styleUrls: ['./ticket-sidebar.component.scss']
 })
-export class TicketSidebarComponent {
-    @Input() ticket: TicketResultJson;
-    assigned = [{user: userMock1, tags: tagsMock1}, {user: userMock2, tags: tagsMock2}];
-    allTags = allTagsMock;
-    referencedTickets = referencedTicketsMock;
-    referencedByTickets = referencedByTicketsMock;
+export class TicketSidebarComponent implements OnChanges {
+  @Input() ticket: TicketDetail;
+  @Input() allAssignmentTags = imm.Map<string, TicketDetailAssTag>();
+  private assignments: imm.List<Assignment>;
 
-    private adding = false;
-    private newUserName = '';
+  @Output() readonly assignmentAdd = new EventEmitter<{user: string, tag: string}>();
+  @Output() readonly assignmentRemove = new EventEmitter<{user: string, tag: string}>();
+  @Output() readonly userAdd = new EventEmitter<TicketDetailUser>();
 
-    onShowAdd() {
-      this.adding = true;
+  private adding = false;
+  private checking = false;
+  private newUserName = '';
+
+  constructor(
+    private userApi: UserApi,
+    private apiCallService: ApiCallService) {
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if ('ticket' in changes || 'allAssignmentTags' in changes) {
+      this.assignments = this.ticket.users
+        .map((tags, user) => ({
+          user: user,
+          tags: tags.map(t => ({id: t.tag.id, transient: t.transient})).toList()
+        }))
+        .sort(using<Assignment>(it => it.user.name.toLocaleLowerCase()))
+        .toList();
     }
+  }
 
-    onHideAdd() {
-      this.adding = false;
-    }
+  onTagAdd(userId: string, tagId: string) {
+    this.assignmentAdd.emit({ user: userId, tag: tagId });
+  }
 
-    onAdd() {
-      // TODO username
-      // TODO database checks and so on
-      this.assigned.push({
-        user: {
-          username: 'todo',
-          id: Math.random() + '',
-          mail: 'aa.aaa',
-          name: this.newUserName,
-          role: UserResultJson.RoleEnum.USER,
-        },
-        tags: [],
-      });
-      this.newUserName = '';
+  onTagRemove(userId: string, tagId: string) {
+    this.assignmentRemove.emit({ user: userId, tag: tagId });
+  }
+
+  onShowAdd() {
+    this.adding = true;
+  }
+
+  onHideAdd() {
+    this.adding = false;
+  }
+
+  onAdd() {
+    this.checking = true;
+    let username = this.newUserName.trim();
+    if (username) {
+      // TODO graceful error handling
+      this.apiCallService
+        .callNoError<UserResultJson>(p => this.userApi.getUserByUsernameUsingGETWithHttpInfo(username, p))
+        .map(user => new TicketDetailUser(user))
+        .subscribe(user => {
+          this.checking = false;
+          this.userAdd.emit(user);
+          this.newUserName = '';
+        });
     }
+  }
+
+  assignedUserTrackBy(index: number, item: Assignment): string {
+    return item.user.id;
+  }
 }

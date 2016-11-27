@@ -26,6 +26,8 @@
 import * as models from './models';
 
 export interface GetResultJson {
+    tickets: { [key: string]: models.TicketResultJson; };
+
     users: { [key: string]: models.UserResultJson; };
 
 }

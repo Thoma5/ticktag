@@ -20,4 +20,5 @@ interface TicketTagRepository : TicktagCrudRepository<TicketTag, UUID> {
     fun findByProjectId(@Param("projectId") projectId: UUID): List<TicketTag>
 
     fun findByTicketTagGroupId(ticketTagGroupId: UUID): List<TicketTag>
+
 }

@@ -27,6 +27,8 @@ class PropertiesLoader {
                 get() = (props["db.validate"] as String).toBoolean()
             override val httpPort: Int
                 get() = (props["http.port"] as String).toInt()
+            override val httpSlow: Boolean
+                get() = (props["http.slow"] as String).toBoolean()
             override val serverSecret: String
                 get() = props["server.secret"] as String
             override val serverNumber: Int

@@ -1,5 +1,6 @@
 /* tslint:disable */
 export * from './AssignmentTagResultJson';
+export * from './CommentCommandJson';
 export * from './CommentResultJson';
 export * from './CountJson';
 export * from './CreateAssignmentTagRequestJson';
@@ -10,8 +11,10 @@ export * from './CreateProjectRequestJson';
 export * from './CreateTicketRequestJson';
 export * from './CreateTicketTagGroupRequestJson';
 export * from './CreateTicketTagRequestJson';
+export * from './CreateTicketUserRelationRequestJson';
 export * from './CreateTimeCategoryRequestJson';
 export * from './CreateUserRequestJson';
+export * from './GetRequestJson';
 export * from './GetResultJson';
 export * from './LoggedTimeResultJson';
 export * from './LoginRequestJson';
@@ -27,7 +30,9 @@ export * from './TicketAssignmentResultJson';
 export * from './TicketEventResultJson';
 export * from './TicketResultJson';
 export * from './TicketTagGroupResultJson';
+export * from './TicketTagRelationResultJson';
 export * from './TicketTagResultJson';
+export * from './TicketUserRelationResultJson';
 export * from './TimeCategoryJson';
 export * from './UpdateAssignmentRequestJson';
 export * from './UpdateCommentRequestJson';

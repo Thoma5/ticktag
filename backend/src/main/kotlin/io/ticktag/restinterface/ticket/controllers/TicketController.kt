@@ -2,10 +2,7 @@ package io.ticktag.restinterface.ticket.controllers
 
 import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
-import io.ticktag.restinterface.ticket.schema.CreateTicketRequestJson
-import io.ticktag.restinterface.ticket.schema.TicketResultJson
-import io.ticktag.restinterface.ticket.schema.TicketSort
-import io.ticktag.restinterface.ticket.schema.UpdateTicketRequestJson
+import io.ticktag.restinterface.ticket.schema.*
 import io.ticktag.service.Principal
 import io.ticktag.service.ticket.dto.CreateTicket
 import io.ticktag.service.ticket.dto.UpdateTicket
@@ -21,7 +18,7 @@ import javax.inject.Inject
 
 @TicktagRestInterface
 @RequestMapping("/ticket")
-@Api(tags = arrayOf("ticket"), description = "ticket manager")
+@Api(tags = arrayOf("ticket"), description = "ticket management")
 open class TicketController @Inject constructor(
         private val ticketService: TicketService
 ) {

@@ -1,5 +1,6 @@
 <script src="ticket-detail.component.ts"></script>
 <div class='ticket-detail-container'>
+<<<<<<< HEAD
   <div *ngIf="loading" class='loading'>
     <tt-loading></tt-loading>
   </div>
@@ -32,4 +33,50 @@
       <tt-ticket-sidebar [ticket]="ticket"></tt-ticket-sidebar>
     </div>
   </div>
+=======
+    <div *ngIf="loading" class='loading'>
+        <tt-loading></tt-loading>
+    </div>
+    <div *ngIf="!loading" class='content row'>
+        <div class='left col-md-8'>
+            <tt-ticket-core
+                [open]='ticketDetail.open'
+                [number]='ticketDetail.number'
+                [title]='ticketDetail.title' (titleChange)='onTitleChange($event)'
+                [description]='ticketDetail.description' (descriptionChange)='onDescriptionChange($event)'
+                [storypoints]='ticketDetail.storyPoints' (storypointsChange)='onStorypointsChange($event)'
+                [tags]='ticketDetail.tags' (tagAdd)='onTagAdd($event)' (tagRemove)='onTagRemove($event)'
+                [initialEstimatedTime]='ticketDetail.initialEstimatedTime'
+                [currentEstimatedTime]='ticketDetail.currentEstimatedTime'
+                [dueDate]='ticketDetail.dueDate'
+                [creator]='ticketDetail.createdBy'
+                [createTime]='ticketDetail.createTime'
+                [subtickets]='ticketDetail.subtickets'
+
+                [allTags]='allTicketTags'
+            ></tt-ticket-core>
+
+            <div class='comments-wrapper'>
+                <tt-ticket-comments [comments]='ticketDetail.comments'></tt-ticket-comments>
+                <tt-ticket-comment-input
+                    [allTicketTags]='allTicketTags'
+                    [ticket]='ticketDetail'
+                    [allTimeCategories]='allTimeCategories'
+                    [allAssignmentTags]='allAssignmentTags'
+                    (commentCreate)='onCommentCreate($event)'
+                ></tt-ticket-comment-input>
+            </div>
+        </div>
+        <div class='right col-md-4'>
+            <tt-ticket-sidebar
+                [ticket]="ticketDetail"
+                [allAssignmentTags]="allAssignmentTags"
+                (assignmentAdd)="onAssignmentAdd($event)"
+                (assignmentRemove)="onAssignmentRemove($event)"
+                (userAdd)="onAssignmentUserAdd($event)"
+            ></tt-ticket-sidebar>
+        </div>
+    </div>
+    <pre>{{ ticketDetail | json }}</pre>
+>>>>>>> develop
 </div>

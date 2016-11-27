@@ -1,7 +1,7 @@
 package io.ticktag.restinterface
 
 import io.ticktag.ApplicationProperties
-import io.ticktag.persistence.LoggedTime.LoggedTimeRepository
+import io.ticktag.persistence.loggedtime.LoggedTimeRepository
 import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.member.MemberRepository
 import io.ticktag.persistence.ticket.AssignmentTagRepository
@@ -50,6 +50,7 @@ open class RestSecurityConfig @Inject constructor(
             cc.addAllowedHeader(CorsConfiguration.ALL)
             cc.addAllowedMethod(CorsConfiguration.ALL)
             cc.addAllowedOrigin(CorsConfiguration.ALL)
+            cc.maxAge = 600  // 10 minutes seems to be the maximum in most browsers
             return cc
         }
     }

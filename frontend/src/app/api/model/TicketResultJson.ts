@@ -42,8 +42,6 @@ export interface TicketResultJson {
 
     initialEstimatedTime?: number;
 
-    mentoningCommentIds: Array<string>;
-
     number: number;
 
     open: boolean;
@@ -52,13 +50,17 @@ export interface TicketResultJson {
 
     projectId: string;
 
+    referencedTicketIds: Array<string>;
+
+    referencingTicketIds: Array<string>;
+
     storyPoints?: number;
 
     subTicketIds: Array<string>;
 
     tagIds?: Array<string>;
 
-    ticketAssignments: Array<models.TicketAssignmentResultJson>;
+    ticketUserRelations: Array<models.TicketUserRelationResultJson>;
 
     title: string;
 

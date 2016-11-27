@@ -1,6 +1,6 @@
 package io.ticktag.restinterface.ticket.schema
 
-import io.ticktag.restinterface.ticketassignment.schema.TicketAssignmentResultJson
+import io.ticktag.restinterface.ticketuserrelation.schema.TicketUserRelationResultJson
 import io.ticktag.service.ticket.dto.TicketResult
 import java.time.Duration
 import java.time.Instant
@@ -18,17 +18,21 @@ class TicketResultJson(
         val dueDate: Instant?,
         val description: String,
         val projectId: UUID,
-        val ticketAssignments: List<TicketAssignmentResultJson>,
+        val ticketUserRelations: List<TicketUserRelationResultJson>,
         val subTicketIds: List<UUID>,
         val parentTicketId: UUID?,
         val createdBy: UUID,
         val tagIds: List<UUID>?,
-        val mentoningCommentIds: List<UUID>,
+        val referencingTicketIds: List<UUID>,
+        val referencedTicketIds: List<UUID>,
         val commentIds: List<UUID>
 
 ) {
     constructor(t: TicketResult) : this(id = t.id, number = t.number, createTime = t.createTime, title = t.title,
-            open = t.open, storyPoints = t.storyPoints, initialEstimatedTime = t.initialEstimatedTime, currentEstimatedTime = t.currentEstimatedTime,
-            dueDate = t.dueDate, description = t.description, projectId = t.projectId, ticketAssignments = t.ticketAssignments.map(::TicketAssignmentResultJson), subTicketIds = t.subTicketIds, parentTicketId = t.parentTicketId,
-            createdBy = t.createdBy, tagIds = t.tagIds, mentoningCommentIds = t.mentoningCommentIds, commentIds = t.commentIds)
+            open = t.open, storyPoints = t.storyPoints, initialEstimatedTime = t.initialEstimatedTime,
+            currentEstimatedTime = t.currentEstimatedTime, dueDate = t.dueDate, description = t.description,
+            projectId = t.projectId, ticketUserRelations = t.ticketAssignments.map(::TicketUserRelationResultJson),
+            subTicketIds = t.subTicketIds, parentTicketId = t.parentTicketId, createdBy = t.createdBy,
+            tagIds = t.tagIds, referencingTicketIds = t.referencingTicketIds,
+            referencedTicketIds = t.referencedTicketIds, commentIds = t.commentIds)
 }

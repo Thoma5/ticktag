@@ -20,11 +20,15 @@ class TimeCategoryApiTest : ApiBaseTest() {
     var name = "0815Activity"
     var name2 = "1337Activity"
 
+    override fun loadTestData(): List<String> {
+        return arrayListOf("sql/testBaseSamples.sql")
+    }
+
     /*Create Tests*/
     @Test
     fun `create timecategory with Admin and not member should succeed`() {
         val projectId = PROJECT_NO_MEMBERS_ID
-        withUser(ADMIN_USER_ID) { principal ->
+        withUser(ADMIN_ID) { principal ->
             val req = CreateTimeCategoryRequestJson(projectId, name)
             assignmentTagController.createTimeCategory(req)
             val result = assignmentTagController.listProjectTimeCategories(projectId).filter { it.name == name }.singleOrNull()
@@ -37,7 +41,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
     @Test
     fun `create timecategory with User as ProjectAdmin should succeed`() {
         val projectId = PROJECT_AOU_UOA_ID
-        withUser(USER_USER_ID) { principal ->
+        withUser(USER_ID) { principal ->
             val req = CreateTimeCategoryRequestJson(projectId, name)
             assignmentTagController.createTimeCategory(req)
             assignmentTagController.listProjectTimeCategories(projectId)
@@ -51,7 +55,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
     @Test
     fun `create timecategory with Observer as ProjectAdmin should succeed`() {
         val projectId = PROJECT_AOU_OAU_ID
-        withUser(OBSERVER_USER_ID) { principal ->
+        withUser(OBSERVER_ID) { principal ->
             val req = CreateTimeCategoryRequestJson(projectId, name)
             assignmentTagController.createTimeCategory(req)
             assignmentTagController.listProjectTimeCategories(projectId)
@@ -65,7 +69,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
     @Test(expected = AccessDeniedException::class)
     fun `create timecategory with User as Observer should fail`() {
         val projectId = PROJECT_AOU_AUO_ID
-        withUser(USER_USER_ID) { principal ->
+        withUser(USER_ID) { principal ->
             val req = CreateTimeCategoryRequestJson(projectId, name)
             assignmentTagController.createTimeCategory(req)
         }
@@ -74,7 +78,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
     @Test(expected = AccessDeniedException::class)
     fun `create timecategory with User as User should fail`() {
         val projectId = PROJECT_AOU_OAU_ID
-        withUser(USER_USER_ID) { principal ->
+        withUser(USER_ID) { principal ->
             val req = CreateTimeCategoryRequestJson(projectId, name)
             assignmentTagController.createTimeCategory(req)
         }
@@ -83,7 +87,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
     @Test(expected = AccessDeniedException::class)
     fun `create timecategory with Observer as Observer should fail`() {
         val projectId = PROJECT_AOU_UOA_ID
-        withUser(OBSERVER_USER_ID) { principal ->
+        withUser(OBSERVER_ID) { principal ->
             val req = CreateTimeCategoryRequestJson(projectId, name)
             assignmentTagController.createTimeCategory(req)
         }
@@ -92,7 +96,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
     @Test(expected = AccessDeniedException::class)
     fun `create timecategory with User and not member should fail`() {
         val projectId = PROJECT_NO_MEMBERS_ID
-        withUser(USER_USER_ID) { principal ->
+        withUser(USER_ID) { principal ->
             val req = CreateTimeCategoryRequestJson(projectId, name)
             assignmentTagController.createTimeCategory(req)
         }
@@ -101,7 +105,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
     @Test(expected = AccessDeniedException::class)
     fun `create timecategory with Observer and not member should fail`() {
         val projectId = PROJECT_NO_MEMBERS_ID
-        withUser(OBSERVER_USER_ID) { principal ->
+        withUser(OBSERVER_ID) { principal ->
             val req = CreateTimeCategoryRequestJson(projectId, name)
             assignmentTagController.createTimeCategory(req)
         }
@@ -119,7 +123,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
     @Test(expected = TicktagValidationException::class)
     fun `create timecategory with wrong data should fail`() {
         val projectId = PROJECT_NO_MEMBERS_ID
-        withUser(ADMIN_USER_ID) { principal ->
+        withUser(ADMIN_ID) { principal ->
             val req = CreateTimeCategoryRequestJson(projectId, "")
             assignmentTagController.createTimeCategory(req)
         }
@@ -129,7 +133,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
     @Test
     fun `update timecategory with Admin and not member should succeed`() {
         val projectId = PROJECT_NO_MEMBERS_ID
-        withUser(ADMIN_USER_ID) { principal ->
+        withUser(ADMIN_ID) { principal ->
             val req = UpdateTimeCategoryRequestJson(name2)
             assignmentTagController.updateTimeCategory(TIMECAT_PROJECT_NO_MEMBERS_IDS.first(), req)
             val result = assignmentTagController.listProjectTimeCategories(projectId).filter { it.name == name2 }.singleOrNull()
@@ -142,7 +146,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
     @Test
     fun `update timecategory with User as ProjectAdmin should succeed`() {
         val projectId = PROJECT_AOU_UOA_ID
-        withUser(USER_USER_ID) { principal ->
+        withUser(USER_ID) { principal ->
             val req = UpdateTimeCategoryRequestJson(name2)
             assignmentTagController.updateTimeCategory(TIMECAT_PROJECT_AOU_UOA_IDS.first(), req)
             val result = assignmentTagController.listProjectTimeCategories(projectId).filter { it.name == name2 }.singleOrNull()
@@ -155,7 +159,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
     @Test
     fun `update timecategory with Observer as ProjectAdmin should succeed`() {
         val projectId = PROJECT_AOU_OAU_ID
-        withUser(OBSERVER_USER_ID) { principal ->
+        withUser(OBSERVER_ID) { principal ->
             val req = UpdateTimeCategoryRequestJson(name2)
             assignmentTagController.updateTimeCategory(TIMECAT_PROJECT_AOU_OAU_IDS.first(), req)
             val result = assignmentTagController.listProjectTimeCategories(projectId).filter { it.name == name2 }.singleOrNull()
@@ -167,7 +171,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
 
     @Test(expected = AccessDeniedException::class)
     fun `update timecategory with User as Observer should fail`() {
-        withUser(USER_USER_ID) { principal ->
+        withUser(USER_ID) { principal ->
             val req = UpdateTimeCategoryRequestJson(name)
             assignmentTagController.updateTimeCategory(TIMECAT_PROJECT_AOU_AUO_IDS.first(), req)
         }
@@ -175,7 +179,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
 
     @Test(expected = AccessDeniedException::class)
     fun `update timecategory with User as User should fail`() {
-        withUser(USER_USER_ID) { principal ->
+        withUser(USER_ID) { principal ->
             val req = UpdateTimeCategoryRequestJson(name)
             assignmentTagController.updateTimeCategory(TIMECAT_PROJECT_AOU_OAU_IDS.first(), req)
         }
@@ -183,7 +187,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
 
     @Test(expected = AccessDeniedException::class)
     fun `update timecategory with Observer as Observer should fail`() {
-        withUser(OBSERVER_USER_ID) { principal ->
+        withUser(OBSERVER_ID) { principal ->
             val req = UpdateTimeCategoryRequestJson(name)
             assignmentTagController.updateTimeCategory(TIMECAT_PROJECT_AOU_UOA_IDS.first(), req)
         }
@@ -191,7 +195,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
 
     @Test(expected = AccessDeniedException::class)
     fun `update timecategory with User and not member should fail`() {
-        withUser(USER_USER_ID) { principal ->
+        withUser(USER_ID) { principal ->
             val req = UpdateTimeCategoryRequestJson(name)
             assignmentTagController.updateTimeCategory(TIMECAT_PROJECT_NO_MEMBERS_IDS.first(), req)
         }
@@ -199,7 +203,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
 
     @Test(expected = AccessDeniedException::class)
     fun `update timecategory with Observer and not member should fail`() {
-        withUser(OBSERVER_USER_ID) { principal ->
+        withUser(OBSERVER_ID) { principal ->
             val req = UpdateTimeCategoryRequestJson(name)
             assignmentTagController.updateTimeCategory(TIMECAT_PROJECT_NO_MEMBERS_IDS.first(), req)
         }
@@ -215,7 +219,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
 
     @Test(expected = TicktagValidationException::class)
     fun `update timecategory with wrong data should fail`() {
-        withUser(ADMIN_USER_ID) { principal ->
+        withUser(ADMIN_ID) { principal ->
             val req = UpdateTimeCategoryRequestJson("")
             assignmentTagController.updateTimeCategory(TIMECAT_PROJECT_NO_MEMBERS_IDS.first(), req)
         }
@@ -223,7 +227,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
 
     @Test(expected = NotFoundException::class)
     fun `update unexisting timecategory should fail`() {
-        withUser(ADMIN_USER_ID) { principal ->
+        withUser(ADMIN_ID) { principal ->
             val req = UpdateTimeCategoryRequestJson(name)
             assignmentTagController.updateTimeCategory(PROJECT_NO_MEMBERS_ID, req)
         }
@@ -232,7 +236,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
     /*Get  Tests*/
     @Test
     fun `get timecategory with Admin and not member should succeed`() {
-        withUser(ADMIN_USER_ID) { principal ->
+        withUser(ADMIN_ID) { principal ->
             val timecat = assignmentTagController.getTimeCategory(TIMECAT_PROJECT_NO_MEMBERS_IDS.first())
             assertThat(timecat.name, `is`(TIMECAT_CONTENT.first()))
         }
@@ -240,7 +244,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
 
     @Test
     fun `get timecategory with Observer and not member should succeed`() {
-        withUser(OBSERVER_USER_ID) { principal ->
+        withUser(OBSERVER_ID) { principal ->
             val timecat = assignmentTagController.getTimeCategory(TIMECAT_PROJECT_NO_MEMBERS_IDS.first())
             assertThat(timecat.name, `is`(TIMECAT_CONTENT.first()))
         }
@@ -249,7 +253,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
 
     @Test
     fun `get timecategory with User as ProjectAdmin should succeed`() {
-        withUser(USER_USER_ID) { principal ->
+        withUser(USER_ID) { principal ->
             val timecat = assignmentTagController.getTimeCategory(TIMECAT_PROJECT_AOU_UOA_IDS.first())
             assertThat(timecat.name, `is`(TIMECAT_CONTENT.first()))
         }
@@ -258,7 +262,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
 
     @Test
     fun `get timecategory with User as ProjectObserver should succeed`() {
-        withUser(USER_USER_ID) { principal ->
+        withUser(USER_ID) { principal ->
             val timecat = assignmentTagController.getTimeCategory(TIMECAT_PROJECT_AOU_AUO_IDS.first())
             assertThat(timecat.name, `is`(TIMECAT_CONTENT.first()))
         }
@@ -266,7 +270,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
     }
 
     fun `get timecategory with User as ProjectUser should succeed`() {
-        withUser(USER_USER_ID) { principal ->
+        withUser(USER_ID) { principal ->
             val timecat = assignmentTagController.getTimeCategory(TIMECAT_PROJECT_AOU_OAU_IDS.first())
             assertThat(timecat.name, `is`(TIMECAT_CONTENT.first()))
         }
@@ -275,7 +279,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
 
     @Test
     fun `get timecategory with Observer as ProjectAdmin should succeed`() {
-        withUser(OBSERVER_USER_ID) { principal ->
+        withUser(OBSERVER_ID) { principal ->
             val timecat = assignmentTagController.getTimeCategory(TIMECAT_PROJECT_AOU_OAU_IDS.first())
             assertThat(timecat.name, `is`(TIMECAT_CONTENT.first()))
         }
@@ -284,7 +288,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
 
     @Test
     fun `get timecategory with Observer as ProjectObserver should succeed`() {
-        withUser(OBSERVER_USER_ID) { principal ->
+        withUser(OBSERVER_ID) { principal ->
             val timecat = assignmentTagController.getTimeCategory(TIMECAT_PROJECT_AOU_UOA_IDS.first())
             assertThat(timecat.name, `is`(TIMECAT_CONTENT.first()))
         }
@@ -293,7 +297,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
 
     @Test
     fun `get timecategory with Observer as ProjectUser should succeed`() {
-        withUser(OBSERVER_USER_ID) { principal ->
+        withUser(OBSERVER_ID) { principal ->
             val timecat = assignmentTagController.getTimeCategory(TIMECAT_PROJECT_AOU_AUO_IDS.first())
             assertThat(timecat.name, `is`(TIMECAT_CONTENT.first()))
         }
@@ -302,7 +306,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
 
     @Test(expected = AccessDeniedException::class)
     fun `get timecategory with User and not member should fail`() {
-        withUser(USER_USER_ID) { principal ->
+        withUser(USER_ID) { principal ->
             assignmentTagController.getTimeCategory(TIMECAT_PROJECT_NO_MEMBERS_IDS.first())
         }
     }
@@ -318,7 +322,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
     @Test
     fun `list timecategory with Admin and not member should succeed`() {
         val timecatIds = TIMECAT_PROJECT_NO_MEMBERS_IDS
-        withUser(ADMIN_USER_ID) { principal ->
+        withUser(ADMIN_ID) { principal ->
             val timecat = assignmentTagController.listProjectTimeCategories(PROJECT_NO_MEMBERS_ID)
             assertThat(timecat.size, `is`(timecatIds.size))
             assertThat(timecat.first().id, `is`(timecatIds.first()))
@@ -329,7 +333,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
     @Test
     fun `list timecategory with Observer and not member should succeed`() {
         val timecatIds = TIMECAT_PROJECT_NO_MEMBERS_IDS
-        withUser(OBSERVER_USER_ID) { principal ->
+        withUser(OBSERVER_ID) { principal ->
             val timecat = assignmentTagController.listProjectTimeCategories(PROJECT_NO_MEMBERS_ID)
             assertThat(timecat.size, `is`(timecatIds.size))
             assertThat(timecat.first().id, `is`(timecatIds.first()))
@@ -340,7 +344,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
     @Test
     fun `list timecategory with User as ProjectAdmin should succeed`() {
         val timecatIds = TIMECAT_PROJECT_AOU_UOA_IDS
-        withUser(USER_USER_ID) { principal ->
+        withUser(USER_ID) { principal ->
             val timecat = assignmentTagController.listProjectTimeCategories(PROJECT_AOU_UOA_ID)
             assertThat(timecat.size, `is`(timecatIds.size))
             assertThat(timecat.first().id, `is`(timecatIds.first()))
@@ -352,7 +356,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
     @Test
     fun `list timecategory with User as ProjectObserver should succeed`() {
         val timecatIds = TIMECAT_PROJECT_AOU_AUO_IDS
-        withUser(USER_USER_ID) { principal ->
+        withUser(USER_ID) { principal ->
             val timecat = assignmentTagController.listProjectTimeCategories(PROJECT_AOU_AUO_ID)
             assertThat(timecat.size, `is`(timecatIds.size))
             assertThat(timecat.first().id, `is`(timecatIds.first()))
@@ -363,7 +367,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
 
     fun `list timecategory with User as ProjectUser should succeed`() {
         val timecatIds = TIMECAT_PROJECT_AOU_OAU_IDS
-        withUser(USER_USER_ID) { principal ->
+        withUser(USER_ID) { principal ->
             val timecat = assignmentTagController.listProjectTimeCategories(PROJECT_AOU_OAU_ID)
             assertThat(timecat.size, `is`(timecatIds.size))
             assertThat(timecat.first().id, `is`(timecatIds.first()))
@@ -375,7 +379,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
     @Test
     fun `list timecategory with Observer as ProjectAdmin should succeed`() {
         val timecatIds = TIMECAT_PROJECT_AOU_OAU_IDS
-        withUser(OBSERVER_USER_ID) { principal ->
+        withUser(OBSERVER_ID) { principal ->
             val timecat = assignmentTagController.listProjectTimeCategories(PROJECT_AOU_OAU_ID)
             assertThat(timecat.size, `is`(timecatIds.size))
             assertThat(timecat.first().id, `is`(timecatIds.first()))
@@ -387,7 +391,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
     @Test
     fun `list timecategory with Observer as ProjectObserver should succeed`() {
         val timecatIds = TIMECAT_PROJECT_AOU_UOA_IDS
-        withUser(OBSERVER_USER_ID) { principal ->
+        withUser(OBSERVER_ID) { principal ->
             val timecat = assignmentTagController.listProjectTimeCategories(PROJECT_AOU_UOA_ID)
             assertThat(timecat.size, `is`(timecatIds.size))
             assertThat(timecat.first().id, `is`(timecatIds.first()))
@@ -399,7 +403,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
     @Test
     fun `list timecategory with Observer as ProjectUser should succeed`() {
         val timecatIds = TIMECAT_PROJECT_AOU_AUO_IDS
-        withUser(OBSERVER_USER_ID) { principal ->
+        withUser(OBSERVER_ID) { principal ->
             val timecat = assignmentTagController.listProjectTimeCategories(PROJECT_AOU_AUO_ID)
             assertThat(timecat.size, `is`(timecatIds.size))
             assertThat(timecat.first().id, `is`(timecatIds.first()))
@@ -410,7 +414,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
 
     @Test(expected = AccessDeniedException::class)
     fun `list timecategory with User and not member should fail`() {
-        withUser(USER_USER_ID) { principal ->
+        withUser(USER_ID) { principal ->
             assignmentTagController.listProjectTimeCategories(PROJECT_NO_MEMBERS_ID)
         }
     }
@@ -426,7 +430,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
     @Test
     fun `delete timecategory with Admin and not member should succeed`() {
         val projectId = PROJECT_NO_MEMBERS_ID
-        withUser(ADMIN_USER_ID) { principal ->
+        withUser(ADMIN_ID) { principal ->
             assignmentTagController.deleteTimeCategory(TIMECAT_PROJECT_NO_MEMBERS_IDS.first())
             val result = assignmentTagController.listProjectTimeCategories(projectId).filter { it.name == name2 }.singleOrNull()
             if (result != null) fail()
@@ -437,7 +441,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
     @Test
     fun `delete timecategory with User as ProjectAdmin should succeed`() {
         val projectId = PROJECT_AOU_UOA_ID
-        withUser(USER_USER_ID) { principal ->
+        withUser(USER_ID) { principal ->
             assignmentTagController.deleteTimeCategory(TIMECAT_PROJECT_AOU_UOA_IDS.first())
             val result = assignmentTagController.listProjectTimeCategories(projectId).filter { it.name == name2 }.singleOrNull()
             if (result != null) fail()
@@ -448,7 +452,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
     @Test
     fun `delete timecategory with Observer as ProjectAdmin should succeed`() {
         val projectId = PROJECT_AOU_OAU_ID
-        withUser(OBSERVER_USER_ID) { principal ->
+        withUser(OBSERVER_ID) { principal ->
             assignmentTagController.deleteTimeCategory(TIMECAT_PROJECT_AOU_OAU_IDS.first())
             val result = assignmentTagController.listProjectTimeCategories(projectId).filter { it.name == name2 }.singleOrNull()
             if (result != null) fail()
@@ -458,35 +462,35 @@ class TimeCategoryApiTest : ApiBaseTest() {
 
     @Test(expected = AccessDeniedException::class)
     fun `delete timecategory with User as Observer should fail`() {
-        withUser(USER_USER_ID) { principal ->
+        withUser(USER_ID) { principal ->
             assignmentTagController.deleteTimeCategory(TIMECAT_PROJECT_AOU_AUO_IDS.first())
         }
     }
 
     @Test(expected = AccessDeniedException::class)
     fun `delete timecategory with User as User should fail`() {
-        withUser(USER_USER_ID) { principal ->
+        withUser(USER_ID) { principal ->
             assignmentTagController.deleteTimeCategory(TIMECAT_PROJECT_AOU_OAU_IDS.first())
         }
     }
 
     @Test(expected = AccessDeniedException::class)
     fun `delete timecategory with Observer as Observer should fail`() {
-        withUser(OBSERVER_USER_ID) { principal ->
+        withUser(OBSERVER_ID) { principal ->
             assignmentTagController.deleteTimeCategory(TIMECAT_PROJECT_AOU_UOA_IDS.first())
         }
     }
 
     @Test(expected = AccessDeniedException::class)
     fun `delete timecategory with User and not member should fail`() {
-        withUser(USER_USER_ID) { principal ->
+        withUser(USER_ID) { principal ->
             assignmentTagController.deleteTimeCategory(TIMECAT_PROJECT_NO_MEMBERS_IDS.first())
         }
     }
 
     @Test(expected = AccessDeniedException::class)
     fun `delete timecategory with Observer and not member should fail`() {
-        withUser(OBSERVER_USER_ID) { principal ->
+        withUser(OBSERVER_ID) { principal ->
             assignmentTagController.deleteTimeCategory(TIMECAT_PROJECT_NO_MEMBERS_IDS.first())
         }
     }
@@ -500,7 +504,7 @@ class TimeCategoryApiTest : ApiBaseTest() {
 
     @Test(expected = NotFoundException::class)
     fun `delete unexisting timecategory should fail`() {
-        withUser(ADMIN_USER_ID) { principal ->
+        withUser(ADMIN_ID) { principal ->
             assignmentTagController.deleteTimeCategory(PROJECT_NO_MEMBERS_ID)
         }
     }

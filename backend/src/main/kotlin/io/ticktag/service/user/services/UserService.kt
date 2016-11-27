@@ -12,10 +12,10 @@ interface UserService {
     fun checkPassword(mail: String, password: String): UserResult?
     fun createUser(createUser: CreateUser): UserResult
     fun getUser(id: UUID): UserResult
-    fun getUser(mail: String): UserResult?
     fun listUsers(): List<UserResult>
     fun listRoles(): List<RoleResult>
     fun updateUser(principal: Principal, id: UUID, updateUser: UpdateUser): UserResult
     fun listUsersFuzzy(projectId: UUID, query: String, pageable: Pageable): List<UserResult>
     fun getUsers(ids: Collection<UUID>): Map<UUID, UserResult>
+    fun getUserByUsername(username: String): UserResult
 }

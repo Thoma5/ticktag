@@ -42,13 +42,13 @@ export interface CreateTicketRequestJson {
 
     projectId: string;
 
-    ticketAssignments: Array<models.TicketAssignmentJson>;
+    ticketAssignments: Array<models.CreateTicketUserRelationRequestJson>;
 
     subTickets: Array<models.CreateTicketRequestJson>;
 
     existingSubTicketIds: Array<string>;
 
-    partenTicketId?: string;
+    parentTicketId?: string;
 
 }
 

@@ -2,6 +2,7 @@ package io.ticktag.restinterface.user
 
 import io.ticktag.ADMIN_ID
 import io.ticktag.OBSERVER_ID
+import io.ticktag.OBSERVER_PASSWORD
 import io.ticktag.USER_ID
 import io.ticktag.persistence.user.entity.Role
 import io.ticktag.restinterface.ApiBaseTest
@@ -23,6 +24,12 @@ import javax.inject.Inject
 class UserApiTest : ApiBaseTest() {
     @Inject lateinit var userController: UserController
     @Inject lateinit var authController: AuthController
+
+
+    override fun loadTestData(): List<String> {
+        return arrayListOf("sql/testBaseSamples.sql", "sql/testUserSamples.sql")
+    }
+
 
     @Test(expected = AccessDeniedException::class)
     fun test_createUser_negative() {
@@ -85,7 +92,7 @@ class UserApiTest : ApiBaseTest() {
         val newPassword = "password"
 
         withUser(id) { principal ->
-            userController.updateUser(id, UpdateUserRequestJson(oldPassword = "cccc", password = newPassword, mail = mail, role = null, profilePic = null, name = name), principal)
+            userController.updateUser(id, UpdateUserRequestJson(oldPassword = OBSERVER_PASSWORD, password = newPassword, mail = mail, role = null, profilePic = null, name = name), principal)
 
             val user = userController.getUser(id)
 
