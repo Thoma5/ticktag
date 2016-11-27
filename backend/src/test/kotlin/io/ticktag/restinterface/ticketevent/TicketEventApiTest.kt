@@ -34,15 +34,7 @@ class TicketEventApiTest : ApiBaseTest() {
     val loggedTimeId = UUID.fromString("00000000-0008-0000-0000-000000000001")
     val user = UUID.fromString("00000000-0001-0000-0000-000000000001")
 
-    @Test
-    fun test(){
-        withUser(user) { principal ->
-            val ticket = ticketController.getTicket(ticketId)
-     //       ticketController.updateTicket(UpdateTicketRequestJson(ticket.title, ticket.open, ticket.storyPoints, ticket.initialEstimatedTime, ticket.currentEstimatedTime, ticket.dueDate, "New Description", null), ticketId, principal)
-        }
-    }
-
-/**   @Test
+  @Test
     fun test_ticketDescriptionChangedShouldAddEvent() {
         withUser(user) { principal ->
             val sizeBefore = ticketEventController.listTicketEvents(ticketId).size
@@ -187,5 +179,4 @@ class TicketEventApiTest : ApiBaseTest() {
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore)
         }
     }
-*/
 }
