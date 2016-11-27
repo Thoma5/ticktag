@@ -31,22 +31,22 @@
         </div>
     </div>
 
-    <div class='references' *ngIf="referencedTickets">
+    <div class='references' *ngIf="ticket.referenced">
         <h2>Referenced Tickets</h2>
         <ul class="ticket-refs">
-            <li *ngFor="let ticket of referencedTickets" class="ticket-ref">
-                <span class="number"><a href="">#{{ ticket.number }}</a></span>
-                <span class="title"><a href="">{{ ticket.title }}</a></span>
+            <li *ngFor="let ticket of ticket.referenced" class="ticket-ref">
+                <span class="number"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.id]">#{{ ticket.number }}</a></span>
+                <span class="title"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.id]">{{ ticket.title }}</a></span>
             </li>
         </ul>
     </div>
 
-    <div class='referenced-by' *ngIf="referencedByTickets">
+    <div class='referenced-by' *ngIf="ticket.referencedBy">
         <h2>Referenced by</h2>
         <ul class="ticket-refs">
-            <li *ngFor="let ticket of referencedByTickets" class="ticket-ref">
-                <span class="number"><a href="">#{{ ticket.number }}</a></span>
-                <span class="title"><a href="">{{ ticket.title }}</a></span>
+            <li *ngFor="let ticket of ticket.referencedBy" class="ticket-ref">
+                <span class="number"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.id]">#{{ ticket.number }}</a></span>
+                <span class="title"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.id]">{{ ticket.title }}</a></span>
             </li>
         </ul>
     </div>

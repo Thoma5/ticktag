@@ -1,4 +1,5 @@
 import { Component, Input, EventEmitter, Output, OnChanges, SimpleChanges } from '@angular/core';
+import { Router } from '@angular/router';
 import { UserApi, UserResultJson } from '../../../api';
 import { ApiCallService } from '../../../service';
 import { using } from '../../../util/using';
@@ -30,7 +31,8 @@ export class TicketSidebarComponent implements OnChanges {
 
   constructor(
     private userApi: UserApi,
-    private apiCallService: ApiCallService) {
+    private apiCallService: ApiCallService,
+    private router: Router) {
   }
 
   ngOnChanges(changes: SimpleChanges) {

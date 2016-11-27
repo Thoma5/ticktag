@@ -167,13 +167,13 @@ Object.freeze(TicketDetailRelated.prototype);
 
 export class TicketDetail {
   readonly comments: imm.List<TicketDetailComment>;
-  readonly createTime: number;  // TODO convert
+  readonly createTime: number;
   readonly createdBy: TicketDetailUser;
-  readonly currentEstimatedTime: number|undefined;  // TODO convert
-  readonly dueDate: number|undefined;  // TODO convert
+  readonly currentEstimatedTime: number|undefined;
+  readonly dueDate: number|undefined;
   readonly description: string;
   readonly id: string;
-  readonly initialEstimatedTime: number|undefined;  // TODO convert
+  readonly initialEstimatedTime: number|undefined;
   readonly number: number;
   readonly open: boolean;
   readonly storyPoints: number|undefined;
@@ -182,6 +182,8 @@ export class TicketDetail {
   readonly users: imm.Map<TicketDetailUser, imm.List<TicketDetailAssignment>>;
   readonly projectId: string;
   readonly subtickets: imm.List<TicketDetailRelated>;
+  readonly referenced: imm.List<TicketDetailRelated>;
+  readonly referencedBy: imm.List<TicketDetailRelated>;
 
   constructor(
       ticket: TicketResultJson,
@@ -256,6 +258,14 @@ export class TicketDetail {
       });
     this.projectId = ticket.projectId;
     this.subtickets = imm.Seq(ticket.subTicketIds)
+      .map(id => relatedTickets.get(id))
+      .filter(t => !!t)
+      .toList();
+    this.referenced = imm.Seq(ticket.referencedTicketIds)
+      .map(id => relatedTickets.get(id))
+      .filter(t => !!t)
+      .toList();
+    this.referencedBy = imm.Seq(ticket.referencingTicketIds)
       .map(id => relatedTickets.get(id))
       .filter(t => !!t)
       .toList();
