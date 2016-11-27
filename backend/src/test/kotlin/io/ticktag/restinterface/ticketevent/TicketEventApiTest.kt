@@ -20,7 +20,7 @@ class TicketEventApiTest : ApiBaseTest() {
     override fun loadTestData(): List<String> {
         return arrayListOf("samples.sql")
     }
-/*
+
     @Inject lateinit var ticketEventController: TicketEventController
     @Inject lateinit var ticketController: TicketController
     @Inject lateinit var commentController: CommentController
@@ -43,7 +43,7 @@ class TicketEventApiTest : ApiBaseTest() {
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
         }
     }
-
+/**
     @Test
     fun test_ticketCurrentEstimatedTimeChangedShouldAddEvent() {
         withUser(user) { principal ->
