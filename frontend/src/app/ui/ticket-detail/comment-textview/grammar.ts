@@ -1,3 +1,5 @@
+import * as imm from 'immutable';
+
 // Note: To avoid issues with the evaluation order, each regular expression is
 // surrounded with `(?:` and `)`. This means you can treat variable interpolation
 // as a single token in the regular expressions.
@@ -76,7 +78,7 @@ export type RefTicketCmd = {
 }
 export type Cmd = TimeCmd | AssignCmd | UnassignCmd | CloseCmd | ReopenCmd | TagCmd | UntagCmd | EstCmd | RefTicketCmd
 
-export function extractCommands(string: string): Cmd[] {
+export function extractCommands(string: string): imm.List<Cmd> {
   let result = new Array<Cmd>();
   let regex = new RegExp(EXPR_REGEX, 'gimu');
   let match: RegExpExecArray;
@@ -134,7 +136,7 @@ export function extractCommands(string: string): Cmd[] {
       throw new Error('This cannot happen aka the regex is full of bugs!');
     }
   }
-  return result;
+  return imm.List(result);
 }
 
 // Makes time to minutes

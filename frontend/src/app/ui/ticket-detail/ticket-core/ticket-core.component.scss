@@ -59,22 +59,18 @@
 }
 
 .description-container {
-    margin-top: 2rem;
-
     tt-edit-button {
         float: right;
     }
 }
 
 .subtickets {
-    margin-top: 2rem;
 }
 
 .status {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    margin-top: 2rem;
 
     div {
         flex-basis: 50%;
@@ -90,4 +86,13 @@
     .filler {
         flex-grow: 1;
     }
+}
+
+.section-header {
+  @extend %subtitle;
+  color: palette(Grey, 600);
+  margin-top: $medium-gap;
+  margin-bottom: $small-gap;
+  width: 100%;
+  border-bottom: $thin-line solid palette(Grey, 300);
 }

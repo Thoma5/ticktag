@@ -25,6 +25,12 @@ open class TicketAssignmentServiceImpl @Inject constructor(
         private val users: UserRepository,
         private val assignmentTags: AssignmentTagRepository
 ) : TicketAssignmentService {
+
+    @PreAuthorize(AuthExpr.WRITE_TICKET_ASSIGNMENT)
+    override fun deleteTicketAssignments(@P("authTicketId") ticketId: UUID, userId: UUID) {
+        ticketAssignments.deleteByUserIdAndTicketId(userId, ticketId)
+    }
+
     @PreAuthorize(AuthExpr.READ_TICKET_ASSIGNMENT)
     override fun getTicketAssignment(@P("authTicketId") ticketId: UUID, tagId: UUID, userId: UUID): TicketAssignmentResult {
         val ticket = tickets.findOne(ticketId) ?: throw NotFoundException()

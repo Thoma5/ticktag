@@ -85,6 +85,22 @@ export class UserApi {
     }
 
     /**
+     * getUserByUsername
+     * 
+     * @param name name
+     */
+    public getUserByUsernameUsingGET(name: string, extraHttpRequestParams?: any): Observable<models.UserResultJson> {
+        return this.getUserByUsernameUsingGETWithHttpInfo(name, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
      * getUser
      * 
      * @param id id
@@ -201,6 +217,50 @@ export class UserApi {
             method: RequestMethod.Post,
             headers: headers,
             body: req == null ? '' : JSON.stringify(req), // https://github.com/angular/angular/issues/10612
+            search: queryParameters
+        });
+        
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * getUserByUsername
+     * 
+     * @param name name
+     */
+    public getUserByUsernameUsingGETWithHttpInfo(name: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/user/name/${name}`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'name' is not null or undefined
+        if (name === null || name === undefined) {
+            throw new Error('Required parameter name was null or undefined when calling getUserByUsernameUsingGET.');
+        }
+
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json'
+        ];
+        
+            
+
+
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Get,
+            headers: headers,
             search: queryParameters
         });
         

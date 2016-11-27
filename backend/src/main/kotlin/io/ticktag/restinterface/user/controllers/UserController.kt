@@ -41,6 +41,11 @@ open class UserController @Inject constructor(
         return UserResultJson(userService.getUser(id))
     }
 
+    @GetMapping("/name/{name}")
+    open fun getUserByUsername(@PathVariable(name = "name") username: String): UserResultJson {
+        return UserResultJson(userService.getUserByUsername(username))
+    }
+
     // TODO paging, filter, sorting
     @GetMapping
     open fun listUsers(): List<UserResultJson> {

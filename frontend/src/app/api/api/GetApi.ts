@@ -71,10 +71,10 @@ export class GetApi {
     /**
      * get
      * 
-     * @param users users
+     * @param request request
      */
-    public getUsingGET(users: Array<string>, extraHttpRequestParams?: any): Observable<models.GetResultJson> {
-        return this.getUsingGETWithHttpInfo(users, extraHttpRequestParams)
+    public getUsingPOST(request: models.GetRequestJson, extraHttpRequestParams?: any): Observable<models.GetResultJson> {
+        return this.getUsingPOSTWithHttpInfo(request, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -88,19 +88,16 @@ export class GetApi {
     /**
      * get
      * 
-     * @param users users
+     * @param request request
      */
-    public getUsingGETWithHttpInfo(users: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
+    public getUsingPOSTWithHttpInfo(request: models.GetRequestJson, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/get`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'users' is not null or undefined
-        if (users === null || users === undefined) {
-            throw new Error('Required parameter users was null or undefined when calling getUsingGET.');
-        }
-        if (users !== undefined) {
-            queryParameters.set('users', <any>users);
+        // verify required parameter 'request' is not null or undefined
+        if (request === null || request === undefined) {
+            throw new Error('Required parameter request was null or undefined when calling getUsingPOST.');
         }
 
 
@@ -116,11 +113,13 @@ export class GetApi {
         
             
 
+        headers.set('Content-Type', 'application/json');
 
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Get,
+            method: RequestMethod.Post,
             headers: headers,
+            body: request == null ? '' : JSON.stringify(request), // https://github.com/angular/angular/issues/10612
             search: queryParameters
         });
         

@@ -7,6 +7,7 @@ interface ApplicationProperties {
     val dbValidate: Boolean
 
     val httpPort: Int
+    val httpSlow: Boolean
 
     val serverSecret: String
     val serverNumber: Int

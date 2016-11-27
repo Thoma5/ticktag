@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { CommentResultJson } from '../../../api';
+import { TicketDetailComment } from '../ticket-detail';
+import * as imm from 'immutable';
 
 @Component({
     selector: 'tt-ticket-comments',
@@ -7,5 +8,5 @@ import { CommentResultJson } from '../../../api';
     styleUrls: ['./ticket-comments.component.scss']
 })
 export class TicketCommentsComponent {
-    @Input() comments: CommentResultJson[];
+    @Input() comments: imm.List<TicketDetailComment>;
 }

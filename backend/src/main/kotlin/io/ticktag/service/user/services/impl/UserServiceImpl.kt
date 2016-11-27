@@ -25,8 +25,17 @@ open class UserServiceImpl @Inject constructor(
         private val hashing: HashingLibrary,
         private val nn: NameNormalizationLibrary
 ) : UserService {
+
+    @PreAuthorize(AuthExpr.USER)  // TODO maybe refine
+    override fun getUserByUsername(username: String): UserResult {
+        return UserResult(users.findByUsername(username) ?: throw NotFoundException())
+    }
+
     @PreAuthorize(AuthExpr.USER)  // TODO maybe refine
     override fun getUsers(ids: Collection<UUID>): Map<UUID, UserResult> {
+        if (ids.isEmpty()) {
+            return emptyMap()
+        }
         return users.findByIds(ids).map(::UserResult).associateBy { it.id }
     }
 
@@ -65,11 +74,6 @@ open class UserServiceImpl @Inject constructor(
     @PreAuthorize(AuthExpr.USER)
     override fun getUser(id: UUID): UserResult {
         return UserResult(users.findOne(id) ?: throw NotFoundException())
-    }
-
-    @PreAuthorize(AuthExpr.USER)
-    override fun getUser(mail: String): UserResult? {
-        return UserResult(users.findByMailIgnoreCase(mail) ?: return null)
     }
 
     @PreAuthorize(AuthExpr.ADMIN) // TODO should probably be more granular
