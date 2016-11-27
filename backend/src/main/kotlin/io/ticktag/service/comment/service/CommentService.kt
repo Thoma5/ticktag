@@ -13,5 +13,4 @@ interface CommentService {
     fun createComment(createComment: CreateComment, principal: Principal, ticketId: UUID): CommentResult
     fun updateComment(commentId: UUID, updateComment: UpdateComment): CommentResult?
     fun deleteComment(commentId: UUID)
-
 }

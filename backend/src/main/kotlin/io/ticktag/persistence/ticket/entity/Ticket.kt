@@ -108,7 +108,6 @@ open class Ticket protected constructor() {
 
     @OneToMany(mappedBy = "ticket", cascade = arrayOf(CascadeType.REMOVE))
     lateinit open var assignedTicketUsers: MutableList<AssignedTicketUser>
-        protected set
 
     @OneToMany(mappedBy = "ticket")
     lateinit open var events: MutableList<TicketEvent>

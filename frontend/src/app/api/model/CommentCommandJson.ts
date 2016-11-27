@@ -25,14 +25,16 @@
 
 import * as models from './models';
 
-export interface CreateCommentRequestJson {
-    text: string;
+export interface CommentCommandJson {
+    cmd: string;
 
-    ticketId: string;
+    minutes?: number;
 
-    mentionedTicketNumbers: Array<number>;
+    category?: string;
 
-    commands: Array<models.CommentCommandJson>;
+    user?: string;
+
+    tag?: string;
 
 }
 
