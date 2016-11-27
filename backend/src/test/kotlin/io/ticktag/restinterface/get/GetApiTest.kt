@@ -27,7 +27,8 @@ class GetApiTest : ApiBaseTest() {
                                     UUID.fromString("93ef43d9-20b7-461a-b960-2d1e89ba099f"),
                                     UUID.fromString("660f2968-aa46-4870-bcc5-a3805366cff2"),
                                     UUID.fromString("99999999-9999-9999-9999-999999999999")),
-                            ticketIds = null),
+                            ticketIds = null,
+                            loggedTimeIds = null),
                     principal = p
             )
 
@@ -48,6 +49,7 @@ class GetApiTest : ApiBaseTest() {
             val result = getController.get(
                     GetRequestJson(
                             userIds = null,
+                            loggedTimeIds = null,
                             ticketIds = listOf(
                                     firstId,
                                     secondId,
