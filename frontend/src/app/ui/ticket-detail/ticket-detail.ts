@@ -125,13 +125,17 @@ Object.freeze(TicketDetailAssTag.prototype);
 
 export class TicketDetailSubticket {
   readonly id: string;
+  readonly projectId: string;
   readonly number: number;
   readonly title: string;
+  readonly open: boolean;
 
   constructor(ticket: TicketResultJson) {
     this.id = ticket.id;
+    this.projectId = ticket.projectId;
     this.number = ticket.number;
     this.title = ticket.title;
+    this.open = ticket.open;
     Object.freeze(this);
   }
 }

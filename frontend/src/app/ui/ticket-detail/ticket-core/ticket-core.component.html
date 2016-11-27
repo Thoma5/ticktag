@@ -30,10 +30,12 @@
                 </tt-taginput>
             </div>
         </div>
+        <div class='section-header'>Subtickets</div>
         <div class='subtickets'>
             <tt-subtickets [tickets]='subtickets'>
             </tt-subtickets>
         </div>
+        <div class='section-header'>Status</div>
         <div class='status'>
             <div class='initial-estimation'>
                 Initial estimation: {{initialEstimatedTime | ttHumanizeDuration}}
@@ -48,6 +50,7 @@
                 Due date: {{dueDate | ttFormatMoment}}
             </div>
         </div>
+        <div class='section-header'>Description</div>
         <div class='description-container'>
             <tt-edit-button [visible]='!editingDescription' (click)='editingDescription=true'></tt-edit-button>
             <div class='description-wrapper'>
