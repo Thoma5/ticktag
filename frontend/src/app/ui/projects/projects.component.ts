@@ -8,12 +8,7 @@ import { ProjectApi, PageProjectResultJson, ProjectResultJson } from '../../api'
 })
 export class ProjectsComponent implements OnInit {
   projects: PageProjectResultJson;
-  columns = [
-    { name: 'Icon' , sortable : false },
-    { name: 'Name' , sortable : true },
-    { name: 'Description' , sortable : false },
-    { name: 'CreationDate' , sortable : true }
-  ];
+
   iconsCss = {
     sortAscending: 'glyphicon glyphicon-chevron-down',
     sortDescending: 'glyphicon glyphicon-chevron-up',
@@ -30,17 +25,6 @@ export class ProjectsComponent implements OnInit {
   limit = 15;
   rows: ProjectResultJson[] = [];
   totalElements = 0;
-  public isCollapsed: boolean = true;
-
-  public collapsed(event: any): void {
-    console.log(event);
-  }
-
-  public expanded(event: any): void {
-    console.log(event);
-  }
-
-
 
 
   // TODO make readonly once Intellij supports readonly properties in ctr

@@ -1,8 +1,17 @@
-<h2>Tickets</h2>
-<div class="row">
-	<div class="left col-md-8 form-box">
-		<div>
-			<datatable class="material" [rows]="tickets" [columns]="columns" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" 	[rowHeight]="'auto'"></datatable>
-		</div>
-	</div>
+<div class="col-md-10 col-md-offset-1 form-box">
+  <div *ngIf="loading">
+    <div class="search row">
+      <div class="col-md-4"><input class="form-control" type='text' placeholder='Type to filter name...' (keyup)='updateFilter($event)' /></div>
+    </div>
+    <datatable class="material" [rows]="rows" [columns]="columns" [columnMode]="standard" [headerHeight]="50" [footerHeight]="50"
+      [rowHeight]="auto" [externalPaging]="true" [count]="totalElements" [offset]="offset" [limit]="limit" [scrollbarH]="true"
+      [scrollbarV]="false" [loadingIndicator]="!reload" [externalSorting]="true" (sort)="onSort($event)" (page)='onPage($event)'
+      [cssClasses]="iconsCss">
+     <datatable-column name="Number" >
+        <template let-value="value">
+          <p><strong>{{value}}</strong></p>
+        </template>
+      </datatable-column>
+    </datatable>
+  </div>
 </div>
