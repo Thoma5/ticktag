@@ -1,5 +1,13 @@
 <md-sidenav-layout fullscreen>
-	<md-sidenav #start opened mode="side">
+<md-sidenav #start opened mode="side">
+	<div>
+		<button md-button (click)="start.toggle()"><span class="glyphicon glyphicon-menu-hamburger"></span></button>
+	</div>
+	<div class="nav-top-block">
+		<h1>TickTag</h1>
+		<img class="img-circle" width="64" src="http://lorempixel.com/64/64/cats" />
+	</div>
+	<div class="navadmin-block">
 		<div>
 			<a md-button [routerLink]="['']">Home</a>
 		</div>
@@ -12,13 +20,11 @@
 		<div>
 			<a md-button *ngIf="user" [routerLink]="['whoami']">Whoami</a>
 		</div>
-			<div>
-			<a md-button>Placeholders are really amazing!</a>
-		</div>
-
-	</md-sidenav>
+	</div>
+</md-sidenav>
+	
 	<div>
-		<button md-button (click)="start.toggle()">Menu</button>
+		<button md-button (click)="start.toggle()"><span class="glyphicon glyphicon-menu-hamburger"></span></button>
 		<a md-button align="end" *ngIf="!user" [routerLink]="['login']">Login</a>
 		<a md-button align="end" *ngIf="user" href="" (click)="logout(); $event.preventDefault()">Logout</a>
 	</div>
