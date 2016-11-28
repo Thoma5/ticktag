@@ -1,6 +1,5 @@
 <div class='subticket-container' [ngClass]='{"closed": !ticket.open}'>
     <a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.id]" class='number'>#{{ticket.number}}</a>
     <a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.id]" class='title'>{{ticket.title}}</a>
-    <div class='progress-bar'>todo</div>
-    <div class='progress-numbers'>{{ticket.loggedTime | ttHumanizeDuration}}/{{ticket.currentEstimatedTime | ttHumanizeDuration}}</div>
+    <tt-progressbar class="barStyle" [showNumbersOutside]="true" [fraction]="ticket.loggedTime" [totalValue]="ticket.currentEstimatedTime"></tt-progressbar>
 </div>

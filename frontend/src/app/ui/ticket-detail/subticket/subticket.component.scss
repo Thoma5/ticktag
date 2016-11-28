@@ -15,16 +15,18 @@
 }
 
 .number {
+flex-grow: 1;
 }
+
 
 .title {
   margin-left: $internal-gap;
+  flex-grow: 1;
 }
 
-.progress-bar {
+.barStyle {
   height: 100%;
-  flex-grow: 1;
-  background-color: palette(Light Blue, 500);
+  flex-grow: 12;
   margin-left: $internal-gap;
 }
 
