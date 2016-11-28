@@ -2,7 +2,7 @@
   <a *ngIf='!editing' href='javascript:void(0)' (click)='startEditing()' class='header'>Add Subticket</a>
   <div class='input' *ngIf='editing'>
     <div class='title-input'>
-      <input ttFocus type='text' [(ngModel)]='title' placeholder='Title'>
+      <input [ttEventFocus]='titleFocusEventSubject' type='text' [(ngModel)]='title' placeholder='Title'>
     </div>
     <div class='description-input'>
         <tt-command-textview

@@ -56,6 +56,7 @@ import { MarkdownToHtmlPipe } from './util/markdown-to-html.pipe';
 import { JsonPipe } from './util/json.pipe';
 import { AutosizeTextareaDirective } from './util/autosize-textarea.directive';
 import { FocusDirective } from './util/focus.directive';
+import { EventFocusDirective } from './util/event-focus.directive';
 import { TaginputComponent } from './util/taginput/taginput.component';
 import { SelectAllDirective } from './util/select-all.directive';
 import { EditButtonComponent } from './util/edit-button/edit-button.component';
@@ -129,6 +130,7 @@ import {TicketEventUserComponent} from './ui/ticket-detail/ticket-events/ticket-
     JsonPipe,
     AutosizeTextareaDirective,
     FocusDirective,
+    EventFocusDirective,
     SelectAllDirective,
     LoadingComponent,
     SpinnerComponent,
