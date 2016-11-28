@@ -20,11 +20,12 @@ import { Observable } from 'rxjs';
   styleUrls: ['./ticket-overview.component.scss']
 })
 export class TicketOverviewComponent implements OnInit {
-  loading = true;
+  private loading = true;
   private tickets: TicketOverview[] = [];
   private allAssignmentTags: imm.Map<string, TicketOverviewAssTag>;
   private allTicketTags: imm.Map<string, TicketOverviewTag>;
-  reload = true;
+  private projectId: string | null = null;
+
   asc = true;
   sortprop = ['NUMBER_ASC'];
   offset = 0;
@@ -62,16 +63,20 @@ export class TicketOverviewComponent implements OnInit {
       this.allTicketTags,
       this.allAssignmentTags
     );
-    console.log(to);
     return to;
   }
 
 
   ngOnInit(): void {
     this.route.params
+      .do(() => { this.loading = true; })
       .switchMap(params => {
-        let projectId = '' + params['projectId'];
+        let projectId = params['projectId'];
+        this.projectId = projectId;
         return this.refresh(projectId);
+      })
+      .subscribe(() => {
+        this.loading = false;
       });
   }
 
@@ -109,51 +114,33 @@ export class TicketOverviewComponent implements OnInit {
         const end = start + this.limit;
         let rows = [...this.rows];
         tuple[0][0].content.forEach(ticket =>
-          this.tickets.concat(
-            this.newTicketOverview(ticket, imm.Map(tuple[1].users).map(u => new TicketOverviewUser(u)).toMap()))
+          this.tickets.push(this.newTicketOverview(ticket, imm.Map(tuple[1].users).map(u => new TicketOverviewUser(u)).toMap()))
         );
         for (let i = start; i < end; i++) {
           rows[i] = this.tickets[i - this.offset * this.limit];
         }
         this.rows = rows;
         console.log(this.rows);
-        this.loading = false;
-        this.reload = false;
       })
       .map(it => undefined);
   }
 
   onPage(event) {
-    this.reload = true;
     console.log('Page Event', event);
     this.limit = event.limit;
     this.offset = event.offset;
-    this.reloadData();
-
+    this.refresh(this.projectId).subscribe();
   }
 
   onSort(event) {
-    this.reload = true;
     console.log('Sort Event', event);
     this.asc = event.sorts[0].dir === 'asc' ? true : false;
-    this.reloadData();
+    this.refresh(this.projectId).subscribe();
   }
 
   updateFilter(event) {
-    this.reload = true;
     // TODO  filter our data
     this.offset = 0;
-    this.reloadData();
+    this.refresh(this.projectId).subscribe();
   }
-
-  reloadData() {
-    this.route.params
-      .do(() => { this.reload = true; })
-      .switchMap(params => {
-        let projectId = '' + params['projectId'];
-        return this.refresh(projectId);
-      });
-  }
-
-
 }
