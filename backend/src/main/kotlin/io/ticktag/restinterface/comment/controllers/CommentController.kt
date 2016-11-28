@@ -11,6 +11,7 @@ import io.ticktag.service.comment.dto.CreateComment
 import io.ticktag.service.comment.dto.UpdateComment
 import io.ticktag.service.comment.service.CommentService
 import io.ticktag.service.loggedtime.dto.CreateLoggedTime
+import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -37,9 +38,13 @@ open class CommentController @Inject constructor(
 
     @PostMapping
     open fun createComment(@RequestBody req: CreateCommentRequestJson,
-                           @AuthenticationPrincipal principal: Principal): CommentResultJson {
-        val comment = commentService.createComment(createComment = CreateComment(req.text, req.ticketId, req.mentionedTicketIds, req.loggedTime.map(::CreateLoggedTime)), principal = principal, ticketId = req.ticketId)
-        return CommentResultJson(comment)
+                           @AuthenticationPrincipal principal: Principal): ResponseEntity<CommentResultJson> {
+        val commands = req.commands.map({
+            it.toCommentCommand() ?: return ResponseEntity.badRequest().body(null)
+        })
+        val createComment = CreateComment(req.text, req.ticketId, req.mentionedTicketNumbers, commands)
+        val comment = commentService.createComment(createComment, principal, req.ticketId)
+        return ResponseEntity.ok(CommentResultJson(comment))
     }
 
     @PutMapping(value = "/{id}")

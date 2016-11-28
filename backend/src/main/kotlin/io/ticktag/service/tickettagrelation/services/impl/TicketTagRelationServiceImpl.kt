@@ -32,15 +32,11 @@ open class TicketTagRelationServiceImpl(
             throw NotFoundException()
         }
 
-        // TODO maybe automatically replace it?
         val assignedTag = ticket.tags.find { it.id == tagId }
         if (assignedTag == null) {
             if (tag.ticketTagGroup.exclusive) {
-                for (t in tag.ticketTagGroup.ticketTags) {
-                    if (ticket.tags.contains(t)) {
-                        throw TicktagValidationException(listOf(ValidationError("tag.id", ValidationErrorDetail.Other("nonexclusive"))))
-                    }
-                }
+                // Remove all tags from the same group
+                ticket.tags = ticket.tags.filter { it !in tag.ticketTagGroup.ticketTags }.toMutableList()
             }
             ticket.tags.add(tag)
         }

@@ -1,5 +1,6 @@
 /* tslint:disable */
 export * from './AssignmentTagResultJson';
+export * from './CommentCommandJson';
 export * from './CommentResultJson';
 export * from './CountJson';
 export * from './CreateAssignmentTagRequestJson';
@@ -13,6 +14,7 @@ export * from './CreateTicketTagRequestJson';
 export * from './CreateTicketUserRelationRequestJson';
 export * from './CreateTimeCategoryRequestJson';
 export * from './CreateUserRequestJson';
+export * from './GetRequestJson';
 export * from './GetResultJson';
 export * from './LoggedTimeResultJson';
 export * from './LoginRequestJson';

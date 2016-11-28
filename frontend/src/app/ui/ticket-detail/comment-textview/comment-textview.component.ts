@@ -1,30 +1,18 @@
 import {
     Component, Input, ElementRef, AfterViewInit, OnChanges, SimpleChanges,
-    OnDestroy
+    OnDestroy, EventEmitter, Output
 } from '@angular/core';
-import {
-    TicketTagResultJson, UserResultJson, TimeCategoryJson, UserApi,
-    AssignmentTagResultJson, TicketUserRelationResultJson, TicketApi, TicketResultJson
-} from '../../api';
-import { ApiCallService } from '../../service';
+import { UserResultJson, UserApi, TicketApi, TicketResultJson } from '../../../api';
+import { ApiCallService } from '../../../service';
+import { using } from '../../../util/using';
 import * as grammar from './grammar';
+import * as imm from 'immutable';
+import {
+    TicketDetailAssTag, TicketDetail, TicketDetailTimeCategory, TicketDetailTag
+} from '../ticket-detail';
 
 const codemirror = require('codemirror');
 require('codemirror/addon/hint/show-hint');
-
-function using<T>(getKey: (obj: T) => any): (a: T, b: T) => number {
-    return (a: T, b: T) => {
-        let aVal = getKey(a);
-        let bVal = getKey(b);
-        if (aVal < bVal) {
-            return -1;
-        } else if (aVal > bVal) {
-            return 1;
-        } else {
-            return 0;
-        }
-    };
-}
 
 const COMMAND_COMPLETIONS = grammar.COMMAND_STRINGS.map(c => {
     if (c === 'close' || c === 'reopen') {
@@ -34,26 +22,32 @@ const COMMAND_COMPLETIONS = grammar.COMMAND_STRINGS.map(c => {
     }
 }).sort(using<string>(c => c.replace('-', '')));
 
-@Component({
-    selector: 'tt-rich-textview',
-    templateUrl: './rich-textview.component.html',
-    styleUrls: ['./rich-textview.component.scss']
-})
-export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestroy {
-    @Input() projectId: string;
-    @Input() initialContent = '';
-    @Input() allTicketTags = new Array<TicketTagResultJson>();
-    @Input() ticketTags = new Array<TicketTagResultJson>();
-    @Input() allTimeCategories = new Array<TimeCategoryJson>();
-    @Input() allAssignmentTags = new Array<AssignmentTagResultJson>();
-    @Input() assignedUsers = new Array<UserResultJson>();
-    @Input() assignments = new Array<TicketUserRelationResultJson>();
+export type CommentTextviewSaveEvent = {
+    commands: imm.List<grammar.Cmd>,
+    text: string,
+}
 
-    private content: string;
-    private instance: any;
-    private commands: grammar.Cmd[];
+@Component({
+    selector: 'tt-comment-textview',
+    templateUrl: './comment-textview.component.html',
+    styleUrls: ['./comment-textview.component.scss']
+})
+export class CommentTextviewComponent implements AfterViewInit, OnChanges, OnDestroy {
+    @Input() initialContent: string;
+    @Input() ticket: TicketDetail;
+    @Input() allTicketTags: imm.Map<string, TicketDetailTag>;
+    @Input() allTimeCategories: imm.Map<string, TicketDetailTimeCategory>;
+    @Input() allAssignmentTags: imm.Map<string, TicketDetailAssTag>;
+    @Input() working = false;
+
+    @Output() readonly save = new EventEmitter<CommentTextviewSaveEvent>();
+
+    private content = '';
+    private instance: any = null;
+    private commands = imm.List<grammar.Cmd>();
 
     private refreshTimeout: number = null;
+    private wantEmitSave: boolean = false;
 
     constructor(
         private element: ElementRef,
@@ -78,6 +72,7 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
                     this.refreshTimeout = null;
                     this.updateCommands();
                     this.showHints();
+                    this.emitSave();
                 }, 100);
             }
         });
@@ -93,6 +88,25 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
         window.clearTimeout(this.refreshTimeout);
         this.refreshTimeout = null;
         this.instance.toTextArea();
+    }
+
+    onSubmitClick(): void {
+        this.wantEmitSave = true;
+        // Do not directly emit the event if a refresh is still pending. In this
+        // case the event will be emittet after the next refresh.
+        if (this.refreshTimeout === null) {
+            this.emitSave();
+        }
+    }
+
+    private emitSave(): void {
+        if (this.wantEmitSave) {
+            this.wantEmitSave = false;
+            this.save.emit({
+                commands: this.commands,
+                text: this.content,
+            });
+        }
     }
 
     private updateCommands() {
@@ -121,7 +135,7 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
         if (isTicket) {
             this.instance.showHint({
                 hint: () => {
-                    let projectId = this.projectId;
+                    let projectId = this.ticket.projectId;
                     return this.apiCallService
                         .callNoError<TicketResultJson[]>(p => this.ticketApi.listTicketsFuzzyUsingGETWithHttpInfo(
                             projectId,
@@ -146,10 +160,13 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
 
         let isAddRemoveTag = new RegExp(String.raw`${grammar.SEPERATOR_FRONT_REGEX}!(-?)tag:(${grammar.TAG_LETTER}*)$`, 'ui').exec(text);
         if (isAddRemoveTag) {
-            let tags = isAddRemoveTag[1] ? this.ticketTags : this.allTicketTags;
+            let tags = (isAddRemoveTag[1] ? this.ticket.tags.map(tag => tag.value) : this.allTicketTags)
+                .valueSeq()
+                .sort(using<TicketDetailTag>(tag => tag.normalizedName))
+                .toArray();
             if (tags.length === 0) { return; }
             tags = tags.slice();
-            tags.sort(using<TicketTagResultJson>(tag => tag.normalizedName));
+            tags.sort(using<TicketDetailTag>(tag => tag.normalizedName));
             this.instance.showHint({
                 hint: () => ({
                     list: tags.map(tt => tt.normalizedName + ' '),
@@ -166,9 +183,11 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
             String.raw`${grammar.SEPERATOR_FRONT_REGEX}!time:${grammar.TIME_REGEX}@(${grammar.TAG_LETTER}*)$`, 'ui'
         ).exec(text);
         if (isTimeTag) {
-            if (this.allTimeCategories.length === 0) { return; }
-            let cats = this.allTimeCategories.slice();
-            cats.sort(using<TimeCategoryJson>(cat => cat.normalizedName));
+            let cats = this.allTimeCategories
+                .valueSeq()
+                .sort(using<TicketDetailTimeCategory>(cat => cat.normalizedName))
+                .toArray();
+            if (cats.length === 0) { return; }
             this.instance.showHint({
                 hint: () => ({
                     list: cats.map(cat => cat.normalizedName + ' '),
@@ -185,7 +204,7 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
         if (isAssign) {
             this.instance.showHint({
                 hint: () => {
-                    let projectId = this.projectId;
+                    let projectId = this.ticket.projectId;
                     return this.apiCallService
                         .callNoError<UserResultJson[]>(p => this.userApi.listUsersFuzzyUsingGETWithHttpInfo(
                             projectId,
@@ -213,9 +232,11 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
             'ui'
         ).exec(text);
         if (isAssignTag) {
-            if (this.allAssignmentTags.length === 0) { return; }
-            let tags = this.allAssignmentTags.slice();
-            tags.sort(using<AssignmentTagResultJson>(tag => tag.normalizedName));
+            let tags = this.allAssignmentTags
+                .valueSeq()
+                .sort(using<TicketDetailAssTag>(tag => tag.normalizedName))
+                .toArray();
+            if (tags.length === 0) { return; }
             this.instance.showHint({
                 hint: () => ({
                     list: tags.map(tag => tag.normalizedName + ' '),
@@ -233,17 +254,15 @@ export class RichTextviewComponent implements AfterViewInit, OnChanges, OnDestro
             'ui'
         ).exec(text);
         if (isUnassign) {
-            if (this.assignments.length === 0) { return; }
-            let aus = this.assignments
-                .map(a => ({
-                    tag: this.allAssignmentTags.find(at => at.id === a.assignmentTagId),
-                    user : this.assignedUsers.find(u => u.id === a.userId)
-                }))
-                .filter(a => a.tag && a.user)
-                .map(as => ({
-                    text: `${as.user.username}@${as.tag.normalizedName} `,
-                    displayText: `${as.user.username}@${as.tag.normalizedName} (${as.user.name} <${as.user.mail}>)`,
-                }));
+            let aus = this.ticket.users
+                .map((assignments, user) => assignments.map(ass => ({
+                    text: `${user.username}@${ass.tag.normalizedName} `,
+                    displayText: `${user.username}@${ass.tag.normalizedName} (${user.name} <${user.mail}>)`,
+                })))
+                .valueSeq()
+                .flatMap(it => it)
+                .toArray();
+            console.dir(aus);
             if (aus.length === 0) { return; }
             this.instance.showHint({
                 hint: () => ({

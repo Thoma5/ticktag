@@ -1,18 +1,37 @@
 <div class='sidebar'>
     <div class='assigned-users'>
         <h2 class="first">Ticket Users</h2>
-        <div class="assigned-user" *ngFor="let a of assigned">
-            <tt-assigned-user [user]="a.user" [tags]="a.tags" [allTags]="allTags"></tt-assigned-user>
+        <div class="assigned-user" *ngFor="let a of assignments; trackBy: assignedUserTrackBy">
+            <tt-assigned-user
+                [user]="a.user"
+                [tags]="a.tags"
+                [allTags]="allAssignmentTags"
+                (tagAdd)="onTagAdd(a.user.id, $event)"
+                (tagRemove)="onTagRemove(a.user.id, $event)"
+            ></tt-assigned-user>
         </div>
         <div class="add-assigned-user">
-            <a *ngIf="!adding" href="javascript:void(0)" (click)="onShowAdd()">Add&nbsp;User</a>
-            <div *ngIf="adding">
-                <input type="text" value="" placeholder="User Name" [(ngModel)]="newUserName" ttFocus ttSelectAll (blur)="onHideAdd()" (keydown.enter)="onAdd()">
+            <a *ngIf="!adding && !checking" href="javascript:void(0)" (click)="onShowAdd()">Add&nbsp;User</a>
+            <div *ngIf="adding || checking">
+                <input
+                    type="text"
+                    value=""
+                    placeholder="Username"
+                    [(ngModel)]="newUserName"
+                    ttFocus
+                    ttSelectAll
+                    (blur)="onHideAdd()"
+                    (keydown.enter)="onAdd()"
+                    [disabled]="checking">
+                <div *ngIf="checking" class="loading">
+                    <tt-spinner>
+                    </tt-spinner>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class='references'>
+    <div class='references' *ngIf="referencedTickets">
         <h2>Referenced Tickets</h2>
         <ul class="ticket-refs">
             <li *ngFor="let ticket of referencedTickets" class="ticket-ref">
@@ -22,7 +41,7 @@
         </ul>
     </div>
 
-    <div class='referenced-by'>
+    <div class='referenced-by' *ngIf="referencedByTickets">
         <h2>Referenced by</h2>
         <ul class="ticket-refs">
             <li *ngFor="let ticket of referencedByTickets" class="ticket-ref">

@@ -18,7 +18,8 @@ import { ProjectsComponent } from './ui/projects/projects.component';
 import { ProjectCreateComponent } from './ui/projects/project-create.component';
 import {
   ProjectApi, AuthApi, UserApi, AssignmenttagApi, CommentsApi, MemberApi,
-  TimecategoryApi, TicketApi, TickettagApi, TickettaggroupApi, GetApi
+  TimecategoryApi, TicketApi, TickettagApi, TickettaggroupApi, GetApi,
+  TicketuserrelationApi, TickettagrelationApi
 } from './api';
 import { TicketDetailComponent } from './ui/ticket-detail/ticket-detail.component';
 import { TicketSidebarComponent } from './ui/ticket-detail/ticket-sidebar/ticket-sidebar.component';
@@ -40,6 +41,8 @@ import {
   StorypointsTextviewReadComponent
 } from './ui/ticket-detail/ticket-storypoints/ticket-storypoints.component';
 import { AssignedUserComponent } from './ui/ticket-detail/assigned-user/assigned-user.component';
+import { SubticketsComponent } from './ui/ticket-detail/subtickets/subtickets.component';
+import { SubticketComponent } from './ui/ticket-detail/subticket/subticket.component';
 import { Ng2BootstrapModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { Angular2DataTableModule } from 'angular2-data-table';
 import { MaterialModule } from '@angular/material';
@@ -55,6 +58,8 @@ import { EditButtonComponent } from './util/edit-button/edit-button.component';
 import { LoadingComponent } from './util/loading/loading.component';
 import { TicketOverviewComponent} from'./ui/ticket-overview/ticket-overview.component';
 import { RichTextviewComponent } from './util/rich-textview/rich-textview.component';
+import { SpinnerComponent } from './util/spinner/spinner.component';
+import { CommentTextviewComponent } from './ui/ticket-detail/comment-textview/comment-textview.component';
 
 
 @NgModule({
@@ -91,12 +96,14 @@ import { RichTextviewComponent } from './util/rich-textview/rich-textview.compon
     StorypointsTextviewEditComponent,
     StorypointsTextviewReadComponent,
     AssignedUserComponent,
+    SubticketsComponent,
+    SubticketComponent,
     TaginputComponent,
     TicketCommentsComponent,
     TicketCommentComponent,
     TicketCommentInputComponent,
     EditButtonComponent,
-    RichTextviewComponent,
+    CommentTextviewComponent,
 
     HumanizeDurationPipe,
     FormatMomentPipe,
@@ -106,6 +113,7 @@ import { RichTextviewComponent } from './util/rich-textview/rich-textview.compon
     FocusDirective,
     SelectAllDirective,
     LoadingComponent,
+    SpinnerComponent,
   ],
   providers: [
     ProjectApi,
@@ -119,6 +127,8 @@ import { RichTextviewComponent } from './util/rich-textview/rich-textview.compon
     TickettagApi,
     TickettaggroupApi,
     GetApi,
+    TicketuserrelationApi,
+    TickettagrelationApi,
 
     ApiCallService,
     AuthService,

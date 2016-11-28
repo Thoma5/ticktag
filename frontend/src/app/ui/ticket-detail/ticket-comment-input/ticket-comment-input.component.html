@@ -1,13 +1,11 @@
 <div class='comment-input'>
-    <tt-rich-textview
-        [initialContent]="'Type a comment here...'"
+    <tt-comment-textview
+        [initialContent]="''"
+        [ticket]="ticket"
         [allTicketTags]="allTicketTags"
-        [ticketTags]="ticketTags"
         [allTimeCategories]="allTimeCategories"
-        [projectId]="ticket.projectId"
         [allAssignmentTags]="allAssignmentTags"
-        [assignedUsers]="assignedUsers"
-        [assignments]="ticket.ticketAssignments"
+        (save)="commentCreate.emit($event)"
     >
-    </tt-rich-textview>
+    </tt-comment-textview>
 </div>

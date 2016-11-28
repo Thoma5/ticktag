@@ -97,8 +97,6 @@ open class Ticket protected constructor() {
             inverseJoinColumns = arrayOf(JoinColumn(name = "ticket_tag_id", referencedColumnName = "id"))
     )
     lateinit open var tags: MutableList<TicketTag>
-        protected set
-
 
     @ManyToMany(mappedBy = "mentionedTickets")
     lateinit open var mentioningComments: MutableList<Comment>
@@ -110,7 +108,6 @@ open class Ticket protected constructor() {
 
     @OneToMany(mappedBy = "ticket", cascade = arrayOf(CascadeType.REMOVE))
     lateinit open var assignedTicketUsers: MutableList<AssignedTicketUser>
-        protected set
 
     @OneToMany(mappedBy = "ticket")
     lateinit open var events: MutableList<TicketEvent>

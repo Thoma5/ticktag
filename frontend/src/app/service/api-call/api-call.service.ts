@@ -4,6 +4,19 @@ import {Observable} from 'rxjs';
 import {AuthService} from '..';
 import {ValidationErrorJson} from '../../api';
 
+// Do not expose this function, it is dangerous if called on objects that are
+// not meant to be frozen this way!
+function deepFreeze(object: any) {
+  if (object instanceof Object) {
+    for (let key in object) {
+      if (object.hasOwnProperty(key)) {
+        deepFreeze(key);
+      }
+    }
+    Object.freeze(object);
+  }
+}
+
 export type ApiCallFn = (extraParams: any) => Observable<Response>;
 
 export class ApiCallResult<T> {
@@ -73,7 +86,11 @@ export class ApiCallService {
 
     return apiCall({headers: headers})
       .map(resp => {
-        return new ApiCallResult<T>(apiCall, extraHeaders || null, true, resp.json());
+        let data = (resp.text().length === 0) ? null : resp.json();
+        if (data) {
+          deepFreeze(data);
+        }
+        return new ApiCallResult<T>(apiCall, extraHeaders || null, true, data);
       })
       .catch(resp => {
         if (resp instanceof Response) {

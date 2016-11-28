@@ -1,0 +1,33 @@
+@import '../../../../style/constants.scss';
+
+.subticket-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.open {
+}
+
+.closed {
+  color: palette(Grey, 600);
+  text-decoration: line-through;
+}
+
+.number {
+}
+
+.title {
+  margin-left: $internal-gap;
+}
+
+.progress-bar {
+  height: 100%;
+  flex-grow: 1;
+  background-color: palette(Light Blue, 500);
+  margin-left: $internal-gap;
+}
+
+.progress-numbers {
+  margin-left: $internal-gap;
+}
