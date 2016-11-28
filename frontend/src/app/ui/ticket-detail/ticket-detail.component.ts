@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ApiCallService } from '../../service';
+import { Modal } from 'angular2-modal/plugins/bootstrap';
+import { ApiCallService, ApiCallResult } from '../../service';
 import { TaskQueue } from '../../util/task-queue';
 import {
   TicketApi, TicketResultJson, CommentsApi, AssignmenttagApi,
@@ -55,7 +56,8 @@ export class TicketDetailComponent implements OnInit {
     private timeCategoryApi: TimecategoryApi,
     private getApi: GetApi,
     private ticketAssignmentApi: TicketuserrelationApi,
-    private ticketTagRelationApi: TickettagrelationApi) {
+    private ticketTagRelationApi: TickettagrelationApi,
+    private modal: Modal) {
   }
 
   ngOnInit(): void {
@@ -94,8 +96,7 @@ export class TicketDetailComponent implements OnInit {
       this.newTicketDetail();
       if (!result.isValid) {
         // TODO nice message
-        console.dir(result);
-        window.alert('😥');
+        this.error(result);
       }
     });
   }
@@ -113,8 +114,7 @@ export class TicketDetailComponent implements OnInit {
       this.newTicketDetail();
       if (!result.isValid) {
         // TODO nice message
-        console.dir(result);
-        window.alert('😥');
+        this.error(result);
       }
     });
   }
@@ -137,8 +137,7 @@ export class TicketDetailComponent implements OnInit {
       this.newTicketDetail();
       if (!result.isValid) {
         // TODO nice message
-        console.dir(result);
-        window.alert('😥');
+        this.error(result);
       }
     });
   }
@@ -163,8 +162,7 @@ export class TicketDetailComponent implements OnInit {
         this.newTicketDetail();
         if (!result.isValid) {
           // TODO nice message
-          console.dir(result);
-          window.alert('😥');
+          this.error(result);
         }
       });
   }
@@ -187,8 +185,7 @@ export class TicketDetailComponent implements OnInit {
     this.queue.push(obs).subscribe(result => {
       if (!result.isValid) {
         // TODO nice message
-        console.dir(result);
-        window.alert('😥');
+        this.error(result);
       }
     });
   }
@@ -217,8 +214,7 @@ export class TicketDetailComponent implements OnInit {
     this.queue.push(obs).subscribe(result => {
       if (!result.isValid) {
         // TODO nice message
-        console.dir(result);
-        window.alert('😥');
+        this.error(result);
       }
     });
   }
@@ -234,8 +230,7 @@ export class TicketDetailComponent implements OnInit {
           this.refresh(this.ticketDetail.projectId, this.ticketDetail.id).subscribe();
         } else {
           // TODO nice message
-          console.dir(result);
-          window.alert('😥');
+          this.error(result);
         }
       });
   }
@@ -287,6 +282,35 @@ export class TicketDetailComponent implements OnInit {
       this.allAssignmentTags,
       this.transientUsers,
       this.transientTags);
+  }
+
+  private error(result: ApiCallResult<void|{}>): void {
+    console.dir(result);
+    let validationErrors = result.error;
+
+    let errorBody = '<ul>';
+    validationErrors.map(e => {
+      let baseStr = e.field + ': ';
+      let errorStr = 'unknown';
+      if (e.type === 'size') {
+        errorStr = 'size (' + e.sizeInfo.min + ', ' + e.sizeInfo.max + ')';
+      } else if (e.type === 'pattern') {
+        errorStr = 'pattern ' + e.patternInfo.pattern;
+      } else if (e.type === 'other') {
+        errorStr = 'other ' + e.otherInfo.name;
+      }
+      return baseStr + errorStr;
+    }).forEach(s => {
+      errorBody = errorBody + '<li>' + s + '</li>';
+    });
+    errorBody = errorBody + '</ul>';
+
+    this.modal.alert()
+        .size('sm')
+        .showClose(true)
+        .title('Error')
+        .body(errorBody)
+        .open();
   }
 
   private refresh(projectId: string, ticketId: string): Observable<void> {

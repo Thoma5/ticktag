@@ -6,6 +6,9 @@ import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { routing } from './app.routing';
 
+import { ModalModule } from 'angular2-modal';
+import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
+
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
 import { AuthService, ApiCallService, MarkdownService } from './service';
 import { LoginComponent } from './ui/login/login.component';
@@ -73,6 +76,8 @@ import { CommandHelpComponent } from './ui/ticket-detail/command-help/command-he
     Angular2DataTableModule,
     Ng2BootstrapModule,
     MaterialModule.forRoot(),
+    ModalModule.forRoot(),
+    BootstrapModalModule,
   ],
   declarations: [
     AppComponent,
