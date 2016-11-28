@@ -6,6 +6,7 @@ export * from './GetApi';
 export * from './LoggedtimeApi';
 export * from './MemberApi';
 export * from './ProjectApi';
+export * from './StatisticApi';
 export * from './TicketApi';
 export * from './TickettagApi';
 export * from './TickettaggroupApi';
