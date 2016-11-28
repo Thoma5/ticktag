@@ -5,13 +5,11 @@ import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.project.ProjectRepository
 import io.ticktag.persistence.ticket.TicketRepository
 import io.ticktag.persistence.ticket.entity.Comment
-import io.ticktag.persistence.ticket.entity.LoggedTime
 import io.ticktag.persistence.ticket.entity.Ticket
 import io.ticktag.persistence.ticket.entity.TicketTag
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.*
 import io.ticktag.service.ticket.dto.CreateTicket
-import io.ticktag.service.ticket.dto.TicketProgressResult
 import io.ticktag.service.ticket.dto.TicketResult
 import io.ticktag.service.ticket.dto.UpdateTicket
 import io.ticktag.service.ticket.service.TicketService
@@ -22,7 +20,6 @@ import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
-import java.time.Duration
 import java.time.Instant
 import java.util.*
 import javax.inject.Inject
@@ -55,45 +52,6 @@ open class TicketServiceImpl @Inject constructor(
         return toResultDto(tickets.findOne(id) ?: throw NotFoundException())
     }
 
-    private fun loggedTimeForTicket(ticket: Ticket): Duration {
-        var duration = Duration.ZERO
-        ticket.comments
-                .flatMap { it.loggedTimes }
-                .forEach { duration += it.time }
-        return duration
-    }
-
-    @PreAuthorize(AuthExpr.READ_TICKET)
-    override fun getTicketProgress(id: UUID): TicketProgressResult {
-        val ticket = tickets.findOne(id) ?: throw NotFoundException()
-        var totalEstimatedTime = Duration.ZERO
-        var totalLoggedTime = Duration.ZERO
-        var ticketDuration: Duration
-        var ticketEstimatedTime: Duration
-
-        ticketEstimatedTime = ticket.currentEstimatedTime ?: ticket.initialEstimatedTime ?: Duration.ZERO
-        totalEstimatedTime += ticketEstimatedTime
-
-        ticketDuration = loggedTimeForTicket(ticket)
-        if (ticketDuration > ticketEstimatedTime) { // logged Time may not be greater than logged Time
-            ticketDuration = ticketEstimatedTime
-        }
-
-        totalLoggedTime += ticketDuration
-
-        for (subTicket: Ticket in ticket.subTickets) {
-            ticketEstimatedTime = subTicket.currentEstimatedTime ?: subTicket.initialEstimatedTime ?: Duration.ZERO
-            totalEstimatedTime += ticketEstimatedTime
-
-            ticketDuration = loggedTimeForTicket(subTicket)
-            if (ticketDuration > ticketEstimatedTime) { // logged Time may not be greater than logged Time
-                ticketDuration = ticketEstimatedTime
-            }
-            totalLoggedTime += ticketDuration
-        }
-
-        return TicketProgressResult(totalLoggedTime, totalEstimatedTime)
-    }
 
     @PreAuthorize(AuthExpr.USER) // Checked manually
     override fun getTickets(ids: Collection<UUID>, principal: Principal): Map<UUID, TicketResult> {

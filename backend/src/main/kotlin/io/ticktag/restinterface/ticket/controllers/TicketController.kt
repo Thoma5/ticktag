@@ -2,7 +2,10 @@ package io.ticktag.restinterface.ticket.controllers
 
 import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
-import io.ticktag.restinterface.ticket.schema.*
+import io.ticktag.restinterface.ticket.schema.CreateTicketRequestJson
+import io.ticktag.restinterface.ticket.schema.TicketResultJson
+import io.ticktag.restinterface.ticket.schema.TicketSort
+import io.ticktag.restinterface.ticket.schema.UpdateTicketRequestJson
 import io.ticktag.service.Principal
 import io.ticktag.service.ticket.dto.CreateTicket
 import io.ticktag.service.ticket.dto.UpdateTicket
@@ -41,10 +44,6 @@ open class TicketController @Inject constructor(
         return TicketResultJson(ticketService.getTicket(id))
     }
 
-    @GetMapping(value = "/{id}/progress")
-    open fun getTicketProgress(@PathVariable(name = "id") id: UUID): TicketProgressResultJson {
-        return TicketProgressResultJson(ticketService.getTicketProgress(id))
-    }
 
     @PostMapping
     open fun createTicket(@RequestBody req: CreateTicketRequestJson,

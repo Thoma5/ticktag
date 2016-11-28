@@ -1,6 +1,6 @@
-package io.ticktag.restinterface.ticket.schema
+package io.ticktag.restinterface.statistic.schema
 
-import io.ticktag.service.ticket.dto.TicketProgressResult
+import io.ticktag.service.statistic.dto.TicketProgressResult
 import java.time.Duration
 
 data class TicketProgressResultJson(

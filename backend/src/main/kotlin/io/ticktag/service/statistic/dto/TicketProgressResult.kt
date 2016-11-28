@@ -1,4 +1,4 @@
-package io.ticktag.service.ticket.dto
+package io.ticktag.service.statistic.dto
 
 import java.time.Duration
 
