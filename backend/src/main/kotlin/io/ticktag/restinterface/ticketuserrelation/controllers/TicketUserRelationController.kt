@@ -1,4 +1,4 @@
-package io.ticktag.restinterface.ticketassignment.controllers
+package io.ticktag.restinterface.ticketuserrelation.controllers
 
 import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface

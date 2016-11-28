@@ -7,8 +7,8 @@ import io.ticktag.restinterface.loggedtime.controller.LoggedTimeController
 import io.ticktag.restinterface.loggedtime.schema.CreateLoggedTimeJson
 import io.ticktag.restinterface.ticket.controllers.TicketController
 import io.ticktag.restinterface.ticket.schema.UpdateTicketRequestJson
-import io.ticktag.restinterface.ticketassignment.controllers.TicketUserRelationController
 import io.ticktag.restinterface.ticketevent.controllers.TicketEventController
+import io.ticktag.restinterface.ticketuserrelation.controllers.TicketUserRelationController
 import org.junit.Assert
 import org.junit.Test
 import java.time.Duration

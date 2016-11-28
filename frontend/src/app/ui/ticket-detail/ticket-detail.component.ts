@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
-import {ApiCallService} from '../../service';
-import {TaskQueue} from '../../util/task-queue';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { ApiCallService } from '../../service';
+import { TaskQueue } from '../../util/task-queue';
 import {
   TicketApi, TicketResultJson, CommentsApi, AssignmenttagApi,
   AssignmentTagResultJson, CommentResultJson, TicketTagResultJson,
@@ -9,18 +9,18 @@ import {
   GetApi, GetResultJson, UpdateTicketRequestJson,
   TicketuserrelationApi, TickettagrelationApi
 } from '../../api';
-import {Observable} from 'rxjs';
-import {TicketEventResultJson} from '../../api/model/TicketEventResultJson';
-import {TicketeventApi} from '../../api/api/TicketeventApi';
+import { Observable } from 'rxjs';
+import { TicketEventResultJson } from '../../api/model/TicketEventResultJson';
+import { TicketeventApi } from '../../api/api/TicketeventApi';
 import {
   TicketDetail, TicketDetailTag, TicketDetailAssTag, TicketDetailComment,
   TicketDetailUser, TicketDetailTimeCategory, TicketDetailTransientUser,
   TicketDetailSubticket
 } from './ticket-detail';
-import {idListToMap} from '../../util/listmaputils';
+import { idListToMap } from '../../util/listmaputils';
 import * as imm from 'immutable';
-import {CommentTextviewSaveEvent} from './comment-textview/comment-textview.component';
-import {RefTicketCmd} from './comment-textview/grammar';
+import { CommentTextviewSaveEvent } from './comment-textview/comment-textview.component';
+import { RefTicketCmd } from './comment-textview/grammar';
 
 @Component({
   selector: 'tt-ticket-detail',
@@ -31,7 +31,7 @@ export class TicketDetailComponent implements OnInit {
   private queue = new TaskQueue();
 
   private loading = true;
-  private ticketEvents: TicketEventResultJson[] | null = null;
+  private ticketEvents: imm.List<TicketEventResultJson>;
   private ticketDetail: TicketDetail = null;
   private allTicketTags: imm.Map<string, TicketDetailTag>;
   private allAssignmentTags: imm.Map<string, TicketDetailAssTag>;
@@ -47,17 +47,17 @@ export class TicketDetailComponent implements OnInit {
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(private route: ActivatedRoute,
-              private router: Router,
-              private apiCallService: ApiCallService,
-              private ticketApi: TicketApi,
-              private commentsApi: CommentsApi,
-              private assigmentTagsApi: AssignmenttagApi,
-              private ticketTagsApi: TickettagApi,
-              private timeCategoryApi: TimecategoryApi,
-              private getApi: GetApi,
-              private ticketEventApi: TicketeventApi,
-              private ticketAssignmentApi: TicketuserrelationApi,
-              private ticketTagRelationApi: TickettagrelationApi) {
+    private router: Router,
+    private apiCallService: ApiCallService,
+    private ticketApi: TicketApi,
+    private commentsApi: CommentsApi,
+    private assigmentTagsApi: AssignmenttagApi,
+    private ticketTagsApi: TickettagApi,
+    private timeCategoryApi: TimecategoryApi,
+    private getApi: GetApi,
+    private ticketEventApi: TicketeventApi,
+    private ticketAssignmentApi: TicketuserrelationApi,
+    private ticketTagRelationApi: TickettagrelationApi) {
   }
 
   ngOnInit(): void {
@@ -76,15 +76,15 @@ export class TicketDetailComponent implements OnInit {
   }
 
   onTitleChange(val: string): void {
-    this.updateTicket({title: val});
+    this.updateTicket({ title: val });
   }
 
   onDescriptionChange(val: string): void {
-    this.updateTicket({description: val});
+    this.updateTicket({ description: val });
   }
 
   onStorypointsChange(val: number): void {
-    this.updateTicket({storyPoints: val});
+    this.updateTicket({ storyPoints: val });
   }
 
   onTagAdd(tagId: string): void {
@@ -321,8 +321,7 @@ export class TicketDetailComponent implements OnInit {
         this.allTicketTags = tuple[0][3];
         this.allAssignmentTags = tuple[0][2];
         this.allTimeCategories = tuple[0][4];
-        console.log(tuple);
-        this.ticketEvents = tuple[0][5];
+        this.ticketEvents = imm.List(tuple[0][5]);
         this.newTicketDetail();
       })
       .map(it => undefined);

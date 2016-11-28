@@ -3,7 +3,7 @@ package io.ticktag.restinterface.ticketuserrelation
 
 import io.ticktag.*
 import io.ticktag.restinterface.ApiBaseTest
-import io.ticktag.restinterface.ticketassignment.controllers.TicketUserRelationController
+import io.ticktag.restinterface.ticketuserrelation.controllers.TicketUserRelationController
 import io.ticktag.service.NotFoundException
 import io.ticktag.service.TicktagValidationException
 import org.junit.Assert.fail

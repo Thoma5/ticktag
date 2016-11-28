@@ -36,7 +36,7 @@ open class TicketEventServiceImpl @Inject constructor(
                 is TicketEventTagRemoved -> TicketEventTagRemovedResult(e)
                 is TicketEventUserAdded -> TicketEventUserAddedResult(e)
                 is TicketEventUserRemoved -> TicketEventUserRemovedResult(e)
-                else -> TicketEventResult(e)
+                else -> throw RuntimeException()
             }
         }
     }
