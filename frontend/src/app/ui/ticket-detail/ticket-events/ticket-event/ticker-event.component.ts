@@ -8,8 +8,4 @@ import {TicketEventResultJson} from '../../../../api/model/TicketEventResultJson
 })
 export class TicketEventComponent {
   @Input() event: TicketEventResultJson;
-
-  dateFromInstant(date: number) {
-    return new Date(date);
-  }
 }
