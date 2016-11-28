@@ -97,7 +97,7 @@ export class TicketOverviewComponent implements OnInit {
         let ticketsResult = tuple[0];
         // We need all assigned users
         let wantedUserIds: string[] = [];
-        ticketsResult.content.forEach(t => t.ticketUserRelations.map(ta => wantedUserIds.concat(ta.userId)));
+        ticketsResult.content.forEach(t => t.ticketUserRelations.map(ta => wantedUserIds.push(ta.userId)));
 
         let getObs = this.apiCallService
           .callNoError<GetResultJson>(p => this.getApi.getUsingPOSTWithHttpInfo({ userIds: wantedUserIds }, p));
