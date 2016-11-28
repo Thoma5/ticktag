@@ -29,20 +29,21 @@ import { TicketSidebarComponent } from './ui/ticket-detail/ticket-sidebar/ticket
 import { TicketCoreComponent } from './ui/ticket-detail/ticket-core/ticket-core.component';
 import { EditableTextviewComponent } from './util/edit-textview/edit-textview.component';
 import {
-  TitleTextviewReadComponent,
-  TitleTextviewEditComponent
-} from './ui/ticket-detail/ticket-title-textview/ticket-title-textview.component';
+  EditTextviewStringComponent, EditTextviewStringEditComponent, EditTextviewStringReadComponent
+} from './util/edit-textview/edit-textview-string.component';
+import {
+  EditTextviewPosNumberComponent, EditTextviewPosNumberEditComponent, EditTextviewPosNumberReadComponent
+} from './util/edit-textview/edit-textview-posnumber.component';
+import {
+  EditTextviewDateTimeComponent, EditTextviewDateTimeEditComponent, EditTextviewDateTimeReadComponent
+} from './util/edit-textview/edit-textview-datetime.component';
 import { MarkdownTextviewEditComponent } from './util/markdown-textview/markdown-textview-edit.component';
 import { MarkdownTextviewReadComponent } from './util/markdown-textview/markdown-textview-read.component';
 import { OpenClosedButtonComponent } from './ui/ticket-detail/open-closed-button/open-closed-button.component';
 import { TicketCommentsComponent } from './ui/ticket-detail/ticket-comments/ticket-comments.component';
 import { TicketCommentComponent } from './ui/ticket-detail/ticket-comment/ticket-comment.component';
 import { TicketCommentInputComponent } from './ui/ticket-detail/ticket-comment-input/ticket-comment-input.component';
-import {
-  TicketStorypointsComponent,
-  StorypointsTextviewEditComponent,
-  StorypointsTextviewReadComponent
-} from './ui/ticket-detail/ticket-storypoints/ticket-storypoints.component';
+import { TicketStorypointsComponent } from './ui/ticket-detail/ticket-storypoints/ticket-storypoints.component';
 import { AssignedUserComponent } from './ui/ticket-detail/assigned-user/assigned-user.component';
 import { SubticketsComponent } from './ui/ticket-detail/subtickets/subtickets.component';
 import { SubticketComponent } from './ui/ticket-detail/subticket/subticket.component';
@@ -99,14 +100,19 @@ import {TicketEventUserComponent} from './ui/ticket-detail/ticket-events/ticket-
     TicketSidebarComponent,
     TicketCoreComponent,
     EditableTextviewComponent,
-    TitleTextviewReadComponent,
-    TitleTextviewEditComponent,
+    EditTextviewStringComponent,
+    EditTextviewStringEditComponent,
+    EditTextviewStringReadComponent,
+    EditTextviewPosNumberComponent,
+    EditTextviewPosNumberEditComponent,
+    EditTextviewPosNumberReadComponent,
+    EditTextviewDateTimeComponent,
+    EditTextviewDateTimeEditComponent,
+    EditTextviewDateTimeReadComponent,
     MarkdownTextviewReadComponent,
     MarkdownTextviewEditComponent,
     OpenClosedButtonComponent,
     TicketStorypointsComponent,
-    StorypointsTextviewEditComponent,
-    StorypointsTextviewReadComponent,
     AssignedUserComponent,
     SubticketsComponent,
     SubticketComponent,

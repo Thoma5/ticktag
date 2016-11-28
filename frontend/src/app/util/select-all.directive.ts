@@ -1,6 +1,6 @@
 import {
     Directive, ElementRef, OnChanges, Input, SimpleChanges,
-    AfterViewInit, NgZone
+    AfterViewInit
 } from '@angular/core';
 
 type ValidTarget = HTMLInputElement | HTMLTextAreaElement;
@@ -11,24 +11,22 @@ type ValidTarget = HTMLInputElement | HTMLTextAreaElement;
 export class SelectAllDirective implements AfterViewInit, OnChanges {
   @Input() ttSelectAll: boolean;
 
-  constructor(private elementRef: ElementRef, private zone: NgZone) { }
+  constructor(private elementRef: ElementRef) { }
 
   ngAfterViewInit(): void {
     this.select();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['ttSelectAll'] && changes['ttSelectAll'].currentValue === true) {
+    if ('ttSelectAll' in changes && this.ttSelectAll) {
       this.select();
     }
   }
 
   private select(): void {
     let elem = this.elementRef.nativeElement as ValidTarget;
-    this.zone.runOutsideAngular(() => {
-      window.setTimeout(() => {
-        elem.select();
-      }, 0);
-    });
+    window.setTimeout(() => {
+      elem.select();
+    }, 0);
   }
 }

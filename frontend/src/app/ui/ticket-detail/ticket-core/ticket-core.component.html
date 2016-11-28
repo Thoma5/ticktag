@@ -8,17 +8,8 @@
                 <div class='title-container'>
                     <span class='number'>#{{number}}</span>
                     <span class='title-text-wrapper'>
-                    <tt-edit-textview
-                        [(editing)]='editingTitle'
-                        [content]='title' (contentChange)='titleChange.emit($event)'>
-                        <!-- TODO duplication, get rid of it -->
-                        <tt-title-textview-read #read class='textview-read'>
-                        </tt-title-textview-read>
-                        <tt-title-textview-edit #edit class='textview-edit'>
-                        </tt-title-textview-edit>
-                    </tt-edit-textview>
-                </span>
-                    <tt-edit-button [visible]='!editingTitle' (click)='editingTitle=true'></tt-edit-button>
+                        <tt-edit-textview-string [content]='title' (contentChange)='titleChange.emit($event)'></tt-edit-textview-string>
+                    </span>
                 </div>
             </h3>
             <tt-ticket-storypoints [points]='storypoints' (pointsChange)='storypointsChange.emit($event)'>
@@ -54,21 +45,21 @@
                 Progress: ???%
             </div>
             <div class='due-date'>
-                Due date: {{dueDate | ttFormatMoment}}
+                Due date: <tt-edit-textview-datetime [content]="dueDate"></tt-edit-textview-datetime>
             </div>
         </div>
         <div class='section-header'>Description</div>
         <div class='description-container'>
             <tt-edit-button [visible]='!editingDescription' (click)='editingDescription=true'></tt-edit-button>
-            <div class='description-wrapper'>
+            <!--div class='description-wrapper'>
                 <tt-edit-textview [(editing)]='editingDescription' [content]='description' (contentChange)='descriptionChange.emit($event)'>
-                    <!-- TODO duplication, get rid of it -->
+                    <!-- TODO duplication, get rid of it --><!--
                     <tt-markdown-textview-read #read class='textview-read'>
                     </tt-markdown-textview-read>
                     <tt-markdown-textview-edit #edit class='textview-edit'>
                     </tt-markdown-textview-edit>
                 </tt-edit-textview>
-            </div>
+            </div-->
         </div>
         <div class='footer-row'>
             <div class='filler'></div>
