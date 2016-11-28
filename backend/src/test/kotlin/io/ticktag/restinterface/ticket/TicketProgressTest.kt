@@ -9,12 +9,14 @@ import java.util.*
 import javax.inject.Inject
 
 
-class TicketProgressTest :ApiBaseTest() {
+class TicketProgressTest : ApiBaseTest() {
     @Inject
     lateinit var ticketController: TicketController
+
     override fun loadTestData(): List<String> {
         return arrayListOf("sql/testProgressTicketSamples.sql")
     }
+
     @Test
     fun `getTicketProgress should calculate correct Progress`() {
         withUser(ADMIN_ID) { ->

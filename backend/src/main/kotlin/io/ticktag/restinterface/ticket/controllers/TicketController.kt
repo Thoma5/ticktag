@@ -32,7 +32,7 @@ open class TicketController @Inject constructor(
         val pageRequest = PageRequest(page, size, Sort(order.map { it.order }))
         val page = ticketService.listTickets(req, pageRequest)
         val content = page.content.map(::TicketResultJson)
-        return PageImpl(content,pageRequest,page.totalElements)
+        return PageImpl(content, pageRequest, page.totalElements)
     }
 
 
@@ -68,9 +68,9 @@ open class TicketController @Inject constructor(
 
     @GetMapping("/fuzzy")
     open fun listTicketsFuzzy(
-            @RequestParam(name="projectId", required = true) projectId: UUID,
-            @RequestParam(name="q", required = true) query: String,
-            @RequestParam(name="order", required = true) order: List<TicketSort>): List<TicketResultJson> {
+            @RequestParam(name = "projectId", required = true) projectId: UUID,
+            @RequestParam(name = "q", required = true) query: String,
+            @RequestParam(name = "order", required = true) order: List<TicketSort>): List<TicketResultJson> {
         val tickets = ticketService.listTicketsFuzzy(projectId, query, PageRequest(0, 15, Sort(order.map { it.order })))
         return tickets.map(::TicketResultJson)
     }

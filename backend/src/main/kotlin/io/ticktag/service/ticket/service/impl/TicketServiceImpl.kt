@@ -55,11 +55,11 @@ open class TicketServiceImpl @Inject constructor(
         return toResultDto(tickets.findOne(id) ?: throw NotFoundException())
     }
 
-    private fun loggedTimeForTicket(ticket: Ticket): Duration{
+    private fun loggedTimeForTicket(ticket: Ticket): Duration {
         var duration = Duration.ZERO
-        for (comment:Comment in ticket.comments){
-            for (loggedTime: LoggedTime in comment.loggedTimes){
-                duration+=loggedTime.time
+        for (comment: Comment in ticket.comments) {
+            for (loggedTime: LoggedTime in comment.loggedTimes) {
+                duration += loggedTime.time
             }
         }
         return duration
@@ -67,34 +67,34 @@ open class TicketServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.READ_TICKET)
     override fun getTicketProgress(id: UUID): TicketProgressResult {
-        val ticket = tickets.findOne(id) ?:throw NotFoundException()
+        val ticket = tickets.findOne(id) ?: throw NotFoundException()
         var totalEstimatedTime = Duration.ZERO
         var totalLoggedTime = Duration.ZERO
-        var ticketDuration:Duration
-        var ticketEstimatedTime:Duration
+        var ticketDuration: Duration
+        var ticketEstimatedTime: Duration
 
-        ticketEstimatedTime =  ticket.currentEstimatedTime ?: ticket.initialEstimatedTime ?: Duration.ZERO
+        ticketEstimatedTime = ticket.currentEstimatedTime ?: ticket.initialEstimatedTime ?: Duration.ZERO
         totalEstimatedTime += ticketEstimatedTime
 
         ticketDuration = loggedTimeForTicket(ticket)
-        if (ticketDuration > ticketEstimatedTime ){ // logged Time may not be greater than logged Time
+        if (ticketDuration > ticketEstimatedTime) { // logged Time may not be greater than logged Time
             ticketDuration = ticketEstimatedTime
         }
 
-        totalLoggedTime+= ticketDuration
+        totalLoggedTime += ticketDuration
 
-        for (subTicket: Ticket in ticket.subTickets){
-            ticketEstimatedTime =  subTicket.currentEstimatedTime ?: subTicket.initialEstimatedTime ?: Duration.ZERO
-            totalEstimatedTime+=ticketEstimatedTime
+        for (subTicket: Ticket in ticket.subTickets) {
+            ticketEstimatedTime = subTicket.currentEstimatedTime ?: subTicket.initialEstimatedTime ?: Duration.ZERO
+            totalEstimatedTime += ticketEstimatedTime
 
             ticketDuration = loggedTimeForTicket(subTicket)
-            if (ticketDuration > ticketEstimatedTime){ // logged Time may not be greater than logged Time
+            if (ticketDuration > ticketEstimatedTime) { // logged Time may not be greater than logged Time
                 ticketDuration = ticketEstimatedTime
             }
-            totalLoggedTime+= ticketDuration
+            totalLoggedTime += ticketDuration
         }
 
-       return TicketProgressResult(totalLoggedTime,totalEstimatedTime)
+        return TicketProgressResult(totalLoggedTime, totalEstimatedTime)
     }
 
     @PreAuthorize(AuthExpr.USER) // Checked manually
