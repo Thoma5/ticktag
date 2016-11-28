@@ -57,11 +57,9 @@ open class TicketServiceImpl @Inject constructor(
 
     private fun loggedTimeForTicket(ticket: Ticket): Duration {
         var duration = Duration.ZERO
-        for (comment: Comment in ticket.comments) {
-            for (loggedTime: LoggedTime in comment.loggedTimes) {
-                duration += loggedTime.time
-            }
-        }
+        ticket.comments
+                .flatMap { it.loggedTimes }
+                .forEach { duration += it.time }
         return duration
     }
 
