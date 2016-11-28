@@ -6,7 +6,7 @@ import java.time.Duration
 import java.time.Instant
 import java.util.*
 
-class TicketResultJson(
+data class TicketResultJson(
         val id: UUID,
         val number: Int,
         val createTime: Instant,

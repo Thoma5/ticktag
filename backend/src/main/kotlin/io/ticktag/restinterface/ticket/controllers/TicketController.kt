@@ -41,6 +41,11 @@ open class TicketController @Inject constructor(
         return TicketResultJson(ticketService.getTicket(id))
     }
 
+    @GetMapping(value = "/{id}/progress")
+    open fun getTicketProgress(@PathVariable(name = "id") id: UUID): TicketProgressResultJson {
+        return TicketProgressResultJson(ticketService.getTicketProgress(id))
+    }
+
     @PostMapping
     open fun createTicket(@RequestBody req: CreateTicketRequestJson,
                           @AuthenticationPrincipal principal: Principal): TicketResultJson {

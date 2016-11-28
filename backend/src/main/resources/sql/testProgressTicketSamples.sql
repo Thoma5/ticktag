@@ -1,4 +1,4 @@
-﻿BEGIN;
+BEGIN;
 
 DELETE FROM "logged_time";
 DELETE FROM "time_category";
