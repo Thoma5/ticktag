@@ -108,9 +108,6 @@ export class TicketOverview {
       .map(entry => entry.map(as => new TicketOverviewAssignment(as.tag)).toList())
       .toMap();
     this.projectId = ticket.projectId;
-    Object.freeze(this);
   }
 }
 Object.freeze(TicketOverview.prototype);
-
-
