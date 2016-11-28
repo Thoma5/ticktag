@@ -30,5 +30,7 @@ export interface GetRequestJson {
 
     ticketIds?: Array<string>;
 
+    ticketIdsForStatistic?: Array<string>;
+
 }
 

@@ -1,4 +1,4 @@
-package io.ticktag.restinterface.loggedtime
+package io.ticktag.restinterface.loggedime
 
 import io.ticktag.ADMIN_ID
 import io.ticktag.restinterface.ApiBaseTest

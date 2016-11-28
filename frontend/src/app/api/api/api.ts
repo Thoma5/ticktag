@@ -8,6 +8,7 @@ export * from './MemberApi';
 export * from './ProjectApi';
 export * from './StatisticApi';
 export * from './TicketApi';
+export * from './TicketeventApi';
 export * from './TickettagApi';
 export * from './TickettaggroupApi';
 export * from './TickettagrelationApi';
