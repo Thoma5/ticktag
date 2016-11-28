@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { ApiCallService } from '../../service';
-import { TaskQueue } from '../../util/task-queue';
+import {Component, OnInit} from '@angular/core';
+import {Router, ActivatedRoute} from '@angular/router';
+import {ApiCallService} from '../../service';
+import {TaskQueue} from '../../util/task-queue';
 import {
   TicketApi, TicketResultJson, CommentsApi, AssignmenttagApi,
   AssignmentTagResultJson, CommentResultJson, TicketTagResultJson,
@@ -9,21 +9,18 @@ import {
   GetApi, GetResultJson, UpdateTicketRequestJson,
   TicketuserrelationApi, TickettagrelationApi
 } from '../../api';
-import { Observable } from 'rxjs';
-<<<<<<< HEAD
+import {Observable} from 'rxjs';
 import {TicketEventResultJson} from '../../api/model/TicketEventResultJson';
 import {TicketeventApi} from '../../api/api/TicketeventApi';
-=======
 import {
   TicketDetail, TicketDetailTag, TicketDetailAssTag, TicketDetailComment,
   TicketDetailUser, TicketDetailTimeCategory, TicketDetailTransientUser,
   TicketDetailSubticket
 } from './ticket-detail';
-import { idListToMap } from '../../util/listmaputils';
+import {idListToMap} from '../../util/listmaputils';
 import * as imm from 'immutable';
-import { CommentTextviewSaveEvent } from './comment-textview/comment-textview.component';
-import { RefTicketCmd } from './comment-textview/grammar';
->>>>>>> develop
+import {CommentTextviewSaveEvent} from './comment-textview/comment-textview.component';
+import {RefTicketCmd} from './comment-textview/grammar';
 
 @Component({
   selector: 'tt-ticket-detail',
@@ -34,15 +31,7 @@ export class TicketDetailComponent implements OnInit {
   private queue = new TaskQueue();
 
   private loading = true;
-<<<<<<< HEAD
-  private ticket: TicketResultJson | null = null;
-  private comments: CommentResultJson[] | null = null;
-  private allAssignmentTags: AssignmentTagResultJson[] | null = null;
-  private allTicketTags: TicketTagResultJson[] | null = null;
-  private allTimeCategories: TimeCategoryJson[] | null = null;
-  private assignedUsers: UserResultJson[] | null = null;
   private ticketEvents: TicketEventResultJson[] | null = null;
-=======
   private ticketDetail: TicketDetail = null;
   private allTicketTags: imm.Map<string, TicketDetailTag>;
   private allAssignmentTags: imm.Map<string, TicketDetailAssTag>;
@@ -55,67 +44,49 @@ export class TicketDetailComponent implements OnInit {
   private currentTicketJson: TicketResultJson;  // Only use to recreate the ticket
   private transientUsers = imm.List<TicketDetailTransientUser>();
   private transientTags = imm.Set<string>();
->>>>>>> develop
 
   // TODO make readonly once Intellij supports readonly properties in ctr
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private apiCallService: ApiCallService,
-    private ticketApi: TicketApi,
-    private commentsApi: CommentsApi,
-    private assigmentTagsApi: AssignmenttagApi,
-    private ticketTagsApi: TickettagApi,
-    private timeCategoryApi: TimecategoryApi,
-    private getApi: GetApi,
-<<<<<<< HEAD
-    private ticketEventApi: TicketeventApi,
-  ) {
-=======
-    private ticketAssignmentApi: TicketuserrelationApi,
-    private ticketTagRelationApi: TickettagrelationApi) {
->>>>>>> develop
+  constructor(private route: ActivatedRoute,
+              private router: Router,
+              private apiCallService: ApiCallService,
+              private ticketApi: TicketApi,
+              private commentsApi: CommentsApi,
+              private assigmentTagsApi: AssignmenttagApi,
+              private ticketTagsApi: TickettagApi,
+              private timeCategoryApi: TimecategoryApi,
+              private getApi: GetApi,
+              private ticketEventApi: TicketeventApi,
+              private ticketAssignmentApi: TicketuserrelationApi,
+              private ticketTagRelationApi: TickettagrelationApi) {
   }
 
   ngOnInit(): void {
     this.route.params
-      .do(() => { this.loading = true; })
+      .do(() => {
+        this.loading = true;
+      })
       .switchMap(params => {
         let ticketId = '' + params['ticketNumber'];
         let projectId = '' + params['projectId'];
         return this.refresh(projectId, ticketId);
       })
-      .subscribe(() => { this.loading = false; });
+      .subscribe(() => {
+        this.loading = false;
+      });
   }
 
   onTitleChange(val: string): void {
-    this.updateTicket({ title: val });
+    this.updateTicket({title: val});
   }
 
   onDescriptionChange(val: string): void {
-    this.updateTicket({ description: val });
+    this.updateTicket({description: val});
   }
 
   onStorypointsChange(val: number): void {
-    this.updateTicket({ storyPoints: val });
+    this.updateTicket({storyPoints: val});
   }
 
-<<<<<<< HEAD
-        let ticketObs = this.apiCallService
-          .callNoError<TicketResultJson>(p => this.ticketApi.getTicketUsingGETWithHttpInfo(ticketId, p));
-        let commentsObs = this.apiCallService
-          .callNoError<CommentResultJson[]>(p => this.commentsApi.listCommentsUsingGETWithHttpInfo(ticketId, p));
-        let assignmentTagsObs = this.apiCallService
-          .callNoError<AssignmentTagResultJson[]>(p => this.assigmentTagsApi.listAssignmentTagsUsingGETWithHttpInfo(projectId, p));
-        let ticketTagsObs = this.apiCallService
-          .callNoError<TicketTagResultJson[]>(p => this.ticketTagsApi.listTicketTagsUsingGETWithHttpInfo(null, projectId, p));
-        let timeCategoriesObs = this.apiCallService
-          .callNoError<TimeCategoryJson[]>(p => this.timeCategoryApi.listProjectTimeCategoriesUsingGETWithHttpInfo(projectId, p));
-        let ticketEvents = this.apiCallService
-          .callNoError<TicketEventResultJson[]>(p => this.ticketEventApi.listTicketEventsUsingGETWithHttpInfo(ticketId, p));
-
-        return Observable.zip(ticketObs, commentsObs, assignmentTagsObs, ticketTagsObs, timeCategoriesObs, ticketEvents);
-=======
   onTagAdd(tagId: string): void {
     this.transientTags = this.transientTags.add(tagId);
     this.newTicketDetail();
@@ -302,6 +273,8 @@ export class TicketDetailComponent implements OnInit {
       .callNoError<TicketResultJson>(p => this.ticketApi.getTicketUsingGETWithHttpInfo(ticketId, p));
     let rawCommentsObs = this.apiCallService
       .callNoError<CommentResultJson[]>(p => this.commentsApi.listCommentsUsingGETWithHttpInfo(ticketId, p));
+    let rawTicketEventsObs = this.apiCallService
+      .callNoError<TicketEventResultJson[]>(p => this.ticketEventApi.listTicketEventsUsingGETWithHttpInfo(ticketId, p));
     let assignmentTagsObs = this.apiCallService
       .callNoError<AssignmentTagResultJson[]>(p => this.assigmentTagsApi.listAssignmentTagsUsingGETWithHttpInfo(projectId, p))
       .map(ats => idListToMap(ats).map(at => new TicketDetailAssTag(at, 0)).toMap());  // TODO ordering
@@ -314,25 +287,31 @@ export class TicketDetailComponent implements OnInit {
 
     // There is no dependency between these requests so we can execute them in parallel
     return Observable
-      .zip(rawTicketObs, rawCommentsObs, assignmentTagsObs, ticketTagsObs, timeCategoriesObs)
+      .zip(rawTicketObs, rawCommentsObs, assignmentTagsObs, ticketTagsObs, timeCategoriesObs, rawTicketEventsObs)
       .flatMap(tuple => {
         let ticketResult = tuple[0];
         // We need all assigned users
         let wantedUserIds = ticketResult.ticketUserRelations.map(ta => ta.userId);
         // And the comment authors
-        tuple[1].forEach(c => { wantedUserIds.push(c.userId); });
+        tuple[1].forEach(c => {
+          wantedUserIds.push(c.userId);
+        });
         // And transient users
-        transientUsers.forEach(tu => { wantedUserIds.push(tu.user.id); });
+        transientUsers.forEach(tu => {
+          wantedUserIds.push(tu.user.id);
+        });
         // And the person who created it
         wantedUserIds.push(ticketResult.createdBy);
         // And the subtickets
         let wantedTicketIds = ticketResult.subTicketIds;
 
         let getObs = this.apiCallService
-          .callNoError<GetResultJson>(p => this.getApi.getUsingPOSTWithHttpInfo({ userIds: wantedUserIds, ticketIds: wantedTicketIds }, p));
+          .callNoError<GetResultJson>(p => this.getApi.getUsingPOSTWithHttpInfo({
+            userIds: wantedUserIds,
+            ticketIds: wantedTicketIds
+          }, p));
 
         return Observable.zip(Observable.of(tuple), getObs);
->>>>>>> develop
       })
       .do(tuple => {
         this.currentTicketJson = tuple[0][0];
@@ -342,24 +321,10 @@ export class TicketDetailComponent implements OnInit {
         this.allTicketTags = tuple[0][3];
         this.allAssignmentTags = tuple[0][2];
         this.allTimeCategories = tuple[0][4];
+        console.log(tuple);
+        this.ticketEvents = tuple[0][5];
         this.newTicketDetail();
       })
-<<<<<<< HEAD
-      .subscribe(tuple => {
-        let [[ticket, comments, assignmentTags, ticketTags, timeCategories, ticketEvents], joined] = tuple;
-        this.ticket = ticket;
-        this.comments = comments;
-        this.allAssignmentTags = assignmentTags;
-        this.allTicketTags = ticketTags;
-        this.allTimeCategories = timeCategories;
-        this.assignedUsers = ticket.ticketAssignments.map(ta => joined.users[ta.userId]).filter(it => it);
-        this.ticketEvents = ticketEvents;
-        console.log(ticketEvents);
-        console.log(comments);
-        this.loading = false;
-      });
-=======
       .map(it => undefined);
->>>>>>> develop
   }
 }

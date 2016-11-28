@@ -25,8 +25,6 @@ export * from './PageTicketResultJson';
 export * from './ProjectResultJson';
 export * from './RoleResultJson';
 export * from './Sort';
-export * from './TicketAssignmentJson';
-export * from './TicketAssignmentResultJson';
 export * from './TicketEventResultJson';
 export * from './TicketResultJson';
 export * from './TicketTagGroupResultJson';
