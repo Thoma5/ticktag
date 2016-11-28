@@ -3,6 +3,9 @@ package io.ticktag.service.ticket.service.impl
 import io.ticktag.TicktagService
 import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.project.ProjectRepository
+import io.ticktag.persistence.ticket.AssignmentTagRepository
+import io.ticktag.persistence.ticket.TicketEventRepository
+import io.ticktag.persistence.ticket.entity.*
 import io.ticktag.persistence.ticket.TicketRepository
 import io.ticktag.persistence.ticket.entity.Comment
 import io.ticktag.persistence.ticket.entity.Ticket
@@ -20,6 +23,7 @@ import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
+import java.time.Duration
 import java.time.Instant
 import java.util.*
 import javax.inject.Inject
@@ -31,8 +35,9 @@ open class TicketServiceImpl @Inject constructor(
         private val projects: ProjectRepository,
         private val users: UserRepository,
         private val comments: CommentRepository,
-        private val ticketAssignmentService: TicketAssignmentService
-
+        private val ticketAssignmentService: TicketAssignmentService,
+        private val assignmentTagRepository: AssignmentTagRepository,
+        private val ticketEvents: TicketEventRepository
 ) : TicketService {
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listTicketsFuzzy(@P("authProjectId") project: UUID, query: String, pageable: Pageable): List<TicketResult> {
@@ -115,7 +120,7 @@ open class TicketServiceImpl @Inject constructor(
         //Assignee
         val ticketAssignmentList = emptyList<TicketAssignmentResult>().toMutableList() // Attach this list after the conversion of newTicket to ticketResult to avoid code duplication
         for ((assignmentTagId, userId) in createTicket.ticketAssignments) {
-            val ticketAssignmentResult = ticketAssignmentService.createTicketAssignment(newTicket.id, assignmentTagId, userId)
+            val ticketAssignmentResult = ticketAssignmentService.createTicketAssignment(newTicket.id, assignmentTagId, userId,principal)
             ticketAssignmentList.add(ticketAssignmentResult)
         }
 
@@ -146,33 +151,51 @@ open class TicketServiceImpl @Inject constructor(
     //TODO: Log Changes in History
     @PreAuthorize(AuthExpr.WRITE_TICKET)
     override fun updateTicket(@Valid updateTicket: UpdateTicket, @P("authTicketId") ticketId: UUID, principal: Principal): TicketResult {
-
+        val user = users.findOne(principal.id)?: throw NotFoundException()
         val ticket = tickets.findOne(ticketId) ?: throw NotFoundException()
 
 
         if (updateTicket.title != null) {
+            if (ticket.title != updateTicket.title)
+                ticketEvents.insert(TicketEventTitleChanged.create(ticket, user, ticket.title, updateTicket.title))
             ticket.title = updateTicket.title
         }
         if (updateTicket.open != null) {
+            if (ticket.open != updateTicket.open)
+                ticketEvents.insert(TicketEventStateChanged.create(ticket, user, ticket.open, updateTicket.open))
             ticket.open = updateTicket.open
         }
         if (updateTicket.storyPoints != null) {
+            if (ticket.storyPoints != updateTicket.storyPoints)
+                ticketEvents.insert(TicketEventStoryPointsChanged.create(ticket, user, ticket.storyPoints, updateTicket.storyPoints))
             ticket.storyPoints = updateTicket.storyPoints
         }
         if (updateTicket.initialEstimatedTime != null) {
+            if (ticket.initialEstimatedTime != updateTicket.initialEstimatedTime)
+                ticketEvents.insert(TicketEventInitialEstimatedTimeChanged.create(ticket, user, ticket.initialEstimatedTime, updateTicket.initialEstimatedTime))
             ticket.initialEstimatedTime = updateTicket.initialEstimatedTime
         }
         if (updateTicket.currentEstimatedTime != null) {
+            if (ticket.currentEstimatedTime != updateTicket.currentEstimatedTime)
+                ticketEvents.insert(TicketEventCurrentEstimatedTimeChanged.create(ticket, user, ticket.currentEstimatedTime, updateTicket.currentEstimatedTime))
             ticket.currentEstimatedTime = updateTicket.currentEstimatedTime
         }
         if (updateTicket.dueDate != null) {
+            if (ticket.dueDate != updateTicket.dueDate)
+                ticketEvents.insert(TicketEventDueDateChanged.create(ticket, user, ticket.dueDate, updateTicket.dueDate))
             ticket.dueDate = updateTicket.dueDate
         }
+
         if (updateTicket.parentTicket != null) {
-            ticket.parentTicket = tickets.findOne(updateTicket.parentTicket)
+            val parentTicket = tickets.findOne(updateTicket.parentTicket) ?: throw NotFoundException()
+            if (ticket.parentTicket != parentTicket)
+                ticketEvents.insert(TicketEventParentChanged.create(ticket, user, ticket.parentTicket, parentTicket))
+            ticket.parentTicket = parentTicket
         }
         //Comment
         if (updateTicket.description != null) {
+            if (ticket.descriptionComment.text != updateTicket.description)
+                ticketEvents.insert(TicketEventCommentTextChanged.create(ticket, user, ticket.descriptionComment, ticket.descriptionComment.text, updateTicket.description))
             ticket.descriptionComment.text = updateTicket.description
         }
 

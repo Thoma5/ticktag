@@ -59,6 +59,12 @@ import { LoadingComponent } from './util/loading/loading.component';
 import { SpinnerComponent } from './util/spinner/spinner.component';
 import { CommentTextviewComponent } from './ui/ticket-detail/comment-textview/comment-textview.component';
 
+import {TicketEventsComponent} from './ui/ticket-detail/ticket-events/ticket-events.component';
+import {TicketEventOldNewComponent} from './ui/ticket-detail/ticket-events/ticket-event-old-new/ticket-event-old-new.component';
+import {TicketeventApi} from './api/api/TicketeventApi';
+import {TicketEventComponent} from './ui/ticket-detail/ticket-events/ticket-event/ticker-event.component';
+import {TicketEventUserComponent} from './ui/ticket-detail/ticket-events/ticket-event-user/ticket-event-user.component';
+
 
 @NgModule({
   imports: [
@@ -98,6 +104,10 @@ import { CommentTextviewComponent } from './ui/ticket-detail/comment-textview/co
     TaginputComponent,
     TicketCommentsComponent,
     TicketCommentComponent,
+    TicketEventsComponent,
+    TicketEventComponent,
+    TicketEventOldNewComponent,
+    TicketEventUserComponent,
     TicketCommentInputComponent,
     EditButtonComponent,
     CommentTextviewComponent,
@@ -124,6 +134,7 @@ import { CommentTextviewComponent } from './ui/ticket-detail/comment-textview/co
     TickettagApi,
     TickettaggroupApi,
     GetApi,
+    TicketeventApi,
     TicketuserrelationApi,
     TickettagrelationApi,
 
