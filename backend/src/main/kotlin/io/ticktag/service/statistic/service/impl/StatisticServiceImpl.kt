@@ -5,6 +5,7 @@ import io.ticktag.persistence.ticket.TicketRepository
 import io.ticktag.persistence.ticket.entity.Ticket
 import io.ticktag.service.AuthExpr
 import io.ticktag.service.NotFoundException
+import io.ticktag.service.Principal
 import io.ticktag.service.statistic.dto.TicketProgressResult
 import io.ticktag.service.statistic.service.StatisticService
 import org.springframework.security.access.prepost.PreAuthorize
@@ -17,6 +18,17 @@ open class StatisticServiceImpl @Inject constructor(
         private val tickets: TicketRepository
 ) : StatisticService {
 
+    @PreAuthorize(AuthExpr.USER) // Checked manually
+    override fun getTicketProgresses(ids: Collection<UUID>, principal: Principal): Map<UUID, TicketProgressResult> {
+        val permittedIds = ids.filter {
+            principal.hasProjectRoleForTicket(it, AuthExpr.ROLE_PROJECT_OBSERVER) || principal.hasRole(AuthExpr.ROLE_GLOBAL_OBSERVER)
+        }
+        if (permittedIds.isEmpty()) {
+            return emptyMap()
+        }
+        return tickets.findByIds(permittedIds).associateBy { it.id }.mapValues { calculateTicketProgress(it.value) }
+    }
+
     private fun loggedTimeForTicket(ticket: Ticket): Duration {
         var duration = Duration.ZERO
         ticket.comments
@@ -28,6 +40,10 @@ open class StatisticServiceImpl @Inject constructor(
     @PreAuthorize(AuthExpr.READ_TICKET)
     override fun getTicketProgress(id: UUID): TicketProgressResult {
         val ticket = tickets.findOne(id) ?: throw NotFoundException()
+        return calculateTicketProgress(ticket)
+    }
+
+    private fun calculateTicketProgress(ticket: Ticket): TicketProgressResult {
         var totalEstimatedTime = Duration.ZERO
         var totalLoggedTime = Duration.ZERO
         var ticketDuration: Duration
