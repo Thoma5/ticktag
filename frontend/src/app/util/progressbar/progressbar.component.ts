@@ -7,13 +7,13 @@ import { Component, Input } from '@angular/core';
 })
 export class ProgressBarComponent {
   @Input() fraction: number = 50;
-  @Input() totalValue: number=100;
-  @Input() showNumbersOutside: boolean=false;
+  @Input() totalValue: number = 100;
+  @Input() showNumbersOutside: boolean = false;
 
-   fractionPercent():number{
-    if (this.totalValue == 0){
-      return 50
+  fractionPercent(): number {
+    if (this.totalValue === 0) {
+      return 50;
     }
-    return this.fraction/this.totalValue*100
+    return this.fraction / this.totalValue * 100;
   }
 }

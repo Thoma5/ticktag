@@ -1,15 +1,23 @@
 @import '../../../style/constants.scss';
-.progress-bar-custom {background: palette(Light Blue, 500);  }
-.progress-bar-custom2 {background: RGBA(242, 242, 242, 1.00);  }
+
+.progress-bar-custom {
+  background: palette(Light Blue, 500);
+}
+
+.progress-bar-custom2 {
+  background: RGBA(242, 242, 242, 1.00);
+}
+
 .progress-numbers {
-  white-space:nowrap;
+  white-space: nowrap;
   margin-left: $internal-gap;
   flex-grow: 2;
 }
 
-.progress-bar-container{
+.progress-bar-container {
   flex-grow: 8;
 }
+
 .progress-container {
   margin-left: $internal-gap;
   flex-wrap: nowrap;
@@ -17,6 +25,6 @@
   display: flex;
 }
 
-.progress-text{
+.progress-text {
   color: #8c8c8c;
 }

@@ -59,7 +59,7 @@ import { EditButtonComponent } from './util/edit-button/edit-button.component';
 import { LoadingComponent } from './util/loading/loading.component';
 import { SpinnerComponent } from './util/spinner/spinner.component';
 import { CommentTextviewComponent } from './ui/ticket-detail/comment-textview/comment-textview.component';
-import {ProgressBarComponent} from "./util/progressbar/progressbar.component";
+import { ProgressBarComponent } from './util/progressbar/progressbar.component';
 
 
 @NgModule({
