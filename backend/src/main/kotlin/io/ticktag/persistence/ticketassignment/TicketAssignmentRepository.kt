@@ -8,5 +8,6 @@ import java.util.*
 
 @TicktagRepository
 interface TicketAssignmentRepository : TicktagCrudRepository<AssignedTicketUser, AssignedTicketUserKey> {
+    fun findByUserIdAndTicketId(userId: UUID, ticketId: UUID): List<AssignedTicketUser>
     fun deleteByUserIdAndTicketId(userId: UUID, ticketId: UUID)
 }

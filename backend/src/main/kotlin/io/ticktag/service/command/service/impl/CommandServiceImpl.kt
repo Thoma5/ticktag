@@ -53,7 +53,7 @@ open class CommandServiceImpl(
                     val assignTag = assignmentTags.findByNormalizedNameAndProjectId(nn.normalize(command.tag), ticket.project.id)
                     if (assignUser != null && assignTag != null) {
                         tryCommand(errors, index) {
-                            ticketAssignmentService.createOrGetIfExistsTicketAssignment(ticket.id, assignTag.id, assignUser.id)
+                            ticketAssignmentService.createOrGetIfExistsTicketAssignment(ticket.id, assignTag.id, assignUser.id, principal)
                         }
                     } else {
                         failedCommand(errors, index)
@@ -64,13 +64,13 @@ open class CommandServiceImpl(
                     if (removeUser != null) {
                         if (command.tag == null) {
                             tryCommand(errors, index) {
-                                ticketAssignmentService.deleteTicketAssignments(ticket.id, removeUser.id)
+                                ticketAssignmentService.deleteTicketAssignments(ticket.id, removeUser.id, principal)
                             }
                         } else {
                             val removeTag = assignmentTags.findByNormalizedNameAndProjectId(nn.normalize(command.tag), ticket.project.id)
                             if (removeTag != null) {
                                 tryCommand(errors, index) {
-                                    ticketAssignmentService.deleteTicketAssignment(ticket.id, removeTag.id, removeUser.id)
+                                    ticketAssignmentService.deleteTicketAssignment(ticket.id, removeTag.id, removeUser.id, principal)
                                 }
                             } else {
                                 failedCommand(errors, index)

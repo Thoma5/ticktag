@@ -23,7 +23,9 @@
                 [allTimeCategories]='allTimeCategories'
                 [allAssignmentTags]='allAssignmentTags'
             ></tt-ticket-core>
-
+      <div class='bottom-section'>
+        <tabset>
+          <tab heading='Comments'>
             <div class='comments-wrapper'>
                 <tt-ticket-comments [ticket]='ticketDetail' [allAssignmentTags]='allAssignmentTags'></tt-ticket-comments>
                 <tt-ticket-comment-input
@@ -34,16 +36,24 @@
                     (commentCreate)='onCommentCreate($event)'
                 ></tt-ticket-comment-input>
             </div>
-        </div>
-        <div class='right col-md-4'>
-            <tt-ticket-sidebar
-                [ticket]="ticketDetail"
-                [allAssignmentTags]="allAssignmentTags"
-                (assignmentAdd)="onAssignmentAdd($event)"
-                (assignmentRemove)="onAssignmentRemove($event)"
-                (userAdd)="onAssignmentUserAdd($event)"
-            ></tt-ticket-sidebar>
-        </div>
+          </tab>
+          <tab heading='Activity'>
+            <div>
+              <tt-ticket-events [events]='ticketEvents'></tt-ticket-events>
+            </div>
+          </tab>
+        </tabset>
+      </div>
     </div>
-    <pre>{{ ticketDetail | json }}</pre>
+    <div class='right col-md-4'>
+      <tt-ticket-sidebar
+        [ticket]="ticketDetail"
+        [allAssignmentTags]="allAssignmentTags"
+        (assignmentAdd)="onAssignmentAdd($event)"
+        (assignmentRemove)="onAssignmentRemove($event)"
+        (userAdd)="onAssignmentUserAdd($event)"
+      ></tt-ticket-sidebar>
+    </div>
+  </div>
+  <pre>{{ ticketDetail | json }}</pre>
 </div>

@@ -65,6 +65,12 @@ import { CommandTextviewComponent } from './ui/ticket-detail/command-textview/co
 import { CommandDescriptionComponent } from './ui/ticket-detail/command-description/command-description.component';
 import { CommandHelpComponent } from './ui/ticket-detail/command-help/command-help.component';
 
+import {TicketEventsComponent} from './ui/ticket-detail/ticket-events/ticket-events.component';
+import {TicketEventOldNewComponent} from './ui/ticket-detail/ticket-events/ticket-event-old-new/ticket-event-old-new.component';
+import {TicketeventApi} from './api/api/TicketeventApi';
+import {TicketEventComponent} from './ui/ticket-detail/ticket-events/ticket-event/ticker-event.component';
+import {TicketEventUserComponent} from './ui/ticket-detail/ticket-events/ticket-event-user/ticket-event-user.component';
+
 
 @NgModule({
   imports: [
@@ -107,6 +113,10 @@ import { CommandHelpComponent } from './ui/ticket-detail/command-help/command-he
     TaginputComponent,
     TicketCommentsComponent,
     TicketCommentComponent,
+    TicketEventsComponent,
+    TicketEventComponent,
+    TicketEventOldNewComponent,
+    TicketEventUserComponent,
     TicketCommentInputComponent,
     EditButtonComponent,
     CommandTextviewComponent,
@@ -135,6 +145,7 @@ import { CommandHelpComponent } from './ui/ticket-detail/command-help/command-he
     TickettagApi,
     TickettaggroupApi,
     GetApi,
+    TicketeventApi,
     TicketuserrelationApi,
     TickettagrelationApi,
 

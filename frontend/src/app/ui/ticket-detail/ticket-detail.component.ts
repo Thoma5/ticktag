@@ -11,6 +11,8 @@ import {
   TicketuserrelationApi, TickettagrelationApi
 } from '../../api';
 import { Observable } from 'rxjs';
+import { TicketEventResultJson } from '../../api/model/TicketEventResultJson';
+import { TicketeventApi } from '../../api/api/TicketeventApi';
 import {
   TicketDetail, TicketDetailTag, TicketDetailAssTag, TicketDetailComment,
   TicketDetailUser, TicketDetailTimeCategory, TicketDetailTransientUser,
@@ -30,6 +32,7 @@ export class TicketDetailComponent implements OnInit {
   private queue = new TaskQueue();
 
   private loading = true;
+  private ticketEvents: imm.List<TicketEventResultJson>;
   private ticketDetail: TicketDetail = null;
   private allTicketTags: imm.Map<string, TicketDetailTag>;
   private allAssignmentTags: imm.Map<string, TicketDetailAssTag>;
@@ -45,8 +48,7 @@ export class TicketDetailComponent implements OnInit {
   private transientTags = imm.Set<string>();
 
   // TODO make readonly once Intellij supports readonly properties in ctr
-  constructor(
-    private route: ActivatedRoute,
+  constructor(private route: ActivatedRoute,
     private router: Router,
     private apiCallService: ApiCallService,
     private ticketApi: TicketApi,
@@ -55,6 +57,7 @@ export class TicketDetailComponent implements OnInit {
     private ticketTagsApi: TickettagApi,
     private timeCategoryApi: TimecategoryApi,
     private getApi: GetApi,
+    private ticketEventApi: TicketeventApi,
     private ticketAssignmentApi: TicketuserrelationApi,
     private ticketTagRelationApi: TickettagrelationApi,
     private modal: Modal) {
@@ -62,13 +65,17 @@ export class TicketDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params
-      .do(() => { this.loading = true; })
+      .do(() => {
+        this.loading = true;
+      })
       .switchMap(params => {
         let ticketId = '' + params['ticketNumber'];
         let projectId = '' + params['projectId'];
         return this.refresh(projectId, ticketId);
       })
-      .subscribe(() => { this.loading = false; });
+      .subscribe(() => {
+        this.loading = false;
+      });
   }
 
   onTitleChange(val: string): void {
@@ -320,6 +327,8 @@ export class TicketDetailComponent implements OnInit {
       .callNoError<TicketResultJson>(p => this.ticketApi.getTicketUsingGETWithHttpInfo(ticketId, p));
     let rawCommentsObs = this.apiCallService
       .callNoError<CommentResultJson[]>(p => this.commentsApi.listCommentsUsingGETWithHttpInfo(ticketId, p));
+    let rawTicketEventsObs = this.apiCallService
+      .callNoError<TicketEventResultJson[]>(p => this.ticketEventApi.listTicketEventsUsingGETWithHttpInfo(ticketId, p));
     let assignmentTagsObs = this.apiCallService
       .callNoError<AssignmentTagResultJson[]>(p => this.assigmentTagsApi.listAssignmentTagsUsingGETWithHttpInfo(projectId, p))
       .map(ats => imm.List(ats)
@@ -337,16 +346,20 @@ export class TicketDetailComponent implements OnInit {
 
     // There is no dependency between these requests so we can execute them in parallel
     return Observable
-      .zip(rawTicketObs, rawCommentsObs, assignmentTagsObs, ticketTagsObs, timeCategoriesObs)
+      .zip(rawTicketObs, rawCommentsObs, assignmentTagsObs, ticketTagsObs, timeCategoriesObs, rawTicketEventsObs)
       .flatMap(tuple => {
         let ticketResult = tuple[0];
 
         // We need all assigned users
         let wantedUserIds = ticketResult.ticketUserRelations.map(ta => ta.userId);
         // And the comment authors
-        tuple[1].forEach(c => { wantedUserIds.push(c.userId); });
+        tuple[1].forEach(c => {
+          wantedUserIds.push(c.userId);
+        });
         // And transient users
-        transientUsers.forEach(tu => { wantedUserIds.push(tu.user.id); });
+        transientUsers.forEach(tu => {
+          wantedUserIds.push(tu.user.id);
+        });
         // And the person who created it
         wantedUserIds.push(ticketResult.createdBy);
 
@@ -383,6 +396,7 @@ export class TicketDetailComponent implements OnInit {
         this.comments = idListToMap(tuple[0][1])
           .map(c => new TicketDetailComment(c, this.interestingUsers, this.interestingLoggedTimes))
           .toMap();
+        this.ticketEvents = imm.List(tuple[0][5]);
         this.newTicketDetail();
       })
       .map(it => undefined);
