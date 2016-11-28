@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import {TicketEventResultJson} from '../../../api/model/TicketEventResultJson';
-import * as imm from 'immutable'
+import * as imm from 'immutable';
 
 @Component({
     selector: 'tt-ticket-events',
