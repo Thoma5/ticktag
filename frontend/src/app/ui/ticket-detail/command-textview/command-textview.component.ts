@@ -11,6 +11,7 @@ import {
     TicketDetailAssTag, TicketDetailTimeCategory, TicketDetailTag,
     TicketDetailTransient, TicketDetailUser, TicketDetailAssignment
 } from '../ticket-detail';
+import { Observable, Subscription } from 'rxjs';
 
 const codemirror = require('codemirror');
 require('codemirror/addon/hint/show-hint');
@@ -41,7 +42,7 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
     @Input() allTicketTags: imm.Map<string, TicketDetailTag>;
     @Input() allTimeCategories: imm.Map<string, TicketDetailTimeCategory>;
     @Input() allAssignmentTags: imm.Map<string, TicketDetailAssTag>;
-    @Input() working = false;
+    @Input() resetEventObservable: Observable<string> | null = null;
 
     @Output() readonly contentChange = new EventEmitter<CommentTextviewSaveEvent>();
     @Output() readonly save = new EventEmitter<void>();
@@ -49,6 +50,7 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
     private content = '';
     private instance: any = null;
     private commands = imm.List<grammar.Cmd>();
+    private resetEventSubscription: Subscription | null = null;
 
     private refreshTimeout: number = null;
 
@@ -85,12 +87,31 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
     }
 
     ngOnChanges(changes: SimpleChanges): void {
+      if ('resetEventObservable' in changes) {
+        this.resubscribeResetEvent();
+      }
     }
 
     ngOnDestroy(): void {
         window.clearTimeout(this.refreshTimeout);
         this.refreshTimeout = null;
         this.instance.toTextArea();
+        if (this.resetEventSubscription != null) {
+          this.resetEventSubscription.unsubscribe();
+        }
+    }
+
+    private resubscribeResetEvent() {
+      if (this.resetEventSubscription != null) {
+        this.resetEventSubscription.unsubscribe();
+      }
+      if (this.resetEventObservable != null) {
+        this.resetEventSubscription = this.resetEventObservable.subscribe(val => {
+          if (this.instance != null) {
+            this.instance.setValue(val);
+          }
+        });
+      }
     }
 
     private processChanges(): void {

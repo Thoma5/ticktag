@@ -13,6 +13,7 @@
             [allTicketTags]="allTicketTags"
             [allTimeCategories]="allTimeCategories"
             [allAssignmentTags]="allAssignmentTags"
+            [resetEventObservable]="resetEventSubject"
             (contentChange)="this.description = $event"
             (save)="onSubmit()"
         >

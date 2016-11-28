@@ -5,6 +5,7 @@ import {
 import * as imm from 'immutable';
 import { CommentTextviewSaveEvent } from '../command-textview/command-textview.component';
 import * as grammar from '../../../service/command/grammar';
+import { Subject } from 'rxjs';
 
 export type SubticketCreateEvent = {
   projectId: string,
@@ -28,6 +29,7 @@ export class SubticketAddComponent {
   readonly assignedUsers = imm.List.of();
 
   @Output() readonly ticketAdd = new EventEmitter<SubticketCreateEvent>();
+  private readonly resetEventSubject = new Subject<string>();
 
   editing: boolean = false;
   title: string = '';
@@ -37,6 +39,7 @@ export class SubticketAddComponent {
     this.editing = true;
     this.title = '';
     this.description = this.getEmptyDescription();
+    this.resetEventSubject.next(this.description.text);
   }
 
   finishEditing(restart: boolean) {
