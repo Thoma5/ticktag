@@ -21,8 +21,8 @@ open class Ticket protected constructor() {
             o.title = title
             o.open = open
             o.storyPoints = storyPoints
-            o.initialEstimatedTime = initialEstimatedTime
-            o.currentEstimatedTime = currentEstimatedTime
+            o.initialEstimatedTime = initialEstimatedTime?:currentEstimatedTime
+            o.currentEstimatedTime = currentEstimatedTime?:initialEstimatedTime
             o.dueDate = dueDate
             o.parentTicket = parentTicket
             o.subTickets = mutableListOf()
