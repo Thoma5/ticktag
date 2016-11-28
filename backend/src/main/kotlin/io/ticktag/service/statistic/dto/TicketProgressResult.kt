@@ -3,6 +3,6 @@ package io.ticktag.service.statistic.dto
 import java.time.Duration
 
 data class TicketProgressResult(
-        val duration: Duration,
+        val totalLoggedTime: Duration,
         val currentEstimatedTime: Duration
 )

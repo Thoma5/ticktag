@@ -23,7 +23,7 @@ class TicketProgressTest : ApiBaseTest() {
         withUser(ADMIN_ID) { ->
             val progress = statisticController.getTicketProgress(UUID.fromString("00000000-0003-0000-0000-000000000002"))
 
-            Assert.assertEquals(progress.duration.seconds, 50)
+            Assert.assertEquals(progress.totalLoggedTime.seconds, 50)
             Assert.assertEquals(progress.currentEstimatedTime.seconds, 60)
         }
     }

@@ -4,9 +4,9 @@ import io.ticktag.service.statistic.dto.TicketProgressResult
 import java.time.Duration
 
 data class TicketProgressResultJson(
-        val duration: Duration,
+        val totalLoggedTime: Duration,
         val currentEstimatedTime: Duration
 ) {
-    constructor(t: TicketProgressResult) : this(duration = t.duration, currentEstimatedTime = t.currentEstimatedTime)
+    constructor(t: TicketProgressResult) : this(totalLoggedTime = t.totalLoggedTime, currentEstimatedTime = t.currentEstimatedTime)
 
 }

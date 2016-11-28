@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 
 @TicktagRestInterface
-@RequestMapping("/statistics")
+@RequestMapping("/statistic")
 @Api(tags = arrayOf("statistic"), description = "statistic management")
 open class StatisticController @Inject constructor(
         private val statisticsService: StatisticService
