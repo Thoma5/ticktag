@@ -4,7 +4,7 @@
       <div class='user-icon'><img src='http://lorempixel.com/100/100/cats'/></div>
       <div class='user-name'><span>?user?</span></div>
     </div>
-    <div class='date'>{{ dateFromInstant(event.time) | date:'medium' }}</div>
+    <div class='date'>{{ event.time | ttFormatMoment }}</div>
   </div>
   <div [ngSwitch]='event.type'>
     <div *ngSwitchCase='"TicketEventTitleChangedResultJson"'>
@@ -38,8 +38,8 @@
     <div *ngSwitchCase='"TicketEventDueDateChangedResultJson"'>
       <tt-ticket-event-old-new
         [title]='"Due date changed"'
-        [oldString]='dateFromInstant(event.srcDueDate) | date:"medium"'
-        [newString]='dateFromInstant(event.dstDueDate) | date:"medium"'
+        [oldString]='event.srcDueDate | ttFormatMoment'
+        [newString]='event.dstDueDate | ttFormatMoment'
       ></tt-ticket-event-old-new>
     </div>
     <div *ngSwitchCase='"TicketEventInitialEstimatedTimeChangedResultJson"'>
