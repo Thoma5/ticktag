@@ -24,7 +24,8 @@ export class TicketEventParentChanged extends TicketEvent {
   readonly srcParent: TicketDetailRelated;
   readonly dstParent: TicketDetailRelated;
 
-  constructor(event: TicketEventResultJson, users: imm.Map<string, TicketDetailUser>, relatedTickets: imm.Map<string, TicketDetailRelated>) {
+  constructor(event: TicketEventResultJson,
+              users: imm.Map<string, TicketDetailUser>, relatedTickets: imm.Map<string, TicketDetailRelated>) {
     super(event, users);
     let eventParentChanged: any = event;
     this.srcParent = relatedTickets.get(eventParentChanged.srcParentId);
