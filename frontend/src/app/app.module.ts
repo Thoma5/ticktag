@@ -37,8 +37,9 @@ import {
 import {
   EditTextviewDateTimeComponent, EditTextviewDateTimeEditComponent, EditTextviewDateTimeReadComponent
 } from './util/edit-textview/edit-textview-datetime.component';
-import { MarkdownTextviewEditComponent } from './util/markdown-textview/markdown-textview-edit.component';
-import { MarkdownTextviewReadComponent } from './util/markdown-textview/markdown-textview-read.component';
+import {
+  EditTextviewTimeComponent, EditTextviewTimeEditComponent, EditTextviewTimeReadComponent
+} from './util/edit-textview/edit-textview-time.component';
 import { OpenClosedButtonComponent } from './ui/ticket-detail/open-closed-button/open-closed-button.component';
 import { TicketCommentsComponent } from './ui/ticket-detail/ticket-comments/ticket-comments.component';
 import { TicketCommentComponent } from './ui/ticket-detail/ticket-comment/ticket-comment.component';
@@ -54,7 +55,7 @@ import { MaterialModule } from '@angular/material';
 import { HumanizeDurationPipe } from './util/humanize-duration.pipe';
 import { FormatMomentPipe } from './util/format-moment.pipe';
 import { MarkdownToHtmlPipe } from './util/markdown-to-html.pipe';
-import { JsonPipe } from './util/json.pipe';
+import { MarkdownTextviewReadComponent } from './util/markdown-textview/markdown-textview-read.component';
 import { AutosizeTextareaDirective } from './util/autosize-textarea.directive';
 import { FocusDirective } from './util/focus.directive';
 import { EventFocusDirective } from './util/event-focus.directive';
@@ -109,8 +110,9 @@ import {TicketEventUserComponent} from './ui/ticket-detail/ticket-events/ticket-
     EditTextviewDateTimeComponent,
     EditTextviewDateTimeEditComponent,
     EditTextviewDateTimeReadComponent,
-    MarkdownTextviewReadComponent,
-    MarkdownTextviewEditComponent,
+    EditTextviewTimeComponent,
+    EditTextviewTimeEditComponent,
+    EditTextviewTimeReadComponent,
     OpenClosedButtonComponent,
     TicketStorypointsComponent,
     AssignedUserComponent,
@@ -129,11 +131,11 @@ import {TicketEventUserComponent} from './ui/ticket-detail/ticket-events/ticket-
     CommandTextviewComponent,
     CommandDescriptionComponent,
     CommandHelpComponent,
+    MarkdownTextviewReadComponent,
 
     HumanizeDurationPipe,
     FormatMomentPipe,
     MarkdownToHtmlPipe,
-    JsonPipe,
     AutosizeTextareaDirective,
     FocusDirective,
     EventFocusDirective,

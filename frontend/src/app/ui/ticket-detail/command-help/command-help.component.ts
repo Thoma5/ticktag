@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'tt-command-help',
@@ -6,4 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./command-help.component.scss']
 })
 export class CommandHelpComponent {
+  @Input() noCommands = false;
 }

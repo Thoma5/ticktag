@@ -8,4 +8,5 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export class TicketStorypointsComponent {
     @Input() points: number;
     @Output() pointsChange: EventEmitter<number> = new EventEmitter<number>();
+    @Input() transient = false;
 }

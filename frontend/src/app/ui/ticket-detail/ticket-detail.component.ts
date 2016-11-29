@@ -46,6 +46,14 @@ export class TicketDetailComponent implements OnInit {
   private currentTicketJson: TicketResultJson;  // Only use to recreate the ticket
   private transientUsers = imm.List<TicketDetailTransientUser>();
   private transientTags = imm.Set<string>();
+  private transientTicket = {
+    title: <string>undefined,
+    storyPoints: <number>undefined,
+    initialEstimatedTime: <number>undefined,
+    currentEstimatedTime: <number>undefined,
+    dueDate: <number>undefined,
+    description: <string>undefined,
+  };
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(private route: ActivatedRoute,
@@ -79,15 +87,57 @@ export class TicketDetailComponent implements OnInit {
   }
 
   onTitleChange(val: string): void {
-    this.updateTicket({ title: val });
+    this.transientTicket.title = val;
+    this.newTicketDetail();
+    this.updateTicket({ title: val }, () => {
+      this.transientTicket.title = undefined;
+      this.newTicketDetail();
+    });
   }
 
   onDescriptionChange(val: string): void {
-    this.updateTicket({ description: val });
+    this.transientTicket.description = val;
+    this.newTicketDetail();
+    this.updateTicket({ description: val }, () => {
+      this.transientTicket.description = undefined;
+      this.newTicketDetail();
+    });
   }
 
   onStorypointsChange(val: number): void {
-    this.updateTicket({ storyPoints: val });
+    this.transientTicket.storyPoints = val;
+    this.newTicketDetail();
+    this.updateTicket({ storyPoints: val }, () => {
+      this.transientTicket.storyPoints = undefined;
+      this.newTicketDetail();
+    });
+  }
+
+  onCurrentEstimatedTimeChange(val: number) {
+    this.transientTicket.currentEstimatedTime = val;
+    this.newTicketDetail();
+    this.updateTicket({ currentEstimatedTime: val }, () => {
+      this.transientTicket.currentEstimatedTime = undefined;
+      this.newTicketDetail();
+    });
+  }
+
+  onInitialEstimatedTimeChange(val: number) {
+    this.transientTicket.initialEstimatedTime = val;
+    this.newTicketDetail();
+    this.updateTicket({ initialEstimatedTime: val }, () => {
+      this.transientTicket.initialEstimatedTime = undefined;
+      this.newTicketDetail();
+    });
+  }
+
+  onDueDateChange(val: number) {
+    this.transientTicket.dueDate = val;
+    this.newTicketDetail();
+    this.updateTicket({ dueDate: val }, () => {
+      this.transientTicket.dueDate = undefined;
+      this.newTicketDetail();
+    });
   }
 
   onTagAdd(tagId: string): void {
@@ -226,16 +276,16 @@ export class TicketDetailComponent implements OnInit {
     });
   }
 
-  private updateTicket(req: UpdateTicketRequestJson): void {
-    // TODO: callNoError is wrong here
+  private updateTicket(req: UpdateTicketRequestJson, onFinish: () => void): void {
     let updateObs = this.apiCallService
-      .call<void>(p => this.ticketApi.updateTicketUsingPUTWithHttpInfo(req, this.ticketDetail.id, p));
+      .call<void>(p => this.ticketApi.updateTicketUsingPUTWithHttpInfo(req, this.ticketDetail.id, p))
+      .flatMap(result => this
+        .refresh(this.ticketDetail.projectId, this.ticketDetail.id)
+        .map(() => result));
     this.queue.push(updateObs)
       .subscribe((result) => {
-        if (result.isValid) {
-          // TODO is this clever?
-          this.refresh(this.ticketDetail.projectId, this.ticketDetail.id).subscribe();
-        } else {
+        onFinish();
+        if (!result.isValid) {
           // TODO nice message
           this.error(result);
         }
@@ -288,7 +338,8 @@ export class TicketDetailComponent implements OnInit {
       this.allTicketTags,
       this.allAssignmentTags,
       this.transientUsers,
-      this.transientTags);
+      this.transientTags,
+      this.transientTicket);
   }
 
   private error(result: ApiCallResult<void|{}>): void {

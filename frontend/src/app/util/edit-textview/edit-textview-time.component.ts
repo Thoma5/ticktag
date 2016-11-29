@@ -2,16 +2,16 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { TextviewEditComponent, TextviewReadComponent } from './edit-textview.component';
 
 @Component({
-  selector: 'tt-edit-textview-datetime-read',
-  template: '{{ content | ttFormatMoment }}',
+  selector: 'tt-edit-textview-time-read',
+  template: '{{ content | ttHumanizeDuration }}',
 })
-export class EditTextviewDateTimeReadComponent implements TextviewReadComponent<number> {
+export class EditTextviewTimeReadComponent implements TextviewReadComponent<number> {
   @Input() content: number;
   @Input() visible: boolean;
 }
 
 @Component({
-  selector: 'tt-edit-textview-datetime-edit',
+  selector: 'tt-edit-textview-time-edit',
   template: `
     <input
       type='text'
@@ -22,7 +22,7 @@ export class EditTextviewDateTimeReadComponent implements TextviewReadComponent<
     >
   `,
 })
-export class EditTextviewDateTimeEditComponent implements TextviewEditComponent<number> {
+export class EditTextviewTimeEditComponent implements TextviewEditComponent<number> {
   private _content: string;
   @Input() set content(v: number) {
     this._content = '' + v;
@@ -42,15 +42,15 @@ export class EditTextviewDateTimeEditComponent implements TextviewEditComponent<
 }
 
 @Component({
-  selector: 'tt-edit-textview-datetime',
+  selector: 'tt-edit-textview-time',
   template: `
     <tt-edit-textview [content]="content" (contentChange)="contentChange.emit($event)" [transient]="transient">
-      <tt-edit-textview-datetime-edit #edit class="textview-edit"></tt-edit-textview-datetime-edit>
-      <tt-edit-textview-datetime-read #read class="textview-read"></tt-edit-textview-datetime-read>
+      <tt-edit-textview-time-edit #edit class="textview-edit"></tt-edit-textview-time-edit>
+      <tt-edit-textview-time-read #read class="textview-read"></tt-edit-textview-time-read>
     </tt-edit-textview>
   `,
 })
-export class EditTextviewDateTimeComponent {
+export class EditTextviewTimeComponent {
   @Input() content: number;
   @Output() readonly contentChange: EventEmitter<number> = new EventEmitter<number>();
   @Input() transient = false;

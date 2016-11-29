@@ -64,9 +64,6 @@
     }
 }
 
-.subtickets {
-}
-
 .status {
     display: flex;
     flex-wrap: wrap;
@@ -95,4 +92,41 @@
   margin-bottom: $small-gap;
   width: 100%;
   border-bottom: $thin-line solid palette(Grey, 300);
+
+  .spinner {
+      width: 1em;
+      height: 1em;
+      display: inline-block;
+  }
 }
+
+.description-edit-wrapper {
+  .under {
+    display: flex;
+    flex-direction: row;
+
+    .help {
+      flex-grow: 1;
+      flex-shrink: 1;
+    }
+
+    .buttons {
+      flex-grow: 0;
+      flex-shrink: 0;
+      margin-top: $small-gap;
+      display: flex;
+      flex-direction: row-reverse;
+      flex-wrap: nowrap;
+      height: 100%;
+
+      .button-abort {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: $internal-gap;
+      }
+    }
+  }
+}
+
+

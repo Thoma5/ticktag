@@ -17,6 +17,7 @@ export class TicketDetailAssignment {
 }
 Object.freeze(TicketDetailAssignment.prototype);
 
+// TODO remove
 export class TicketDetailTransient<T> {
   readonly value: T;
   readonly transient: boolean;
@@ -193,21 +194,22 @@ export class TicketDetail {
       ticketTags: imm.Map<string, TicketDetailTag>,
       assignmentTags: imm.Map<string, TicketDetailAssTag>,
       transientUsers: imm.List<TicketDetailTransientUser>,
-      transientTags: imm.Set<string>) {
+      transientTags: imm.Set<string>,
+      transientTicket: TicketDetailTransientFields) {
     this.comments = imm.List(ticket.commentIds)
       .map(cid => comments.get(cid))
       .filter(it => !!it)
       .toList();
     this.createTime = ticket.createTime;
     this.createdBy = users.get(ticket.createdBy);  // TODO error handling or create a dummy user
-    this.currentEstimatedTime = ticket.currentEstimatedTime;
-    this.dueDate = ticket.dueDate;
-    this.description = ticket.description;
+    this.currentEstimatedTime = coalesce(transientTicket.currentEstimatedTime, ticket.currentEstimatedTime);
+    this.dueDate = coalesce(transientTicket.dueDate, ticket.dueDate);
+    this.description = coalesce(transientTicket.description, ticket.description);
     this.id = ticket.id;
-    this.initialEstimatedTime = ticket.initialEstimatedTime;
+    this.initialEstimatedTime = coalesce(transientTicket.initialEstimatedTime, ticket.initialEstimatedTime);
     this.number = ticket.number;
     this.open = ticket.open;
-    this.storyPoints = ticket.storyPoints;
+    this.storyPoints = coalesce(transientTicket.storyPoints, ticket.storyPoints);
     this.tags = imm.List(ticket.tagIds)
       .map(tid => new TicketDetailTransient(ticketTags.get(tid), false))
       .filter(it => !!it.value)
@@ -226,7 +228,7 @@ export class TicketDetail {
           }
         });
       });
-    this.title = ticket.title;
+    this.title = coalesce(transientTicket.title, ticket.title);
     this.users = imm.List(ticket.ticketUserRelations)
       .map(as => ({ user: users.get(as.userId), tag: assignmentTags.get(as.assignmentTagId) }))
       .filter(as => !!as.user && !!as.tag)
@@ -273,3 +275,22 @@ export class TicketDetail {
   }
 }
 Object.freeze(TicketDetail.prototype);
+
+export interface TicketDetailTransientFields {
+  title?: string;
+  storyPoints?: number;
+  initialEstimatedTime?: number;
+  currentEstimatedTime?: number;
+  dueDate?: number;
+  description?: string;
+}
+
+// Do not export this function. It works only with undefined and is specific
+// to the usecase here.
+function coalesce<T>(first: T|undefined, second: T): T {
+  if (first === undefined) {
+    return second;
+  } else {
+    return first;
+  }
+}

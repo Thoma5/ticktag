@@ -22,8 +22,9 @@ export interface TextviewEditComponent<T> {
     styleUrls: ['./edit-textview.component.scss']
 })
 export class EditableTextviewComponent<T> implements AfterContentInit, OnChanges {
-    @Input() content: T;
+    @Input() content: T = null;
     @Output() contentChange: EventEmitter<T> = new EventEmitter<T>();
+    @Input() transient = false;
 
     @ContentChild('read') private readonly readComponent: TextviewReadComponent<T>;
     @ContentChild('edit') private readonly editComponent: TextviewEditComponent<T>;
@@ -68,7 +69,9 @@ export class EditableTextviewComponent<T> implements AfterContentInit, OnChanges
             this.currentContent = content;
         });
         this.editComponent.save.subscribe(() => {
-            this.contentChange.emit(this.currentContent);
+            if (this.currentContent !== this.content) {
+                this.contentChange.emit(this.currentContent);
+            }
             this.editing = false;
         });
         this.editComponent.abort.subscribe(() => {

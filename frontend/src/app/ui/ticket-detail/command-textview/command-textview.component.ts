@@ -43,6 +43,7 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
     @Input() allTimeCategories: imm.Map<string, TicketDetailTimeCategory>;
     @Input() allAssignmentTags: imm.Map<string, TicketDetailAssTag>;
     @Input() resetEventObservable: Observable<string> | null = null;
+    @Input() noCommands: boolean = false;
 
     @Output() readonly contentChange = new EventEmitter<CommentTextviewSaveEvent>();
     @Output() readonly save = new EventEmitter<void>();
@@ -129,6 +130,9 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
 
     private updateCommands() {
         this.commands = grammar.extractCommands(this.content);
+        if (this.noCommands) {
+            this.commands = this.commands.filter(cmd => cmd.cmd === 'refTicket').toList();
+        }
     }
 
     private showHints() {
@@ -136,7 +140,7 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
         let text: string = this.instance.getRange({line: cursor.line, ch: 0}, cursor);
 
         let isCommand = new RegExp(String.raw`${grammar.SEPERATOR_FRONT_REGEX}(![a-z-]{0,10})$`, 'ui').exec(text);
-        if (isCommand) {
+        if (!this.noCommands && isCommand) {
             this.instance.showHint({
                 hint: () => ({
                     list: COMMAND_COMPLETIONS,
@@ -177,7 +181,7 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
         }
 
         let isAddRemoveTag = new RegExp(String.raw`${grammar.SEPERATOR_FRONT_REGEX}!(-?)tag:(${grammar.TAG_LETTER}*)$`, 'ui').exec(text);
-        if (isAddRemoveTag) {
+        if (!this.noCommands && isAddRemoveTag) {
             let tags = (isAddRemoveTag[1] ? this.activeTags.map(tag => tag.value) : this.allTicketTags)
                 .valueSeq()
                 .sort(using<TicketDetailTag>(tag => tag.normalizedName))
@@ -200,7 +204,7 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
         let isTimeTag = new RegExp(
             String.raw`${grammar.SEPERATOR_FRONT_REGEX}!time:${grammar.TIME_REGEX}@(${grammar.TAG_LETTER}*)$`, 'ui'
         ).exec(text);
-        if (isTimeTag) {
+        if (!this.noCommands && isTimeTag) {
             let cats = this.allTimeCategories
                 .valueSeq()
                 .sort(using<TicketDetailTimeCategory>(cat => cat.normalizedName))
@@ -219,7 +223,7 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
         }
 
         let isAssign = new RegExp(String.raw`${grammar.SEPERATOR_FRONT_REGEX}!assign:(${grammar.USER_LETTER}*)$`, 'ui').exec(text);
-        if (isAssign) {
+        if (!this.noCommands && isAssign) {
             this.instance.showHint({
                 hint: () => {
                     let projectId = this.projectId;
@@ -249,7 +253,7 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
             String.raw`${grammar.SEPERATOR_FRONT_REGEX}!assign:${grammar.USER_REGEX}?@(${grammar.TAG_LETTER}*)$`,
             'ui'
         ).exec(text);
-        if (isAssignTag) {
+        if (!this.noCommands && isAssignTag) {
             let tags = this.allAssignmentTags
                 .valueSeq()
                 .sort(using<TicketDetailAssTag>(tag => tag.normalizedName))
@@ -271,7 +275,7 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
             String.raw`${grammar.SEPERATOR_FRONT_REGEX}!-assign:(${grammar.USER_LETTER}*(?:@${grammar.TAG_LETTER}*)?)$`,
             'ui'
         ).exec(text);
-        if (isUnassign) {
+        if (!this.noCommands && isUnassign) {
             let aus = this.assignedUsers
                 .map((assignments, user) => assignments.map(ass => ({
                     text: `${user.username}@${ass.tag.normalizedName} `,

@@ -33,7 +33,7 @@ export class EditTextviewPosNumberEditComponent implements TextviewEditComponent
 @Component({
   selector: 'tt-edit-textview-posnumber',
   template: `
-    <tt-edit-textview [content]="content" (contentChange)="contentChange.emit($event)">
+    <tt-edit-textview [content]="content" (contentChange)="contentChange.emit($event)" [transient]="transient">
       <tt-edit-textview-posnumber-edit #edit class="textview-edit"></tt-edit-textview-posnumber-edit>
       <tt-edit-textview-posnumber-read #read class="textview-read"></tt-edit-textview-posnumber-read>
     </tt-edit-textview>
@@ -42,4 +42,5 @@ export class EditTextviewPosNumberEditComponent implements TextviewEditComponent
 export class EditTextviewPosNumberComponent {
   @Input() content: number;
   @Output() readonly contentChange = new EventEmitter<number>();
+  @Input() transient = false;
 }
