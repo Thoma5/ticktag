@@ -78,6 +78,18 @@
         [newString]='event.rawEvent.dstStoryPoints'
       ></tt-ticket-event-old-new>
     </div>
+    <div *ngSwitchCase='"TicketEventLoggedTimeRemovedResultJson"'>
+      <tt-ticket-event-old-new
+        [title]='"Logged time removed"'
+        [oldString]='event.category.name + " " + (event.time | ttHumanizeDuration)'
+      ></tt-ticket-event-old-new>
+    </div>
+    <div *ngSwitchCase='"TicketEventLoggedTimeAddedResultJson"'>
+      <tt-ticket-event-old-new
+        [title]='"Logged time added"'
+        [newString]='event.category.name + " " + (event.time | ttHumanizeDuration)'
+      ></tt-ticket-event-old-new>
+    </div>
   </div>
   <p class="bottom-info">
     Created on {{  event.time | ttFormatMoment }}
