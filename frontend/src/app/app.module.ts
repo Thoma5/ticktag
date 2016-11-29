@@ -55,6 +55,7 @@ import { MaterialModule } from '@angular/material';
 import { HumanizeDurationPipe } from './util/humanize-duration.pipe';
 import { FormatMomentPipe } from './util/format-moment.pipe';
 import { MarkdownToHtmlPipe } from './util/markdown-to-html.pipe';
+import { PercentPipe } from './util/percent.pipe';
 import { MarkdownTextviewReadComponent } from './util/markdown-textview/markdown-textview-read.component';
 import { AutosizeTextareaDirective } from './util/autosize-textarea.directive';
 import { FocusDirective } from './util/focus.directive';
@@ -152,6 +153,7 @@ import {TicketEventOldNewMarkupComponent}
     HumanizeDurationPipe,
     FormatMomentPipe,
     MarkdownToHtmlPipe,
+    PercentPipe,
     AutosizeTextareaDirective,
     FocusDirective,
     EventFocusDirective,

@@ -4,19 +4,19 @@ import * as moment from 'moment';
 // See https://github.com/moment/moment/issues/348
 moment.locale('precise-short-en', {
   relativeTime: {
-    future: 'in %s',
-    past: '%s ago',
-    s: '%d s', // see https://github.com/timrwood/moment/pull/232#issuecomment-4699806
-    m: '%d m',
-    mm: '%d m',
-    h: '%d h',
-    hh: '%d h',
-    d: '%d d',
-    dd: '%d d',
-    M: 'a month',
-    MM: '%d months',
-    y: 'a year',
-    yy: '%d years'
+    future: 'in\xa0%s',
+    past: '%s\xa0ago',
+    s: '%d\xa0s', // see https://github.com/timrwood/moment/pull/232#issuecomment-4699806
+    m: '%d\xa0m',
+    mm: '%d\xa0m',
+    h: '%d\xa0h',
+    hh: '%d\xa0h',
+    d: '%d\xa0d',
+    dd: '%d\xa0d',
+    M: 'a\xa0month',
+    MM: '%d\xa0months',
+    y: 'a\xa0year',
+    yy: '%d\xa0years'
   }
 });
 

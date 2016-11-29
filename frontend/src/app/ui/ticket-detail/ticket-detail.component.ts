@@ -18,7 +18,7 @@ import {
   TicketDetailUser, TicketDetailTimeCategory, TicketDetailTransientUser,
   TicketDetailRelated, TicketDetailLoggedTime, TicketEvent, TicketEventParentChanged, TicketEventUserAdded,
   TicketEventUserRemoved, TicketEventLoggedTimeRemoved, TicketEventLoggedTimeAdded, TicketEventTagRemoved,
-  TicketEventTagAdded
+  TicketEventTagAdded, TicketDetailProgress
 } from './ticket-detail';
 import { SubticketCreateEvent } from './subticket-add/subticket-add.component';
 import { idListToMap } from '../../util/listmaputils';
@@ -43,6 +43,7 @@ export class TicketDetailComponent implements OnInit {
   private interestingLoggedTimes: imm.Map<string, TicketDetailLoggedTime>;
   private comments: imm.Map<string, TicketDetailComment>;
   private relatedTickets: imm.Map<string, TicketDetailRelated>;
+  private relatedProgresses: imm.Map<string, TicketDetailProgress>;
 
   // Internal state
   private currentTicketJson: TicketResultJson;  // Only use to recreate the ticket
@@ -345,6 +346,7 @@ export class TicketDetailComponent implements OnInit {
       this.interestingUsers,
       this.allTicketTags,
       this.allAssignmentTags,
+      this.relatedProgresses,
       this.transientUsers,
       this.transientTags,
       this.transientTicket);
@@ -442,11 +444,18 @@ export class TicketDetailComponent implements OnInit {
           }
         });
 
+        // Tickets needed for progress
+        let wantedStatisticIds = new Array<string>();
+        // The ticket itself
+        wantedStatisticIds.push(ticketId);
+        // And all subtickets
+        wantedStatisticIds.push(...ticketResult.subTicketIds);
+
         let getObs = this.apiCallService
           .callNoError<GetResultJson>(p => this.getApi.getUsingPOSTWithHttpInfo({
             userIds: wantedUserIds,
             ticketIds: wantedTicketIds,
-
+            ticketIdsForStatistic: wantedStatisticIds,
           }, p));
         return Observable.zip(Observable.of(tuple), getObs);
       })
@@ -461,8 +470,9 @@ export class TicketDetailComponent implements OnInit {
         this.allAssignmentTags = tuple[0][2];
         this.allTimeCategories = tuple[0][4];
         this.currentTicketJson = tuple[0][0];
+        this.relatedProgresses = imm.Map(tuple[1].ticketStatistics).map((p, tid) => new TicketDetailProgress(tid, p)).toMap();
         this.interestingUsers = imm.Map(tuple[1].users).map(u => new TicketDetailUser(u)).toMap();
-        this.relatedTickets = imm.Map(tuple[1].tickets).map(t => new TicketDetailRelated(t)).toMap();
+        this.relatedTickets = imm.Map(tuple[1].tickets).map(t => new TicketDetailRelated(t, this.relatedProgresses)).toMap();
         this.interestingLoggedTimes = imm.Map(tuple[2].loggedTimes)
           .map(lt => new TicketDetailLoggedTime(lt, this.allTimeCategories))
           .toMap();

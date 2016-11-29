@@ -42,7 +42,7 @@
                 Current estimation: <tt-edit-textview-time [content]="currentEstimatedTime" [transient]="currentEstimatedTimeTransient" (contentChange)="currentEstimatedTimeChange.emit($event)"></tt-edit-textview-time>
             </div>
             <div class='ticket-progress'>
-                Progress: ???%
+                Progress: {{ ticket.progress.percent | ttPercent }}
             </div>
             <div class='due-date'>
                 Due date: <tt-edit-textview-datetime [content]="dueDate" [transient]="dueDateTransient" (contentChange)="dueDateChange.emit($event)"></tt-edit-textview-datetime>

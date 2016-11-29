@@ -1,9 +1,26 @@
 import {
   TicketResultJson, CommentResultJson, UserResultJson, TicketTagResultJson,
-  AssignmentTagResultJson, TimeCategoryJson, LoggedTimeResultJson, TicketEventResultJson
+  AssignmentTagResultJson, TimeCategoryJson, LoggedTimeResultJson, TicketEventResultJson,
+  TicketProgressResultJson
 } from '../../api';
 import * as imm from 'immutable';
 import { Tag } from '../../util/taginput/taginput.component';
+
+export class TicketDetailProgress {
+  readonly ticketId: string;
+  readonly currentEstimatedTime: number;
+  readonly totalLoggedTime: number;
+
+  get percent(): number { return this.totalLoggedTime / this.currentEstimatedTime; }
+
+  constructor(ticketId: string, prog: TicketProgressResultJson) {
+    this.ticketId = ticketId;
+    this.currentEstimatedTime = prog.currentEstimatedTime;
+    this.totalLoggedTime = prog.totalLoggedTime;
+    Object.freeze(this);
+  }
+}
+Object.freeze(TicketDetailProgress.prototype);
 
 export class TicketEvent {
   readonly id: string;
@@ -25,7 +42,8 @@ export class TicketEventParentChanged extends TicketEvent {
   readonly dstParent: TicketDetailRelated;
 
   constructor(event: TicketEventResultJson,
-              users: imm.Map<string, TicketDetailUser>, relatedTickets: imm.Map<string, TicketDetailRelated>) {
+              users: imm.Map<string, TicketDetailUser>,
+              relatedTickets: imm.Map<string, TicketDetailRelated>) {
     super(event, users);
     let eventParentChanged: any = event;
     this.srcParent = relatedTickets.get(eventParentChanged.srcParentId);
@@ -260,17 +278,16 @@ export class TicketDetailRelated {
   readonly title: string;
   readonly open: boolean;
   readonly currentEstimatedTime: number;
-  readonly loggedTime: number;
+  readonly progress: TicketDetailProgress|undefined;
 
-  constructor(ticket: TicketResultJson) {
+  constructor(ticket: TicketResultJson, relatedProgresses: imm.Map<string, TicketDetailProgress>) {
     this.id = ticket.id;
     this.projectId = ticket.projectId;
     this.number = ticket.number;
     this.title = ticket.title;
     this.open = ticket.open;
     this.currentEstimatedTime = ticket.currentEstimatedTime;
-    // TODO real value here!!!
-    this.loggedTime = this.currentEstimatedTime / 2;
+    this.progress = relatedProgresses.get(this.id);
     Object.freeze(this);
   }
 }
@@ -295,6 +312,7 @@ export class TicketDetail {
   readonly subtickets: imm.List<TicketDetailRelated>;
   readonly referenced: imm.List<TicketDetailRelated>;
   readonly referencedBy: imm.List<TicketDetailRelated>;
+  readonly progress: TicketDetailProgress|undefined;
 
   constructor(
       ticket: TicketResultJson,
@@ -303,6 +321,7 @@ export class TicketDetail {
       users: imm.Map<string, TicketDetailUser>,
       ticketTags: imm.Map<string, TicketDetailTag>,
       assignmentTags: imm.Map<string, TicketDetailAssTag>,
+      relatedProgresses: imm.Map<string, TicketDetailProgress>,
       transientUsers: imm.List<TicketDetailTransientUser>,
       transientTags: imm.Set<string>,
       transientTicket: TicketDetailTransientFields) {
@@ -381,6 +400,7 @@ export class TicketDetail {
       .map(id => relatedTickets.get(id))
       .filter(t => !!t)
       .toList();
+    this.progress = relatedProgresses.get(this.id);
     Object.freeze(this);
   }
 }
