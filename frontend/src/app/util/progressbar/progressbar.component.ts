@@ -3,12 +3,12 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'tt-progressbar',
   templateUrl: './progressbar.component.html',
-  styleUrls: ['./progressbar.scss']
+  styleUrls: ['./progressbar.component.scss']
 })
 export class ProgressBarComponent {
   @Input() fraction: number = 50;
   @Input() totalValue: number = 100;
-  @Input() showNumbersOutside: boolean = false;
+  @Input() showNumbers: boolean = true;
 
   fractionPercent(): number {
     if (this.totalValue === 0) {

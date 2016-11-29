@@ -15,21 +15,21 @@
 }
 
 .number {
-flex-grow: 1;
+  width: 5%;
 }
-
 
 .title {
+  width: 20%;
   margin-left: $internal-gap;
-  flex-grow: 1;
 }
 
-.barStyle {
+.progress-bar-container {
   height: 100%;
-  flex-grow: 12;
+  flex-grow: 1;
   margin-left: $internal-gap;
 }
 
 .progress-numbers {
+  width: 10%;
   margin-left: $internal-gap;
 }
