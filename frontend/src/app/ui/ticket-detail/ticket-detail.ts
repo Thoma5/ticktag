@@ -1,9 +1,38 @@
 import {
   TicketResultJson, CommentResultJson, UserResultJson, TicketTagResultJson,
-  AssignmentTagResultJson, TimeCategoryJson, LoggedTimeResultJson
+  AssignmentTagResultJson, TimeCategoryJson, LoggedTimeResultJson, TicketEventResultJson
 } from '../../api';
 import * as imm from 'immutable';
 import { Tag } from '../../util/taginput/taginput.component';
+
+export class TicketEvent {
+  readonly id: string;
+  readonly user: TicketDetailUser;
+  readonly time: number;
+  readonly rawEvent: TicketEventResultJson;
+
+  constructor(event: TicketEventResultJson, users: imm.Map<string, TicketDetailUser>) {
+    this.id = event.id;
+    this.user = users.get(event.userId);  // TODO do something if the user does not exist
+    this.time = event.time;
+    this.rawEvent = event;
+  }
+}
+Object.freeze(TicketEvent.prototype);
+
+export class TicketEventParentChanged extends TicketEvent {
+  readonly srcParent: TicketDetailRelated;
+  readonly dstParent: TicketDetailRelated;
+
+  constructor(event: TicketEventResultJson, users: imm.Map<string, TicketDetailUser>, relatedTickets: imm.Map<string, TicketDetailRelated>) {
+    super(event, users);
+    let eventParentChanged: any = event;
+    this.srcParent = relatedTickets.get(eventParentChanged.srcParentId);
+    this.dstParent = relatedTickets.get(eventParentChanged.dstParentId);
+    Object.freeze(this);
+  }
+}
+Object.freeze(TicketEventParentChanged.prototype);
 
 export class TicketDetailAssignment {
   readonly tag: TicketDetailAssTag;

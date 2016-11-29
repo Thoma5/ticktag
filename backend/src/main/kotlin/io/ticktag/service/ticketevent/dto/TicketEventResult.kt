@@ -7,8 +7,9 @@ import java.util.*
 open class TicketEventResult(
         val id: UUID,
         val userId: UUID,
+        val userName: String,
         val ticketId: UUID,
         val time: Instant
 ) {
-    constructor(e: TicketEvent) : this(id = e.id, userId = e.user.id, ticketId = e.ticket.id, time = e.time)
+    constructor(e: TicketEvent) : this(id = e.id, userId = e.user.id, ticketId = e.ticket.id, time = e.time, userName = e.user.name)
 }

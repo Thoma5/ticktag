@@ -16,7 +16,7 @@ import { TicketeventApi } from '../../api/api/TicketeventApi';
 import {
   TicketDetail, TicketDetailTag, TicketDetailAssTag, TicketDetailComment,
   TicketDetailUser, TicketDetailTimeCategory, TicketDetailTransientUser,
-  TicketDetailRelated, TicketDetailLoggedTime
+  TicketDetailRelated, TicketDetailLoggedTime, TicketEvent, TicketEventParentChanged
 } from './ticket-detail';
 import { SubticketCreateEvent } from './subticket-add/subticket-add.component';
 import { idListToMap } from '../../util/listmaputils';
@@ -32,7 +32,7 @@ export class TicketDetailComponent implements OnInit {
   private queue = new TaskQueue();
 
   private loading = true;
-  private ticketEvents: imm.List<TicketEventResultJson>;
+  private ticketEvents: imm.List<TicketEvent>;
   private ticketDetail: TicketDetail = null;
   private allTicketTags: imm.Map<string, TicketDetailTag>;
   private allAssignmentTags: imm.Map<string, TicketDetailAssTag>;
@@ -427,6 +427,19 @@ export class TicketDetailComponent implements OnInit {
         // And tickets that reference this ticket
         wantedTicketIds.push(...ticketResult.referencingTicketIds);
 
+        // We need users, comments and parent tickets from events
+        let eventResult = tuple[5];
+        eventResult.forEach(event => {
+          let e: any = event;
+          wantedUserIds.push(e.userId);
+          switch (e.type) {
+            case 'TicketEventParentChangedResultJson':
+              if (e.srcParentId) { wantedTicketIds.push(e.srcParentId); }
+              if (e.dstParentId) { wantedTicketIds.push(e.dstParentId); }
+              break;
+          }
+        });
+
         let getObs = this.apiCallService
           .callNoError<GetResultJson>(p => this.getApi.getUsingPOSTWithHttpInfo({
             userIds: wantedUserIds,
@@ -453,7 +466,17 @@ export class TicketDetailComponent implements OnInit {
         this.comments = idListToMap(tuple[0][1])
           .map(c => new TicketDetailComment(c, this.interestingUsers, this.interestingLoggedTimes))
           .toMap();
-        this.ticketEvents = imm.List(tuple[0][5]);
+        this.ticketEvents = imm.List(tuple[0][5])
+          .map(event => {
+            let e: any = event;
+            console.log(e);
+            switch (e.type) {
+              case 'TicketEventParentChangedResultJson':
+                return new TicketEventParentChanged(e, this.interestingUsers, this.relatedTickets);
+              default:
+                return new TicketEvent(e, this.interestingUsers);
+            }
+          }).toList();
         this.newTicketDetail();
       })
       .map(it => undefined);

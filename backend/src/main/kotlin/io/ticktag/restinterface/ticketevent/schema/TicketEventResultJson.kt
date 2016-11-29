@@ -12,8 +12,9 @@ import java.util.*
 open class TicketEventResultJson(
         val id: UUID,
         val userId: UUID,
+        val userName: String,
         val ticketId: UUID,
         val time: Instant
 ) {
-    constructor(e: TicketEventResult) : this(id = e.id, userId = e.userId, ticketId = e.ticketId, time = e.time)
+    constructor(e: TicketEventResult) : this(id = e.id, userId = e.userId, ticketId = e.ticketId, time = e.time, userName = e.userName)
 }

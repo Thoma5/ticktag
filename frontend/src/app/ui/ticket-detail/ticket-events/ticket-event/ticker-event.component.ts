@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import {TicketEventResultJson} from '../../../../api/model/TicketEventResultJson';
+import {TicketEvent} from '../../ticket-detail';
 
 @Component({
   selector: 'tt-ticket-event',
@@ -7,5 +7,5 @@ import {TicketEventResultJson} from '../../../../api/model/TicketEventResultJson
   styleUrls: ['../ticket-events.component.scss']
 })
 export class TicketEventComponent {
-  @Input() event: TicketEventResultJson;
+  @Input() event: TicketEvent;
 }

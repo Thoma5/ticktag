@@ -2,77 +2,81 @@
   <div class='header-row'>
     <div class='user'>
       <div class='user-icon'><img src='http://lorempixel.com/100/100/cats'/></div>
-      <div class='user-name'><span>?user?</span></div>
+      <div class='user-info'>
+        <div class='user-name'><span>{{event.user.name}}</span></div>
+      </div>
     </div>
-    <div class='date'>{{ event.time | ttFormatMoment }}</div>
   </div>
-  <div [ngSwitch]='event.type'>
+  <div [ngSwitch]='event.rawEvent.type' class='content'>
     <div *ngSwitchCase='"TicketEventTitleChangedResultJson"'>
       <tt-ticket-event-old-new
       [title]='"Title changed"'
-      [oldString]='event.srcTitle'
-      [newString]='event.dstTitle'
+      [oldString]='event.rawEvent.srcTitle'
+      [newString]='event.rawEvent.dstTitle'
       ></tt-ticket-event-old-new>
     </div>
     <div *ngSwitchCase='"TicketEventCurrentEstimatedTimeChangedResultJson"'>
       <tt-ticket-event-old-new
       [title]='"Current estimated time changed"'
-      [oldString]='event.srcCurrentEstimatedTime'
-      [newString]='event.dstCurrentEstimatedTime'
+      [oldString]='event.rawEvent.srcCurrentEstimatedTime | ttHumanizeDuration'
+      [newString]='event.rawEvent.dstCurrentEstimatedTime | ttHumanizeDuration'
       ></tt-ticket-event-old-new>
     </div>
     <div *ngSwitchCase='"TicketEventParentChangedResultJson"'>
-      <tt-ticket-event-old-new
+      <tt-ticket-event-parent-ticket-changed
         [title]='"Parent ticket changed"'
-        [oldString]='event.srcParentNumber'
-        [newString]='event.dstParentNumber'
-      ></tt-ticket-event-old-new>
+        [srcParent]='event.srcParent'
+        [dstParent]='event.dstParent'
+      ></tt-ticket-event-parent-ticket-changed>
     </div>
     <div *ngSwitchCase='"TicketEventCommentTextChangedResultJson"'>
       <tt-ticket-event-old-new
         [title]='"Comment text changed"'
-        [oldString]='event.srcText'
-        [newString]='event.dstText'
+        [oldString]='event.rawEvent.srcText'
+        [newString]='event.rawEvent.dstText'
       ></tt-ticket-event-old-new>
     </div>
     <div *ngSwitchCase='"TicketEventDueDateChangedResultJson"'>
       <tt-ticket-event-old-new
         [title]='"Due date changed"'
-        [oldString]='event.srcDueDate | ttFormatMoment'
-        [newString]='event.dstDueDate | ttFormatMoment'
+        [oldString]='event.rawEvent.srcDueDate | ttFormatMoment'
+        [newString]='event.rawEvent.dstDueDate | ttFormatMoment'
       ></tt-ticket-event-old-new>
     </div>
     <div *ngSwitchCase='"TicketEventInitialEstimatedTimeChangedResultJson"'>
       <tt-ticket-event-old-new
         [title]='"Initial estimated time changed"'
-        [oldString]='event.srcInitialEstimatedTime'
-        [newString]='event.dstInitialEstimatedTime'
+        [oldString]='event.rawEvent.srcInitialEstimatedTime | ttHumanizeDuration'
+        [newString]='event.rawEvent.dstInitialEstimatedTime | ttHumanizeDuration'
       ></tt-ticket-event-old-new>
     </div>
     <div *ngSwitchCase='"TicketEventStateChangedResultJson"'>
       <tt-ticket-event-old-new
         [title]='"State changed"'
-        [oldString]='event.srcState ? "Open" : "Close"'
-        [newString]='event.dstState ? "Open" : "Close"'
+        [oldString]='event.rawEvent.srcState ? "Open" : "Close"'
+        [newString]='event.rawEvent.dstState ? "Open" : "Close"'
       ></tt-ticket-event-old-new>
     </div>
     <div *ngSwitchCase='"TicketEventUserAddedResultJson"'>
       <tt-ticket-event-user
-        [userId]='event.addedUserId'
-        [userName]='event.addedUserUsername'
-        [tagId]='event.assignmentTagId'
-        [tagName]='event.assignmentTagName'
+        [userId]='event.rawEvent.addedUserId'
+        [userName]='event.rawEvent.addedUserUsername'
+        [tagId]='event.rawEvent.assignmentTagId'
+        [tagName]='event.rawEvent.assignmentTagName'
         [added]='true'
       ></tt-ticket-event-user>
     </div>
     <div *ngSwitchCase='"TicketEventUserRemovedResultJson"'>
       <tt-ticket-event-user
-        [userId]='event.removedUserId'
-        [userName]='event.removedUserUsername'
-        [tagId]='event.assignmentTagId'
-        [tagName]='event.assignmentTagName'
+        [userId]='event.rawEvent.removedUserId'
+        [userName]='event.rawEvent.removedUserUsername'
+        [tagId]='event.rawEvent.assignmentTagId'
+        [tagName]='event.rawEvent.assignmentTagName'
         [added]='false'
       ></tt-ticket-event-user>
     </div>
   </div>
+  <p class="bottom-info">
+    Created on {{  event.time | ttFormatMoment }}
+  </p>
 </div>
