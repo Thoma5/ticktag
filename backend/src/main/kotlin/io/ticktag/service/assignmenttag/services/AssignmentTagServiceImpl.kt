@@ -23,7 +23,7 @@ open class AssignmentTagServiceImpl @Inject constructor(
         private val nameNormalizationLibrary: NameNormalizationLibrary
 ) : AssignmentTagService {
 
-    @PreAuthorize(AuthExpr.PROJECT_USER)
+    @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listAssignmentTags(@P("authProjectId") projectId: UUID): List<AssignmentTagResult> {
         return assignmentTags.findByProjectId(projectId).map(::AssignmentTagResult)
     }
