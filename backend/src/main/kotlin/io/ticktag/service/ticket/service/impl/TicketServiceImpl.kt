@@ -56,6 +56,7 @@ open class TicketServiceImpl @Inject constructor(
         return toResultDto(tickets.findOne(id) ?: throw NotFoundException())
     }
 
+
     @PreAuthorize(AuthExpr.USER) // Checked manually
     override fun getTickets(ids: Collection<UUID>, principal: Principal): Map<UUID, TicketResult> {
         val permittedIds = ids.filter {

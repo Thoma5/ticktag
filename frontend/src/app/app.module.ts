@@ -60,13 +60,17 @@ import { AutosizeTextareaDirective } from './util/autosize-textarea.directive';
 import { FocusDirective } from './util/focus.directive';
 import { EventFocusDirective } from './util/event-focus.directive';
 import { TaginputComponent } from './util/taginput/taginput.component';
+import { TagViewComponent } from './ui/ticket-overview/tagview/tagview.component';
 import { SelectAllDirective } from './util/select-all.directive';
 import { EditButtonComponent } from './util/edit-button/edit-button.component';
 import { LoadingComponent } from './util/loading/loading.component';
+import { TicketOverviewComponent } from'./ui/ticket-overview/ticket-overview.component';
+import { AssignedUserOverviewComponent } from'./ui/ticket-overview/assigned-user/assigned-user-overview.component';
 import { SpinnerComponent } from './util/spinner/spinner.component';
 import { CommandTextviewComponent } from './ui/ticket-detail/command-textview/command-textview.component';
 import { CommandDescriptionComponent } from './ui/ticket-detail/command-description/command-description.component';
 import { CommandHelpComponent } from './ui/ticket-detail/command-help/command-help.component';
+import { ProgressBarComponent } from './util/progressbar/progressbar.component';
 
 import {TicketEventsComponent} from './ui/ticket-detail/ticket-events/ticket-events.component';
 import {TicketEventOldNewComponent} from './ui/ticket-detail/ticket-events/ticket-event-old-new/ticket-event-old-new.component';
@@ -102,6 +106,7 @@ import {TicketEventOldNewMarkupComponent}
     UserCreateComponent,
     ProjectsComponent,
     ProjectCreateComponent,
+    TicketOverviewComponent,
     TicketDetailComponent,
     TicketSidebarComponent,
     TicketCoreComponent,
@@ -121,10 +126,12 @@ import {TicketEventOldNewMarkupComponent}
     OpenClosedButtonComponent,
     TicketStorypointsComponent,
     AssignedUserComponent,
+    AssignedUserOverviewComponent,
     SubticketsComponent,
     SubticketComponent,
     SubticketAddComponent,
     TaginputComponent,
+    TagViewComponent,
     TicketCommentsComponent,
     TicketCommentComponent,
     TicketEventsComponent,
@@ -140,6 +147,7 @@ import {TicketEventOldNewMarkupComponent}
     CommandDescriptionComponent,
     CommandHelpComponent,
     MarkdownTextviewReadComponent,
+    ProgressBarComponent,
 
     HumanizeDurationPipe,
     FormatMomentPipe,

@@ -25,14 +25,10 @@
 
 import * as models from './models';
 
-export interface GetResultJson {
-    loggedTimes: { [key: string]: models.LoggedTimeResultJson; };
+export interface TicketProgressResultJson {
+    currentEstimatedTime: number;
 
-    ticketStatistics: { [key: string]: models.TicketProgressResultJson; };
-
-    tickets: { [key: string]: models.TicketResultJson; };
-
-    users: { [key: string]: models.UserResultJson; };
+    totalLoggedTime: number;
 
 }
 

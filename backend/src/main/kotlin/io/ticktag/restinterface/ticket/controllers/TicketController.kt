@@ -45,6 +45,7 @@ open class TicketController @Inject constructor(
         return TicketResultJson(ticketService.getTicket(id))
     }
 
+
     @PostMapping
     open fun createTicket(@RequestBody req: CreateTicketRequestJson,
                           @AuthenticationPrincipal principal: Principal): ResponseEntity<TicketResultJson> {

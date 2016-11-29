@@ -23,10 +23,9 @@
   margin-left: $internal-gap;
 }
 
-.progress-bar {
+.progress-bar-container {
   height: 100%;
   flex-grow: 1;
-  background-color: palette(Light Blue, 500);
   margin-left: $internal-gap;
 }
 

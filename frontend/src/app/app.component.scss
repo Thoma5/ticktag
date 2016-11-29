@@ -1,3 +1,26 @@
 main {
     padding: 2rem;
 }
+md-sidenav {
+  width: 200px;
+  text-align: right;
+  background-color: black
+}
+md-sidenav {
+  width: 200px;
+  text-align: left;
+  background-color: darkslategrey
+}
+
+.nav-top-block{
+    text-align: center;
+    font-weight: bold;
+    font-size: 2em;
+    color: white;
+    margin: 20px 0 50px 0;
+}
+
+md-sidenav div a {
+  color: white;
+  text-align: left
+}

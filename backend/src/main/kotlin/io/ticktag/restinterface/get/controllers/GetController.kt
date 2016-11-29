@@ -9,6 +9,8 @@ import io.ticktag.restinterface.ticket.schema.TicketResultJson
 import io.ticktag.restinterface.user.schema.UserResultJson
 import io.ticktag.service.Principal
 import io.ticktag.service.loggedtime.service.LoggedTimeService
+import io.ticktag.restinterface.statistic.schema.TicketProgressResultJson
+import io.ticktag.service.statistic.service.StatisticService
 import io.ticktag.service.ticket.service.TicketService
 import io.ticktag.service.user.services.UserService
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -23,7 +25,8 @@ import javax.inject.Inject
 open class GetController @Inject constructor(
         private val userService: UserService,
         private val ticketService: TicketService,
-        private val loggedTimeService: LoggedTimeService
+        private val loggedTimeService: LoggedTimeService,
+        private val statisticService: StatisticService
 ) {
     // Unfortunately request bodies in GET requests are not supported by swagger
     // So this is a POST endpoint, whatever ¯\_(ツ)_/¯
@@ -35,14 +38,17 @@ open class GetController @Inject constructor(
         val userIds = request.userIds
         val ticketIds = request.ticketIds
         val loggedTimeIds = request.loggedTimeIds
+        val ticketIdsForStatistic = request.ticketIdsForStatistic
         val users = if (userIds == null) emptyMap() else userService.getUsers(userIds).mapValues { UserResultJson(it.value) }
         val tickets = if (ticketIds == null) emptyMap() else ticketService.getTickets(ticketIds, principal).mapValues { TicketResultJson(it.value) }
         val loggedTimes = if (loggedTimeIds == null) emptyMap() else loggedTimeService.getLoggedTimes(loggedTimeIds, principal).mapValues { LoggedTimeResultJson(it.value) }
+        val ticketStatistics = if (ticketIdsForStatistic == null) emptyMap() else statisticService.getTicketProgresses(ticketIdsForStatistic, principal).mapValues { TicketProgressResultJson(it.value) }
 
         return GetResultJson(
                 users = users,
                 tickets = tickets,
-                loggedTimes = loggedTimes
+                loggedTimes = loggedTimes,
+                ticketStatistics = ticketStatistics
         )
     }
 }

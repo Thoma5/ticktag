@@ -8,6 +8,7 @@ import io.ticktag.restinterface.get.schema.GetRequestJson
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.time.Duration
 import java.util.*
 import javax.inject.Inject
 
@@ -28,11 +29,14 @@ class GetApiTest : ApiBaseTest() {
                                     UUID.fromString("660f2968-aa46-4870-bcc5-a3805366cff2"),
                                     UUID.fromString("99999999-9999-9999-9999-999999999999")),
                             ticketIds = null,
-                            loggedTimeIds = null),
+                            loggedTimeIds = null,
+                            ticketIdsForStatistic = null),
                     principal = p
             )
 
             assertEquals(2, result.users.size)
+            assertEquals(0, result.tickets.size)
+            assertEquals(0, result.ticketStatistics.size)
             assertTrue(result.users.containsKey(UUID.fromString("93ef43d9-20b7-461a-b960-2d1e89ba099f")))
             assertTrue(result.users.containsKey(UUID.fromString("660f2968-aa46-4870-bcc5-a3805366cff2")))
 
@@ -53,16 +57,46 @@ class GetApiTest : ApiBaseTest() {
                             ticketIds = listOf(
                                     firstId,
                                     secondId,
-                                    UUID.fromString("99999999-9999-9999-9999-999999999999"))),
+                                    UUID.fromString("99999999-9999-9999-9999-999999999999")),
+                            ticketIdsForStatistic = null),
                     principal = p
             )
 
             assertEquals(0, result.users.size)
             assertEquals(1, result.tickets.size)
+            assertEquals(0, result.ticketStatistics.size)
             assertTrue(result.tickets.containsKey(secondId))
 
             val ticket = result.tickets[secondId]!!
             assertEquals("Project 2 Ticket One", ticket.title)
+        }
+    }
+
+    @Test
+    fun `should return correct statistics and skip missing or forbidden`() {
+        withUser(USER_ID) { p ->
+            val firstId = UUID.fromString("00000000-0003-0000-0000-000000000104")
+            val secondId = UUID.fromString("00000000-0003-0000-0000-000000000102")
+            val result = getController.get(
+                    GetRequestJson(
+                            userIds = null,
+                            ticketIds = null,
+                            loggedTimeIds = null,
+                            ticketIdsForStatistic = listOf(
+                                    firstId,
+                                    secondId,
+                                    UUID.fromString("99999999-9999-9999-9999-999999999999"))),
+                    principal = p
+            )
+
+            assertEquals(0, result.users.size)
+            assertEquals(0, result.tickets.size)
+            assertEquals(1, result.ticketStatistics.size)
+            assertTrue(result.ticketStatistics.containsKey(secondId))
+
+            val stat = result.ticketStatistics[secondId]!!
+            assertEquals(Duration.ofNanos(25), stat.currentEstimatedTime)
+            assertEquals(Duration.ZERO, stat.totalLoggedTime)
         }
     }
 }

@@ -1,0 +1,10 @@
+<div class="progress-container">
+  <div class="progress progress-bar-container">
+    <div class="progress-bar progress-bar-custom " role="progressbar" [style.width]="fractionPercent()+'%'">
+      <span *ngIf='showNumbers'>{{fraction | ttHumanizeDuration}}</span>
+    </div>
+    <div class="progress-bar progress-bar-custom2" role="progressbar" [style.width]="(100-fractionPercent())+'%'">
+      <span *ngIf='showNumbers' class="progress-text">{{totalValue | ttHumanizeDuration}}</span>
+    </div>
+  </div>
+</div>
