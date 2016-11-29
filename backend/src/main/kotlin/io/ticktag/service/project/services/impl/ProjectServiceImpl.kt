@@ -39,7 +39,7 @@ open class ProjectServiceImpl @Inject constructor(
         return ProjectResult(projects.findOne(id) ?: throw NotFoundException())
     }
 
-    @PreAuthorize(AuthExpr.ADMIN)
+    @PreAuthorize(AuthExpr.OBSERVER)
     override fun listAllProjects(name: String, pageable: Pageable): Page<ProjectResult> {
         val page = projects.findByNameContainingIgnoreCase(name, pageable)
         val content = page.content.map(::ProjectResult)

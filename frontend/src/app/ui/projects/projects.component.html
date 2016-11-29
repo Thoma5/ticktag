@@ -5,6 +5,9 @@
     </div>
     <div class="search row">
       <div class="col-md-4"><input class="form-control" type='text' placeholder='Type to filter name...' (keyup)='updateFilter($event)' /></div>
+      <div class="col-md-4" *ngIf="user && ((user.authorities.indexOf('ADMIN') != -1) ||(user.authorities.indexOf('OBSERVER') != -1))">
+        <md-slide-toggle [(ngModel)]="allProjects" (change)="getProjects(offset, limit, sortprop, asc, undefined)">All Projects</md-slide-toggle>
+      </div>
     </div>
 
     <datatable class="material striped" [rows]="rows" [columns]="columns" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
@@ -15,32 +18,32 @@
         <template let-column="column">
           {{""}}
         </template>
-        <template  let-value="value">
+        <template let-value="value">
           <img class="img-circle" width="32" src="http://lorempixel.com/32/32/cats" />
         </template>
       </datatable-column>
-      <datatable-column name="Name" >
+      <datatable-column name="Name">
         <template let-value="value">
           <p><strong>{{value}}</strong></p>
         </template>
       </datatable-column>
-      <datatable-column name="CreationDate" [width]="20"> 
+      <datatable-column name="CreationDate" [width]="20">
         <template let-row="row" let-value="value">
           {{value | date: 'dd.MM.yyyy'}}
         </template>
       </datatable-column>
-      <datatable-column name="Description" >
-         <template let-column="column">
+      <datatable-column name="Description">
+        <template let-column="column">
           {{"Description"}}
         </template>
         <template let-row="row" let-value="value">
           <div class="form-group">
-           {{value}}
+            {{value}}
           </div>
         </template>
       </datatable-column>
       <datatable-column name="Actions" [width]="20">
-         <template id="test" let-column="column">
+        <template id="test" let-column="column">
           {{"Actions"}}
         </template>
         <template>
