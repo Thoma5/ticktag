@@ -30,11 +30,11 @@
       ></tt-ticket-event-parent-ticket-changed>
     </div>
     <div *ngSwitchCase='"TicketEventCommentTextChangedResultJson"'>
-      <tt-ticket-event-old-new
-        [title]='"Comment text changed"'
+      <tt-ticket-event-old-new-markup
+        [title]='"Description text changed"'
         [oldString]='event.rawEvent.srcText'
         [newString]='event.rawEvent.dstText'
-      ></tt-ticket-event-old-new>
+      ></tt-ticket-event-old-new-markup>
     </div>
     <div *ngSwitchCase='"TicketEventDueDateChangedResultJson"'>
       <tt-ticket-event-old-new

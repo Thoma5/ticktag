@@ -34,7 +34,5 @@ export interface TicketEventResultJson {
 
     userId: string;
 
-    userName: string;
-
 }
 
