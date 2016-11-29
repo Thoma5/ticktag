@@ -53,7 +53,7 @@ import { JsonPipe } from './util/json.pipe';
 import { AutosizeTextareaDirective } from './util/autosize-textarea.directive';
 import { FocusDirective } from './util/focus.directive';
 import { TaginputComponent } from './util/taginput/taginput.component';
-import { TagViewComponent } from './util/tagview/tagview.component';
+import { TagViewComponent } from './ui/ticket-overview/tagview/tagview.component';
 import { SelectAllDirective } from './util/select-all.directive';
 import { EditButtonComponent } from './util/edit-button/edit-button.component';
 import { LoadingComponent } from './util/loading/loading.component';

@@ -7,11 +7,11 @@
       <div class="col-md-4"><input class="form-control" type='text' placeholder='Type to filter name...' (keyup)='updateFilter($event)' /></div>
     </div>
 
-    <datatable class="material" [rows]="rows" [columns]="columns" [columnMode]="standard" [headerHeight]="50" [footerHeight]="50"
+    <datatable class="material" [rows]="rows" [columns]="columns" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
       [rowHeight]="auto" [externalPaging]="true" [count]="totalElements" [offset]="offset" [limit]="limit" [scrollbarH]="true"
       [scrollbarV]="false" [loadingIndicator]="refresh" [externalSorting]="true" (sort)="onSort($event)" (page)='onPage($event)'
       [cssClasses]="iconsCss">
-      <datatable-column name="Icon" [width]="64">
+      <datatable-column name="Icon" [width]="20">
         <template let-column="column">
           {{""}}
         </template>
@@ -24,9 +24,9 @@
           <p><strong>{{value}}</strong></p>
         </template>
       </datatable-column>
-      <datatable-column name="CreationDate" [width]="100"> 
+      <datatable-column name="CreationDate" [width]="20"> 
         <template let-row="row" let-value="value">
-          {{value | date: 'dd/MM/yyyy'}}
+          {{value | date: 'dd.MM.yyyy'}}
         </template>
       </datatable-column>
       <datatable-column name="Description" >
@@ -39,7 +39,7 @@
           </div>
         </template>
       </datatable-column>
-      <datatable-column name="Actions" [frozenRight]="true">
+      <datatable-column name="Actions" [width]="20">
          <template id="test" let-column="column">
           {{"Actions"}}
         </template>

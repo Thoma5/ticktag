@@ -21,15 +21,15 @@ import { Observable } from 'rxjs';
 })
 export class TicketOverviewComponent implements OnInit {
   private loading = true;
+  private reloading = true;
   private tickets: TicketOverview[] = [];
   private allAssignmentTags: imm.Map<string, TicketOverviewAssTag>;
   private allTicketTags: imm.Map<string, TicketOverviewTag>;
   private projectId: string | null = null;
 
-  asc = true;
   sortprop = ['NUMBER_ASC'];
   offset = 0;
-  limit = 15;
+  limit = 10;
   totalElements = 0;
   rows: TicketOverview[] = [];
   iconsCss = {
@@ -81,7 +81,7 @@ export class TicketOverviewComponent implements OnInit {
   }
 
   private refresh(projectId: string): Observable<void> {
-    console.log('loading data');
+    this.reloading = true;
     let rawTicketObs = this.apiCallService
       .callNoError<PageTicketResultJson>(p => this.ticketApi
         .listTicketsUsingGETWithHttpInfo(projectId, this.sortprop, this.offset, this.limit, p));
@@ -120,21 +120,27 @@ export class TicketOverviewComponent implements OnInit {
           rows[i] = this.tickets[i - this.offset * this.limit];
         }
         this.rows = rows;
-        console.log(this.rows);
+        this.reloading = false;
       })
       .map(it => undefined);
   }
 
   onPage(event: any) {
-    console.log('Page Event', event);
     this.limit = event.limit;
     this.offset = event.offset;
     this.refresh(this.projectId).subscribe();
   }
 
   onSort(event: any) {
-    console.log('Sort Event', event);
-    this.asc = event.sorts[0].dir === 'asc' ? true : false;
+    if (event.sorts[0].prop === 'title') {
+      this.sortprop = [ 'TITLE_' + event.sorts[0].dir.toUpperCase() ];
+    }else if (event.sorts[0].prop === 'storyPoints') {
+      this.sortprop = [ 'STORY_POINTS_' + event.sorts[0].dir.toUpperCase() ];
+    }else if (event.sorts[0].prop === 'number') {
+      this.sortprop = [ 'NUMBER_' + event.sorts[0].dir.toUpperCase() ];
+    }else if (event.sorts[0].prop === 'dueDate') {
+      this.sortprop = [ 'DUE_DATE_' + event.sorts[0].dir.toUpperCase() ];
+    }
     this.refresh(this.projectId).subscribe();
   }
 
@@ -142,5 +148,9 @@ export class TicketOverviewComponent implements OnInit {
     // TODO  filter our data
     this.offset = 0;
     this.refresh(this.projectId).subscribe();
+  }
+
+  onTagClicked(event: any) {
+    console.log(event.name);
   }
 }

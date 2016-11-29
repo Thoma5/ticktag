@@ -98,7 +98,9 @@ export class TicketOverview {
     this.number = ticket.number;
     this.open = ticket.open;
     this.storyPoints = ticket.storyPoints;
-    this.tags =  imm.List(ticket.tagIds).map(tid => ticketTags.get(tid))
+    this.tags =  imm.List(ticket.tagIds)
+    .map(tid => ticketTags.get(tid))
+    .sort((a, b) => (a.order < b.order) ? -1 : (a.order === b.order ? 0 : 1))
     .toList();
     this.title = ticket.title;
     this.users = imm.List(ticket.ticketUserRelations)

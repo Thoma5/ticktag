@@ -1,7 +1,8 @@
 import {
-  Component, Input
+  Component, Input, Output, EventEmitter
 } from '@angular/core';
 import * as imm from 'immutable';
+import {TicketOverviewTag} from '../ticket-overview';
 
 
 export interface Tag {
@@ -23,6 +24,11 @@ export type TagRef =
   styleUrls: ['./tagview.component.scss'],
 })
 export class TagViewComponent {
-  @Input() tags: imm.List<TagRef>;
+  @Input() tags: imm.List<TicketOverviewTag>;
+  @Output() clickedTag = new EventEmitter<TicketOverviewTag>();
+
+  tagClicked(tag: TicketOverviewTag) {
+    this.clickedTag.emit(tag);
+  }
 
 }

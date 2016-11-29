@@ -1,0 +1,5 @@
+<div class="tags">
+    <button (click)="tagClicked(tag)" *ngFor="let tag of tags" class="tag btn" [style.backgroundColor]="'#' + tag.color">
+        <span class="name">{{ tag.name }}</span>
+    </button>
+</div>

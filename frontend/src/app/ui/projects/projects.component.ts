@@ -56,7 +56,7 @@ export class ProjectsComponent implements OnInit {
       });
   }
 
-  onPage(event) {
+  onPage(event: any) {
     this.refresh = true;
     console.log('Page Event', event);
     this.limit = event.limit;
@@ -65,7 +65,7 @@ export class ProjectsComponent implements OnInit {
 
   }
 
-  onSort(event) {
+  onSort(event: any) {
     this.refresh = true;
     console.log('Sort Event', event);
     this.asc = event.sorts[0].dir === 'asc' ? true : false;
@@ -73,7 +73,7 @@ export class ProjectsComponent implements OnInit {
     this.getProjects(this.offset, this.limit, this.sortprop, this.asc, undefined);
   }
 
-  updateFilter(event) {
+  updateFilter(event: any) {
     let val = event.target.value;
 
     // filter our data
