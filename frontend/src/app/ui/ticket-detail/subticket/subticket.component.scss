@@ -15,19 +15,21 @@
 }
 
 .number {
+  width: 5%;
 }
 
 .title {
+  width: 20%;
   margin-left: $internal-gap;
 }
 
-.progress-bar {
+.progress-bar-container {
   height: 100%;
   flex-grow: 1;
-  background-color: palette(Light Blue, 500);
   margin-left: $internal-gap;
 }
 
 .progress-numbers {
+  width: 10%;
   margin-left: $internal-gap;
 }

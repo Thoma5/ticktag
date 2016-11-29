@@ -2,7 +2,10 @@ package io.ticktag.restinterface.ticket.controllers
 
 import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
-import io.ticktag.restinterface.ticket.schema.*
+import io.ticktag.restinterface.ticket.schema.CreateTicketRequestJson
+import io.ticktag.restinterface.ticket.schema.TicketResultJson
+import io.ticktag.restinterface.ticket.schema.TicketSort
+import io.ticktag.restinterface.ticket.schema.UpdateTicketRequestJson
 import io.ticktag.service.Principal
 import io.ticktag.service.ticket.dto.CreateTicket
 import io.ticktag.service.ticket.dto.UpdateTicket
@@ -32,7 +35,7 @@ open class TicketController @Inject constructor(
         val pageRequest = PageRequest(page, size, Sort(order.map { it.order }))
         val page = ticketService.listTickets(req, pageRequest)
         val content = page.content.map(::TicketResultJson)
-        return PageImpl(content,pageRequest,page.totalElements)
+        return PageImpl(content, pageRequest, page.totalElements)
     }
 
 
@@ -40,6 +43,7 @@ open class TicketController @Inject constructor(
     open fun getTicket(@PathVariable(name = "id") id: UUID): TicketResultJson {
         return TicketResultJson(ticketService.getTicket(id))
     }
+
 
     @PostMapping
     open fun createTicket(@RequestBody req: CreateTicketRequestJson,
@@ -63,9 +67,9 @@ open class TicketController @Inject constructor(
 
     @GetMapping("/fuzzy")
     open fun listTicketsFuzzy(
-            @RequestParam(name="projectId", required = true) projectId: UUID,
-            @RequestParam(name="q", required = true) query: String,
-            @RequestParam(name="order", required = true) order: List<TicketSort>): List<TicketResultJson> {
+            @RequestParam(name = "projectId", required = true) projectId: UUID,
+            @RequestParam(name = "q", required = true) query: String,
+            @RequestParam(name = "order", required = true) order: List<TicketSort>): List<TicketResultJson> {
         val tickets = ticketService.listTicketsFuzzy(projectId, query, PageRequest(0, 15, Sort(order.map { it.order })))
         return tickets.map(::TicketResultJson)
     }

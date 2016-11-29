@@ -21,8 +21,8 @@ open class Ticket protected constructor() {
             o.title = title
             o.open = open
             o.storyPoints = storyPoints
-            o.initialEstimatedTime = initialEstimatedTime
-            o.currentEstimatedTime = currentEstimatedTime
+            o.initialEstimatedTime = initialEstimatedTime?:currentEstimatedTime
+            o.currentEstimatedTime = currentEstimatedTime?:initialEstimatedTime
             o.dueDate = dueDate
             o.parentTicket = parentTicket
             o.subTickets = mutableListOf()
@@ -113,11 +113,11 @@ open class Ticket protected constructor() {
     lateinit open var events: MutableList<TicketEvent>
         protected set
 
-    @OneToMany(mappedBy = "srcParent")
+    @OneToMany(mappedBy = "srcParent", cascade = arrayOf(CascadeType.REMOVE))
     lateinit open var parentChangedEventsSrc: MutableList<TicketEventParentChanged>
         protected set
 
-    @OneToMany(mappedBy = "dstParent")
+    @OneToMany(mappedBy = "dstParent", cascade = arrayOf(CascadeType.REMOVE))
     lateinit open var parentChangedEventsDst: MutableList<TicketEventParentChanged>
         protected set
 

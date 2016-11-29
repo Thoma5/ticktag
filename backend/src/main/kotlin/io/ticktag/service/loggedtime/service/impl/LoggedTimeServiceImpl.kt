@@ -3,7 +3,11 @@ package io.ticktag.service.loggedtime.service.impl
 import io.ticktag.TicktagService
 import io.ticktag.persistence.loggedtime.LoggedTimeRepository
 import io.ticktag.persistence.comment.CommentRepository
+import io.ticktag.persistence.ticket.TicketEventRepository
 import io.ticktag.persistence.ticket.entity.LoggedTime
+import io.ticktag.persistence.ticket.entity.TicketEvent
+import io.ticktag.persistence.ticket.entity.TicketEventLoggedTimeAdded
+import io.ticktag.persistence.ticket.entity.TicketEventLoggedTimeRemoved
 import io.ticktag.persistence.timecategory.TimeCategoryRepository
 import io.ticktag.service.*
 import io.ticktag.service.loggedtime.dto.CreateLoggedTime
@@ -19,9 +23,10 @@ import javax.inject.Inject
 open class LoggedTimeServiceImpl @Inject constructor(
         private val loggedTimes: LoggedTimeRepository,
         private val comments: CommentRepository,
-        private val timeCategorys: TimeCategoryRepository
+        private val timeCategorys: TimeCategoryRepository,
+        private val ticketEvents: TicketEventRepository
 ) : LoggedTimeService {
-    
+
     @PreAuthorize(AuthExpr.READ_COMMENT)
     override fun listLoggedTimeForComment(@P("authCommentId") commentId: UUID): List<LoggedTimeResult> {
         return loggedTimes.findAll().map(::LoggedTimeResult)
@@ -45,12 +50,22 @@ open class LoggedTimeServiceImpl @Inject constructor(
         val category = timeCategorys.findOne(createLoggedTime.categoryId) ?: throw NotFoundException()
         val newLoggedTime = LoggedTime.create(duration, comment, category)
         loggedTimes.insert(newLoggedTime)
+        ticketEvents.insert(TicketEventLoggedTimeAdded.create(comment.ticket, comment.user, comment, category, duration))
         return LoggedTimeResult(newLoggedTime)
     }
 
     @PreAuthorize(AuthExpr.EDIT_TIME_LOG)
     override fun updateLoggedTime(updateLoggedTime: UpdateLoggedTime, @P("authLoggedTimeId") loggedTimeId: UUID): LoggedTimeResult {
         val loggedTime = loggedTimes.findOne(loggedTimeId) ?: throw NotFoundException()
+
+        val timeChanged = updateLoggedTime.time != null && loggedTime.time != updateLoggedTime.time
+        val categoryChanged = updateLoggedTime.categoryId != null && loggedTime.category != timeCategorys.findOne(updateLoggedTime.categoryId)
+        if (timeChanged || categoryChanged) {
+            val category = timeCategorys.findOne(updateLoggedTime.categoryId ?: loggedTime.category.id) ?: throw NotFoundException()
+            ticketEvents.insert(TicketEventLoggedTimeRemoved.create(loggedTime.comment.ticket, loggedTime.comment.user, loggedTime.comment, loggedTime.category, loggedTime.time))
+            ticketEvents.insert(TicketEventLoggedTimeAdded.create(loggedTime.comment.ticket, loggedTime.comment.user, loggedTime.comment, category, updateLoggedTime.time ?: loggedTime.time))
+        }
+
         if (updateLoggedTime.time != null) {
             loggedTime.time = updateLoggedTime.time
         }
@@ -66,5 +81,6 @@ open class LoggedTimeServiceImpl @Inject constructor(
     override fun deleteLoggedTime(@P("authLoggedTimeId") loggedTimeId: UUID) {
         val loggedTimeToDelete = loggedTimes.findOne(loggedTimeId) ?: throw NotFoundException()
         loggedTimes.delete(loggedTimeToDelete)
+        ticketEvents.insert(TicketEventLoggedTimeRemoved.create(loggedTimeToDelete.comment.ticket, loggedTimeToDelete.comment.user, loggedTimeToDelete.comment, loggedTimeToDelete.category, loggedTimeToDelete.time))
     }
 }
