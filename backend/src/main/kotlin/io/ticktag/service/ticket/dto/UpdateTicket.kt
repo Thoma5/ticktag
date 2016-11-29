@@ -14,7 +14,7 @@ data class UpdateTicket(
         val initialEstimatedTime: Duration?,
         val currentEstimatedTime: Duration?,
         val dueDate: Instant?,
-        @field:Size(min = 1, max = 5000) val description: String?,
+        @field:Size(min = 0, max = 5000) val description: String?,
         val parentTicket: UUID?
 
 ) {
