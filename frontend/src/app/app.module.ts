@@ -55,9 +55,11 @@ import { FocusDirective } from './util/focus.directive';
 import { TaginputComponent } from './util/taginput/taginput.component';
 import { SelectAllDirective } from './util/select-all.directive';
 import { EditButtonComponent } from './util/edit-button/edit-button.component';
+
 import { LoadingComponent } from './util/loading/loading.component';
 import { SpinnerComponent } from './util/spinner/spinner.component';
 import { CommentTextviewComponent } from './ui/ticket-detail/comment-textview/comment-textview.component';
+import { ProgressBarComponent } from './util/progressbar/progressbar.component';
 
 import {TicketEventsComponent} from './ui/ticket-detail/ticket-events/ticket-events.component';
 import {TicketEventOldNewComponent} from './ui/ticket-detail/ticket-events/ticket-event-old-new/ticket-event-old-new.component';
@@ -111,7 +113,7 @@ import {TicketEventUserComponent} from './ui/ticket-detail/ticket-events/ticket-
     TicketCommentInputComponent,
     EditButtonComponent,
     CommentTextviewComponent,
-
+    ProgressBarComponent,
     HumanizeDurationPipe,
     FormatMomentPipe,
     MarkdownToHtmlPipe,
