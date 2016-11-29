@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @TicktagService
 open class TicketEventServiceImpl @Inject constructor(
-        val ticketEvents: TicketEventRepository
+        private val ticketEvents: TicketEventRepository
 ) : TicketEventService {
 
     @PreAuthorize(AuthExpr.READ_TICKET)
