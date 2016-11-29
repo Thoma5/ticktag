@@ -94,7 +94,7 @@ open class CommandServiceImpl(
                     val tag = ticketTags.findByNormalizedNameAndProjectId(nn.normalize(command.tag), ticket.project.id)
                     if (tag != null) {
                         tryCommand(errors, index) {
-                            ticketTagRelationService.createOrGetIfExistsTicketTagRelation(ticket.id, tag.id)
+                            ticketTagRelationService.createOrGetIfExistsTicketTagRelation(ticket.id, tag.id, principal)
                         }
                     } else {
                         failedCommand(errors, index)
@@ -104,7 +104,7 @@ open class CommandServiceImpl(
                     val tag = ticketTags.findByNormalizedNameAndProjectId(nn.normalize(command.tag), ticket.project.id)
                     if (tag != null) {
                         tryCommand(errors, index) {
-                            ticketTagRelationService.deleteTicketTagRelation(ticket.id, tag.id)
+                            ticketTagRelationService.deleteTicketTagRelation(ticket.id, tag.id, principal)
                         }
                     } else {
                         failedCommand(errors, index)

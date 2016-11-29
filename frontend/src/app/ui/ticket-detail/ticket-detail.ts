@@ -102,6 +102,30 @@ export class TicketDetailAssignment {
 }
 Object.freeze(TicketDetailAssignment.prototype);
 
+export class TicketEventTagRemoved extends TicketEvent {
+  readonly tag: TicketDetailTag;
+
+  constructor(event: TicketEventResultJson, users: imm.Map<string, TicketDetailUser>, tags: imm.Map<string, TicketDetailTag>) {
+    super(event, users);
+    let eventTag: any = event;
+    this.tag = tags.get(eventTag.tagId);
+    Object.freeze(this);
+  }
+}
+Object.freeze(TicketEventTagRemoved.prototype);
+
+export class TicketEventTagAdded extends TicketEvent {
+  readonly tag: TicketDetailTag;
+
+  constructor(event: TicketEventResultJson, users: imm.Map<string, TicketDetailUser>, tags: imm.Map<string, TicketDetailTag>) {
+    super(event, users);
+    let eventTag: any = event;
+    this.tag = tags.get(eventTag.tagId);
+    Object.freeze(this);
+  }
+}
+Object.freeze(TicketEventTagRemoved.prototype);
+
 // TODO remove
 export class TicketDetailTransient<T> {
   readonly value: T;

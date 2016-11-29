@@ -74,6 +74,7 @@ import {TicketeventApi} from './api/api/TicketeventApi';
 import {TicketEventComponent} from './ui/ticket-detail/ticket-events/ticket-event/ticker-event.component';
 import {TicketEventUserComponent} from './ui/ticket-detail/ticket-events/ticket-event-user/ticket-event-user.component';
 import {TicketEventParentChangedComponent} from './ui/ticket-detail/ticket-events/ticket-event-parent-ticket-changed/ticket-event-parent-ticket-changed.component';
+import {TicketEventTagComponent} from './ui/ticket-detail/ticket-events/ticket-event-tag/ticket-event-tag.component';
 
 
 @NgModule({
@@ -128,6 +129,7 @@ import {TicketEventParentChangedComponent} from './ui/ticket-detail/ticket-event
     TicketEventOldNewComponent,
     TicketEventUserComponent,
     TicketEventParentChangedComponent,
+    TicketEventTagComponent,
     TicketCommentInputComponent,
     EditButtonComponent,
     CommandTextviewComponent,

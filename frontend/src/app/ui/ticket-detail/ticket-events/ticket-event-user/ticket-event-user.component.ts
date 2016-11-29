@@ -10,8 +10,4 @@ export class TicketEventUserComponent {
   @Input() user: TicketDetailUser;
   @Input() tag: TicketDetailAssTag;
   @Input() added: Boolean;
-
-  getTitle() {
-    return (this.added) ? 'User added' : 'User removed';
-  }
 }

@@ -17,7 +17,8 @@ import {
   TicketDetail, TicketDetailTag, TicketDetailAssTag, TicketDetailComment,
   TicketDetailUser, TicketDetailTimeCategory, TicketDetailTransientUser,
   TicketDetailRelated, TicketDetailLoggedTime, TicketEvent, TicketEventParentChanged, TicketEventUserAdded,
-  TicketEventUserRemoved, TicketEventLoggedTimeRemoved, TicketEventLoggedTimeAdded
+  TicketEventUserRemoved, TicketEventLoggedTimeRemoved, TicketEventLoggedTimeAdded, TicketEventTagRemoved,
+  TicketEventTagAdded
 } from './ticket-detail';
 import { SubticketCreateEvent } from './subticket-add/subticket-add.component';
 import { idListToMap } from '../../util/listmaputils';
@@ -482,6 +483,10 @@ export class TicketDetailComponent implements OnInit {
                 return new TicketEventLoggedTimeRemoved(e, this.interestingUsers, this.allTimeCategories);
               case 'TicketEventLoggedTimeAddedResultJson':
                 return new TicketEventLoggedTimeAdded(e, this.interestingUsers, this.allTimeCategories);
+              case 'TicketEventTagRemovedResultJson':
+                return new TicketEventTagRemoved(e, this.interestingUsers, this.allTicketTags);
+              case 'TicketEventTagAddedResultJson':
+                return new TicketEventTagAdded(e, this.interestingUsers, this.allTicketTags);
               default:
                 return new TicketEvent(e, this.interestingUsers);
             }

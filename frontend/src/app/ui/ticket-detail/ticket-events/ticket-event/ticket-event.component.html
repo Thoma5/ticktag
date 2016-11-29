@@ -90,6 +90,18 @@
         [newString]='event.category.name + " " + (event.time | ttHumanizeDuration)'
       ></tt-ticket-event-old-new>
     </div>
+    <div *ngSwitchCase='"TicketEventTagRemovedResultJson"'>
+      <tt-ticket-event-tag
+        [tag]='event.tag'
+        [added]='false'
+      ></tt-ticket-event-tag>
+    </div>
+    <div *ngSwitchCase='"TicketEventTagAddedResultJson"'>
+      <tt-ticket-event-tag
+        [tag]='event.tag'
+        [added]='true'
+      ></tt-ticket-event-tag>
+    </div>
   </div>
   <p class="bottom-info">
     Created on {{  event.time | ttFormatMoment }}
