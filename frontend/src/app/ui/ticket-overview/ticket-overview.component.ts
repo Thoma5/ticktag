@@ -26,7 +26,6 @@ export class TicketOverviewComponent implements OnInit {
   private allAssignmentTags: imm.Map<string, TicketOverviewAssTag>;
   private allTicketTags: imm.Map<string, TicketOverviewTag>;
   private projectId: string | null = null;
-
   sortprop = ['NUMBER_ASC'];
   offset = 0;
   limit = 10;
@@ -41,7 +40,6 @@ export class TicketOverviewComponent implements OnInit {
     pagerNext: 'glyphicon glyphicon-forward'
   };
 
-  // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -133,13 +131,13 @@ export class TicketOverviewComponent implements OnInit {
 
   onSort(event: any) {
     if (event.sorts[0].prop === 'title') {
-      this.sortprop = [ 'TITLE_' + event.sorts[0].dir.toUpperCase() ];
-    }else if (event.sorts[0].prop === 'storyPoints') {
-      this.sortprop = [ 'STORY_POINTS_' + event.sorts[0].dir.toUpperCase() ];
-    }else if (event.sorts[0].prop === 'number') {
-      this.sortprop = [ 'NUMBER_' + event.sorts[0].dir.toUpperCase() ];
-    }else if (event.sorts[0].prop === 'dueDate') {
-      this.sortprop = [ 'DUE_DATE_' + event.sorts[0].dir.toUpperCase() ];
+      this.sortprop = ['TITLE_' + event.sorts[0].dir.toUpperCase()];
+    } else if (event.sorts[0].prop === 'storyPoints') {
+      this.sortprop = ['STORY_POINTS_' + event.sorts[0].dir.toUpperCase()];
+    } else if (event.sorts[0].prop === 'number') {
+      this.sortprop = ['NUMBER_' + event.sorts[0].dir.toUpperCase()];
+    } else if (event.sorts[0].prop === 'dueDate') {
+      this.sortprop = ['DUE_DATE_' + event.sorts[0].dir.toUpperCase()];
     }
     this.refresh(this.projectId).subscribe();
   }
@@ -151,6 +149,12 @@ export class TicketOverviewComponent implements OnInit {
   }
 
   onTagClicked(event: any) {
-    console.log(event.name);
+    console.log(event); // TODO add to filter
+  }
+
+  activate(event: any) {
+    if (event.type === 'dblclick') {
+      this.router.navigate(['/project', this.projectId, 'ticket', event.row.id]);
+    }
   }
 }

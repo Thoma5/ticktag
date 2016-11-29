@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ApiCallService } from '../../service';
 import { ProjectApi, PageProjectResultJson, ProjectResultJson } from '../../api';
 @Component({
@@ -28,7 +29,9 @@ export class ProjectsComponent implements OnInit {
 
 
   // TODO make readonly once Intellij supports readonly properties in ctr
-  constructor(private projectApi: ProjectApi,
+  constructor(
+    private router: Router,
+    private projectApi: ProjectApi,
     private apiCallService: ApiCallService) {
   }
 
@@ -81,7 +84,9 @@ export class ProjectsComponent implements OnInit {
     this.getProjects(this.offset, this.limit, this.sortprop, this.asc, val);
   }
 
-
-
-
+  activate(event: any) {
+    if (event.type === 'dblclick') {
+      this.router.navigate(['/project', event.row.id, 'tickets']);
+    }
+  }
 }

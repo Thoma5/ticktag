@@ -6,9 +6,10 @@
     <div class="search row">
       <div class="col-md-4"><input class="form-control" type='text' placeholder='Type to filter name...' (keyup)='updateFilter($event)' /></div>
     </div>
-    <datatable class="material" [rows]="rows" [columns]="columns" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+    <datatable class="material striped" [rows]="rows" [columns]="columns" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
       [rowHeight]="auto" [externalPaging]="true" [count]="totalElements" [offset]="offset" [limit]="limit" [scrollbarH]="true"
-      [scrollbarV]="false" [loadingIndicator]="reloading" [externalSorting]="true" (sort)="onSort($event)" (page)='onPage($event)' [cssClasses]="iconsCss">
+      [scrollbarV]="false" [loadingIndicator]="reloading" [externalSorting]="true" (sort)="onSort($event)" (page)='onPage($event)'
+      [cssClasses]="iconsCss" [selectionType]="'row'" (activate)="activate($event)">
       <datatable-column name="Number">
         <template let-value="value">
           <p><strong>#{{value}}</strong></p>
@@ -20,7 +21,7 @@
         </template>
       </datatable-column>
       <datatable-column name="Tags">
-         <template let-column="column">
+        <template let-column="column">
           Tags
         </template>
         <template let-row="row" let-value="value">
@@ -33,8 +34,8 @@
         </template>
         <template let-row="row" let-value="value">
           <div style="float:left;margin-left:40px" float="left" *ngFor='let v of value.keys()'>
-             <tt-assigned-user-overview [user]="v"></tt-assigned-user-overview>
-          </div>          
+            <tt-assigned-user-overview [user]="v"></tt-assigned-user-overview>
+          </div>
         </template>
       </datatable-column>
       <datatable-column name="StoryPoints" [width]="64">
@@ -42,13 +43,13 @@
           {{value}}
         </template>
       </datatable-column>
-         <datatable-column name="DueDate" [width]="64">
+      <datatable-column name="DueDate" [width]="64">
         <template let-row="row" let-value="value">
           {{value | date: 'dd.MM.yyyy'}}
         </template>
       </datatable-column>
       <datatable-column name="Progress">
-         <template let-column="column">
+        <template let-column="column">
           Progress
         </template>
         <template let-row="row" let-value="value">
