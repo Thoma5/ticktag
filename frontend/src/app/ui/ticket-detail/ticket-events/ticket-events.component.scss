@@ -14,11 +14,10 @@
 
 .header-row {
   width: 100%;
-  align-items: center;
   display: flex;
-  float: left;
-  justify-content: space-between;
-  margin-bottom: 1em;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  vertical-align: center;
 }
 
 .user {
@@ -27,31 +26,45 @@
   float: left;
 }
 
+.tag {
+  @extend %tag;
+}
+
 .user-icon {
   @extend %user-icon;
-  margin-right: 1em;
+}
+
+.user-info {
+  margin-left: $small-gap;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
 }
 
 .user-name {
-
   font-weight: bold;
 }
 
-.date {
-  color: gray;
+.bottom-info {
+  margin-top: $small-gap;
+  text-align: right;
 }
 
-.text {
-  margin-top: 1em;
+.content {
+  margin-top: $small-gap;
 }
 
 .change-label {
   display: inline-block;
-  width: 5em;
   margin-right: 1em;
 }
 
-#subtitle {
+.subtitle {
   font-size: 14pt;
   margin-bottom: 5px;
+}
+
+.clickable {
+  cursor: pointer;
 }

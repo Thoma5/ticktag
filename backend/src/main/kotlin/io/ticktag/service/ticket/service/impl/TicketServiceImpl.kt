@@ -3,7 +3,6 @@ package io.ticktag.service.ticket.service.impl
 import io.ticktag.TicktagService
 import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.project.ProjectRepository
-import io.ticktag.persistence.ticket.AssignmentTagRepository
 import io.ticktag.persistence.ticket.TicketEventRepository
 import io.ticktag.persistence.ticket.entity.*
 import io.ticktag.persistence.ticket.TicketRepository
@@ -12,6 +11,7 @@ import io.ticktag.persistence.ticket.entity.Ticket
 import io.ticktag.persistence.ticket.entity.TicketTag
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.*
+import io.ticktag.service.command.service.CommandService
 import io.ticktag.service.ticket.dto.CreateTicket
 import io.ticktag.service.ticket.dto.TicketResult
 import io.ticktag.service.ticket.dto.UpdateTicket
@@ -23,7 +23,6 @@ import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
-import java.time.Duration
 import java.time.Instant
 import java.util.*
 import javax.inject.Inject
@@ -36,7 +35,7 @@ open class TicketServiceImpl @Inject constructor(
         private val users: UserRepository,
         private val comments: CommentRepository,
         private val ticketAssignmentService: TicketAssignmentService,
-        private val assignmentTagRepository: AssignmentTagRepository,
+        private val commandService: CommandService,
         private val ticketEvents: TicketEventRepository
 ) : TicketService {
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
@@ -91,7 +90,7 @@ open class TicketServiceImpl @Inject constructor(
         }
 
 
-        val number = tickets.findNewTicketNumber(createTicket.projectID) ?: 1
+        val number = (tickets.findHighestTicketNumberInProject(createTicket.projectID) ?: 0) + 1
         val createTime = Instant.now()
         val title = createTicket.title
         val open: Boolean = createTicket.open
@@ -138,6 +137,9 @@ open class TicketServiceImpl @Inject constructor(
             val subTicket = tickets.findOne(subID) ?: throw NotFoundException()
             subTicket.parentTicket = newTicket
         }
+
+        // Execute commands
+        commandService.applyCommands(newComment, createTicket.commands, principal)
 
         // Neither EM nor UPDATECASCADE can reload the ticket
         val ticketResult = toResultDto(newTicket)

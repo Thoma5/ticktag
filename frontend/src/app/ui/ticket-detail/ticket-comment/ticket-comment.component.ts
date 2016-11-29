@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { TicketDetailComment } from '../ticket-detail';
+import { TicketDetailComment, TicketDetailAssTag } from '../ticket-detail';
+import * as imm from 'immutable';
 
 @Component({
   selector: 'tt-ticket-comment',
@@ -8,4 +9,5 @@ import { TicketDetailComment } from '../ticket-detail';
 })
 export class TicketCommentComponent {
     @Input() comment: TicketDetailComment;
+    @Input() userTags: imm.List<TicketDetailAssTag>;
 }

@@ -1,6 +1,7 @@
 package io.ticktag.service.ticket.dto
 
 import io.ticktag.restinterface.ticket.schema.CreateTicketRequestJson
+import io.ticktag.service.command.dto.Command
 import java.time.Duration
 import java.time.Instant
 import java.util.*
@@ -20,11 +21,12 @@ data class CreateTicket(
         val ticketAssignments: List<TicketAssignment>,
         val subTickets: List<CreateTicket>,
         val existingSubTicketIds: List<UUID>,
-        var parentTicket: UUID?
+        var parentTicket: UUID?,
+        val commands: List<Command>
 ) {
-    constructor(req: CreateTicketRequestJson) : this(
+    constructor(req: CreateTicketRequestJson, subtickets: List<CreateTicket>, commands: List<Command>) : this(
             req.title, req.open, req.storyPoints, req.initialEstimatedTime,
             req.currentEstimatedTime, req.dueDate, req.description, req.projectId,
-            req.ticketAssignments.map(::TicketAssignment), req.subTickets.map(::CreateTicket),
-            req.existingSubTicketIds, req.parentTicketId)
+            req.ticketAssignments.map(::TicketAssignment), subtickets,
+            req.existingSubTicketIds, req.parentTicketId, commands)
 }

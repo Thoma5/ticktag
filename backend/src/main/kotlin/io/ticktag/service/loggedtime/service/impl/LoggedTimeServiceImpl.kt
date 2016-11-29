@@ -5,7 +5,6 @@ import io.ticktag.persistence.loggedtime.LoggedTimeRepository
 import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.ticket.TicketEventRepository
 import io.ticktag.persistence.ticket.entity.LoggedTime
-import io.ticktag.persistence.ticket.entity.TicketEvent
 import io.ticktag.persistence.ticket.entity.TicketEventLoggedTimeAdded
 import io.ticktag.persistence.ticket.entity.TicketEventLoggedTimeRemoved
 import io.ticktag.persistence.timecategory.TimeCategoryRepository
@@ -26,6 +25,18 @@ open class LoggedTimeServiceImpl @Inject constructor(
         private val timeCategorys: TimeCategoryRepository,
         private val ticketEvents: TicketEventRepository
 ) : LoggedTimeService {
+
+    @PreAuthorize(AuthExpr.USER)
+    override fun getLoggedTimes(ids: List<UUID>, principal: Principal): Map<UUID, LoggedTimeResult> {
+        val permittedIds = ids.filter {
+            principal.hasProjectRoleForLoggedTime(it, AuthExpr.ROLE_PROJECT_OBSERVER) || principal.hasRole(AuthExpr.ROLE_GLOBAL_OBSERVER)
+        }
+        if (permittedIds.isEmpty()) {
+            return emptyMap()
+        } else {
+            return loggedTimes.findByIds(ids).map(::LoggedTimeResult).associateBy { it.id }
+        }
+    }
 
     @PreAuthorize(AuthExpr.READ_COMMENT)
     override fun listLoggedTimeForComment(@P("authCommentId") commentId: UUID): List<LoggedTimeResult> {

@@ -26,6 +26,8 @@
 import * as models from './models';
 
 export interface GetResultJson {
+    loggedTimes: { [key: string]: models.LoggedTimeResultJson; };
+
     ticketStatistics: { [key: string]: models.TicketProgressResultJson; };
 
     tickets: { [key: string]: models.TicketResultJson; };

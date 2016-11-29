@@ -16,14 +16,35 @@
     @extend %user-icon;
 }
 
-.user-name {
-    margin-left: 1em;
+.user-info {
+    margin-left: $small-gap;
     display: flex;
     flex-direction: column;
     align-content: center;
     justify-content: center;
 }
 
-.text {
-    margin-top: 1em;
+.user-name {
+    font-weight: bold;
+}
+
+.user-tag {
+    @extend %tag;
+}
+
+.content {
+    margin-top: $small-gap;
+}
+
+.time-info {
+    margin-top: $small-gap;
+
+    strong {
+        font-weight: bold;
+    }
+}
+
+.bottom-info {
+    margin-top: $small-gap;
+    text-align: right;
 }

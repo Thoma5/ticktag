@@ -1,19 +1,5 @@
 @import '../../../../style/constants.scss';
 
-.CodeMirror {
-    cursor: text;
-}
-
-.under {
-    display: flex;
-    flex-direction: row;
-}
-
-.buttons {
-    flex-grow: 0;
-    flex-shrink: 0;
-}
-
 .help {
     flex-grow: 1;
     flex-shrink: 1;
@@ -25,13 +11,6 @@
             color: $edit-font-color-focus;
             background-color: transparent;
             font-weight: bold;
-        }
-    }
-    .itwill {
-        margin-bottom: $internal-gap;
-        code {
-            font-weight: bold;
-            background-color: transparent;
         }
     }
 }

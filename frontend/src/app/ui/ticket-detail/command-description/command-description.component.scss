@@ -1,0 +1,9 @@
+@import '../../../../style/constants.scss';
+
+.itwill {
+    margin-bottom: $internal-gap;
+    code {
+        font-weight: bold;
+        background-color: transparent;
+    }
+}

@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -47,9 +48,10 @@ open class TicketController @Inject constructor(
 
     @PostMapping
     open fun createTicket(@RequestBody req: CreateTicketRequestJson,
-                          @AuthenticationPrincipal principal: Principal): TicketResultJson {
-        val ticket = ticketService.createTicket(CreateTicket(req), principal, req.projectId)
-        return TicketResultJson(ticket)
+                          @AuthenticationPrincipal principal: Principal): ResponseEntity<TicketResultJson> {
+        val dto = toCreateDto(req) ?: return ResponseEntity.badRequest().body(null)
+        val ticket = ticketService.createTicket(dto, principal, req.projectId)
+        return ResponseEntity.ok(TicketResultJson(ticket))
     }
 
     @PutMapping(value = "/{id}")
@@ -72,5 +74,16 @@ open class TicketController @Inject constructor(
             @RequestParam(name = "order", required = true) order: List<TicketSort>): List<TicketResultJson> {
         val tickets = ticketService.listTicketsFuzzy(projectId, query, PageRequest(0, 15, Sort(order.map { it.order })))
         return tickets.map(::TicketResultJson)
+    }
+
+    private fun toCreateDto(req: CreateTicketRequestJson): CreateTicket? {
+        val commands = req.commands.map({
+            it.toCommentCommand() ?: return null
+        })
+        val subtickets = req.subTickets.map({
+            toCreateDto(it) ?: return null
+        })
+
+        return CreateTicket(req, subtickets, commands)
     }
 }

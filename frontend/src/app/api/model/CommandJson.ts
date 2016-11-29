@@ -25,7 +25,7 @@
 
 import * as models from './models';
 
-export interface CommentCommandJson {
+export interface CommandJson {
     cmd: string;
 
     minutes?: number;
@@ -35,6 +35,8 @@ export interface CommentCommandJson {
     user?: string;
 
     tag?: string;
+
+    ticket?: number;
 
 }
 

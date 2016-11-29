@@ -1,0 +1,27 @@
+<div class='wrapper'>
+  <a *ngIf='!editing' href='javascript:void(0)' (click)='startEditing()' class='header'>Add Subticket</a>
+  <div class='input' *ngIf='editing'>
+    <div class='title-input'>
+      <input [ttEventFocus]='titleFocusEventSubject' type='text' [(ngModel)]='title' placeholder='Title'>
+    </div>
+    <div class='description-input'>
+        <tt-command-textview
+            [initialContent]="'Description text...'"
+            [projectId]="parentTicket.projectId"
+            [activeTags]="activeTags"
+            [assignedUsers]="assignedUsers"
+            [allTicketTags]="allTicketTags"
+            [allTimeCategories]="allTimeCategories"
+            [allAssignmentTags]="allAssignmentTags"
+            [resetEventObservable]="resetEventSubject"
+            (contentChange)="this.description = $event"
+            (save)="onSubmit()"
+        >
+        </tt-command-textview>
+    </div>
+    <div class="buttons">
+      <input type='button' class='btn btn-primary button-submit' value='Add' (click)="onSubmit()">
+      <a href='javascript:void(0)' class='button-abort' value='Abort' (click)="onAbort()">Abort</a>
+    </div>
+  </div>
+</div>

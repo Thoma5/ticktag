@@ -1,7 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import '../style/app.scss';
 import { AuthService, User } from './service';
 import { Router } from '@angular/router';
+import { Overlay } from 'angular2-modal';
+import { Modal } from 'angular2-modal/plugins/bootstrap';
+
+
 @Component({
   selector: 'tt-app',
   templateUrl: './app.component.html',
@@ -13,9 +17,14 @@ export class AppComponent implements OnInit {
   private router: Router;
 
   // TODO make readonly once Intellij supports readonly properties in ctr
-  constructor(private authService: AuthService) {
+  constructor(
+    private authService: AuthService,
+    private modal: Modal,
+    overlay: Overlay, vcRef: ViewContainerRef) {
     this.title = 'TickTag';
+    overlay.defaultViewContainer = vcRef;
   }
+
 
   ngOnInit(): void {
     this.user = this.authService.user;

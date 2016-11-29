@@ -14,7 +14,7 @@ interface TicketRepository : TicktagCrudRepository<Ticket, UUID> {
     fun findByProjectId(projectId: UUID,pageable: Pageable): Page<Ticket>
 
     @Query("Select max(t.number) from Ticket t where project.id = :projectId ")
-    fun findNewTicketNumber(@Param("projectId") projectId: UUID): Int?
+    fun findHighestTicketNumberInProject(@Param("projectId") projectId: UUID): Int?
 
     @Query("""
         select t

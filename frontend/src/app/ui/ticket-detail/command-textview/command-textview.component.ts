@@ -5,11 +5,13 @@ import {
 import { UserResultJson, UserApi, TicketApi, TicketResultJson } from '../../../api';
 import { ApiCallService } from '../../../service';
 import { using } from '../../../util/using';
-import * as grammar from './grammar';
+import * as grammar from '../../../service/command/grammar';
 import * as imm from 'immutable';
 import {
-    TicketDetailAssTag, TicketDetail, TicketDetailTimeCategory, TicketDetailTag
+    TicketDetailAssTag, TicketDetailTimeCategory, TicketDetailTag,
+    TicketDetailTransient, TicketDetailUser, TicketDetailAssignment
 } from '../ticket-detail';
+import { Observable, Subscription } from 'rxjs';
 
 const codemirror = require('codemirror');
 require('codemirror/addon/hint/show-hint');
@@ -28,26 +30,30 @@ export type CommentTextviewSaveEvent = {
 }
 
 @Component({
-    selector: 'tt-comment-textview',
-    templateUrl: './comment-textview.component.html',
-    styleUrls: ['./comment-textview.component.scss']
+    selector: 'tt-command-textview',
+    templateUrl: './command-textview.component.html',
+    styleUrls: ['./command-textview.component.scss']
 })
-export class CommentTextviewComponent implements AfterViewInit, OnChanges, OnDestroy {
+export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDestroy {
     @Input() initialContent: string;
-    @Input() ticket: TicketDetail;
+    @Input() projectId: string;
+    @Input() activeTags: imm.List<TicketDetailTransient<TicketDetailTag>>;
+    @Input() assignedUsers: imm.Map<TicketDetailUser, imm.List<TicketDetailAssignment>>;
     @Input() allTicketTags: imm.Map<string, TicketDetailTag>;
     @Input() allTimeCategories: imm.Map<string, TicketDetailTimeCategory>;
     @Input() allAssignmentTags: imm.Map<string, TicketDetailAssTag>;
-    @Input() working = false;
+    @Input() resetEventObservable: Observable<string> | null = null;
+    @Input() noCommands: boolean = false;
 
-    @Output() readonly save = new EventEmitter<CommentTextviewSaveEvent>();
+    @Output() readonly contentChange = new EventEmitter<CommentTextviewSaveEvent>();
+    @Output() readonly save = new EventEmitter<void>();
 
     private content = '';
     private instance: any = null;
     private commands = imm.List<grammar.Cmd>();
+    private resetEventSubscription: Subscription | null = null;
 
     private refreshTimeout: number = null;
-    private wantEmitSave: boolean = false;
 
     constructor(
         private element: ElementRef,
@@ -58,59 +64,75 @@ export class CommentTextviewComponent implements AfterViewInit, OnChanges, OnDes
 
     ngAfterViewInit(): void {
         let ta: HTMLTextAreaElement = this.element.nativeElement.querySelector('textarea');
-        ta.value = this.initialContent || '';
-        this.content = this.initialContent || '';
+        ta.value = '';
+        this.content = '';
         this.instance = codemirror.fromTextArea(ta, {
             mode: 'text',
             lineWrapping: true,
             autofocus: false,
+            extraKeys: {
+              Tab: false,
+              'Shift-Tab': false,
+              'Ctrl-Enter': () => this.save.emit(),
+            },
         });
         this.instance.on('changes', () => {
             this.content = this.instance.getValue();
             if (this.refreshTimeout === null) {
                 this.refreshTimeout = window.setTimeout(() => {
                     this.refreshTimeout = null;
-                    this.updateCommands();
-                    this.showHints();
-                    this.emitSave();
+                    this.processChanges();
                 }, 100);
             }
         });
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (this.instance && 'initialContent' in changes) {
-            this.instance.setValue(changes['initialContent']);
-        }
+      if ('resetEventObservable' in changes) {
+        this.resubscribeResetEvent();
+      }
     }
 
     ngOnDestroy(): void {
         window.clearTimeout(this.refreshTimeout);
         this.refreshTimeout = null;
         this.instance.toTextArea();
-    }
-
-    onSubmitClick(): void {
-        this.wantEmitSave = true;
-        // Do not directly emit the event if a refresh is still pending. In this
-        // case the event will be emittet after the next refresh.
-        if (this.refreshTimeout === null) {
-            this.emitSave();
+        if (this.resetEventSubscription != null) {
+          this.resetEventSubscription.unsubscribe();
         }
     }
 
-    private emitSave(): void {
-        if (this.wantEmitSave) {
-            this.wantEmitSave = false;
-            this.save.emit({
-                commands: this.commands,
-                text: this.content,
-            });
-        }
+    private resubscribeResetEvent() {
+      if (this.resetEventSubscription != null) {
+        this.resetEventSubscription.unsubscribe();
+      }
+      if (this.resetEventObservable != null) {
+        this.resetEventSubscription = this.resetEventObservable.subscribe(val => {
+          if (this.instance != null) {
+            this.instance.setValue(val);
+          }
+        });
+      }
+    }
+
+    private processChanges(): void {
+      this.updateCommands();
+      this.showHints();
+      this.emitChange();
+    }
+
+    private emitChange(): void {
+      this.contentChange.emit({
+          commands: this.commands,
+          text: this.content,
+      });
     }
 
     private updateCommands() {
         this.commands = grammar.extractCommands(this.content);
+        if (this.noCommands) {
+            this.commands = this.commands.filter(cmd => cmd.cmd === 'refTicket').toList();
+        }
     }
 
     private showHints() {
@@ -118,7 +140,7 @@ export class CommentTextviewComponent implements AfterViewInit, OnChanges, OnDes
         let text: string = this.instance.getRange({line: cursor.line, ch: 0}, cursor);
 
         let isCommand = new RegExp(String.raw`${grammar.SEPERATOR_FRONT_REGEX}(![a-z-]{0,10})$`, 'ui').exec(text);
-        if (isCommand) {
+        if (!this.noCommands && isCommand) {
             this.instance.showHint({
                 hint: () => ({
                     list: COMMAND_COMPLETIONS,
@@ -135,7 +157,7 @@ export class CommentTextviewComponent implements AfterViewInit, OnChanges, OnDes
         if (isTicket) {
             this.instance.showHint({
                 hint: () => {
-                    let projectId = this.ticket.projectId;
+                    let projectId = this.projectId;
                     return this.apiCallService
                         .callNoError<TicketResultJson[]>(p => this.ticketApi.listTicketsFuzzyUsingGETWithHttpInfo(
                             projectId,
@@ -159,8 +181,8 @@ export class CommentTextviewComponent implements AfterViewInit, OnChanges, OnDes
         }
 
         let isAddRemoveTag = new RegExp(String.raw`${grammar.SEPERATOR_FRONT_REGEX}!(-?)tag:(${grammar.TAG_LETTER}*)$`, 'ui').exec(text);
-        if (isAddRemoveTag) {
-            let tags = (isAddRemoveTag[1] ? this.ticket.tags.map(tag => tag.value) : this.allTicketTags)
+        if (!this.noCommands && isAddRemoveTag) {
+            let tags = (isAddRemoveTag[1] ? this.activeTags.map(tag => tag.value) : this.allTicketTags)
                 .valueSeq()
                 .sort(using<TicketDetailTag>(tag => tag.normalizedName))
                 .toArray();
@@ -182,7 +204,7 @@ export class CommentTextviewComponent implements AfterViewInit, OnChanges, OnDes
         let isTimeTag = new RegExp(
             String.raw`${grammar.SEPERATOR_FRONT_REGEX}!time:${grammar.TIME_REGEX}@(${grammar.TAG_LETTER}*)$`, 'ui'
         ).exec(text);
-        if (isTimeTag) {
+        if (!this.noCommands && isTimeTag) {
             let cats = this.allTimeCategories
                 .valueSeq()
                 .sort(using<TicketDetailTimeCategory>(cat => cat.normalizedName))
@@ -201,10 +223,10 @@ export class CommentTextviewComponent implements AfterViewInit, OnChanges, OnDes
         }
 
         let isAssign = new RegExp(String.raw`${grammar.SEPERATOR_FRONT_REGEX}!assign:(${grammar.USER_LETTER}*)$`, 'ui').exec(text);
-        if (isAssign) {
+        if (!this.noCommands && isAssign) {
             this.instance.showHint({
                 hint: () => {
-                    let projectId = this.ticket.projectId;
+                    let projectId = this.projectId;
                     return this.apiCallService
                         .callNoError<UserResultJson[]>(p => this.userApi.listUsersFuzzyUsingGETWithHttpInfo(
                             projectId,
@@ -231,7 +253,7 @@ export class CommentTextviewComponent implements AfterViewInit, OnChanges, OnDes
             String.raw`${grammar.SEPERATOR_FRONT_REGEX}!assign:${grammar.USER_REGEX}?@(${grammar.TAG_LETTER}*)$`,
             'ui'
         ).exec(text);
-        if (isAssignTag) {
+        if (!this.noCommands && isAssignTag) {
             let tags = this.allAssignmentTags
                 .valueSeq()
                 .sort(using<TicketDetailAssTag>(tag => tag.normalizedName))
@@ -253,8 +275,8 @@ export class CommentTextviewComponent implements AfterViewInit, OnChanges, OnDes
             String.raw`${grammar.SEPERATOR_FRONT_REGEX}!-assign:(${grammar.USER_LETTER}*(?:@${grammar.TAG_LETTER}*)?)$`,
             'ui'
         ).exec(text);
-        if (isUnassign) {
-            let aus = this.ticket.users
+        if (!this.noCommands && isUnassign) {
+            let aus = this.assignedUsers
                 .map((assignments, user) => assignments.map(ass => ({
                     text: `${user.username}@${ass.tag.normalizedName} `,
                     displayText: `${user.username}@${ass.tag.normalizedName} (${user.name} <${user.mail}>)`,

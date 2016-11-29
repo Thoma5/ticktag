@@ -1,6 +1,5 @@
 @import '../../../../style/constants.scss';
 
-$edit-background-color: palette(Grey, 100);
 $points-font-size: 2em;
 
 .points-container {
@@ -13,23 +12,26 @@ $points-font-size: 2em;
     position: relative;
 }
 
-.points-textview {
+tt-edit-textview-posnumber {
     float: left;
 }
 
-tt-edit-button {
-    position: absolute;
-    right: 0;
-    top: 0;
-}
+:host /deep/ {
+    tt-edit-button {
+        font-size: $points-font-size;
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
 
-.points {
-    font-size: $points-font-size;
-    text-align: center;
-}
+    .textview-read {
+        font-size: $points-font-size;
+        text-align: center;
+    }
 
-input {
-    width: 100%;
-    font-size: $points-font-size;
-    text-align: center;
+    input {
+        width: 100%;
+        font-size: $points-font-size;
+        text-align: center;
+    }
 }

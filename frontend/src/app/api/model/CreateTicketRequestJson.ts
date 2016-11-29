@@ -50,5 +50,7 @@ export interface CreateTicketRequestJson {
 
     parentTicketId?: string;
 
+    commands: Array<models.CommandJson>;
+
 }
 

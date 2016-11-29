@@ -19,4 +19,5 @@ import 'font-awesome/css/font-awesome.css';
 import 'github-markdown-css/github-markdown.css';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/addon/hint/show-hint.css';
+import 'codemirror/addon/display/placeholder.js';
 import 'awesomplete/awesomplete.css';

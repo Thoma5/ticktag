@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import {TicketDetailAssTag, TicketDetailUser} from '../../ticket-detail';
 
 @Component({
   selector: 'tt-ticket-event-user',
@@ -6,13 +7,7 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['../ticket-events.component.scss']
 })
 export class TicketEventUserComponent {
-  @Input() userId: String;
-  @Input() userName: String;
-  @Input() tagId: String;
-  @Input() tagName: String;
+  @Input() user: TicketDetailUser;
+  @Input() tag: TicketDetailAssTag;
   @Input() added: Boolean;
-
-  getTitle() {
-    return (this.added) ? 'User added' : 'User removed';
-  }
 }

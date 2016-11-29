@@ -3,7 +3,7 @@ package io.ticktag.restinterface.comment
 import io.ticktag.*
 import io.ticktag.restinterface.ApiBaseTest
 import io.ticktag.restinterface.comment.controllers.CommentController
-import io.ticktag.restinterface.comment.schema.CommentCommandJson
+import io.ticktag.restinterface.comment.schema.CommandJson
 import io.ticktag.restinterface.comment.schema.CreateCommentRequestJson
 import io.ticktag.restinterface.comment.schema.UpdateCommentRequestJson
 import io.ticktag.restinterface.loggedtime.controller.LoggedTimeController
@@ -90,7 +90,7 @@ class CommentApiTest : ApiBaseTest() {
     fun `createComment with a time command should log time`() {
         withUser(ADMIN_ID) { principal ->
 
-            val id = createCommentCmd(principal, CommentCommandJson("time", 90, TIMECAT_CONTENT[0], null, null))
+            val id = createCommentCmd(principal, CommandJson("time", 90, TIMECAT_CONTENT[0], null, null, null))
 
             val comment = commentController.getComment(id)
             assertThat(comment.loggedTimeIds.size, `is`(1))
@@ -104,7 +104,7 @@ class CommentApiTest : ApiBaseTest() {
     fun `createComment with an assign command should assing the user`() {
         withUser(ADMIN_ID) { principal ->
 
-            val id = createCommentCmd(principal, CommentCommandJson("assign", null, null, "obelix", ASSTAG_CONTENT[0]))
+            val id = createCommentCmd(principal, CommandJson("assign", null, null, "obelix", ASSTAG_CONTENT[0], null))
 
             commentController.getComment(id)
             val ticket = ticketController.getTicket(TEST_TICKET)
@@ -120,7 +120,7 @@ class CommentApiTest : ApiBaseTest() {
     fun `createComment with an unassign command should unassign the user`() {
         withUser(ADMIN_ID) { principal ->
 
-            val id = createCommentCmd(principal, CommentCommandJson("unassign", null, null, "admit", ASSTAG_CONTENT[0]))
+            val id = createCommentCmd(principal, CommandJson("unassign", null, null, "admit", ASSTAG_CONTENT[0], null))
 
             commentController.getComment(id)
             val ticket = ticketController.getTicket(TEST_TICKET)
@@ -132,7 +132,7 @@ class CommentApiTest : ApiBaseTest() {
     fun `createComment with an unassign command without tag should unassign the user`() {
         withUser(ADMIN_ID) { principal ->
 
-            val id = createCommentCmd(principal, CommentCommandJson("unassign", null, null, "admit", null))
+            val id = createCommentCmd(principal, CommandJson("unassign", null, null, "admit", null, null))
 
             commentController.getComment(id)
             val ticket = ticketController.getTicket(TEST_TICKET)
@@ -144,13 +144,13 @@ class CommentApiTest : ApiBaseTest() {
     fun `createComment with a close and reopen command should change the open status of the ticket`() {
         withUser(ADMIN_ID) { principal ->
 
-            val id = createCommentCmd(principal, CommentCommandJson("close", null, null, null, null))
+            val id = createCommentCmd(principal, CommandJson("close", null, null, null, null, null))
 
             commentController.getComment(id)
             val ticket = ticketController.getTicket(TEST_TICKET)
             assertThat(ticket.open, `is`(false))
 
-            val id2 = createCommentCmd(principal, CommentCommandJson("reopen", null, null, null, null))
+            val id2 = createCommentCmd(principal, CommandJson("reopen", null, null, null, null, null))
 
             commentController.getComment(id2)
             val ticket2 = ticketController.getTicket(TEST_TICKET)
@@ -162,7 +162,7 @@ class CommentApiTest : ApiBaseTest() {
     fun `createComment with a tag command should assign the tag`() {
         withUser(ADMIN_ID) { principal ->
 
-            val id = createCommentCmd(principal, CommentCommandJson("tag", null, null, null, "bug"))
+            val id = createCommentCmd(principal, CommandJson("tag", null, null, null, "bug", null))
 
             commentController.getComment(id)
             val ticket = ticketController.getTicket(TEST_TICKET)
@@ -174,7 +174,7 @@ class CommentApiTest : ApiBaseTest() {
     fun `createComment with an untag command should remove the tag`() {
         withUser(ADMIN_ID) { principal ->
 
-            val id = createCommentCmd(principal, CommentCommandJson("untag", null, null, null, "feature"))
+            val id = createCommentCmd(principal, CommandJson("untag", null, null, null, "feature", null))
 
             commentController.getComment(id)
             val ticket = ticketController.getTicket(TEST_TICKET)
@@ -186,7 +186,7 @@ class CommentApiTest : ApiBaseTest() {
     fun `createComment with an est command should change the current estimation`() {
         withUser(ADMIN_ID) { principal ->
 
-            val id = createCommentCmd(principal, CommentCommandJson("est", 1234, null, null, null))
+            val id = createCommentCmd(principal, CommandJson("est", 1234, null, null, null, null))
 
             commentController.getComment(id)
             val ticket = ticketController.getTicket(TEST_TICKET)
@@ -201,8 +201,7 @@ class CommentApiTest : ApiBaseTest() {
             val result = commentController.createComment(CreateCommentRequestJson(
                     text = "Text",
                     ticketId = TEST_TICKET,
-                    mentionedTicketNumbers = listOf(2),
-                    commands = emptyList()
+                    commands = listOf(CommandJson("refTicket", null, null, null, null, 2))
             ), principal)
 
             commentController.getComment(result.body.id)
@@ -211,11 +210,10 @@ class CommentApiTest : ApiBaseTest() {
         }
     }
 
-    private fun createCommentCmd(principal: Principal, vararg commands: CommentCommandJson): UUID {
+    private fun createCommentCmd(principal: Principal, vararg commands: CommandJson): UUID {
         val result = commentController.createComment(CreateCommentRequestJson(
                 text = "Text",
                 ticketId = TEST_TICKET,
-                mentionedTicketNumbers = emptyList(),
                 commands = commands.asList()
         ), principal)
         return result.body.id

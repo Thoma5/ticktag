@@ -42,7 +42,7 @@ open class CommentController @Inject constructor(
         val commands = req.commands.map({
             it.toCommentCommand() ?: return ResponseEntity.badRequest().body(null)
         })
-        val createComment = CreateComment(req.text, req.ticketId, req.mentionedTicketNumbers, commands)
+        val createComment = CreateComment(req.text, req.ticketId, commands)
         val comment = commentService.createComment(createComment, principal, req.ticketId)
         return ResponseEntity.ok(CommentResultJson(comment))
     }

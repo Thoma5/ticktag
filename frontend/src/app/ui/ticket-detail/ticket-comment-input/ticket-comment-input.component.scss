@@ -4,8 +4,23 @@
     @extend %card;
 }
 
+.under {
+  display: flex;
+  flex-direction: row;
+}
+
+.help {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
 .buttons {
-    display: flex;
-    flex-direction: row-reverse;
-    flex-wrap: nowrap;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.spinner {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
 }

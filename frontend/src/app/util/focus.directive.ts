@@ -15,7 +15,7 @@ export class FocusDirective implements AfterViewInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes['ttFocus'] && changes['ttFocus'].currentValue === true) {
+        if ('ttFocus' in changes && this.ttFocus) {
             this.elementRef.nativeElement.focus();
         }
     }
