@@ -7,13 +7,11 @@ import java.util.*
 class TicketEventLoggedTimeAddedResultJson(e: TicketEventLoggedTimeAddedResult) : TicketEventResultJson(e) {
     val commentId: UUID
     val categoryId: UUID
-    val categoryName: String
     val loggedTime: Duration
 
     init {
         commentId = e.commentId
         categoryId = e.categoryId
-        categoryName = e.categoryName
         loggedTime = e.loggedTime
     }
 }
