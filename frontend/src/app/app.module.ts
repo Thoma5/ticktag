@@ -53,11 +53,12 @@ import { JsonPipe } from './util/json.pipe';
 import { AutosizeTextareaDirective } from './util/autosize-textarea.directive';
 import { FocusDirective } from './util/focus.directive';
 import { TaginputComponent } from './util/taginput/taginput.component';
+import { TagViewComponent } from './util/tagview/tagview.component';
 import { SelectAllDirective } from './util/select-all.directive';
 import { EditButtonComponent } from './util/edit-button/edit-button.component';
 import { LoadingComponent } from './util/loading/loading.component';
 import { TicketOverviewComponent} from'./ui/ticket-overview/ticket-overview.component';
-import { RichTextviewComponent } from './util/rich-textview/rich-textview.component';
+import { AssignedUserOverviewComponent} from'./ui/ticket-overview/assigned-user/assigned-user-overview.component';
 import { SpinnerComponent } from './util/spinner/spinner.component';
 import { CommentTextviewComponent } from './ui/ticket-detail/comment-textview/comment-textview.component';
 
@@ -96,9 +97,11 @@ import { CommentTextviewComponent } from './ui/ticket-detail/comment-textview/co
     StorypointsTextviewEditComponent,
     StorypointsTextviewReadComponent,
     AssignedUserComponent,
+    AssignedUserOverviewComponent,
     SubticketsComponent,
     SubticketComponent,
     TaginputComponent,
+    TagViewComponent,
     TicketCommentsComponent,
     TicketCommentComponent,
     TicketCommentInputComponent,

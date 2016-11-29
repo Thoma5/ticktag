@@ -125,20 +125,20 @@ export class TicketOverviewComponent implements OnInit {
       .map(it => undefined);
   }
 
-  onPage(event) {
+  onPage(event: any) {
     console.log('Page Event', event);
     this.limit = event.limit;
     this.offset = event.offset;
     this.refresh(this.projectId).subscribe();
   }
 
-  onSort(event) {
+  onSort(event: any) {
     console.log('Sort Event', event);
     this.asc = event.sorts[0].dir === 'asc' ? true : false;
     this.refresh(this.projectId).subscribe();
   }
 
-  updateFilter(event) {
+  updateFilter(event: any) {
     // TODO  filter our data
     this.offset = 0;
     this.refresh(this.projectId).subscribe();
