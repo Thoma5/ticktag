@@ -14,18 +14,18 @@ export class TicketEventOldNewMarkupComponent {
   isNewCollapsed: boolean = true;
 
   onCollapseOld() {
-    this.isOldCollapsed =! this.isOldCollapsed
+    this.isOldCollapsed = ! this.isOldCollapsed;
   }
 
   onCollapseNew() {
-    this.isNewCollapsed =! this.isNewCollapsed
+    this.isNewCollapsed = ! this.isNewCollapsed;
   }
 
   contentTitle(boolHidden: Boolean) {
     if (boolHidden) {
       return 'Show content';
     } else {
-      return 'Hide content'
+      return 'Hide content';
     }
   }
 }

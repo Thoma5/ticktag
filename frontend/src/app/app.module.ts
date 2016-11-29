@@ -76,7 +76,8 @@ import {TicketEventUserComponent} from './ui/ticket-detail/ticket-events/ticket-
 import {TicketEventParentChangedComponent}
   from './ui/ticket-detail/ticket-events/ticket-event-parent-ticket-changed/ticket-event-parent-ticket-changed.component';
 import {TicketEventTagComponent} from './ui/ticket-detail/ticket-events/ticket-event-tag/ticket-event-tag.component';
-import {TicketEventOldNewMarkupComponent} from "./ui/ticket-detail/ticket-events/ticket-event-old-new-markup/ticket-event-old-new-markup.component";
+import {TicketEventOldNewMarkupComponent}
+  from './ui/ticket-detail/ticket-events/ticket-event-old-new-markup/ticket-event-old-new-markup.component';
 
 
 @NgModule({

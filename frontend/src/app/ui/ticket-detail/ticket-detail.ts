@@ -65,13 +65,13 @@ Object.freeze(TicketEventUserRemoved.prototype);
 
 export class TicketEventLoggedTimeAdded extends TicketEvent {
   readonly category: TicketDetailTimeCategory;
-  readonly time: number;
+  readonly loggedTime: number;
 
   constructor(event: TicketEventResultJson, users: imm.Map<string, TicketDetailUser>, cats: imm.Map<string, TicketDetailTimeCategory>) {
     super(event, users);
     let eventLoggedTime: any = event;
     this.category = cats.get(eventLoggedTime.categoryId);
-    this.time = eventLoggedTime.loggedTime;
+    this.loggedTime = eventLoggedTime.loggedTime;
     Object.freeze(this);
   }
 }
@@ -79,13 +79,13 @@ Object.freeze(TicketEventLoggedTimeAdded.prototype);
 
 export class TicketEventLoggedTimeRemoved extends TicketEvent {
   readonly category: TicketDetailTimeCategory;
-  readonly time: number;
+  readonly loggedTime: number;
 
   constructor(event: TicketEventResultJson, users: imm.Map<string, TicketDetailUser>, cats: imm.Map<string, TicketDetailTimeCategory>) {
     super(event, users);
     let eventLoggedTime: any = event;
     this.category = cats.get(eventLoggedTime.categoryId);
-    this.time = eventLoggedTime.loggedTime;
+    this.loggedTime = eventLoggedTime.loggedTime;
     Object.freeze(this);
   }
 }
