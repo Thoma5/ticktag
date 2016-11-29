@@ -7,6 +7,8 @@ import {User} from './service/auth/user';
 import {Observable} from 'rxjs/Rx';
 import {Injectable} from '@angular/core';
 import {MaterialModule} from '@angular/material';
+import {Overlay, OverlayRenderer} from 'angular2-modal';
+import {Modal} from 'angular2-modal/plugins/bootstrap';
 
 @Injectable()
 class MockAuthService extends AuthService {
@@ -28,7 +30,7 @@ describe('App', () => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, MaterialModule],
       declarations: [AppComponent],
-      providers: [provideRoutes([]), {provide: AuthService, useClass: MockAuthService}],
+      providers: [provideRoutes([]), {provide: AuthService, useClass: MockAuthService}, Overlay, Modal, OverlayRenderer],
     });
   });
 
