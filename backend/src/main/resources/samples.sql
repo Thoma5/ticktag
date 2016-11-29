@@ -683,6 +683,8 @@ INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('a94a570d
 INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('799ee2dd-2168-46cf-84e2-b6a6395c4801', '00000000-0003-0000-0000-000000000006', '00000000-0001-0000-0000-000000000001', '2016-11-25 17:20:40.389000');
 INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('0e842df3-2308-4a12-beba-cacbdf4eeccf', '00000000-0003-0000-0000-000000000006', '00000000-0001-0000-0000-000000000001', '2016-11-25 17:20:49.227000');
 INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('347a199c-01e2-4e14-9215-afd4418d59f9', '00000000-0003-0000-0000-000000000006', '00000000-0001-0000-0000-000000000001', '2016-11-29 10:37:09.412000');
+INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('2e695d4f-7c17-480c-9ac8-9b59951dbce5', '00000000-0003-0000-0000-000000000006', '00000000-0001-0000-0000-000000000001', '2016-11-29 11:22:38.281000');
+INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('df0d8ada-a555-42aa-9495-68ee55263440', '00000000-0003-0000-0000-000000000006', '00000000-0001-0000-0000-000000000001', '2016-11-29 11:22:45.189000');
 
 --Ticket Event Title Changed
 INSERT INTO public.ticket_event_title_changed (id, src_title, dst_title) VALUES ('aacf19e5-4afb-443c-9597-991e7d91f453', 'Set UP CI', 'New Title');
@@ -718,8 +720,12 @@ INSERT INTO public.ticket_event_current_estimated_time_changed (id, src_current_
 INSERT INTO public.ticket_event_current_estimated_time_changed (id, src_current_estimated_time, dst_current_estimated_time) VALUES ('31720c8c-19e6-47d7-b1c9-de1cf321d4d5', 8000000000, 15000000000);
 INSERT INTO public.ticket_event_current_estimated_time_changed (id, src_current_estimated_time, dst_current_estimated_time) VALUES ('392ff38c-69eb-4e83-8681-79371eb4af20', 15000000000, 10000000000);
 
---Ticket Event Parent Changed
+-- Ticket Event Parent Changed
 INSERT INTO public.ticket_event_parent_changed (id, src_parent_id, dst_parent_id) VALUES ('1b139e94-20bb-4070-989a-4e219c124bc3', null, '00000000-0003-0000-0000-000000000001');
 INSERT INTO public.ticket_event_parent_changed (id, src_parent_id, dst_parent_id) VALUES ('a6a40784-6e76-4da1-b054-c3bdbcc5f5da', '00000000-0003-0000-0000-000000000001', '00000000-0003-0000-0000-000000000002');
+
+-- Ticket Event Story Points Changed
+INSERT INTO public.ticket_event_story_points_changed (id, src_story_points, dst_story_points) VALUES ('2e695d4f-7c17-480c-9ac8-9b59951dbce5', 20, 40);
+INSERT INTO public.ticket_event_story_points_changed (id, src_story_points, dst_story_points) VALUES ('df0d8ada-a555-42aa-9495-68ee55263440', 40, 30);
 
 COMMIT;

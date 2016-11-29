@@ -71,6 +71,13 @@
         [added]='false'
       ></tt-ticket-event-user>
     </div>
+    <div *ngSwitchCase='"TicketEventStoryPointsChangedResultJson"'>
+      <tt-ticket-event-old-new
+        [title]='"Story points changed"'
+        [oldString]='event.rawEvent.srcStoryPoints'
+        [newString]='event.rawEvent.dstStoryPoints'
+      ></tt-ticket-event-old-new>
+    </div>
   </div>
   <p class="bottom-info">
     Created on {{  event.time | ttFormatMoment }}
