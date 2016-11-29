@@ -48,6 +48,13 @@
                 Due date: <tt-edit-textview-datetime [content]="dueDate" [transient]="dueDateTransient" (contentChange)="dueDateChange.emit($event)"></tt-edit-textview-datetime>
             </div>
         </div>
+        <div class='status-progress'>
+          <tt-progressbar
+            [showNumbers]="true"
+            [fraction]="ticket.progress.totalLoggedTime"
+            [totalValue]="ticket.progress.currentEstimatedTime">
+          </tt-progressbar>
+        </div>
         <div class='section-header'>
             Description
             <tt-edit-button *ngIf="!editingDescription && !descriptionTransient" (click)="onEditDescription()"></tt-edit-button>

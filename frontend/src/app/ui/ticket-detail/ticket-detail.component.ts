@@ -8,7 +8,7 @@ import {
   AssignmentTagResultJson, CommentResultJson, TicketTagResultJson,
   TickettagApi, TimeCategoryJson, TimecategoryApi,
   GetApi, GetResultJson, UpdateTicketRequestJson,
-  TicketuserrelationApi, TickettagrelationApi
+  TicketuserrelationApi, TickettagrelationApi,
 } from '../../api';
 import { Observable, Subject } from 'rxjs';
 import { TicketEventResultJson } from '../../api/model/TicketEventResultJson';
@@ -349,7 +349,9 @@ export class TicketDetailComponent implements OnInit {
       this.relatedProgresses,
       this.transientUsers,
       this.transientTags,
-      this.transientTicket);
+      this.transientTicket,
+      this.relatedProgresses.get(this.currentTicketJson.id),
+      );
   }
 
   private error(result: ApiCallResult<void|{}>): void {

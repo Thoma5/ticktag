@@ -324,7 +324,9 @@ export class TicketDetail {
       relatedProgresses: imm.Map<string, TicketDetailProgress>,
       transientUsers: imm.List<TicketDetailTransientUser>,
       transientTags: imm.Set<string>,
-      transientTicket: TicketDetailTransientFields) {
+      transientTicket: TicketDetailTransientFields,
+      progress: TicketDetailProgress,
+      ) {
     this.comments = imm.List(ticket.commentIds)
       .map(cid => comments.get(cid))
       .filter(it => !!it)
@@ -339,6 +341,7 @@ export class TicketDetail {
     this.number = ticket.number;
     this.open = ticket.open;
     this.storyPoints = coalesce(transientTicket.storyPoints, ticket.storyPoints);
+    this.progress = progress;
     this.tags = imm.List(ticket.tagIds)
       .map(tid => new TicketDetailTransient(ticketTags.get(tid), false))
       .filter(it => !!it.value)
