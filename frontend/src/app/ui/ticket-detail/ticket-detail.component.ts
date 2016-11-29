@@ -10,7 +10,7 @@ import {
   GetApi, GetResultJson, UpdateTicketRequestJson,
   TicketuserrelationApi, TickettagrelationApi
 } from '../../api';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { TicketEventResultJson } from '../../api/model/TicketEventResultJson';
 import { TicketeventApi } from '../../api/api/TicketeventApi';
 import {
@@ -54,6 +54,8 @@ export class TicketDetailComponent implements OnInit {
     dueDate: <number>undefined,
     description: <string>undefined,
   };
+  private creatingComment = false;
+  private commentResetEventObservable = new Subject<string>();
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(private route: ActivatedRoute,
@@ -230,6 +232,7 @@ export class TicketDetailComponent implements OnInit {
   }
 
   onCommentCreate(event: CommentTextviewSaveEvent): void {
+    this.creatingComment = true;
     let obs = this.apiCallService
       .call<void>(p => this.commentsApi.createCommentUsingPOSTWithHttpInfo({
         text: event.text,
@@ -240,9 +243,12 @@ export class TicketDetailComponent implements OnInit {
         .refresh(this.ticketDetail.projectId, this.ticketDetail.id)
         .map(() => result));
     this.queue.push(obs).subscribe(result => {
+      this.creatingComment = false;
       if (!result.isValid) {
         // TODO nice message
         this.error(result);
+      } else {
+        this.commentResetEventObservable.next('');
       }
     });
   }
