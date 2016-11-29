@@ -59,19 +59,15 @@
     </div>
     <div *ngSwitchCase='"TicketEventUserAddedResultJson"'>
       <tt-ticket-event-user
-        [userId]='event.rawEvent.addedUserId'
-        [userName]='event.rawEvent.addedUserUsername'
-        [tagId]='event.rawEvent.assignmentTagId'
-        [tagName]='event.rawEvent.assignmentTagName'
+        [user]='event.addedUser'
+        [tag]='event.assignmentTag'
         [added]='true'
       ></tt-ticket-event-user>
     </div>
     <div *ngSwitchCase='"TicketEventUserRemovedResultJson"'>
       <tt-ticket-event-user
-        [userId]='event.rawEvent.removedUserId'
-        [userName]='event.rawEvent.removedUserUsername'
-        [tagId]='event.rawEvent.assignmentTagId'
-        [tagName]='event.rawEvent.assignmentTagName'
+        [user]='event.removedUser'
+        [tag]='event.assignmentTag'
         [added]='false'
       ></tt-ticket-event-user>
     </div>

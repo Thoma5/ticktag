@@ -26,6 +26,10 @@
   float: left;
 }
 
+.tag {
+  @extend %tag;
+}
+
 .user-icon {
   @extend %user-icon;
 }
@@ -53,11 +57,10 @@
 
 .change-label {
   display: inline-block;
-  width: 5em;
   margin-right: 1em;
 }
 
-#subtitle {
+.subtitle {
   font-size: 14pt;
   margin-bottom: 5px;
 }

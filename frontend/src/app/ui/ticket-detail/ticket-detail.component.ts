@@ -16,7 +16,8 @@ import { TicketeventApi } from '../../api/api/TicketeventApi';
 import {
   TicketDetail, TicketDetailTag, TicketDetailAssTag, TicketDetailComment,
   TicketDetailUser, TicketDetailTimeCategory, TicketDetailTransientUser,
-  TicketDetailRelated, TicketDetailLoggedTime, TicketEvent, TicketEventParentChanged
+  TicketDetailRelated, TicketDetailLoggedTime, TicketEvent, TicketEventParentChanged, TicketEventUserAdded,
+  TicketEventUserRemoved
 } from './ticket-detail';
 import { SubticketCreateEvent } from './subticket-add/subticket-add.component';
 import { idListToMap } from '../../util/listmaputils';
@@ -443,7 +444,8 @@ export class TicketDetailComponent implements OnInit {
         let getObs = this.apiCallService
           .callNoError<GetResultJson>(p => this.getApi.getUsingPOSTWithHttpInfo({
             userIds: wantedUserIds,
-            ticketIds: wantedTicketIds
+            ticketIds: wantedTicketIds,
+
           }, p));
         return Observable.zip(Observable.of(tuple), getObs);
       })
@@ -469,10 +471,13 @@ export class TicketDetailComponent implements OnInit {
         this.ticketEvents = imm.List(tuple[0][5])
           .map(event => {
             let e: any = event;
-            console.log(e);
             switch (e.type) {
               case 'TicketEventParentChangedResultJson':
                 return new TicketEventParentChanged(e, this.interestingUsers, this.relatedTickets);
+              case 'TicketEventUserRemovedResultJson':
+                return new TicketEventUserRemoved(e, this.interestingUsers, this.allAssignmentTags);
+              case 'TicketEventUserAddedResultJson':
+                return new TicketEventUserAdded(e, this.interestingUsers, this.allAssignmentTags);
               default:
                 return new TicketEvent(e, this.interestingUsers);
             }

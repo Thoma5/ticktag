@@ -34,6 +34,34 @@ export class TicketEventParentChanged extends TicketEvent {
 }
 Object.freeze(TicketEventParentChanged.prototype);
 
+export class TicketEventUserAdded extends TicketEvent {
+  readonly addedUser: TicketDetailUser;
+  readonly assignmentTag: TicketDetailAssTag;
+
+  constructor(event: TicketEventResultJson, users: imm.Map<string, TicketDetailUser>, assTags: imm.Map<string, TicketDetailAssTag>) {
+    super(event, users);
+    let eventUserChanged: any = event;
+    this.addedUser = users.get(eventUserChanged.addedUserId);
+    this.assignmentTag = assTags.get(eventUserChanged.assignmentTagId);
+    Object.freeze(this);
+  }
+}
+Object.freeze(TicketEventUserAdded.prototype);
+
+export class TicketEventUserRemoved extends TicketEvent {
+  readonly removedUser: TicketDetailUser;
+  readonly assignmentTag: TicketDetailAssTag;
+
+  constructor(event: TicketEventResultJson, users: imm.Map<string, TicketDetailUser>, assTags: imm.Map<string, TicketDetailAssTag>) {
+    super(event, users);
+    let eventUserChanged: any = event;
+    this.removedUser = users.get(eventUserChanged.removedUserId);
+    this.assignmentTag = assTags.get(eventUserChanged.assignmentTagId);
+    Object.freeze(this);
+  }
+}
+Object.freeze(TicketEventUserRemoved.prototype);
+
 export class TicketDetailAssignment {
   readonly tag: TicketDetailAssTag;
   readonly transient: boolean;

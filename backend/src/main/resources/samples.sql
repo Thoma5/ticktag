@@ -682,6 +682,7 @@ INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('957dfea0
 INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('a94a570d-02c1-49ac-b558-e455036a9303', '00000000-0003-0000-0000-000000000006', '00000000-0001-0000-0000-000000000001', '2016-11-25 17:10:13.054000');
 INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('799ee2dd-2168-46cf-84e2-b6a6395c4801', '00000000-0003-0000-0000-000000000006', '00000000-0001-0000-0000-000000000001', '2016-11-25 17:20:40.389000');
 INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('0e842df3-2308-4a12-beba-cacbdf4eeccf', '00000000-0003-0000-0000-000000000006', '00000000-0001-0000-0000-000000000001', '2016-11-25 17:20:49.227000');
+INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('347a199c-01e2-4e14-9215-afd4418d59f9', '00000000-0003-0000-0000-000000000006', '00000000-0001-0000-0000-000000000001', '2016-11-29 10:37:09.412000');
 
 --Ticket Event Title Changed
 INSERT INTO public.ticket_event_title_changed (id, src_title, dst_title) VALUES ('aacf19e5-4afb-443c-9597-991e7d91f453', 'Set UP CI', 'New Title');
@@ -708,6 +709,9 @@ INSERT INTO public.ticket_event_state_changed (id, src_state, dst_state) VALUES 
 -- Ticket Event User Added
 INSERT INTO public.ticket_event_user_added (id, user_id, assignment_tag_id) VALUES ('799ee2dd-2168-46cf-84e2-b6a6395c4801', '00000000-0001-0000-0000-000000000001', '00000000-0006-0000-0000-000000000001');
 INSERT INTO public.ticket_event_user_added (id, user_id, assignment_tag_id) VALUES ('0e842df3-2308-4a12-beba-cacbdf4eeccf', '00000000-0001-0000-0000-000000000001', '00000000-0006-0000-0000-000000000002');
+
+-- Ticket Event User Removed
+INSERT INTO public.ticket_event_user_removed (id, user_id, assignment_tag_id) VALUES ('347a199c-01e2-4e14-9215-afd4418d59f9', '93ef43d9-20b7-461a-b960-2d1e89ba099f', '00000000-0006-0000-0000-000000000002');
 
 --Ticket Event Current Estimated Time Changed
 INSERT INTO public.ticket_event_current_estimated_time_changed (id, src_current_estimated_time, dst_current_estimated_time) VALUES ('9abd317d-94fe-4e97-909d-af713479b367', 54000000000000, 8000000000);
