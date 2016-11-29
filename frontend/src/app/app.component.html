@@ -1,24 +1,27 @@
 <md-sidenav-layout fullscreen>
-	<md-sidenav #start opened mode="side">
+<md-sidenav #start opened mode="side">
+	<div class="nav-top-block">
+		<h1>TickTag</h1>
+		<img class="img-circle" width="128" src="/img/TickTag.png" />
+	</div>
+	<div class="navadmin-block">
 		<div>
-			<a md-button [routerLink]="['']">Home</a>
+			<a md-button [routerLink]="['']"><span class="glyphicon glyphicon-home"></span> Home</a>
 		</div>
 		<div>
-			<a md-button *ngIf="user && (user.authorities.indexOf('ADMIN') != -1)" [routerLink]="['users']">Users</a>
+			<a md-button *ngIf="user && (user.authorities.indexOf('ADMIN') != -1)" [routerLink]="['users']"><span class="glyphicon glyphicon-user"></span> Users</a>
 		</div>
 		<div>
-			<a md-button *ngIf="user" [routerLink]="['projects']">Projects</a>
+			<a md-button *ngIf="user" [routerLink]="['projects']"><span class="glyphicon glyphicon-th-list"></span> Projects</a>
 		</div>
 		<div>
-			<a md-button *ngIf="user" [routerLink]="['whoami']">Whoami</a>
+			<a md-button *ngIf="user" [routerLink]="['whoami']"><span class="glyphicon glyphicon-user"></span> Whoami</a>
 		</div>
-			<div>
-			<a md-button>Placeholders are really amazing!</a>
-		</div>
-
-	</md-sidenav>
+	</div>
+</md-sidenav>
+	
 	<div>
-		<button md-button (click)="start.toggle()">Menu</button>
+		<button md-button (click)="start.toggle()"><span class="glyphicon glyphicon-menu-hamburger"></span></button>
 		<a md-button align="end" *ngIf="!user" [routerLink]="['login']">Login</a>
 		<a md-button align="end" *ngIf="user" href="" (click)="logout(); $event.preventDefault()">Logout</a>
 	</div>
