@@ -1,4 +1,4 @@
-package io.ticktag
+package io.ticktag.integrationtests
 
 import com.google.common.io.Resources
 import io.ticktag.persistence.comment.CommentRepository
