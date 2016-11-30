@@ -390,7 +390,9 @@ INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES ('
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES ('dd8c1748-a82b-410a-a9aa-22b2b2cecb39', '93ef43d9-20b7-461a-b960-2d1e89ba099f', '00000000-0003-0000-0000-000000000004', '2016-11-30 10:42:10.592000', 'Das Ticket wird länger dauern als gedacht !est:10h');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES ('d5f38991-8f75-4d8c-ae72-52889de451fb', '93ef43d9-20b7-461a-b960-2d1e89ba099f', '00000000-0003-0000-0000-000000000002', '2016-11-30 10:43:57.111000', 'Der tag ist falsch !tag:feature und bitte übernimm das testen !assign:heinzl@testing ');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES ('0b6e58ba-0e91-4371-be20-6336335beace', '93ef43d9-20b7-461a-b960-2d1e89ba099f', '00000000-0003-0000-0000-000000000003', '2016-11-30 10:45:02.061000', 'ich bin mit dem testen fertig, leider muss das nochmal überarbeitet werden !reopen !-tag:review !est:5h');
-
+INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES ('f3a7c1f1-5bab-428d-b100-a51ad2434eab', '660f2968-aa46-4870-bcc5-a3805366cff2', '00000000-0003-0000-0000-000000000002', '2016-11-30 11:39:22.640000', 'Wenn das CI #6 fertig wäre könnten wir das dann automatisch testen');
+INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES ('d64d70aa-f1f7-4da6-adc3-1cf7c7b716e1', '93ef43d9-20b7-461a-b960-2d1e89ba099f', '00000000-0003-0000-0000-000000000006', '2016-11-30 11:44:44.162000', 'Auf das Ergebnis von #4 müssen wir warten');
+INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES ('dfceb74c-29c9-4640-a36f-8a07c4d45ca5', '660f2968-aa46-4870-bcc5-a3805366cff2', '00000000-0003-0000-0000-000000000004', '2016-11-30 11:52:12.251000', '!time:1h30min@implementing Users View wurder mit Details erweitert');
 -- BEGIN Role Based Ticket Testdata DO NOT ALTER
 INSERT INTO PUBLIC.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, OPEN, story_points, initial_estimated_time, current_estimated_time, due_date)
 VALUES ('00000000-0003-0000-0000-000000000101', 1, NULL, '00000000-0002-0000-0000-000000000101',
@@ -644,7 +646,7 @@ VALUES ('00000000-0007-0000-0000-000000000108', '00000000-0002-0000-0000-0000000
 INSERT INTO public.logged_time (id, comment_id, category_id, time)
 VALUES ('00000000-0008-0000-0000-000000000001', '00000000-0004-0000-0000-000000000008',
         '00000000-0007-0000-0000-000000000001', 10);
-
+INSERT INTO public.logged_time (id, comment_id, category_id, time) VALUES ('cc0b48b3-3dba-489c-8a1d-7b11a14e4cd7', 'dfceb74c-29c9-4640-a36f-8a07c4d45ca5', '00000000-0007-0000-0000-000000000001', 5400000000000);
 
 INSERT INTO public.logged_time (id, comment_id, category_id, time)
 VALUES ('00000000-0008-0000-0000-000000000002', '00000000-0004-0000-0000-000000000008',
@@ -690,7 +692,8 @@ INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('bcf284e5
 INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('8dc03c84-bf91-4d20-a25b-27c2d4fa3bf2', '00000000-0003-0000-0000-000000000003', '93ef43d9-20b7-461a-b960-2d1e89ba099f', '2016-11-30 10:45:02.076000');
 INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('fc782359-38f9-42a9-bf9b-d26ca482bf28', '00000000-0003-0000-0000-000000000003', '93ef43d9-20b7-461a-b960-2d1e89ba099f', '2016-11-30 10:45:02.110000');
 INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('baf45f47-4683-40c6-ace6-2b735c887432', '00000000-0003-0000-0000-000000000003', '93ef43d9-20b7-461a-b960-2d1e89ba099f', '2016-11-30 10:45:02.113000');
---Ticket Event Title Changed
+INSERT INTO public.ticket_event (id, ticket_id, user_id, time) VALUES ('ce7db5dd-32bc-429c-947c-518a8357169e', '00000000-0003-0000-0000-000000000004', '660f2968-aa46-4870-bcc5-a3805366cff2', '2016-11-30 11:54:31.409000');
+-- -Ticket Event Title Changed
 INSERT INTO public.ticket_event_title_changed (id, src_title, dst_title) VALUES ('aacf19e5-4afb-443c-9597-991e7d91f453', 'Set UP CI', 'New Title');
 INSERT INTO public.ticket_event_title_changed (id, src_title, dst_title) VALUES ('4e7773dd-2010-408b-a936-42cb1419c462', 'New Title', 'Last Title was odd');
 
@@ -736,9 +739,16 @@ INSERT INTO public.ticket_event_story_points_changed (id, src_story_points, dst_
 -- Tag added
 INSERT INTO public.ticket_event_tag_added (id, ticket_tag_id) VALUES ('3aff9346-0a36-49a3-82cc-a46d923a0289', '00000000-0005-0000-0000-000000000001');
 
+-- logged Time added
+INSERT INTO public.ticket_event_logged_time_added (id, comment_id, time_category_id, time)
+VALUES ('ce7db5dd-32bc-429c-947c-518a8357169e', 'dfceb74c-29c9-4640-a36f-8a07c4d45ca5', '00000000-0007-0000-0000-000000000001', 5400000000000);
 
 -- Tag removed
 INSERT INTO public.ticket_event_tag_removed (id, ticket_tag_id) VALUES ('36c04483-4eda-4b12-a051-bdf9caa4331d', '00000000-0005-0000-0000-000000000002');
 INSERT INTO public.ticket_event_tag_removed (id, ticket_tag_id) VALUES ('fc782359-38f9-42a9-bf9b-d26ca482bf28', '00000000-0005-0000-0000-000000000004');
+
+-- Mentioning Ticket
+INSERT INTO public.mentioned_ticket (comment_id, mentioned_ticket_id) VALUES ('f3a7c1f1-5bab-428d-b100-a51ad2434eab', '00000000-0003-0000-0000-000000000006');
+INSERT INTO public.mentioned_ticket (comment_id, mentioned_ticket_id) VALUES ('d64d70aa-f1f7-4da6-adc3-1cf7c7b716e1', '00000000-0003-0000-0000-000000000004');
 
 COMMIT;
