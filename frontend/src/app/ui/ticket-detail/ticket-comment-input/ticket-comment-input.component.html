@@ -1,0 +1,28 @@
+<div class='comment-input'>
+    <tt-command-textview
+        [initialContent]="'Comment text...'"
+        [projectId]="ticket.projectId"
+        [activeTags]="ticket.tags"
+        [assignedUsers]="ticket.users"
+        [allTicketTags]="allTicketTags"
+        [allTimeCategories]="allTimeCategories"
+        [allAssignmentTags]="allAssignmentTags"
+        [resetEventObservable]='resetEventObservable'
+        (contentChange)="this.content = $event"
+        (save)="onSubmit()"
+    >
+    </tt-command-textview>
+    <div class="under">
+      <div class="help">
+        <tt-command-description
+            [commands]="content.commands"
+        >
+        </tt-command-description>
+        <tt-command-help></tt-command-help>
+      </div>
+      <div class="buttons">
+        <input *ngIf="!working" type='button' class='btn btn-primary button-submit' value='Submit' (click)="onSubmit()">
+        <div class="spinner" *ngIf="working"><tt-spinner></tt-spinner></div>
+      </div>
+    </div>
+</div>

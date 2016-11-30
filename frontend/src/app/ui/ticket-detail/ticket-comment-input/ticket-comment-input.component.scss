@@ -1,0 +1,26 @@
+@import '../../../../style/constants.scss';
+
+.comment-input {
+    @extend %card;
+}
+
+.under {
+  display: flex;
+  flex-direction: row;
+}
+
+.help {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.buttons {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.spinner {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+}

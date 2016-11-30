@@ -1,8 +1,31 @@
-// styles in src/style directory are applied to the whole page
-body {
-    background: #0147A7;
-    color: #fff;
+@import "reset.css";
+@import "constants.scss";
+
+html, body {
+    font-family: $base-font;
+    font-size: $base-pt;
+    line-height: $base-line-height;
+    width: 100%;
+    height: 100%;
+    color: $font-color;
 }
-a {
-    color: #03A9F4;
+
+/* Background pattern from subtlepatterns.com */
+body {
+    background-image: url('../public/img/handmadepaper.png')
+}
+
+md-sidenav-layout {
+    background: none;
+}
+
+main {
+    height: 100%;
+    width: 100%;
+}
+
+.markdown-body {
+    em, i {
+        font-style: italic;
+    }
 }

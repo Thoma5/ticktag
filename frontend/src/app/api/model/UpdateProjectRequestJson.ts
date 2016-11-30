@@ -26,11 +26,11 @@
 import * as models from './models';
 
 export interface UpdateProjectRequestJson {
-    name: string;
+    name?: string;
 
-    description: string;
+    description?: string;
 
-    icon: Array<string>;
+    icon?: Array<string>;
 
 }
 

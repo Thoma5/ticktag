@@ -15,6 +15,8 @@ import springfox.documentation.spi.schema.ModelPropertyBuilderPlugin
 import springfox.documentation.spi.schema.contexts.ModelPropertyContext
 import springfox.documentation.spring.web.plugins.Docket
 import springfox.documentation.swagger2.annotations.EnableSwagger2
+import java.time.Duration
+import java.time.Instant
 import kotlin.reflect.jvm.kotlinProperty
 
 @Configuration
@@ -43,6 +45,8 @@ open class SwaggerConfig : WebMvcConfigurerAdapter() {
                 .securitySchemes(listOf(apiKey))
                 .ignoredParameterTypes(Principal::class.java)
                 .protocols(setOf("http"))
+                .directModelSubstitute(Duration::class.java, Long::class.java)
+                .directModelSubstitute(Instant::class.java, Long::class.java)
     }
 
     @Bean
@@ -53,8 +57,8 @@ open class SwaggerConfig : WebMvcConfigurerAdapter() {
                     val bean = context.beanPropertyDefinition.get()
                     if (bean.hasField()) {
                         val property = bean.field.annotated.kotlinProperty
-                        if (property != null && !property.returnType.isMarkedNullable) {
-                            context.builder.required(true)
+                        if (property != null) {
+                            context.builder.required(!property.returnType.isMarkedNullable)
                         }
                     }
                 }

@@ -1,0 +1,14 @@
+<div class="help">
+  <div class="commands">
+    <div *ngIf="!noCommands">
+      <p><code>!tag:example</code>, <code>!-tag:example</code>: add or remove a tag</p>
+      <p><code>!close</code>, <code>!reopen</code>: close or reopen this ticket</p>
+      <p><code>!time:2h5min@develop</code>: log time with the given category</p>
+      <p><code>!assign:dave@owner</code>, <code>!-assign:dave@owner</code>: assign or unassign a user with the given tag to this ticket</p>
+      <p><code>!-assign:user</code>: unassign a user completely from this ticket</p>
+      <p><code>!est:2h5min</code>: change the estimated time</p>
+    </div>
+    <p><code>#1234</code>: reference ticket 1234</p>
+    <p>You can use <code>Markdown</code> to format the text</p>
+  </div>
+</div>

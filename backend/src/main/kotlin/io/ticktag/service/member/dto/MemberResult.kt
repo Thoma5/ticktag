@@ -5,10 +5,10 @@ import io.ticktag.persistence.member.entity.ProjectRole
 import java.util.*
 
 data class MemberResult(
-        val uID: UUID,
-        val pID: UUID,
+        val userId: UUID,
+        val projectId: UUID,
         val joinDate: Date,
         val projectRole: ProjectRole
 ) {
-    constructor(m: Member) : this(uID = m.user.id, pID = m.project.id, joinDate = m.joinDate, projectRole = m.role)
+    constructor(m: Member) : this(userId = m.user.id, projectId = m.project.id, joinDate = m.joinDate, projectRole = m.role)
 }

@@ -101,6 +101,22 @@ export class ProjectApi {
     }
 
     /**
+     * getProjectsCount
+     * 
+     * @param all all
+     */
+    public getProjectsCountUsingGET(all?: boolean, extraHttpRequestParams?: any): Observable<models.CountJson> {
+        return this.getProjectsCountUsingGETWithHttpInfo(all, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
      * listProjects
      * 
      * @param page page
@@ -110,7 +126,7 @@ export class ProjectApi {
      * @param name name
      * @param all all
      */
-    public listProjectsUsingGET(page?: number, size?: number, order?: string, asc?: boolean, name?: string, all?: boolean, extraHttpRequestParams?: any): Observable<Array<models.ProjectResultJson>> {
+    public listProjectsUsingGET(page?: number, size?: number, order?: string, asc?: boolean, name?: string, all?: boolean, extraHttpRequestParams?: any): Observable<models.PageProjectResultJson> {
         return this.listProjectsUsingGETWithHttpInfo(page, size, order, asc, name, all, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -217,6 +233,49 @@ export class ProjectApi {
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Delete,
+            headers: headers,
+            search: queryParameters
+        });
+        
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * getProjectsCount
+     * 
+     * @param all all
+     */
+    public getProjectsCountUsingGETWithHttpInfo(all?: boolean, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/project/count`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        if (all !== undefined) {
+            queryParameters.set('all', <any>all);
+        }
+
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json'
+        ];
+        
+            
+
+
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Get,
             headers: headers,
             search: queryParameters
         });

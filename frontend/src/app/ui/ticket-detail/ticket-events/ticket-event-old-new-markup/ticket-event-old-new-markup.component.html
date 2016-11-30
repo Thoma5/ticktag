@@ -1,0 +1,16 @@
+<div class="subtitle">{{title}}</div>
+<div *ngIf='oldString'>
+  <span class='label label-danger change-label'>From</span>
+  <div [class.collapse]="isOldCollapsed">
+    <tt-markdown-textview-read [content]="oldString"></tt-markdown-textview-read>
+  </div>
+  <a (click)="onCollapseOld()" class='readmore'>{{contentTitle(isOldCollapsed)}}</a>
+</div>
+<div *ngIf='newString'>
+  <span class='label label-success change-label'>To</span>
+  <div [class.collapse]="isNewCollapsed">
+    <tt-markdown-textview-read [content]="newString"></tt-markdown-textview-read>
+  </div>
+  <a (click)="onCollapseNew()" class='readmore'>{{contentTitle(isNewCollapsed)}}</a>
+</div>
+

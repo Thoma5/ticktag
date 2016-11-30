@@ -1,0 +1,22 @@
+<div class='comment'>
+    <div class='header-row'>
+        <div class='user-icon'><img src='http://lorempixel.com/100/100/cats'/></div>
+        <div class='user-info'><div>
+            <span class='user-name'>{{comment.user.name}}</span>
+            <span *ngFor="let tag of userTags" class='user-tag' [style.backgroundColor]="'#' + tag.color">
+                {{ tag.name }}
+            </span>
+        </div></div>
+    </div>
+    <div class="content">
+        <tt-markdown-textview-read [content]='comment.text'></tt-markdown-textview-read>
+    </div>
+    <div class="time-info">
+        <p *ngFor="let loggedTime of comment.loggedTimes">
+            This comment logged <strong>{{ loggedTime.time | ttHumanizeDuration }}</strong> in the category <strong>{{ loggedTime.category.name }}</strong>.
+        </p>
+    </div>
+    <p class="bottom-info">
+        Created on {{ comment.createTime | ttFormatMoment }}
+    </p>
+</div>

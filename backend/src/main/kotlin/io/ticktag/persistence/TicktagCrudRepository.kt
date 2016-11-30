@@ -13,7 +13,7 @@ import javax.persistence.EntityManager
 interface TicktagCrudRepository<E, ID: Serializable> : Repository<E, ID>, TicktagBaseRepositoryInsert<E> {
     fun findOne(id: ID): E?
     fun exists(id: ID): Boolean
-
+    fun count(): Int
     fun findAll(): List<E>
     fun findAll(pageable: Pageable): Page<E>
 

@@ -28,13 +28,15 @@ import * as models from './models';
 export interface CreateUserRequestJson {
     mail: string;
 
+    username: string;
+
     name: string;
 
     password: string;
 
     role: CreateUserRequestJson.RoleEnum;
 
-    profilePic: Array<string>;
+    profilePic?: Array<string>;
 
 }
 export namespace CreateUserRequestJson {

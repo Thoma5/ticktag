@@ -1,0 +1,50 @@
+@import '../../../../style/constants.scss';
+
+.comment {
+    @extend %card;
+}
+
+.header-row {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    vertical-align: center;
+}
+
+.user-icon {
+    @extend %user-icon;
+}
+
+.user-info {
+    margin-left: $small-gap;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+}
+
+.user-name {
+    font-weight: bold;
+}
+
+.user-tag {
+    @extend %tag;
+}
+
+.content {
+    margin-top: $small-gap;
+}
+
+.time-info {
+    margin-top: $small-gap;
+
+    strong {
+        font-weight: bold;
+    }
+}
+
+.bottom-info {
+    margin-top: $small-gap;
+    text-align: right;
+}

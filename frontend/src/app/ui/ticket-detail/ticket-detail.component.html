@@ -1,0 +1,60 @@
+<div class='ticket-detail-container'>
+    <div *ngIf="loading" class='loading'>
+        <tt-loading></tt-loading>
+    </div>
+    <div *ngIf="!loading" class='content row'>
+        <div class='left col-md-8'>
+            <tt-ticket-core
+                [open]='ticketDetail.open'
+                [number]='ticketDetail.number'
+                [title]='ticketDetail.title' (titleChange)='onTitleChange($event)' [titleTransient]='transientTicket.title !== undefined'
+                [description]='ticketDetail.description' (descriptionChange)='onDescriptionChange($event)' [descriptionTransient]='transientTicket.description !== undefined'
+                [storypoints]='ticketDetail.storyPoints' (storypointsChange)='onStorypointsChange($event)' [storypointsTransient]='transientTicket.storyPoints !== undefined'
+                [tags]='ticketDetail.tags' (tagAdd)='onTagAdd($event)' (tagRemove)='onTagRemove($event)'
+                [initialEstimatedTime]='ticketDetail.initialEstimatedTime' [initialEstimatedTimeTransient]='transientTicket.initialEstimatedTime !== undefined' (initialEstimatedTimeChange)='onInitialEstimatedTimeChange($event)'
+                [currentEstimatedTime]='ticketDetail.currentEstimatedTime' [currentEstimatedTimeTransient]='transientTicket.currentEstimatedTime !== undefined' (currentEstimatedTimeChange)='onCurrentEstimatedTimeChange($event)'
+                [dueDate]='ticketDetail.dueDate' [dueDateTransient]='transientTicket.dueDate !== undefined' (dueDateChange)='onDueDateChange($event)'
+                [creator]='ticketDetail.createdBy'
+                [createTime]='ticketDetail.createTime'
+                [subtickets]='ticketDetail.subtickets' (subticketAdd)='onSubticketAdd($event)'
+
+                [ticket]='ticketDetail'
+                [allTicketTags]='allTicketTags'
+                [allTimeCategories]='allTimeCategories'
+                [allAssignmentTags]='allAssignmentTags'
+            ></tt-ticket-core>
+      <div class='bottom-section'>
+        <tabset>
+          <tab heading='Comments'>
+            <div class='comments-wrapper'>
+                <tt-ticket-comments [ticket]='ticketDetail' [allAssignmentTags]='allAssignmentTags'></tt-ticket-comments>
+                <tt-ticket-comment-input
+                    [allTicketTags]='allTicketTags'
+                    [ticket]='ticketDetail'
+                    [allTimeCategories]='allTimeCategories'
+                    [allAssignmentTags]='allAssignmentTags'
+                    [working]='creatingComment'
+                    [resetEventObservable]='commentResetEventObservable'
+                    (commentCreate)='onCommentCreate($event)'
+                ></tt-ticket-comment-input>
+            </div>
+          </tab>
+          <tab heading='Activity'>
+            <div>
+              <tt-ticket-events [events]='ticketEvents'></tt-ticket-events>
+            </div>
+          </tab>
+        </tabset>
+      </div>
+    </div>
+    <div class='right col-md-4'>
+      <tt-ticket-sidebar
+        [ticket]="ticketDetail"
+        [allAssignmentTags]="allAssignmentTags"
+        (assignmentAdd)="onAssignmentAdd($event)"
+        (assignmentRemove)="onAssignmentRemove($event)"
+        (userAdd)="onAssignmentUserAdd($event)"
+      ></tt-ticket-sidebar>
+    </div>
+  </div>
+</div>

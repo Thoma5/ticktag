@@ -1,27 +1,26 @@
-// styles applied on :host are applied on the current component, "app" in this case
-:host {
-  display: block;
-}
-
-header {
-  background-color: #fff;
-  padding: 16px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
-}
-
 main {
-  padding: 1em;
-  font-family: Arial, Helvetica, sans-serif;
-  text-align: center;
-  margin-top: 50px;
-  display: block;
+    padding: 2rem;
+}
+md-sidenav {
+  width: 200px;
+  text-align: right;
+  background-color: black
+}
+md-sidenav {
+  width: 200px;
+  text-align: left;
+  background-color: darkslategrey
 }
 
-footer {
-  text-align: center;
-  font-size: 0.8em;
+.nav-top-block{
+    text-align: center;
+    font-weight: bold;
+    font-size: 2em;
+    color: white;
+    margin: 20px 0 50px 0;
+}
+
+md-sidenav div a {
+  color: white;
+  text-align: left
 }

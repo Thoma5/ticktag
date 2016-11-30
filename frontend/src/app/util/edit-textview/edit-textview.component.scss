@@ -1,0 +1,14 @@
+@import '../../../style/constants.scss';
+
+$edit-background-color: palette(Grey, 100);
+
+.editing {
+    background-color: $edit-background-color;
+}
+
+.loading {
+    width: 1em;
+    height: 1em;
+    margin-left: $internal-gap;
+    display: inline-block;
+}

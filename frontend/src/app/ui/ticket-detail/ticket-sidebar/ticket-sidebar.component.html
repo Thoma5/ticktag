@@ -1,0 +1,53 @@
+<div class='sidebar'>
+    <div class='assigned-users'>
+        <h2 class="first">Ticket Users</h2>
+        <div class="assigned-user" *ngFor="let a of assignments; trackBy: assignedUserTrackBy">
+            <tt-assigned-user
+                [user]="a.user"
+                [tags]="a.tags"
+                [allTags]="allAssignmentTags"
+                (tagAdd)="onTagAdd(a.user.id, $event)"
+                (tagRemove)="onTagRemove(a.user.id, $event)"
+            ></tt-assigned-user>
+        </div>
+        <div class="add-assigned-user">
+            <a *ngIf="!adding && !checking" href="javascript:void(0)" (click)="onShowAdd()">Add&nbsp;User</a>
+            <div *ngIf="adding || checking">
+                <input
+                    type="text"
+                    value=""
+                    placeholder="Username"
+                    [(ngModel)]="newUserName"
+                    ttFocus
+                    ttSelectAll
+                    (blur)="onHideAdd()"
+                    (keydown.enter)="onAdd()"
+                    [disabled]="checking">
+                <div *ngIf="checking" class="loading">
+                    <tt-spinner>
+                    </tt-spinner>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class='references' *ngIf="ticket.referenced.size > 0">
+        <h2>Referenced Tickets</h2>
+        <ul class="ticket-refs">
+            <li *ngFor="let ticket of ticket.referenced" class="ticket-ref">
+                <span class="number"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.id]">#{{ ticket.number }}</a></span>
+                <span class="title"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.id]">{{ ticket.title }}</a></span>
+            </li>
+        </ul>
+    </div>
+
+    <div class='referenced-by' *ngIf="ticket.referencedBy.size > 0">
+        <h2>Referenced by</h2>
+        <ul class="ticket-refs">
+            <li *ngFor="let ticket of ticket.referencedBy" class="ticket-ref">
+                <span class="number"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.id]">#{{ ticket.number }}</a></span>
+                <span class="title"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.id]">{{ ticket.title }}</a></span>
+            </li>
+        </ul>
+    </div>
+</div>

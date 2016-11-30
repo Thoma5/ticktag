@@ -2,6 +2,7 @@ package io.ticktag.service.user.services.impl
 
 import io.ticktag.TicktagService
 import io.ticktag.library.hashing.HashingLibrary
+import io.ticktag.library.unicode.NameNormalizationLibrary
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.persistence.user.entity.Role
 import io.ticktag.persistence.user.entity.User
@@ -11,6 +12,7 @@ import io.ticktag.service.user.dto.RoleResult
 import io.ticktag.service.user.dto.UpdateUser
 import io.ticktag.service.user.dto.UserResult
 import io.ticktag.service.user.services.UserService
+import org.springframework.data.domain.Pageable
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
 import java.util.*
@@ -20,8 +22,27 @@ import javax.validation.Valid
 @TicktagService
 open class UserServiceImpl @Inject constructor(
         private val users: UserRepository,
-        private val hashing: HashingLibrary
+        private val hashing: HashingLibrary,
+        private val nn: NameNormalizationLibrary
 ) : UserService {
+
+    @PreAuthorize(AuthExpr.USER)  // TODO maybe refine
+    override fun getUserByUsername(username: String): UserResult {
+        return UserResult(users.findByUsername(username) ?: throw NotFoundException())
+    }
+
+    @PreAuthorize(AuthExpr.USER)  // TODO maybe refine
+    override fun getUsers(ids: Collection<UUID>): Map<UUID, UserResult> {
+        if (ids.isEmpty()) {
+            return emptyMap()
+        }
+        return users.findByIds(ids).map(::UserResult).associateBy { it.id }
+    }
+
+    @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
+    override fun listUsersFuzzy(@P("#authProjectId") projectId: UUID, query: String, pageable: Pageable): List<UserResult> {
+        return users.findByProjectIdAndFuzzy(projectId, "%$query%", "%$query%", "%${nn.normalize(query)}%", pageable).map(::UserResult)
+    }
 
     @PreAuthorize(AuthExpr.ANONYMOUS)
     override fun checkPassword(mail: String, password: String): UserResult? {
@@ -37,24 +58,22 @@ open class UserServiceImpl @Inject constructor(
         if (users.findByMailIgnoreCase(createUser.mail) != null) {
             throw TicktagValidationException(listOf(ValidationError("createUser.mail", ValidationErrorDetail.Other("inuse"))))
         }
+        if (users.findByUsername(createUser.username) != null) {
+            throw TicktagValidationException(listOf(ValidationError("createUser.username", ValidationErrorDetail.Other("inuse"))))
+        }
 
         val mail = createUser.mail
         val name = createUser.name
         val passwordHash = hashing.hashPassword(createUser.password)
-        val user = User.create(mail, passwordHash, name, createUser.role, UUID.randomUUID(), createUser.profilePic)
+        val user = User.create(mail, passwordHash, name, createUser.username, createUser.role, UUID.randomUUID(), createUser.profilePic)
         users.insert(user)
 
         return UserResult(user)
     }
 
-    @PreAuthorize(AuthExpr.USER)  // TODO is this correct?
-    override fun getUser(id: UUID): UserResult? {
-        return UserResult(users.findOne(id) ?: return null)
-    }
-
-    @PreAuthorize(AuthExpr.USER)  // TODO is this correct?
-    override fun getUser(mail: String): UserResult? {
-        return UserResult(users.findByMailIgnoreCase(mail) ?: return null)
+    @PreAuthorize(AuthExpr.USER)
+    override fun getUser(id: UUID): UserResult {
+        return UserResult(users.findOne(id) ?: throw NotFoundException())
     }
 
     @PreAuthorize(AuthExpr.ADMIN) // TODO should probably be more granular
@@ -72,9 +91,11 @@ open class UserServiceImpl @Inject constructor(
     override fun updateUser(principal: Principal, @P("userId") id: UUID, @Valid updateUser: UpdateUser): UserResult {
         val user = users.findOne(id) ?: throw NotFoundException()
         if (updateUser.password != null) {
-            if (principal.hasRole("ADMIN") || (updateUser.oldPassword != null
-                    && checkPassword(user.mail, updateUser.oldPassword) != null)) {  //ADMIN allowed to change password every password, Own User: Password Check
-                user.passwordHash = hashing.hashPassword(updateUser.password)
+            //ADMIN allowed to change password every password, Own User: Password Check
+            val isAdmin = principal.hasRole("ADMIN")
+            val oldPasswordMatches = (updateUser.oldPassword != null && checkPassword(user.mail, updateUser.oldPassword) != null)
+            if (isAdmin || oldPasswordMatches) {
+                unsafeUpdateUserPassword(user, updateUser.password)
             } else {
                 throw TicktagValidationException(listOf(ValidationError("updateUser.oldPassword", ValidationErrorDetail.Other("passwordincorrect"))))
             }
@@ -91,7 +112,7 @@ open class UserServiceImpl @Inject constructor(
         if (updateUser.profilePic != null) {
             user.profilePic = updateUser.profilePic
         }
-        if (updateUser.role != null ) {
+        if (updateUser.role != null) {
             if (principal.hasRole("ADMIN")) {  //Only Admins can change user roles!
                 user.role = updateUser.role
             } else {
@@ -99,5 +120,10 @@ open class UserServiceImpl @Inject constructor(
             }
         }
         return UserResult(user)
+    }
+
+    private fun unsafeUpdateUserPassword(user: User, newPassword: String) {
+        user.passwordHash = hashing.hashPassword(newPassword)
+        user.currentToken = UUID.randomUUID()
     }
 }

@@ -1,0 +1,18 @@
+<div *ngIf='added'>
+  <div class='subtitle'>Tag added</div>
+  <span class='label label-success change-label'>Added</span>
+  <span>
+    <div class="tag" [style.backgroundColor]="'#' + tag.color">
+        <span class="name">{{ tag.name }}</span>
+    </div>
+  </span>
+</div>
+<div *ngIf='!added'>
+  <div class='subtitle'>Tag removed</div>
+  <span class='label label-danger change-label'>Removed</span>
+  <span>
+    <div class="tag" [style.backgroundColor]="'#' + tag.color">
+        <span class="name">{{ tag.name }}</span>
+    </div>
+  </span>
+</div>

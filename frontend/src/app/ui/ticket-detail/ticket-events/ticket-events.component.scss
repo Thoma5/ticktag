@@ -1,0 +1,70 @@
+@import '../../../../style/constants.scss';
+
+.events {
+    overflow: hidden;
+}
+
+.event-wrapper {
+    margin-bottom: 2rem;
+}
+
+.event {
+  @extend %card;
+}
+
+.header-row {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  vertical-align: center;
+}
+
+.user {
+  align-items: center;
+  display: flex;
+  float: left;
+}
+
+.tag {
+  @extend %tag;
+}
+
+.user-icon {
+  @extend %user-icon;
+}
+
+.user-info {
+  margin-left: $small-gap;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+}
+
+.user-name {
+  font-weight: bold;
+}
+
+.bottom-info {
+  margin-top: $small-gap;
+  text-align: right;
+}
+
+.content {
+  margin-top: $small-gap;
+}
+
+.change-label {
+  display: inline-block;
+  margin-right: 1em;
+}
+
+.subtitle {
+  font-size: 14pt;
+  margin-bottom: 5px;
+}
+
+.clickable {
+  cursor: pointer;
+}

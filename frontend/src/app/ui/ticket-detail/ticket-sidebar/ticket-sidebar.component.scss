@@ -1,0 +1,54 @@
+@import '../../../../style/constants.scss';
+
+h2 {
+    @extend %subtitle;
+    margin-top: $medium-gap;
+
+    &.first {
+        margin-top: 0;
+    }
+}
+
+.sidebar {
+    @extend %card;
+}
+
+.assigned-user {
+    margin-top: $internal-gap;
+    margin-bottom: $small-gap;
+}
+
+.add-assigned-user {
+    a {
+        @extend %edit-a;
+    }
+}
+
+.ticket-refs {
+    padding: 0;
+    display: table;
+    border-collapse: separate;
+    border-spacing: $internal-gap;
+}
+
+.ticket-ref {
+    list-style: none;
+    display: table-row;
+}
+
+.ticket-ref .number {
+    font-weight: bold;
+    display: table-cell;
+    text-align: right;
+}
+
+.ticket-ref .title {
+    display: table-cell;
+}
+
+.loading {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-left: $internal-gap;
+}

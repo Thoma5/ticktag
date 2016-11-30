@@ -1,0 +1,37 @@
+@import '../../../../style/constants.scss';
+
+$points-font-size: 2em;
+
+.points-container {
+    width: 4em;
+    height: 4em;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+    position: relative;
+}
+
+tt-edit-textview-posnumber {
+    float: left;
+}
+
+:host /deep/ {
+    tt-edit-button {
+        font-size: $points-font-size;
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    .textview-read {
+        font-size: $points-font-size;
+        text-align: center;
+    }
+
+    input {
+        width: 100%;
+        font-size: $points-font-size;
+        text-align: center;
+    }
+}

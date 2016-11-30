@@ -18,36 +18,36 @@ import javax.inject.Inject
 open class MemberController @Inject constructor(
         private val memberService: MemberService
 ) {
-    @GetMapping(value = "{pID}/member/{uID}")
+    @GetMapping(value = "{projectId}/member/{userId}")
     open fun getMember(
-            @PathVariable uID: UUID,
-            @PathVariable pID: UUID): MemberResultJson {
-        val member = memberService.getMember(uID, pID)
+            @PathVariable userId: UUID,
+            @PathVariable projectId: UUID): MemberResultJson {
+        val member = memberService.getMember(userId, projectId)
         return MemberResultJson(member)
     }
 
-    @PostMapping(value = "{pID}/member/{uID}")
+    @PostMapping(value = "{projectId}/member/{userId}")
     open fun createMember(
-            @PathVariable uID: UUID,
-            @PathVariable pID: UUID,
+            @PathVariable userId: UUID,
+            @PathVariable projectId: UUID,
             @RequestBody req: CreateMemberRequestJson): MemberResultJson {
-        val member = memberService.createMember(uID, pID, CreateMember(req.projectRole))
+        val member = memberService.createMember(userId, projectId, CreateMember(req.projectRole))
         return MemberResultJson(member)
     }
 
-    @DeleteMapping(value = "{pID}/member/{uID}")
+    @DeleteMapping(value = "{projectId}/member/{userId}")
     open fun deleteMember(
-            @PathVariable uID: UUID,
-            @PathVariable pID: UUID) {
-        memberService.deleteMember(uID, pID)
+            @PathVariable userId: UUID,
+            @PathVariable projectId: UUID) {
+        memberService.deleteMember(userId, projectId)
     }
 
-    @PutMapping(value = "{pID}/member/{uID}")
+    @PutMapping(value = "{projectId}/member/{userId}")
     open fun updateMember(
-            @PathVariable uID: UUID,
-            @PathVariable pID: UUID,
+            @PathVariable userId: UUID,
+            @PathVariable projectId: UUID,
             @RequestBody req: UpdateMemberRequestJson): MemberResultJson {
-        val member = memberService.updateMember(uID, pID, UpdateMember(req.projectRole))
+        val member = memberService.updateMember(userId, projectId, UpdateMember(req.projectRole))
         return MemberResultJson(member)
     }
 }

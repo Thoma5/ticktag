@@ -1,20 +1,34 @@
-<header>
-  <nav>
-    <a [routerLink]="['']">Home</a>
-    <a *ngIf="user && (user.authorities.indexOf('ADMIN') != -1)" [routerLink]="['users']">Users</a>
-    <a *ngIf="user" [routerLink]="['projects']">Projects</a>
-    <a *ngIf="user" [routerLink]="['whoami']">Whoami</a>
-    <a *ngIf="!user" [routerLink]="['login']">Login</a>
-    <a *ngIf="user" href="" (click)="logout(); $event.preventDefault()">Logout</a>
-  </nav>
-</header>
-<main>
-  <h1>Hello from {{title}}!</h1>
+<md-sidenav-layout fullscreen>
+<md-sidenav #start opened mode="side">
+	<div class="nav-top-block">
+		<h1>TickTag</h1>
+		<img class="img-circle" width="128" src="/img/TickTag.png" />
+	</div>
+	<div class="navadmin-block">
+		<div>
+			<a md-button [routerLink]="['']"><span class="glyphicon glyphicon-home"></span> Home</a>
+		</div>
+		<div>
+			<a md-button *ngIf="user && (user.authorities.indexOf('ADMIN') != -1)" [routerLink]="['users']"><span class="glyphicon glyphicon-user"></span> Users</a>
+		</div>
+		<div>
+			<a md-button *ngIf="user" [routerLink]="['projects']"><span class="glyphicon glyphicon-th-list"></span> Projects</a>
+		</div>
+		<div>
+			<a md-button *ngIf="user" [routerLink]="['whoami']"><span class="glyphicon glyphicon-user"></span> Whoami</a>
+		</div>
+	</div>
+</md-sidenav>
+	
+	<div>
+		<button md-button (click)="start.toggle()"><span class="glyphicon glyphicon-menu-hamburger"></span></button>
+		<a md-button align="end" *ngIf="!user" [routerLink]="['login']">Login</a>
+		<a md-button align="end" *ngIf="user" href="" (click)="logout(); $event.preventDefault()">Logout</a>
+	</div>
+	<main>
+		<router-outlet></router-outlet>
+	</main>
+</md-sidenav-layout>
 
-  <!-- Images (and assets) are parsed and loaded from within the public directory -->
-  <img src="/img/angular.png">
-
-  <router-outlet></router-outlet>
-</main>
 <footer>
 </footer>

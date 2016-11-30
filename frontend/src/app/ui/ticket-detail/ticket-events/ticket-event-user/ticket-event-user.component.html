@@ -1,0 +1,18 @@
+<div *ngIf='added'>
+  <div class='subtitle'>User added</div>
+  <span class='label label-success change-label'>Added</span>
+  <span><span class='user-name'>{{user.name}}</span> with
+    <div class="tag" [style.backgroundColor]="'#' + tag.color">
+        <span class="name">{{ tag.name }}</span>
+    </div>
+  </span>
+</div>
+<div *ngIf='!added'>
+  <div class='subtitle'>User removed</div>
+  <span class='label label-danger change-label'>Removed</span>
+  <span><span class='user-name'>{{user.name}}</span> with
+    <div class="tag" [style.backgroundColor]="'#' + tag.color">
+        <span class="name">{{ tag.name }}</span>
+    </div>
+  </span>
+</div>
