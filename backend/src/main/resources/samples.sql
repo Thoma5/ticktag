@@ -385,110 +385,7 @@ SET description_comment_id = '00000000-0004-0000-0000-000000000010'
 WHERE id = '00000000-0003-0000-0000-000000000008';
 
 
-INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES ('00000000-0004-0000-0000-000000000001', '660f2968-aa46-4870-bcc5-a3805366cff2', '00000000-0003-0000-0000-000000000001', '2016-11-16 17:09:59.019000', 'Hello World');
-INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES ('00000000-0004-0000-0000-000000000002', '660f2968-aa46-4870-bcc5-a3805366cff2', '00000000-0003-0000-0000-000000000002', '2016-11-16 17:09:59.019000', 'You have to do 3 sub Tasks');
-INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES ('00000000-0004-0000-0000-000000000003', '660f2968-aa46-4870-bcc5-a3805366cff2', '00000000-0003-0000-0000-000000000003', '2016-11-16 17:09:59.019000', 'Design UI --Comment there is no Closed Event atm');
-INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES ('00000000-0004-0000-0000-000000000006', '660f2968-aa46-4870-bcc5-a3805366cff2', '00000000-0003-0000-0000-000000000003', '2016-11-16 18:09:59.019000', 'Finished');
-INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES ('00000000-0004-0000-0000-000000000004', '660f2968-aa46-4870-bcc5-a3805366cff2', '00000000-0003-0000-0000-000000000004', '2016-11-16 17:09:59.019000', 'Implement Users View');
-INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES ('00000000-0004-0000-0000-000000000005', '660f2968-aa46-4870-bcc5-a3805366cff2', '00000000-0003-0000-0000-000000000005', '2016-11-16 17:09:59.019000', 'Test Users View');
-INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES ('00000000-0004-0000-0000-000000000007', '93ef43d9-20b7-461a-b960-2d1e89ba099f', '00000000-0003-0000-0000-000000000006', '2016-11-16 17:09:59.019000', '# An exhibit of Markdown
 
-This note demonstrates some of what [Markdown][1] is capable of doing.
-
-*Note: Feel free to play with this page. Unlike regular notes, this doesn''t automatically save itself.*
-
-## Basic formatting
-
-Paragraphs can be written like so. A paragraph is the basic block of Markdown. A paragraph is what text will turn into when there is no reason it should become anything else.
-
-Paragraphs must be separated by a blank line. Basic formatting of *italics* and **bold** is supported. This *can be **nested** like* so.
-
-## Lists
-
-### Ordered list
-
-1. Item 1
-2. A second item
-3. Number 3
-4. Ⅳ
-
-*Note: the fourth item uses the Unicode character for [Roman numeral four][2].*
-
-### Unordered list
-
-* An item
-* Another item
-* Yet another item
-* And there''s more...
-
-## Paragraph modifiers
-
-### Code block
-
-    Code blocks are very useful for developers and other people who look at code or other things that are written in plain text. As you can see, it uses a fixed-width font.
-
-You can also make `inline code` to add code into other things.
-
-### Quote
-
-> Here is a quote. What this is should be self explanatory. Quotes are automatically indented when they are used.
-
-## Headings
-
-There are six levels of headings. They correspond with the six levels of HTML headings. You''ve probably noticed them already in the page. Each level down uses one more hash character.
-
-### Headings *can* also contain **formatting**
-
-### They can even contain `inline code`
-
-Of course, demonstrating what headings look like messes up the structure of the page.
-
-I don''t recommend using more than three or four levels of headings here, because, when you''re smallest heading isn''t too small, and you''re largest heading isn''t too big, and you want each size up to look noticeably larger and more important, there there are only so many sizes that you can use.
-
-## URLs
-
-URLs can be made in a handful of ways:
-
-* A named link to [MarkItDown][3]. The easiest way to do these is to select what you want to make a link and hit `Ctrl+L`.
-* Another named link to [MarkItDown](http://www.markitdown.net/)
-* Sometimes you just want a URL like <http://www.markitdown.net/>.
-
-## Horizontal rule
-
-A horizontal rule is a line that goes across the middle of the page.
-
----
-
-It''s sometimes handy for breaking things up.
-
-## Images
-
-![Cat](http://lorempixel.com/400/400/cats)
-
-## Code
-
-```haskell
-quicksort :: (Ord a) => [a] -> [a]
-quicksort [] = []
-quicksort (x:xs) =
-    let smallerSorted = quicksort [a | a <- xs, a <= x]
-        biggerSorted = quicksort [a | a <- xs, a > x]
-    in  smallerSorted ++ [x] ++ biggerSorted
-```
-
-## Finally
-
-
-  This is the XSS test:
-  <script>alert("xss")</script>
-  [XSS](javascript&#58this;alert(1&#41;)
-  [XSS](javascript&#58;alert(1&#41;)
-  ![XSS](javascript:alert())
-
-
-  This is the linkify test: https://www.google.com
-  And this is the normal link test: [Link](https://www.google.com)
-');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES ('1a8c8bc8-c235-4fd2-a36f-73387ad9f54b', '93ef43d9-20b7-461a-b960-2d1e89ba099f', '00000000-0003-0000-0000-000000000003', '2016-11-30 10:40:38.195000', 'ich werde das noch testen !assign:heinzl@testing  ');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES ('dd8c1748-a82b-410a-a9aa-22b2b2cecb39', '93ef43d9-20b7-461a-b960-2d1e89ba099f', '00000000-0003-0000-0000-000000000004', '2016-11-30 10:42:10.592000', 'Das Ticket wird länger dauern als gedacht !est:10h');
 INSERT INTO public.comment (id, user_id, ticket_id, create_time, text) VALUES ('d5f38991-8f75-4d8c-ae72-52889de451fb', '93ef43d9-20b7-461a-b960-2d1e89ba099f', '00000000-0003-0000-0000-000000000002', '2016-11-30 10:43:57.111000', 'Der tag ist falsch !tag:feature und bitte übernimm das testen !assign:heinzl@testing ');
@@ -608,20 +505,30 @@ INSERT INTO public.assigned_ticket_tag (ticket_id, ticket_tag_id) VALUES ('00000
 
 --Assignment-Tag
 
-INSERT INTO public.assigned_ticket_user (ticket_id, assignment_tag_id, user_id) VALUES ('00000000-0003-0000-0000-000000000003', '00000000-0006-0000-0000-000000000002', '93ef43d9-20b7-461a-b960-2d1e89ba099f');
-INSERT INTO public.assigned_ticket_user (ticket_id, assignment_tag_id, user_id) VALUES ('00000000-0003-0000-0000-000000000002', '00000000-0006-0000-0000-000000000002', '93ef43d9-20b7-461a-b960-2d1e89ba099f');
-INSERT INTO public.assigned_ticket_user (ticket_id, assignment_tag_id, user_id) VALUES ('00000000-0003-0000-0000-000000000001', '00000000-0006-0000-0000-000000000001', '660f2968-aa46-4870-bcc5-a3805366cff2');
-INSERT INTO public.assigned_ticket_user (ticket_id, assignment_tag_id, user_id) VALUES ('00000000-0003-0000-0000-000000000002', '00000000-0006-0000-0000-000000000001', '660f2968-aa46-4870-bcc5-a3805366cff2');
-INSERT INTO public.assigned_ticket_user (ticket_id, assignment_tag_id, user_id) VALUES ('00000000-0003-0000-0000-000000000003', '00000000-0006-0000-0000-000000000001', '660f2968-aa46-4870-bcc5-a3805366cff2');
-INSERT INTO public.assigned_ticket_user (ticket_id, assignment_tag_id, user_id) VALUES ('00000000-0003-0000-0000-000000000004', '00000000-0006-0000-0000-000000000001', '660f2968-aa46-4870-bcc5-a3805366cff2');
-INSERT INTO public.assigned_ticket_user (ticket_id, assignment_tag_id, user_id) VALUES ('00000000-0003-0000-0000-000000000005', '00000000-0006-0000-0000-000000000001', '93ef43d9-20b7-461a-b960-2d1e89ba099f');
-INSERT INTO public.assigned_ticket_user (ticket_id, assignment_tag_id, user_id) VALUES ('00000000-0003-0000-0000-000000000005', '00000000-0006-0000-0000-000000000002', '660f2968-aa46-4870-bcc5-a3805366cff2');
-INSERT INTO public.assigned_ticket_user (ticket_id, assignment_tag_id, user_id) VALUES ('00000000-0003-0000-0000-000000000006', '00000000-0006-0000-0000-000000000001', '93ef43d9-20b7-461a-b960-2d1e89ba099f');
-INSERT INTO public.assigned_ticket_user (ticket_id, assignment_tag_id, user_id) VALUES ('00000000-0003-0000-0000-000000000006', '00000000-0006-0000-0000-000000000002', '93ef43d9-20b7-461a-b960-2d1e89ba099f');
-INSERT INTO public.assigned_ticket_user (ticket_id, assignment_tag_id, user_id) VALUES ('00000000-0003-0000-0000-000000000101', '00000000-0006-0000-0000-000000000101', '00000000-0001-0000-0000-000000000101');
-INSERT INTO public.assigned_ticket_user (ticket_id, assignment_tag_id, user_id) VALUES ('00000000-0003-0000-0000-000000000101', '00000000-0006-0000-0000-000000000102', '00000000-0001-0000-0000-000000000103');
-INSERT INTO public.assigned_ticket_user (ticket_id, assignment_tag_id, user_id) VALUES ('00000000-0003-0000-0000-000000000102', '00000000-0006-0000-0000-000000000104', '00000000-0001-0000-0000-000000000101');
-INSERT INTO public.assigned_ticket_user (ticket_id, assignment_tag_id, user_id) VALUES ('00000000-0003-0000-0000-000000000102', '00000000-0006-0000-0000-000000000106', '00000000-0001-0000-0000-000000000103');
+INSERT INTO public.assignment_tag (id, project_id, name, normalized_name, color)
+VALUES ('00000000-0006-0000-0000-000000000001', '00000000-0002-0000-0000-000000000001', 'Implementing', 'implementing',
+        '2196F3');
+
+INSERT INTO public.assignment_tag (id, project_id, name, normalized_name, color)
+VALUES ('00000000-0006-0000-0000-000000000002', '00000000-0002-0000-0000-000000000001', 'Testing', 'testing', '4CAF50');
+
+INSERT INTO public.assignment_tag (id, project_id, name, normalized_name, color)
+VALUES
+  ('00000000-0006-0000-0000-000000000003', '00000000-0002-0000-0000-000000000001', 'Bug Fixing', 'bugfixing', 'F44336');
+
+INSERT INTO public.assignment_tag (id, project_id, name, normalized_name, color)
+VALUES ('00000000-0006-0000-0000-000000000004', '00000000-0002-0000-0000-000000000001', 'Ticket Owner', 'ticketowner',
+        'FF9800');
+
+INSERT INTO public.assignment_tag (id, project_id, name, normalized_name, color)
+VALUES
+  ('00000000-0006-0000-0000-000000000005', '00000000-0002-0000-0000-000000000001', 'Document', 'document', '00BCD4');
+
+INSERT INTO public.assignment_tag (id, project_id, name, normalized_name, color)
+VALUES ('00000000-0006-0000-0000-000000000006', '00000000-0002-0000-0000-000000000001', 'Review', 'review', '9C27B0');
+
+
+
 
 --BEGIN Assignment-Tag Data for rolebased testing DO NOT ALTER
 INSERT INTO PUBLIC.assignment_tag (id, project_id, NAME, normalized_name, color)
@@ -680,6 +587,10 @@ VALUES ('00000000-0003-0000-0000-000000000006', '00000000-0006-0000-0000-0000000
 INSERT INTO public.assigned_ticket_user (ticket_id, assignment_tag_id, user_id)
 VALUES ('00000000-0003-0000-0000-000000000006', '00000000-0006-0000-0000-000000000002',
         '93ef43d9-20b7-461a-b960-2d1e89ba099f');
+
+INSERT INTO public.assigned_ticket_user (ticket_id, assignment_tag_id, user_id) VALUES ('00000000-0003-0000-0000-000000000003', '00000000-0006-0000-0000-000000000002', '93ef43d9-20b7-461a-b960-2d1e89ba099f');
+INSERT INTO public.assigned_ticket_user (ticket_id, assignment_tag_id, user_id) VALUES ('00000000-0003-0000-0000-000000000002', '00000000-0006-0000-0000-000000000002', '93ef43d9-20b7-461a-b960-2d1e89ba099f');
+
 
 --BEGIN ASSIGNED TICKET USERS role based Test data DO NOT ALTER
 INSERT INTO PUBLIC.assigned_ticket_user (ticket_id, assignment_tag_id, user_id)
