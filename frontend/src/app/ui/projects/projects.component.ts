@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApiCallService } from '../../service';
+import { ApiCallService, AuthService, User } from '../../service';
 import { ProjectApi, PageProjectResultJson, ProjectResultJson } from '../../api';
 @Component({
   selector: 'tt-projects',
@@ -26,23 +26,34 @@ export class ProjectsComponent implements OnInit {
   limit = 15;
   rows: ProjectResultJson[] = [];
   totalElements = 0;
+  private allProjects: boolean = false;
+  private user: User;
+
 
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(
     private router: Router,
     private projectApi: ProjectApi,
-    private apiCallService: ApiCallService) {
+    private apiCallService: ApiCallService,
+    private authService: AuthService) {
   }
 
   ngOnInit(): void {
     this.projects = [];
     this.getProjects(this.offset, this.limit, 'NAME', true, undefined);
+    this.user = this.authService.user;
+    this.authService.observeUser()
+      .subscribe(user => {
+        console.log(user);
+        this.user = user;
+      });
   }
 
   getProjects(page?: number, size?: number, order?: string, asc?: boolean, name?: string): void {
     this.apiCallService
-      .callNoError<PageProjectResultJson>(h => this.projectApi.listProjectsUsingGETWithHttpInfo(page, size, order, asc, name, true, h))
+      .callNoError<PageProjectResultJson>(h => this.projectApi
+      .listProjectsUsingGETWithHttpInfo(page, size, order, asc, name, this.allProjects, h))
       .subscribe(projects => {
         this.refresh = true;
         this.projects = projects;
