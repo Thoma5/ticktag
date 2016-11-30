@@ -4,7 +4,7 @@
       <span *ngIf='showNumbers'>{{fraction | ttHumanizeDuration}}</span>
     </div>
     <div class="progress-bar progress-bar-custom2" role="progressbar" [style.width]="(100-fractionPercent())+'%'">
-      <span *ngIf='showNumbers' class="progress-text">{{totalValue | ttHumanizeDuration}}</span>
+      <span *ngIf='showNumbers' class="progress-text">{{(totalValue - fraction)| ttHumanizeDuration}}</span>
     </div>
   </div>
 </div>
