@@ -14,10 +14,10 @@ import { Modal } from 'angular2-modal/plugins/bootstrap';
 export class AppComponent implements OnInit {
   private title: string;
   private user: User;
-  private router: Router;
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(
+    private router: Router,
     private authService: AuthService,
     private modal: Modal,
     overlay: Overlay, vcRef: ViewContainerRef) {
