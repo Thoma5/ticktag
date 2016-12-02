@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { TextviewEditComponent, TextviewReadComponent } from './edit-textview.component';
+import * as moment from 'moment';
 
 @Component({
   selector: 'tt-edit-textview-time-read',
@@ -13,22 +14,25 @@ export class EditTextviewTimeReadComponent implements TextviewReadComponent<numb
 @Component({
   selector: 'tt-edit-textview-time-edit',
   template: `
-    <input
+     <input
       type='text'
       [ttFocus]='visible' [ttSelectAll]="visible"
       [ngModel]='_content' (ngModelChange)='onModelChange($event)'
       (keydown.enter)='visible && save.emit()' (blur)='visible && save.emit()'
       (keydown.escape)='visible && abort.emit()'
-    >
+     ></form>
   `,
 })
 export class EditTextviewTimeEditComponent implements TextviewEditComponent<number> {
   private _content: string;
   @Input() set content(v: number) {
-    this._content = '' + v;
+      var d = moment.duration(v, 'ms');
+       this._content = Math.floor(d.asHours())+":"+d.minutes();
   }
   get content() {
-    return parseInt(this._content, 10);
+    console.log(moment.duration(this._content).asMilliseconds())
+
+    return moment.duration(this._content).asMilliseconds();  
   }
 
   @Input() visible: boolean;
@@ -37,7 +41,7 @@ export class EditTextviewTimeEditComponent implements TextviewEditComponent<numb
   @Output() readonly save: EventEmitter<void> = new EventEmitter<void>();
 
   onModelChange(val: string) {
-    this.contentChange.emit(parseInt(val, 10));
+    this.contentChange.emit(moment.duration(val).asMilliseconds());
   }
 }
 
