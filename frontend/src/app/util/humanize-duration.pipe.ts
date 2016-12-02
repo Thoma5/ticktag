@@ -26,7 +26,7 @@ export class HumanizeDurationPipe implements PipeTransform {
   transform(value: number): string {
     //   moment.locale('precise-short-en');
     //   return moment.duration(value, 'ms').humanize();
-    var d = moment.duration(value, 'ms');
-    return Math.floor(d.asHours())+":"+d.minutes();
+    const d = moment.duration(value, 'ms');
+    return Math.floor(d.asHours()) + ':' + (d.minutes() < 10 ? '0' : '') + d.minutes();
   }
 }
