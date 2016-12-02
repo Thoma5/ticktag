@@ -8,6 +8,7 @@ import { routing } from './app.routing';
 
 import { ModalModule } from 'angular2-modal';
 import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
+import { DragulaModule } from 'ng2-dragula';
 
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
 import { AuthService, ApiCallService, MarkdownService } from './service';
@@ -65,23 +66,23 @@ import { TagViewComponent } from './ui/ticket-overview/tagview/tagview.component
 import { SelectAllDirective } from './util/select-all.directive';
 import { EditButtonComponent } from './util/edit-button/edit-button.component';
 import { LoadingComponent } from './util/loading/loading.component';
-import { TicketOverviewComponent } from'./ui/ticket-overview/ticket-overview.component';
-import { AssignedUserOverviewComponent } from'./ui/ticket-overview/assigned-user/assigned-user-overview.component';
+import { TicketOverviewComponent } from './ui/ticket-overview/ticket-overview.component';
+import { AssignedUserOverviewComponent } from './ui/ticket-overview/assigned-user/assigned-user-overview.component';
 import { SpinnerComponent } from './util/spinner/spinner.component';
 import { CommandTextviewComponent } from './ui/ticket-detail/command-textview/command-textview.component';
 import { CommandDescriptionComponent } from './ui/ticket-detail/command-description/command-description.component';
 import { CommandHelpComponent } from './ui/ticket-detail/command-help/command-help.component';
 import { ProgressBarComponent } from './util/progressbar/progressbar.component';
 
-import {TicketEventsComponent} from './ui/ticket-detail/ticket-events/ticket-events.component';
-import {TicketEventOldNewComponent} from './ui/ticket-detail/ticket-events/ticket-event-old-new/ticket-event-old-new.component';
-import {TicketeventApi} from './api/api/TicketeventApi';
-import {TicketEventComponent} from './ui/ticket-detail/ticket-events/ticket-event/ticker-event.component';
-import {TicketEventUserComponent} from './ui/ticket-detail/ticket-events/ticket-event-user/ticket-event-user.component';
-import {TicketEventParentChangedComponent}
+import { TicketEventsComponent } from './ui/ticket-detail/ticket-events/ticket-events.component';
+import { TicketEventOldNewComponent } from './ui/ticket-detail/ticket-events/ticket-event-old-new/ticket-event-old-new.component';
+import { TicketeventApi } from './api/api/TicketeventApi';
+import { TicketEventComponent } from './ui/ticket-detail/ticket-events/ticket-event/ticker-event.component';
+import { TicketEventUserComponent } from './ui/ticket-detail/ticket-events/ticket-event-user/ticket-event-user.component';
+import { TicketEventParentChangedComponent }
   from './ui/ticket-detail/ticket-events/ticket-event-parent-ticket-changed/ticket-event-parent-ticket-changed.component';
-import {TicketEventTagComponent} from './ui/ticket-detail/ticket-events/ticket-event-tag/ticket-event-tag.component';
-import {TicketEventOldNewMarkupComponent}
+import { TicketEventTagComponent } from './ui/ticket-detail/ticket-events/ticket-event-tag/ticket-event-tag.component';
+import { TicketEventOldNewMarkupComponent }
   from './ui/ticket-detail/ticket-events/ticket-event-old-new-markup/ticket-event-old-new-markup.component';
 
 
@@ -97,6 +98,7 @@ import {TicketEventOldNewMarkupComponent}
     MaterialModule.forRoot(),
     ModalModule.forRoot(),
     BootstrapModalModule,
+    DragulaModule,
   ],
   declarations: [
     AppComponent,
