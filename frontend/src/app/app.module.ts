@@ -84,6 +84,7 @@ import { TicketEventParentChangedComponent }
 import { TicketEventTagComponent } from './ui/ticket-detail/ticket-events/ticket-event-tag/ticket-event-tag.component';
 import { TicketEventOldNewMarkupComponent }
   from './ui/ticket-detail/ticket-events/ticket-event-old-new-markup/ticket-event-old-new-markup.component';
+import { DragulaSampleComponent } from './ui/dragula-sample/dragula-sample.component';
 
 
 @NgModule({
@@ -162,6 +163,8 @@ import { TicketEventOldNewMarkupComponent }
     SelectAllDirective,
     LoadingComponent,
     SpinnerComponent,
+
+    DragulaSampleComponent
   ],
   providers: [
     ProjectApi,
