@@ -11,6 +11,11 @@ import '@angularclass/hmr';
 
 // Other vendors for example jQuery, Lodash or Bootstrap
 // You can import js, ts, css, sass, ...
+import 'jquery';
+import 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js';
+import 'bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css';
+import 'bootstrap-timepicker/js/bootstrap-timepicker.min.js';
+import 'bootstrap-timepicker/css/bootstrap-timepicker.min.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'angular2-data-table/release/datatable.css';
 import 'angular2-data-table/release/material.css';
