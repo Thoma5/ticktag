@@ -6,13 +6,13 @@ moment.locale('precise-short-en', {
   relativeTime: {
     future: 'in\xa0%s',
     past: '%s\xa0ago',
-    s: '%d\xa0s', // see https://github.com/timrwood/moment/pull/232#issuecomment-4699806
-    m: '%d\xa0m',
-    mm: '%d\xa0m',
-    h: '%d\xa0h',
-    hh: '%d\xa0h',
-    d: '%d\xa0d',
-    dd: '%d\xa0d',
+    s: '%ds', // see https://github.com/timrwood/moment/pull/232#issuecomment-4699806
+    m: '%dm',
+    mm: '%dm',
+    h: '%dh',
+    hh: '%dh',
+    d: '%dd',
+    dd: '%dd',
     M: 'a\xa0month',
     MM: '%d\xa0months',
     y: 'a\xa0year',
