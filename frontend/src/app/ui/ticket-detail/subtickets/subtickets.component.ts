@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { TicketDetailRelated } from '../ticket-detail';
+import { TicketDetail, TicketDetailRelated } from '../ticket-detail';
 
 @Component({
   selector: 'tt-subtickets',
@@ -7,5 +7,6 @@ import { TicketDetailRelated } from '../ticket-detail';
   styleUrls: ['./subtickets.component.scss']
 })
 export class SubticketsComponent {
+  @Input() parentTicket: TicketDetail;
   @Input() tickets: TicketDetailRelated[];
 }

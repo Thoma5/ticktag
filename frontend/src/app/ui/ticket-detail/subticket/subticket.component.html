@@ -1,9 +1,10 @@
-<div class='subticket-container' [ngClass]='{"closed": !ticket.open}'>
-    <a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.id]" class='number'>#{{ticket.number}}</a>
-    <a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.id]" class='title'>{{ticket.title}}</a>
+<div class='subticket-container' [ngClass]='{"closed": !open}'>
+    <a *ngIf="showNumber" [routerLink]="['/project', projectId, 'ticket', id]" class='number'>#{{number}}</a>
+    <a *ngIf="!showNumber" class="number"></a>
+    <a [routerLink]="['/project', projectId, 'ticket', id]" class='title'>{{title}}</a>
     <div class="progress-bar-container">
-      <tt-progressbar [showNumbers]="false" [fraction]="ticket.progress.totalLoggedTime" [totalValue]="ticket.progress.currentEstimatedTime"></tt-progressbar>
+      <tt-progressbar [showNumbers]="false" [fraction]="loggedTime" [totalValue]="estimatedTime"></tt-progressbar>
     </div>
-    <div class='progress-numbers'>{{ ticket.progress.totalLoggedTime | ttHumanizeDuration }}/{{ ticket.progress.currentEstimatedTime | ttHumanizeDuration }}
+    <div class='progress-numbers'>{{ loggedTime | ttHumanizeDuration }}/{{ estimatedTime | ttHumanizeDuration }}
     </div>
 </div>

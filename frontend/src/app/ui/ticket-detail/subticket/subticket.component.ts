@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { TicketDetailRelated } from '../ticket-detail';
 
 @Component({
   selector: 'tt-subticket',
@@ -7,5 +6,13 @@ import { TicketDetailRelated } from '../ticket-detail';
   styleUrls: ['./subticket.component.scss']
 })
 export class SubticketComponent {
-  @Input() ticket: TicketDetailRelated;
+  @Input() projectId: number;
+  @Input() ticketId: number;
+  @Input() number: number;
+  @Input() title: string;
+  @Input() loggedTime: number;
+  @Input() estimatedTime: number;
+  @Input() open: boolean;
+
+  @Input() showNumber: boolean;
 }

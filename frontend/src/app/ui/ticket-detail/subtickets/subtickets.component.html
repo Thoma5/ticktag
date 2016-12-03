@@ -1,7 +1,33 @@
-<div class='subtickets-container'>
+<div class="subtickets-container">
   <ul>
+    <li>
+      <tt-subticket
+        [projectId]="parentTicket.projectId"
+        [ticketId]="parentTicket.ticketId"
+        [number]="parentTicket.number"
+        [title]="'This ticket'"
+        [loggedTime]="parentTicket.progress.loggedTime"
+        [estimatedTime]="parentTicket.progress.currentEstimatedTime"
+        [open]="parentTicket.open"
+        [showNumber]="false"
+      ></tt-subticket>
+    </li>
     <li *ngFor="let ticket of tickets">
-      <tt-subticket [ticket]='ticket'></tt-subticket>
+      <!--
+        For subtickets total time should be equal to their time
+        This might change though if we allow nested subtickets
+        Therefore we use the total here
+      -->
+      <tt-subticket
+        [projectId]="ticket.projectId"
+        [ticketId]="ticket.ticketId"
+        [number]="ticket.number"
+        [title]="ticket.title"
+        [loggedTime]="ticket.progress.totalLoggedTime"
+        [estimatedTime]="ticket.progress.totalCurrentEstimatedTime"
+        [open]="ticket.open"
+        [showNumber]="true"
+      ></tt-subticket>
    </li>
   </ul>
 </div>

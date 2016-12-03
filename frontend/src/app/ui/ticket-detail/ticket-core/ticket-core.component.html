@@ -23,8 +23,10 @@
         </div>
         <div class='section-header'>Subtickets</div>
         <div class='subtickets'>
-            <tt-subtickets [tickets]='subtickets'>
-            </tt-subtickets>
+            <tt-subtickets
+              [parentTicket]='ticket'
+              [tickets]='subtickets'
+            ></tt-subtickets>
             <tt-subticket-add
               [parentTicket]='ticket'
               [allTicketTags]='allTicketTags'
@@ -52,7 +54,7 @@
           <tt-progressbar
             [showNumbers]="true"
             [fraction]="ticket.progress.totalLoggedTime"
-            [totalValue]="ticket.progress.currentEstimatedTime">
+            [totalValue]="ticket.progress.totalCurrentEstimatedTime">
           </tt-progressbar>
         </div>
         <div class='section-header'>

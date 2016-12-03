@@ -8,15 +8,19 @@ import { Tag } from '../../util/taginput/taginput.component';
 
 export class TicketDetailProgress {
   readonly ticketId: string;
+  readonly loggedTime: number;
   readonly currentEstimatedTime: number;
+  readonly totalCurrentEstimatedTime: number;
   readonly totalLoggedTime: number;
 
-  get percent(): number { return this.totalLoggedTime / this.currentEstimatedTime; }
+  get percent(): number { return this.totalLoggedTime / this.totalCurrentEstimatedTime; }
 
   constructor(ticketId: string, prog: TicketProgressResultJson) {
     this.ticketId = ticketId;
+    this.loggedTime = prog.loggedTime;
     this.currentEstimatedTime = prog.currentEstimatedTime;
     this.totalLoggedTime = prog.totalLoggedTime;
+    this.totalCurrentEstimatedTime = prog.totalCurrentEstimatedTime;
     Object.freeze(this);
   }
 }
