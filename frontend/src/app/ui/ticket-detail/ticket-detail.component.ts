@@ -1,3 +1,4 @@
+const uuidV4 = require('uuid/v4');
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Modal } from 'angular2-modal/plugins/bootstrap';
@@ -18,7 +19,8 @@ import {
   TicketDetailUser, TicketDetailTimeCategory, TicketDetailTransientUser,
   TicketDetailRelated, TicketDetailLoggedTime, TicketEvent, TicketEventParentChanged, TicketEventUserAdded,
   TicketEventUserRemoved, TicketEventLoggedTimeRemoved, TicketEventLoggedTimeAdded, TicketEventTagRemoved,
-  TicketEventTagAdded, TicketDetailProgress
+  TicketEventTagAdded, TicketDetailProgress,
+  newTicketDetailRelated, newTransientTicketDetailRelated
 } from './ticket-detail';
 import { SubticketCreateEvent } from './subticket-add/subticket-add.component';
 import { idListToMap } from '../../util/listmaputils';
@@ -59,6 +61,7 @@ export class TicketDetailComponent implements OnInit {
   };
   private creatingComment = false;
   private commentResetEventObservable = new Subject<string>();
+  private transientSubtickets = imm.Map<string, TicketDetailRelated>();
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(private route: ActivatedRoute,
@@ -257,7 +260,11 @@ export class TicketDetailComponent implements OnInit {
   }
 
   onSubticketAdd(val: SubticketCreateEvent): void {
-    // TODO define default values
+    let transientId = uuidV4();
+    let transientTicket = newTransientTicketDetailRelated(val.title, val.description, false);
+    this.transientSubtickets = this.transientSubtickets.set(transientId, transientTicket);
+    this.newTicketDetail();
+
     let obs = this.apiCallService
       .call(p => this.ticketApi.createTicketUsingPOSTWithHttpInfo({
         title: val.title,
@@ -280,8 +287,13 @@ export class TicketDetailComponent implements OnInit {
     this.queue.push(obs).subscribe(result => {
       if (!result.isValid) {
         // TODO nice message
+        let ticketWithError = newTransientTicketDetailRelated(val.title, val.description, true);
+        this.transientSubtickets = this.transientSubtickets.set(transientId, ticketWithError);
         this.error(result);
+      } else {
+        this.transientSubtickets = this.transientSubtickets.remove(transientId);
       }
+        this.newTicketDetail();
     });
   }
 
@@ -350,6 +362,7 @@ export class TicketDetailComponent implements OnInit {
       this.transientUsers,
       this.transientTags,
       this.transientTicket,
+      this.transientSubtickets,
       this.relatedProgresses.get(this.currentTicketJson.id),
       );
   }
@@ -474,7 +487,7 @@ export class TicketDetailComponent implements OnInit {
         this.currentTicketJson = tuple[0][0];
         this.relatedProgresses = imm.Map(tuple[1].ticketStatistics).map((p, tid) => new TicketDetailProgress(tid, p)).toMap();
         this.interestingUsers = imm.Map(tuple[1].users).map(u => new TicketDetailUser(u)).toMap();
-        this.relatedTickets = imm.Map(tuple[1].tickets).map(t => new TicketDetailRelated(t, this.relatedProgresses)).toMap();
+        this.relatedTickets = imm.Map(tuple[1].tickets).map(t => newTicketDetailRelated(t, this.relatedProgresses)).toMap();
         this.interestingLoggedTimes = imm.Map(tuple[2].loggedTimes)
           .map(lt => new TicketDetailLoggedTime(lt, this.allTimeCategories))
           .toMap();

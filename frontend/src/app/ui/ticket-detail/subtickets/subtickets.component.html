@@ -25,11 +25,11 @@
         [ticketId]="ticket.id"
         [number]="ticket.number"
         [title]="ticket.title"
-        [loggedTime]="ticket.progress.totalLoggedTime"
-        [estimatedTime]="ticket.progress.totalCurrentEstimatedTime"
+        [loggedTime]="ticket.progress ? ticket.progress.totalLoggedTime : null"
+        [estimatedTime]="ticket.progress ? ticket.totalCurrentEstimatedTime : null"
         [initialEstimatedTime]="ticket.initialEstimatedTime"
         [open]="ticket.open"
-        [showNumber]="true"
+        [showNumber]="ticket.number != null"
         [showProgress]="ticket.initialEstimatedTime != null"
       ></tt-subticket>
    </li>
