@@ -8,6 +8,7 @@
         [title]="'This ticket'"
         [loggedTime]="parentTicket.progress.loggedTime"
         [estimatedTime]="parentTicket.progress.currentEstimatedTime"
+        [initialEstimatedTime]="parentTicket.initialEstimatedTime"
         [open]="parentTicket.open"
         [showNumber]="false"
       ></tt-subticket>
@@ -25,6 +26,7 @@
         [title]="ticket.title"
         [loggedTime]="ticket.progress.totalLoggedTime"
         [estimatedTime]="ticket.progress.totalCurrentEstimatedTime"
+        [initialEstimatedTime]="ticket.initialEstimatedTime"
         [open]="ticket.open"
         [showNumber]="true"
       ></tt-subticket>

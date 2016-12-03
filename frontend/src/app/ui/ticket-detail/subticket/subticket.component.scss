@@ -29,7 +29,19 @@
   margin-left: $internal-gap;
 }
 
-.progress-numbers {
-  width: 10%;
+.progress-numbers-logged {
+  width: 7.5%;
+  text-align: right;
   margin-left: $internal-gap;
+}
+
+.progress-numbers-estimated {
+  width: 7.5%;
+  text-align: right;
+}
+
+.progress-numbers-initial {
+  width: 7.5%;
+  color: palette(Grey, 600);
+  text-align: right;
 }

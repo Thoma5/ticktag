@@ -282,6 +282,7 @@ export class TicketDetailRelated {
   readonly title: string;
   readonly open: boolean;
   readonly currentEstimatedTime: number;
+  readonly initialEstimatedTime: number;
   readonly progress: TicketDetailProgress|undefined;
 
   constructor(ticket: TicketResultJson, relatedProgresses: imm.Map<string, TicketDetailProgress>) {
@@ -291,6 +292,7 @@ export class TicketDetailRelated {
     this.title = ticket.title;
     this.open = ticket.open;
     this.currentEstimatedTime = ticket.currentEstimatedTime;
+    this.initialEstimatedTime = ticket.initialEstimatedTime;
     this.progress = relatedProgresses.get(this.id);
     Object.freeze(this);
   }
