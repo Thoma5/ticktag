@@ -1,9 +1,9 @@
 <div class="subtickets-container">
   <ul>
-    <li>
+    <li *ngIf="tickets.size > 0">
       <tt-subticket
         [projectId]="parentTicket.projectId"
-        [ticketId]="parentTicket.ticketId"
+        [ticketId]="parentTicket.id"
         [number]="parentTicket.number"
         [title]="'This ticket'"
         [loggedTime]="parentTicket.progress.loggedTime"
@@ -11,6 +11,7 @@
         [initialEstimatedTime]="parentTicket.initialEstimatedTime"
         [open]="parentTicket.open"
         [showNumber]="false"
+        [showProgress]="parentTicket.initialEstimatedTime != null"
       ></tt-subticket>
     </li>
     <li *ngFor="let ticket of tickets">
@@ -21,7 +22,7 @@
       -->
       <tt-subticket
         [projectId]="ticket.projectId"
-        [ticketId]="ticket.ticketId"
+        [ticketId]="ticket.id"
         [number]="ticket.number"
         [title]="ticket.title"
         [loggedTime]="ticket.progress.totalLoggedTime"
@@ -29,6 +30,7 @@
         [initialEstimatedTime]="ticket.initialEstimatedTime"
         [open]="ticket.open"
         [showNumber]="true"
+        [showProgress]="ticket.initialEstimatedTime != null"
       ></tt-subticket>
    </li>
   </ul>

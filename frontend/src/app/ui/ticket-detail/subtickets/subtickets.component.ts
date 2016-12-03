@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { TicketDetail, TicketDetailRelated } from '../ticket-detail';
+import * as imm from 'immutable';
 
 @Component({
   selector: 'tt-subtickets',
@@ -8,5 +9,5 @@ import { TicketDetail, TicketDetailRelated } from '../ticket-detail';
 })
 export class SubticketsComponent {
   @Input() parentTicket: TicketDetail;
-  @Input() tickets: TicketDetailRelated[];
+  @Input() tickets: imm.List<TicketDetailRelated>;
 }
