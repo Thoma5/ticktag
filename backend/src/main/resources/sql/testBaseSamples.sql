@@ -14,7 +14,7 @@ DELETE FROM "ticket_event_tag_removed";
 DELETE FROM "ticket_event_title_changed";
 DELETE FROM "ticket_event_user_added";
 DELETE FROM "ticket_event_user_removed";
-DELETE From "ticket_event";
+DELETE FROM "ticket_event";
 
 DELETE FROM "logged_time";
 DELETE FROM "time_category";

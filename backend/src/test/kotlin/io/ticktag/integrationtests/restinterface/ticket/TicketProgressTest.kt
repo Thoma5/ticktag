@@ -1,6 +1,5 @@
 package io.ticktag.integrationtests.restinterface.ticket
 
-import com.sun.org.glassfish.external.statistics.Statistic
 import io.ticktag.ADMIN_ID
 import io.ticktag.integrationtests.restinterface.ApiBaseTest
 import io.ticktag.restinterface.statistic.controller.StatisticController
@@ -15,7 +14,7 @@ class TicketProgressTest : ApiBaseTest() {
     lateinit var statisticController: StatisticController
 
     override fun loadTestData(): List<String> {
-        return arrayListOf("sql/testProgressTicketSamples.sql")
+        return arrayListOf("sql/testBaseSamples.sql", "sql/testProgressTicketSamples.sql")
     }
 
     @Test
