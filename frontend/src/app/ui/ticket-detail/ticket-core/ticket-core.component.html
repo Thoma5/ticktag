@@ -27,13 +27,15 @@
               [parentTicket]='ticket'
               [tickets]='subtickets'
             ></tt-subtickets>
-            <tt-subticket-add
-              [parentTicket]='ticket'
-              [allTicketTags]='allTicketTags'
-              [allTimeCategories]='allTimeCategories'
-              [allAssignmentTags]='allAssignmentTags'
-              (ticketAdd)='subticketAdd.emit($event)'
-            ></tt-subticket-add>
+            <div class="subticket-add">
+              <tt-subticket-add
+                [parentTicket]='ticket'
+                [allTicketTags]='allTicketTags'
+                [allTimeCategories]='allTimeCategories'
+                [allAssignmentTags]='allAssignmentTags'
+                (ticketAdd)='subticketAdd.emit($event)'
+              ></tt-subticket-add>
+            </div>
         </div>
         <div class='section-header'>Status</div>
         <div class='status'>
