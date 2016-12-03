@@ -6,6 +6,7 @@ import {UsersComponent} from './ui/users/users.component';
 import {ProjectsComponent} from './ui/projects/projects.component';
 import {TicketOverviewComponent} from './ui/ticket-overview/ticket-overview.component';
 import {TicketDetailComponent} from './ui/ticket-detail/ticket-detail.component';
+import {KanbanBoardsComponent} from './ui/kanban-boards/kanban-boards.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -15,5 +16,6 @@ const routes: Routes = [
   {path: 'projects', component: ProjectsComponent},
   {path: 'project/:projectId/tickets', component: TicketOverviewComponent},
   {path: 'project/:projectId/ticket/:ticketNumber', component: TicketDetailComponent},
+  {path: 'project/:projectId/boards', component: KanbanBoardsComponent}
 ];
 export const routing = RouterModule.forRoot(routes);
