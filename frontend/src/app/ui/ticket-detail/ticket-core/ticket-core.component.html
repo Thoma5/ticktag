@@ -48,13 +48,14 @@
                 Current estimation: <tt-edit-textview-time [content]="currentEstimatedTime" [transient]="currentEstimatedTimeTransient" (contentChange)="currentEstimatedTimeChange.emit($event)"></tt-edit-textview-time>
             </div>
             <div class='ticket-progress'>
-                Progress: {{ ticket.progress.percent | ttPercent }}
+                <span>Progress: </span>
+                <span>{{ ticket.progress.percent | ttPercent }}</span>
             </div>
             <div class='due-date'>
                 Due date: <tt-edit-textview-datetime [content]="dueDate" [transient]="dueDateTransient" (contentChange)="dueDateChange.emit($event)"></tt-edit-textview-datetime>
             </div>
         </div>
-        <div class='status-progress'>
+        <div *ngIf="ticket.currentEstimatedTime != null" class='status-progress'>
           <tt-progressbar
             [showNumbers]="true"
             [fraction]="ticket.progress.totalLoggedTime"

@@ -13,7 +13,13 @@ export class TicketDetailProgress {
   readonly totalCurrentEstimatedTime: number;
   readonly totalLoggedTime: number;
 
-  get percent(): number { return this.totalLoggedTime / this.totalCurrentEstimatedTime; }
+  get percent(): number {
+    if (this.totalCurrentEstimatedTime > 0) {
+      return this.totalLoggedTime / this.totalCurrentEstimatedTime;
+    } else {
+      return 0;
+    }
+  }
 
   constructor(ticketId: string, prog: TicketProgressResultJson) {
     this.ticketId = ticketId;
