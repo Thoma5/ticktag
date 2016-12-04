@@ -138,9 +138,13 @@ class UserApiTest : ApiBaseTest() {
 
     @Test
     fun `getUser with other user should hide email`() {
+        val newUser = withUser(ADMIN_ID) { p ->
+            userController.createUser(CreateUserRequestJson("newuser@example.com", "newuser", "new user", "password", Role.USER, null), p)
+        }
+
         withUser(USER_ID) { p ->
-            val result = userController.getUser(OBSERVER_ID, p)
-            assertEquals("Obelix Observer", result.name)
+            val result = userController.getUser(newUser.id, p)
+            assertEquals("new user", result.name)
             assertNull(result.mail)
         }
     }
@@ -150,6 +154,15 @@ class UserApiTest : ApiBaseTest() {
         withUser(OBSERVER_ID) { p ->
             val result = userController.getUser(USER_ID, p)
             assertEquals("user1@ticktag.a", result.mail)
+        }
+    }
+
+    @Test
+    fun `getUser with common project should show email`() {
+        withUser(USER_ID) { p ->
+            val result = userController.getUser(OBSERVER_ID, p)
+            assertEquals("Obelix Observer", result.name)
+            assertEquals("observer@ticktag.a", result.mail)
         }
     }
 }

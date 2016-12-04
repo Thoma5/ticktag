@@ -126,8 +126,13 @@ open class UserServiceImpl @Inject constructor(
     }
 
     private fun userToDto(user: User, principal: Principal): UserResult {
-        // Strip mail unless the user is at least a global observer or self
-        if (principal.hasRole(AuthExpr.ROLE_GLOBAL_OBSERVER) || principal.isId(user.id)) {
+        val isGlobalObserver = principal.hasRole(AuthExpr.ROLE_GLOBAL_OBSERVER)
+        val isSelf = principal.isId(user.id)
+        val viewedUserProjects = user.memberships.map { it.project }
+        val callingUserProjects = users.findOne(principal.id)?.memberships?.map { it.project } ?: emptyList()
+        val haveCommonProject = viewedUserProjects.intersect(callingUserProjects).isNotEmpty()
+
+        if (isGlobalObserver || isSelf || haveCommonProject) {
             return UserResult(user)
         } else {
             return UserResult(user).copy(mail = null)
