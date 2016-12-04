@@ -9,10 +9,12 @@ import io.ticktag.persistence.tickettag.TicketTagRepository
 import io.ticktag.persistence.tickettaggroup.TicketTagGroupRepository
 import io.ticktag.service.AuthExpr
 import io.ticktag.service.NotFoundException
+import io.ticktag.service.Principal
 import io.ticktag.service.kanbanBoard.dto.KanbanBoardResult
 import io.ticktag.service.kanbanBoard.dto.KanbanColumnResult
 import io.ticktag.service.kanbanBoard.dto.UpdateKanbanColumn
 import io.ticktag.service.kanbanBoard.services.KanbanService
+import io.ticktag.service.tickettagrelation.services.TicketTagRelationService
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
 import java.util.*
@@ -23,7 +25,8 @@ open class KanbanServiceImpl @Inject constructor(
         private val ticketTagGroups: TicketTagGroupRepository,
         private val ticketTagRepository: TicketTagRepository,
         private val kanbanCellRepository: KanbanCellRepository,
-        private val ticketRepository: TicketRepository
+        private val ticketRepository: TicketRepository,
+        private val ticketTagRelationService: TicketTagRelationService
 ) : KanbanService {
 
     @PreAuthorize(AuthExpr.READ_TICKET_TAG_FOR_GROUP)
@@ -41,7 +44,7 @@ open class KanbanServiceImpl @Inject constructor(
 
             var i = 0
             tickets.forEach {
-                val kanbanCell = KanbanCell.create(it,column,i)
+                val kanbanCell = KanbanCell.create(it, column, i)
                 kanbanCellRepository.insert(kanbanCell)
                 i++
             }
@@ -58,21 +61,25 @@ open class KanbanServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
-    override fun updateKanbanBoard(columns: List<UpdateKanbanColumn>): List<KanbanColumnResult> {
+    override fun updateKanbanBoard(columns: List<UpdateKanbanColumn>, principal: Principal): List<KanbanColumnResult> {
         var result = emptyList<KanbanColumnResult>().toMutableList()
         for (column in columns) {
+
             kanbanCellRepository.deleteByTagId(column.id)
-            var tag = ticketTagRepository.findOne(column.id)?:throw NotFoundException()
+            var tag = ticketTagRepository.findOne(column.id) ?: throw NotFoundException()
             var tickets = emptyList<Ticket>().toMutableList()
             if (column.ticketIds.size != 0) {
 
                 var i = 0
                 column.ticketIds.forEach {
-                    val ticket = ticketRepository.findOne(it)?:throw NotFoundException()
+                    val ticket = ticketRepository.findOne(it) ?: throw NotFoundException()
                     tickets.add(ticket)
                     val kanbanCell = KanbanCell.create(ticket, tag, i)
                     kanbanCellRepository.insert(kanbanCell)
                     i++
+                    if (!tag.tickets.map(Ticket::id).contains(it)) {
+                        ticketTagRelationService.createOrGetIfExistsTicketTagRelation(it, tag.id,principal )
+                    }
                 }
             }
             result.add(KanbanColumnResult(tag, tickets.map { it.id }))

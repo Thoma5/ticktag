@@ -5,12 +5,14 @@ import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.kanbanboard.schema.KanbanBoardReslutJson
 import io.ticktag.restinterface.kanbanboard.schema.KanbanColumnResultJson
 import io.ticktag.restinterface.kanbanboard.schema.UpdateKanbanColumnJson
+import io.ticktag.service.Principal
 import io.ticktag.service.kanbanBoard.services.KanbanService
 import io.ticktag.service.tickettaggroup.service.TicketTagGroupService
 import org.springframework.web.bind.annotation.*
 import java.util.*
 import javax.inject.Inject
 import  io.ticktag.service.kanbanBoard.dto.UpdateKanbanColumn
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 
 @TicktagRestInterface
 @RequestMapping("/board")
@@ -30,7 +32,7 @@ open class KanbanBoardController @Inject constructor(
     }
 
     @PutMapping(value = "/{id}")
-    open fun updateKanbanBoards(@PathVariable id: UUID,@RequestBody(required = true) columns: List<UpdateKanbanColumnJson>): List<KanbanColumnResultJson> {
-        return kanbanService.updateKanbanBoard(columns.map(::UpdateKanbanColumn)).map(::KanbanColumnResultJson)
+    open fun updateKanbanBoards(@PathVariable id: UUID,@RequestBody(required = true) columns: List<UpdateKanbanColumnJson>, @AuthenticationPrincipal principal: Principal): List<KanbanColumnResultJson> {
+        return kanbanService.updateKanbanBoard(columns.map(::UpdateKanbanColumn),principal).map(::KanbanColumnResultJson)
     }
 }
