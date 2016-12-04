@@ -14,6 +14,10 @@ export class SubticketComponent {
   @Input() estimatedTime: number|null;
   @Input() initialEstimatedTime: number|null;
   @Input() open: boolean;
+  @Input() loading: boolean = false;
+  @Input() error: boolean = false;
+  @Input() transient: boolean = false;
+
 
   @Input() showNumber: boolean = true;
   @Input() showProgress: boolean = true;

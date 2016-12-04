@@ -14,12 +14,23 @@
   text-decoration: line-through;
 }
 
-.number {
+.number-col {
   width: 5%;
+}
+
+.loading {
+  width: 1em;
+  height: 1em;
+}
+
+.error {
+  width: 1em;
+  height: 1em;
 }
 
 .title {
   width: 20%;
+  overflow: hidden;
   margin-left: $internal-gap;
 }
 

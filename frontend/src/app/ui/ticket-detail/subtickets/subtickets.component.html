@@ -31,6 +31,9 @@
         [open]="ticket.open"
         [showNumber]="ticket.number != null"
         [showProgress]="ticket.initialEstimatedTime != null"
+        [loading]="ticket.transient && !ticket.error"
+        [error]="ticket.error"
+        [transient]="ticket.transient"
       ></tt-subticket>
    </li>
   </ul>
