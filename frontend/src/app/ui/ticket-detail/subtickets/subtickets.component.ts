@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { TicketDetail, TicketDetailRelated } from '../ticket-detail';
+import { TicketRestoreEvent } from '../subticket/subticket.component';
 import * as imm from 'immutable';
 
 @Component({
@@ -10,4 +11,6 @@ import * as imm from 'immutable';
 export class SubticketsComponent {
   @Input() parentTicket: TicketDetail;
   @Input() tickets: imm.List<TicketDetailRelated>;
+
+  @Output() readonly ticketRestore = new EventEmitter<TicketRestoreEvent>();
 }

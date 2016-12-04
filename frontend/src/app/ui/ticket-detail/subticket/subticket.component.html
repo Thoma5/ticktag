@@ -4,22 +4,22 @@
       <div *ngIf="loading" class="loading">
         <tt-spinner class="loading"></tt-spinner>
       </div>
-      <div *ngIf="error" class="error">
+      <a *ngIf="error" class="error" href="javascript:void(0);" (click)='onRestore()'>
         <i class="fa fa-exclamation-triangle"></i>
-      </div>
+      </a>
     </div>
     <a *ngIf="!transient" [routerLink]="['/project', projectId, 'ticket', ticketId]" class='title'>{{title}}</a>
     <span *ngIf="transient" class='title'>{{title}}</span>
     <div class="progress-bar-container">
-      <tt-progressbar *ngIf="showProgress" [showNumbers]="false" [fraction]="loggedTime" [totalValue]="estimatedTime"></tt-progressbar>
+      <tt-progressbar *ngIf="!transient && showProgress" [showNumbers]="false" [fraction]="loggedTime" [totalValue]="estimatedTime"></tt-progressbar>
     </div>
     <div class='progress-numbers-logged tooltip-container'>
-      <span [tooltip]="'Logged time'">{{ loggedTime | ttHumanizeDuration }}</span>
+      <span *ngIf="!transient" [tooltip]="'Logged time'">{{ loggedTime | ttHumanizeDuration }}</span>
     </div>
     <div class='progress-numbers-estimated'>
-      <span [tooltip]="'Current estimation'">{{ estimatedTime | ttHumanizeDuration }}</span>
+      <span *ngIf="!transient" [tooltip]="'Current estimation'">{{ estimatedTime | ttHumanizeDuration }}</span>
     </div>
     <div class='progress-numbers-initial'>
-      <span [tooltip]="'Initial estimation'">({{ initialEstimatedTime | ttHumanizeDuration }})</span>
+      <span *ngIf="!transient" [tooltip]="'Initial estimation'">({{ initialEstimatedTime | ttHumanizeDuration }})</span>
     </div>
 </div>

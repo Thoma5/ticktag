@@ -26,6 +26,7 @@
             <tt-subtickets
               [parentTicket]='ticket'
               [tickets]='subtickets'
+              (ticketRestore)='onSubticketRestore($event)'
             ></tt-subtickets>
             <div class="subticket-add">
               <tt-subticket-add
@@ -33,6 +34,7 @@
                 [allTicketTags]='allTicketTags'
                 [allTimeCategories]='allTimeCategories'
                 [allAssignmentTags]='allAssignmentTags'
+                [resetEventObservable]='subticketAddResetSubject'
                 (ticketAdd)='subticketAdd.emit($event)'
               ></tt-subticket-add>
             </div>
