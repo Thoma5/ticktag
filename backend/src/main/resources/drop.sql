@@ -30,5 +30,5 @@ DROP TABLE IF EXISTS "ticket_event_mention_added" CASCADE;
 DROP TABLE IF EXISTS "ticket_event_mention_removed" CASCADE;
 DROP TABLE IF EXISTS "ticket_event_logged_time_added" CASCADE;
 DROP TABLE IF EXISTS "ticket_event_logged_time_removed" CASCADE;
-
+DROP TABLE IF EXISTS "kanban_cell" CASCADE;
 COMMIT;

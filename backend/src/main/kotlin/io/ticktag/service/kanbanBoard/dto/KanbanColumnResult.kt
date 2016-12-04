@@ -13,5 +13,5 @@ data class KanbanColumnResult (
         val kanbanBoardId: UUID,
         val ticketIds: List<UUID>
 ) {
-    constructor(t: TicketTag) : this(id = t.id, name = t.name, normalizedName = t.normalizedName, color = t.color, order = t.order, kanbanBoardId = t.ticketTagGroup.id, ticketIds = t.tickets.map { it.id })
+    constructor(t: TicketTag, ticketIds: List<UUID>) : this(id = t.id, name = t.name, normalizedName = t.normalizedName, color = t.color, order = t.order, kanbanBoardId = t.ticketTagGroup.id, ticketIds = ticketIds)
 }
