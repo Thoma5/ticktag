@@ -38,7 +38,6 @@ export class KanbanBoardsComponent implements OnInit {
     return Observable
       .zip(kanbanBoardsObs)
       .do(tuple => {
-        console.log(tuple);
         this.kanbanBoards = imm.List(tuple[0]).map((b: KanbanBoardReslutJson) => new KanbanBoard(b)).toList();
       })
       .map(it => undefined);
@@ -51,7 +50,6 @@ export class KanbanBoard {
   readonly projectId: string;
 
   constructor(b: KanbanBoardReslutJson) {
-    console.log(b);
     this.id = b.id;
     this.name = b.name;
     this.projectId = b.projectId;

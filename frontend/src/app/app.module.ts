@@ -86,6 +86,7 @@ import { TicketEventOldNewMarkupComponent }
   from './ui/ticket-detail/ticket-events/ticket-event-old-new-markup/ticket-event-old-new-markup.component';
 import {KanbanBoardsComponent} from './ui/kanban-boards/kanban-boards.component';
 import {BoardApi} from './api/api/BoardApi';
+import {KanbanBoardDetailComponent} from './ui/kanban-board-detail/kanban-board-detail.component';
 
 
 @NgModule({
@@ -165,7 +166,8 @@ import {BoardApi} from './api/api/BoardApi';
     LoadingComponent,
     SpinnerComponent,
 
-    KanbanBoardsComponent
+    KanbanBoardsComponent,
+    KanbanBoardDetailComponent
   ],
   providers: [
     ProjectApi,

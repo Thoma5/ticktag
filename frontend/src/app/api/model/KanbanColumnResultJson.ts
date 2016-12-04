@@ -25,14 +25,20 @@
 
 import * as models from './models';
 
-export interface KanbanBoardReslutJson {
-    columnIds: Array<string>;
+export interface KanbanColumnResultJson {
+    color: string;
 
     id: string;
 
+    kanbanBoardId: string;
+
     name: string;
 
-    projectId: string;
+    normalizedName: string;
+
+    order: number;
+
+    ticketIds: Array<string>;
 
 }
 

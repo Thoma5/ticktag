@@ -17,6 +17,7 @@ export * from './CreateUserRequestJson';
 export * from './GetRequestJson';
 export * from './GetResultJson';
 export * from './KanbanBoardReslutJson';
+export * from './KanbanColumnResultJson';
 export * from './LoggedTimeResultJson';
 export * from './LoginRequestJson';
 export * from './LoginResultJson';
