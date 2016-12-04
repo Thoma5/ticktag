@@ -15,7 +15,7 @@
         [showProgress]="parentTicket.initialEstimatedTime != null"
       ></tt-subticket>
     </li>
-    <li *ngFor="let ticket of tickets">
+    <li *ngFor="let ticket of sortedTickets">
       <!--
         For subtickets total time should be equal to their time
         This might change though if we allow nested subtickets
