@@ -26,35 +26,39 @@ open class UserServiceImpl @Inject constructor(
         private val nn: NameNormalizationLibrary
 ) : UserService {
 
-    @PreAuthorize(AuthExpr.USER)  // TODO maybe refine
-    override fun getUserByUsername(username: String): UserResult {
-        return UserResult(users.findByUsername(username) ?: throw NotFoundException())
+    @PreAuthorize(AuthExpr.USER)
+    override fun getUserByUsername(username: String, principal: Principal): UserResult {
+        return userToDto(users.findByUsername(username) ?: throw NotFoundException(), principal)
     }
 
-    @PreAuthorize(AuthExpr.USER)  // TODO maybe refine
-    override fun getUsers(ids: Collection<UUID>): Map<UUID, UserResult> {
+    @PreAuthorize(AuthExpr.USER)
+    override fun getUsers(ids: Collection<UUID>, principal: Principal): Map<UUID, UserResult> {
         if (ids.isEmpty()) {
             return emptyMap()
         }
-        return users.findByIds(ids).map(::UserResult).associateBy { it.id }
+        return users.findByIds(ids).map({ userToDto(it, principal) }).associateBy { it.id }
     }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
-    override fun listUsersFuzzy(@P("#authProjectId") projectId: UUID, query: String, pageable: Pageable): List<UserResult> {
-        return users.findByProjectIdAndFuzzy(projectId, "%$query%", "%$query%", "%${nn.normalize(query)}%", pageable).map(::UserResult)
+    override fun listUsersFuzzy(@P("#authProjectId") projectId: UUID, query: String, pageable: Pageable, principal: Principal): List<UserResult> {
+        return users.findByProjectIdAndFuzzy(projectId, "%$query%", "%$query%", "%${nn.normalize(query)}%", pageable)
+                .map({ userToDto(it, principal) })
     }
 
     @PreAuthorize(AuthExpr.ANONYMOUS)
     override fun checkPassword(mail: String, password: String): UserResult? {
         val user = users.findByMailIgnoreCase(mail) ?: return null
-        if (hashing.checkPassword(password, user.passwordHash))
+        if (hashing.checkPassword(password, user.passwordHash)) {
+            // This is the only function that may bypass the userToDto function
+            // We just checked the password so we can return all the information
             return UserResult(user)
-        else
+        } else {
             return null
+        }
     }
 
     @PreAuthorize(AuthExpr.ADMIN)
-    override fun createUser(@Valid createUser: CreateUser): UserResult {
+    override fun createUser(@Valid createUser: CreateUser, principal: Principal): UserResult {
         if (users.findByMailIgnoreCase(createUser.mail) != null) {
             throw TicktagValidationException(listOf(ValidationError("createUser.mail", ValidationErrorDetail.Other("inuse"))))
         }
@@ -68,24 +72,23 @@ open class UserServiceImpl @Inject constructor(
         val user = User.create(mail, passwordHash, name, createUser.username, createUser.role, UUID.randomUUID(), createUser.profilePic)
         users.insert(user)
 
-        return UserResult(user)
+        return userToDto(user, principal)
     }
 
     @PreAuthorize(AuthExpr.USER)
-    override fun getUser(id: UUID): UserResult {
-        return UserResult(users.findOne(id) ?: throw NotFoundException())
+    override fun getUser(id: UUID, principal: Principal): UserResult {
+        return userToDto((users.findOne(id) ?: throw NotFoundException()), principal)
     }
 
     @PreAuthorize(AuthExpr.ADMIN) // TODO should probably be more granular
-    override fun listUsers(): List<UserResult> {
-        return users.findAll().map(::UserResult)
+    override fun listUsers(principal: Principal): List<UserResult> {
+        return users.findAll().map({ userToDto(it, principal) })
     }
 
     @PreAuthorize(AuthExpr.ADMIN) // TODO should probably be more granular
     override fun listRoles(): List<RoleResult> {
         return Role.values().map(::RoleResult)
     }
-
 
     @PreAuthorize(AuthExpr.ADMIN_OR_SELF)
     override fun updateUser(principal: Principal, @P("userId") id: UUID, @Valid updateUser: UpdateUser): UserResult {
@@ -113,13 +116,22 @@ open class UserServiceImpl @Inject constructor(
             user.profilePic = updateUser.profilePic
         }
         if (updateUser.role != null) {
-            if (principal.hasRole("ADMIN")) {  //Only Admins can change user roles!
+            if (principal.hasRole(AuthExpr.ROLE_GLOBAL_ADMIN)) {  //Only Admins can change user roles!
                 user.role = updateUser.role
             } else {
                 throw TicktagValidationException(listOf(ValidationError("updateUser.role", ValidationErrorDetail.Other("notpermitted"))))
             }
         }
-        return UserResult(user)
+        return userToDto(user, principal)
+    }
+
+    private fun userToDto(user: User, principal: Principal): UserResult {
+        // Strip mail unless the user is at least a global observer or self
+        if (principal.hasRole(AuthExpr.ROLE_GLOBAL_OBSERVER) || principal.isId(user.id)) {
+            return UserResult(user)
+        } else {
+            return UserResult(user).copy(mail = null)
+        }
     }
 
     private fun unsafeUpdateUserPassword(user: User, newPassword: String) {
