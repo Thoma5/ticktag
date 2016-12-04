@@ -4,14 +4,13 @@ import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.kanbanboard.schema.KanbanBoardReslutJson
 import io.ticktag.restinterface.kanbanboard.schema.KanbanColumnResultJson
+import io.ticktag.restinterface.kanbanboard.schema.UpdateKanbanColumnJson
 import io.ticktag.service.kanbanBoard.services.KanbanService
 import io.ticktag.service.tickettaggroup.service.TicketTagGroupService
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.*
 import java.util.*
 import javax.inject.Inject
+import  io.ticktag.service.kanbanBoard.dto.UpdateKanbanColumn
 
 @TicktagRestInterface
 @RequestMapping("/board")
@@ -28,5 +27,10 @@ open class KanbanBoardController @Inject constructor(
     @GetMapping(value = "/{id}/columns")
     open fun listKanbanColumns(@PathVariable id: UUID): List<KanbanColumnResultJson> {
         return kanbanService.listColumns(id).map(::KanbanColumnResultJson)
+    }
+
+    @PutMapping(value = "/{id}")
+    open fun updateKanbanBoards(@PathVariable id: UUID,@RequestBody(required = true) columns: List<UpdateKanbanColumnJson>): List<KanbanColumnResultJson> {
+        return kanbanService.updateKanbanBoard(columns.map(::UpdateKanbanColumn)).map(::KanbanColumnResultJson)
     }
 }
