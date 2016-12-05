@@ -31,6 +31,11 @@ open class KanbanBoardController @Inject constructor(
         return kanbanService.listColumns(id).map(::KanbanColumnResultJson)
     }
 
+    @GetMapping(value = "/{id}")
+    open fun getKanbanBoard(@PathVariable id:UUID): KanbanBoardReslutJson{
+        return KanbanBoardReslutJson(kanbanService.getBoard(id))
+    }
+
     @PutMapping(value = "/{id}")
     open fun updateKanbanBoards(@PathVariable id: UUID,@RequestBody(required = true) columns: List<UpdateKanbanColumnJson>, @AuthenticationPrincipal principal: Principal): List<KanbanColumnResultJson> {
         return kanbanService.updateKanbanBoard(columns.map(::UpdateKanbanColumn),principal).map(::KanbanColumnResultJson)

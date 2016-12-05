@@ -56,9 +56,10 @@ open class KanbanServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
-    override fun listBoards(@P("authProjectId") projectId: UUID): List<KanbanBoardResult> {
-        return ticketTagGroups.findExclusiveTicketTagGroupsByProjectId(projectId).map(::KanbanBoardResult)
-    }
+    override fun getBoard(boardId: UUID): KanbanBoardResult = KanbanBoardResult(ticketTagGroups.findOne(boardId)?:throw NotFoundException())
+
+    @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
+    override fun listBoards(@P("authProjectId") projectId: UUID): List<KanbanBoardResult> = ticketTagGroups.findExclusiveTicketTagGroupsByProjectId(projectId).map(::KanbanBoardResult)
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun updateKanbanBoard(columns: List<UpdateKanbanColumn>, principal: Principal): List<KanbanColumnResult> {
