@@ -16,6 +16,9 @@ import { idListToMap } from '../../util/listmaputils';
 import {KanbanBoard} from '../kanban-boards/kanban-boards.component';
 import {KanbanBoardReslutJson} from '../../api/model/KanbanBoardReslutJson';
 import {TicketDetailProgress} from '../ticket-detail/ticket-detail';
+import {DragulaService} from 'ng2-dragula';
+import {UpdateKanbanColumnJson} from '../../api/model/UpdateKanbanColumnJson';
+import {TaskQueue} from '../../util/task-queue';
 
 @Component({
   selector: 'tt-kanban-board-detail',
@@ -23,6 +26,8 @@ import {TicketDetailProgress} from '../ticket-detail/ticket-detail';
   styleUrls: ['./kanban-board-detail.component.scss']
 })
 export class KanbanBoardDetailComponent implements OnInit {
+  private queue = new TaskQueue();
+
   private kanbanBoard: KanbanBoard;
   private kanbanColumns: imm.List<KanbanDetailColumn>;
   private allTicketTags: imm.Map<string, KanbanDetailTag>;
@@ -37,7 +42,36 @@ export class KanbanBoardDetailComponent implements OnInit {
               private apiCallService: ApiCallService,
               private getApi: GetApi,
               private ticketTagsApi: TickettagApi,
-              private kanbanBoardApi: BoardApi) {}
+              private kanbanBoardApi: BoardApi,
+              private dragulaService: DragulaService
+  ) {
+    dragulaService.dropModel.subscribe((value) => {
+      this.onDropModel(value.slice(1));
+    });
+  }
+
+  private onDropModel(args) {
+    this.updateModel();
+  }
+
+  private updateModel() {
+    let columns: UpdateKanbanColumnJson[] = [];
+    this.kanbanColumns.forEach(c => {
+      let newArray: string[] = [];
+      for (let t of c.tickets) {
+        newArray.push(t.id);
+      }
+      let u = {id: c.id, ticketIds: newArray};
+      columns.push(u);
+    });
+    console.log(columns);
+    let updateObs = this.apiCallService.callNoError<KanbanColumnResultJson[]>(p => this.kanbanBoardApi.updateKanbanBoardsUsingPUTWithHttpInfo(this.kanbanBoard.id, columns, p));
+    this.queue.push(updateObs)
+      .subscribe((result) => {
+        console.log(result);
+        this.refresh(this.kanbanBoard.projectId, this.kanbanBoard.id);
+      });
+  }
 
   ngOnInit(): void {
     this.route.params
@@ -104,8 +138,6 @@ export class KanbanBoardDetailComponent implements OnInit {
         this.interestingTickets = imm.Map(tuple[1].tickets)
           .map(t => new KanbanDetailTicket(t, this.interestingUsers, this.allTicketTags, this.relatedProgresses)).toMap();
         this.kanbanColumns = imm.List(tuple[0][0]).map(c => new KanbanDetailColumn(c, this.interestingTickets)).toList();
-        console.log(this.kanbanBoard);
-        console.log(this.kanbanColumns);
       })
       .map(it => undefined);
   }
@@ -119,7 +151,7 @@ export class KanbanDetailColumn implements Tag {
   readonly name: string;
   readonly normalizedName: string;
   readonly order: number;
-  readonly tickets: imm.List<KanbanDetailTicket>;
+  readonly tickets: KanbanDetailTicket[];
 
   constructor(c: KanbanColumnResultJson,
               tickets: imm.Map<string, KanbanDetailTicket>) {
@@ -129,9 +161,8 @@ export class KanbanDetailColumn implements Tag {
     this.name = c.name;
     this.normalizedName = c.normalizedName;
     this.order = c.order;
-    this.tickets = imm.List(c.ticketIds)
-      .map(id => tickets.get(id))
-      .toList();
+    this.tickets = c.ticketIds
+      .map(id => tickets.get(id));
     Object.freeze(this);
   }
 
