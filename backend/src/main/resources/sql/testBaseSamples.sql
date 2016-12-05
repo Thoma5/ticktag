@@ -39,11 +39,11 @@ INSERT INTO public."user" (id, username, mail, name, password_hash, role, curren
   ('00000000-0001-0000-0000-000000000101', 'admit', 'admin@ticktag.a', 'Admiral Admin',
    '$2a$10$mTEkiQq2Wo./aqfekJHPk.5sG8JLWqWYbtMODwk9xQwQp0GtkCiM.', 'ADMIN', '00000000-0001-0000-0000-abcdef123641',
    NULL); --aaaa
-INSERT INTO public."user" (id, username, name, mail, password_hash, role, current_token, profile_pic) VALUES
+INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, profile_pic) VALUES
   ('00000000-0001-0000-0000-000000000102', 'obelix', 'observer@ticktag.a', 'Obelix Observer',
    '$2a$10$Ydzo0FR5x8ZweeaeIQS2gevmLqsZuS37.bWRYy.f.u62NG00MAOcS', 'OBSERVER', '00000000-0001-0000-2343-abcdef123641',
    NULL); --bbbb
-INSERT INTO public."user" (id, username, name, mail, password_hash, role, current_token, profile_pic) VALUES
+INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, profile_pic) VALUES
   ('00000000-0001-0000-0000-000000000103', 'userla', 'user1@ticktag.a', 'Ursula User',
    '$2a$10$OgvbSbiDxizgC/6K3dhVwO8iY6.QFS6f2PvE1AyJS1Vmo6Rnb3Gve', 'USER', '00000000-0001-8676-0000-abcdef123641',
    NULL); --cccc
