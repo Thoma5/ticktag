@@ -40,7 +40,7 @@ export class EditTextviewTimeEditComponent implements TextviewEditComponent<numb
   @Output() readonly save: EventEmitter<void> = new EventEmitter<void>();
 
   onModelChange(val: string) {
-    const regexp = new RegExp('^[0-9]+(:[0-5][0-9])+$');
+    const regexp = new RegExp('[0-9]+(:[0-5][0-9])+');
     this.valid = regexp.test(val);
     if (this.valid) {
       this.contentChange.emit(moment.duration(val).asMilliseconds());
