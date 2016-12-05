@@ -6,7 +6,7 @@ import java.util.*
 
 data class UserResult(
         val id: UUID,
-        val mail: String,
+        val mail: String?,
         val username: String,
         val name: String,
         val currentToken: UUID,

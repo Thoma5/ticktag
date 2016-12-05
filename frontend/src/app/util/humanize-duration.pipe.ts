@@ -25,9 +25,9 @@ moment.locale('precise-short-en', {
 export class HumanizeDurationPipe implements PipeTransform {
   transform(value: number): string {
     if (value === 0 || value == null) {
-      return '0s';
+      return '00:00';
     }
-    moment.locale('precise-short-en');
-    return moment.duration(value, 'ms').humanize();
+    const d = moment.duration(value, 'ms');
+    return Math.floor(d.asHours()) + ':' + (d.minutes() < 10 ? '0' : '') + d.minutes();
   }
 }
