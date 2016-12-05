@@ -1,0 +1,24 @@
+<div class='ticket'>
+  <span class='storypoints'>{{ticket.storyPoints}}</span>
+  <span class="ticket-ref">
+    <span class="number"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.id]">#{{ ticket.number }} </a></span>
+    <span class="title"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.id]">{{ ticket.title }}</a></span>
+  </span>
+  <div class='tags'>
+    <div *ngFor="let tag of ticket.tags" class="tag" [style.backgroundColor]="'#' + tag.color">
+      <span class="name">{{ tag.name }}</span>
+    </div>
+  </div>
+  <div class='users'>
+    <span *ngFor="let user of ticket.users" class="user">
+      <img class="img-circle" width="32" src="http://lorempixel.com/64/64/cats" />
+    </span>
+  </div>
+  <div class='status-progress'>
+    <tt-progressbar
+      [showNumbers]="true"
+      [fraction]="ticket.progress.totalLoggedTime"
+      [totalValue]="ticket.progress.currentEstimatedTime">
+    </tt-progressbar>
+  </div>
+</div>

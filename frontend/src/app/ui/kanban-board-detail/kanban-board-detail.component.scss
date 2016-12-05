@@ -18,3 +18,34 @@
   @extend %title;
   margin-bottom: $medium-gap;
 }
+
+.container {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  width: 100%;
+}
+
+.ticket-container {
+  @extend %card;
+  background-color: rgb(202, 202, 202);;
+  padding: $small-gap;
+}
+
+.column-container {
+  flex-grow: 1;
+  width: 100%;
+  margin: $small-gap;
+}
+
+.column-header {
+  border-radius: 0.25em;
+  box-shadow: 0 ($px * 1em) 0 rgba(0,0,0,0.12);
+  margin-bottom: $small-gap;
+  text-align: center;
+  font-size: ($base-pt * 1.25);
+  padding: $small-gap;
+  font-weight: bold;
+}
+
+

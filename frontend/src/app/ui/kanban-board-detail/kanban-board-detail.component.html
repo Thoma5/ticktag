@@ -1,12 +1,19 @@
-<h1 class="title">Kanban Boards</h1>
 <div class='ticket-detail-container'>
   <div *ngIf="loading" class='loading'>
     <tt-loading></tt-loading>
   </div>
   <div *ngIf="!loading">
-    <div *ngFor="let board of kanbanBoards">
-      <div class='board'>
-        <a [routerLink]="['/project', board.projectId, 'board', board.id]">{{ board.name }}</a>
+    <h1 class='title'>{{kanbanBoard.name}}</h1>
+    <div class='container'>
+      <div *ngFor="let column of kanbanColumns" class='column-container'>
+        <div class='column-header' [style.backgroundColor]="'#' + column.color">{{column.name}}</div>
+        <div class='ticket-container' [dragula]='"first-bag"'>
+          <div *ngFor="let ticket of column.tickets">
+            <tt-kanban-cell
+              [ticket]="ticket"
+            ></tt-kanban-cell>
+          </div>
+        </div>
       </div>
     </div>
   </div>

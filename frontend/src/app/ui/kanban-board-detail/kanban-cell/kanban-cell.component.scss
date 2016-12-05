@@ -1,0 +1,56 @@
+@import '../../../../style/constants.scss';
+
+
+.ticket {
+  @extend %card;
+  margin-bottom: $small-gap;
+  position: relative;
+}
+
+.tag {
+  @extend %tag;
+  margin-right: $internal-gap;
+  margin-left: 0px;
+}
+
+.tags {
+  margin-top: $internal-gap;
+}
+
+.ticket-ref {
+}
+
+.ticket-ref .number {
+  font-weight: bold;
+}
+
+.ticket-ref .title {
+}
+
+.storypoints {
+  font-weight: bold;
+  position: absolute;
+  right: -2px;
+  top: -2px;
+  border: 2px solid #ccc;
+  padding: 5px;
+  width: 30px;
+  height: 30px;
+  line-height: 16px;
+  text-align: center;
+  vertical-align: top;
+}
+
+.users {
+  margin-top: $internal-gap;
+}
+
+.user {
+  margin-right: $internal-gap;
+}
+
+.status-progress {
+  margin-top: $internal-gap;
+  margin-left: -$internal-gap;
+  margin-bottom: -20px;
+}
