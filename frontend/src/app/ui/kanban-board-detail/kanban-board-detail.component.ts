@@ -69,7 +69,7 @@ export class KanbanBoardDetailComponent implements OnInit {
     this.queue.push(updateObs)
       .subscribe((result) => {
         console.log(result);
-        this.refresh(this.kanbanBoard.projectId, this.kanbanBoard.id);
+        this.refresh(this.kanbanBoard.projectId, this.kanbanBoard.id).subscribe();
       });
   }
 
