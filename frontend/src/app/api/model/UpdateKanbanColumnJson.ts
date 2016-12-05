@@ -25,12 +25,10 @@
 
 import * as models from './models';
 
-export interface KanbanBoardReslutJson {
+export interface UpdateKanbanColumnJson {
     id: string;
 
-    name: string;
-
-    projectId: string;
+    ticketIds: Array<string>;
 
 }
 

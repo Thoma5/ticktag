@@ -69,6 +69,22 @@ export class BoardApi {
     }
 
     /**
+     * getKanbanBoard
+     * 
+     * @param id id
+     */
+    public getKanbanBoardUsingGET(id: string, extraHttpRequestParams?: any): Observable<models.KanbanBoardReslutJson> {
+        return this.getKanbanBoardUsingGETWithHttpInfo(id, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
      * listKanbanBoards
      * 
      * @param projectId projectId
@@ -100,6 +116,67 @@ export class BoardApi {
             });
     }
 
+    /**
+     * updateKanbanBoards
+     * 
+     * @param id id
+     * @param columns columns
+     */
+    public updateKanbanBoardsUsingPUT(id: string, columns: Array<models.UpdateKanbanColumnJson>, extraHttpRequestParams?: any): Observable<Array<models.KanbanColumnResultJson>> {
+        return this.updateKanbanBoardsUsingPUTWithHttpInfo(id, columns, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+
+    /**
+     * getKanbanBoard
+     * 
+     * @param id id
+     */
+    public getKanbanBoardUsingGETWithHttpInfo(id: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/board/${id}`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'id' is not null or undefined
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling getKanbanBoardUsingGET.');
+        }
+
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json'
+        ];
+        
+            
+
+
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Get,
+            headers: headers,
+            search: queryParameters
+        });
+        
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
 
     /**
      * listKanbanBoards
@@ -181,6 +258,57 @@ export class BoardApi {
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
+            search: queryParameters
+        });
+        
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * updateKanbanBoards
+     * 
+     * @param id id
+     * @param columns columns
+     */
+    public updateKanbanBoardsUsingPUTWithHttpInfo(id: string, columns: Array<models.UpdateKanbanColumnJson>, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/board/${id}`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'id' is not null or undefined
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling updateKanbanBoardsUsingPUT.');
+        }
+        // verify required parameter 'columns' is not null or undefined
+        if (columns === null || columns === undefined) {
+            throw new Error('Required parameter columns was null or undefined when calling updateKanbanBoardsUsingPUT.');
+        }
+
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json'
+        ];
+        
+            
+
+        headers.set('Content-Type', 'application/json');
+
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Put,
+            headers: headers,
+            body: columns == null ? '' : JSON.stringify(columns), // https://github.com/angular/angular/issues/10612
             search: queryParameters
         });
         
