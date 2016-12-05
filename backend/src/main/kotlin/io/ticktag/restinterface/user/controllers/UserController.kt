@@ -23,7 +23,7 @@ open class UserController @Inject constructor(
 
     @PostMapping
     open fun createUser(@RequestBody req: CreateUserRequestJson): UserResultJson {
-        val user = userService.createUser(CreateUser(mail = req.mail, name = req.name, password = req.password, role = req.role, profilePic = req.profilePic, username = req.username))
+        val user = userService.createUser(CreateUser(mail = req.mail, name = req.name, password = req.password, role = req.role, username = req.username))
         return UserResultJson(user)
     }
 
@@ -32,13 +32,23 @@ open class UserController @Inject constructor(
                         @RequestBody req: UpdateUserRequestJson,
                         @AuthenticationPrincipal principal: Principal): UserResultJson {
         val user = userService.updateUser(principal, id, UpdateUser(mail = req.mail, name = req.name, password = req.password,
-                role = req.role, profilePic = req.profilePic, oldPassword = req.oldPassword))
+                role = req.role, oldPassword = req.oldPassword))
         return UserResultJson(user)
     }
 
     @GetMapping(value = "/{id}")
     open fun getUser(@PathVariable(name = "id") id: UUID): UserResultJson {
         return UserResultJson(userService.getUser(id))
+    }
+
+    @GetMapping("/{id}/image")
+    open fun getUserImage(@PathVariable("id") id: UUID): UserImageJson {
+        val image = userService.getUserImage(id)
+        if (image == null) {
+            return UserImageJson("")
+        } else {
+            return UserImageJson(String(Base64.getEncoder().encode(image), charset("ASCII")))
+        }
     }
 
     @GetMapping("/name/{name}")

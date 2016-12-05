@@ -43,6 +43,7 @@ export * from './UpdateTicketTagGroupRequestJson';
 export * from './UpdateTicketTagRequestJson';
 export * from './UpdateTimeCategoryRequestJson';
 export * from './UpdateUserRequestJson';
+export * from './UserImageJson';
 export * from './UserResultJson';
 export * from './ValidationErrorJson';
 export * from './ValidationErrorOtherJson';

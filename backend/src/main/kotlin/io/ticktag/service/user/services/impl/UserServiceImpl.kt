@@ -27,6 +27,11 @@ open class UserServiceImpl @Inject constructor(
 ) : UserService {
 
     @PreAuthorize(AuthExpr.USER)  // TODO maybe refine
+    override fun getUserImage(id: UUID): ByteArray? {
+        return users.findOne(id)?.image?.image
+    }
+
+    @PreAuthorize(AuthExpr.USER)  // TODO maybe refine
     override fun getUserByUsername(username: String): UserResult {
         return UserResult(users.findByUsername(username) ?: throw NotFoundException())
     }
@@ -65,7 +70,7 @@ open class UserServiceImpl @Inject constructor(
         val mail = createUser.mail
         val name = createUser.name
         val passwordHash = hashing.hashPassword(createUser.password)
-        val user = User.create(mail, passwordHash, name, createUser.username, createUser.role, UUID.randomUUID(), createUser.profilePic)
+        val user = User.create(mail, passwordHash, name, createUser.username, createUser.role, UUID.randomUUID())
         users.insert(user)
 
         return UserResult(user)
@@ -109,9 +114,6 @@ open class UserServiceImpl @Inject constructor(
             user.name = updateUser.name
         }
 
-        if (updateUser.profilePic != null) {
-            user.profilePic = updateUser.profilePic
-        }
         if (updateUser.role != null) {
             if (principal.hasRole("ADMIN")) {  //Only Admins can change user roles!
                 user.role = updateUser.role

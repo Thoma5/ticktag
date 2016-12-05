@@ -18,4 +18,5 @@ interface UserService {
     fun listUsersFuzzy(projectId: UUID, query: String, pageable: Pageable): List<UserResult>
     fun getUsers(ids: Collection<UUID>): Map<UUID, UserResult>
     fun getUserByUsername(username: String): UserResult
+    fun getUserImage(id: UUID): ByteArray?
 }
