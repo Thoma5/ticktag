@@ -29,6 +29,37 @@ open class StatisticServiceImpl @Inject constructor(
         return tickets.findByIds(permittedIds).associateBy { it.id }.mapValues { calculateTicketProgress(it.value) }
     }
 
+    @PreAuthorize(AuthExpr.READ_TICKET)
+    override fun getTicketProgress(id: UUID): TicketProgressResult {
+        val ticket = tickets.findOne(id) ?: throw NotFoundException()
+        return calculateTicketProgress(ticket)
+    }
+
+    private fun calculateTicketProgress(ticket: Ticket): TicketProgressResult {
+        val allRelevantTickets = listOf(ticket) + ticket.subTickets
+
+        val totalEstimatedTime = allRelevantTickets.map { subTicket ->
+            subTicket.currentEstimatedTime ?: subTicket.initialEstimatedTime ?: Duration.ZERO
+        }.fold(Duration.ZERO, Duration::plus)
+
+        val totalLoggedTime = allRelevantTickets.map { t ->
+            val estimatedTime = estimatedTimeForTicket(t)
+            var loggedTime = loggedTimeForTicket(t)
+            if (loggedTime > estimatedTime) { // logged Time may not be greater than logged Time
+                loggedTime = estimatedTime
+            }
+            loggedTime
+        }.fold(Duration.ZERO, Duration::plus)
+
+        val estimatedTime = estimatedTimeForTicket(ticket)
+        var loggedTime = loggedTimeForTicket(ticket)
+        if (loggedTime > estimatedTime) {
+            loggedTime = estimatedTime
+        }
+
+        return TicketProgressResult(loggedTime, estimatedTime, totalLoggedTime, totalEstimatedTime)
+    }
+
     private fun loggedTimeForTicket(ticket: Ticket): Duration {
         var duration = Duration.ZERO
         ticket.comments
@@ -37,39 +68,7 @@ open class StatisticServiceImpl @Inject constructor(
         return duration
     }
 
-    @PreAuthorize(AuthExpr.READ_TICKET)
-    override fun getTicketProgress(id: UUID): TicketProgressResult {
-        val ticket = tickets.findOne(id) ?: throw NotFoundException()
-        return calculateTicketProgress(ticket)
-    }
-
-    private fun calculateTicketProgress(ticket: Ticket): TicketProgressResult {
-        var totalEstimatedTime = Duration.ZERO
-        var totalLoggedTime = Duration.ZERO
-        var ticketDuration: Duration
-        var ticketEstimatedTime: Duration
-
-        ticketEstimatedTime = ticket.currentEstimatedTime ?: ticket.initialEstimatedTime ?: Duration.ZERO
-        totalEstimatedTime += ticketEstimatedTime
-
-        ticketDuration = loggedTimeForTicket(ticket)
-        if (ticketDuration > ticketEstimatedTime) { // logged Time may not be greater than logged Time
-            ticketDuration = ticketEstimatedTime
-        }
-
-        totalLoggedTime += ticketDuration
-
-        for (subTicket: Ticket in ticket.subTickets) {
-            ticketEstimatedTime = subTicket.currentEstimatedTime ?: subTicket.initialEstimatedTime ?: Duration.ZERO
-            totalEstimatedTime += ticketEstimatedTime
-
-            ticketDuration = loggedTimeForTicket(subTicket)
-            if (ticketDuration > ticketEstimatedTime) { // logged Time may not be greater than logged Time
-                ticketDuration = ticketEstimatedTime
-            }
-            totalLoggedTime += ticketDuration
-        }
-
-        return TicketProgressResult(totalLoggedTime, totalEstimatedTime)
+    private fun estimatedTimeForTicket(ticket: Ticket): Duration {
+        return ticket.currentEstimatedTime ?: ticket.initialEstimatedTime ?: Duration.ZERO
     }
 }

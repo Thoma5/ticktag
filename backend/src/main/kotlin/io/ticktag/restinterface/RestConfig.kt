@@ -62,7 +62,7 @@ open class RestConfig : WebMvcConfigurerAdapter() {
 open class RestExceptionHandlers {
     @ExceptionHandler(TicktagValidationException::class)
     open fun handleValidationError(ex: TicktagValidationException): ResponseEntity<List<ValidationErrorJson>> {
-        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(ex.errros.map {
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(ex.errors.map {
             when (it.detail) {
                 is ValidationErrorDetail.Size ->
                     ValidationErrorJson(it.field, "size", sizeInfo = ValidationErrorSizeJson(it.detail.min, it.detail.max))

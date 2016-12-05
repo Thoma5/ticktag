@@ -16,6 +16,7 @@ DELETE FROM "ticket_event_user_added";
 DELETE FROM "ticket_event_user_removed";
 DELETE From "ticket_event";
 
+-- TODO this entire SQL file should be much *much* smaller and contain only the required data
 DELETE FROM "logged_time";
 DELETE FROM "time_category";
 DELETE FROM "assigned_ticket_user";
