@@ -148,13 +148,13 @@ export class TicketOverviewComponent implements OnInit {
     this.refresh(this.projectId).subscribe();
   }
 
-  onTagClicked(event: any) {
+  onTagClicked(event: TicketOverviewTag) {
     console.log(event); // TODO add to filter
   }
-
   activate(event: any) {
-    if (event.type === 'dblclick') {
+    if (event.type === 'keydown' && event.event.code === 'Enter') {
       this.router.navigate(['/project', this.projectId, 'ticket', event.row.id]);
+    }
     }
   }
 }

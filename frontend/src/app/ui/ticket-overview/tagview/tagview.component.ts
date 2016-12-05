@@ -27,8 +27,7 @@ export class TagViewComponent {
   @Input() tags: imm.List<TicketOverviewTag>;
   @Output() clickedTag = new EventEmitter<TicketOverviewTag>();
 
-  tagClicked(tag: TicketOverviewTag) {
-    this.clickedTag.emit(tag);
-  }
-
+tagClicked(tag: TicketOverviewTag) {
+  this.clickedTag.emit(tag);
+}
 }
