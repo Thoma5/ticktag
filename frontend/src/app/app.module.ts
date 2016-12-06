@@ -83,6 +83,7 @@ import {TicketEventParentChangedComponent}
 import {TicketEventTagComponent} from './ui/ticket-detail/ticket-events/ticket-event-tag/ticket-event-tag.component';
 import {TicketEventOldNewMarkupComponent}
   from './ui/ticket-detail/ticket-events/ticket-event-old-new-markup/ticket-event-old-new-markup.component';
+import { BurnDownChartComponent } from './ui/burn-down-chart/burn-down-chart.component';
 import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
 
 @NgModule({
@@ -150,7 +151,8 @@ import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
     CommandHelpComponent,
     MarkdownTextviewReadComponent,
     ProgressBarComponent,
-
+    BurnDownChartComponent,
+    
     HumanizeDurationPipe,
     FormatMomentPipe,
     MarkdownToHtmlPipe,

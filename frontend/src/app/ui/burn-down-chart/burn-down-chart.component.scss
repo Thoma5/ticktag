@@ -1,0 +1,28 @@
+@import '../../../style/constants.scss';
+
+.burn-down-chart-container {
+    height: 100%;
+    width: 100%;
+}
+
+.core {
+    @extend %card;
+    overflow: hidden;
+    position: relative;
+    max-width: 1024px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.loading {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.title {
+    @extend %title;
+    margin-bottom: $medium-gap;
+}
