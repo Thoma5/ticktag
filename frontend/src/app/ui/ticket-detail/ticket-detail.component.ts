@@ -35,6 +35,7 @@ import { CommentTextviewSaveEvent } from './command-textview/command-textview.co
 export class TicketDetailComponent implements OnInit {
   private queue = new TaskQueue();
 
+  // If you add something here make sure you also add it to refresh() and reset()
   private loading = true;
   private ticketEvents: imm.List<TicketEvent>;
   private ticketDetail: TicketDetail = null;
@@ -87,7 +88,8 @@ export class TicketDetailComponent implements OnInit {
       .switchMap(params => {
         let ticketId = '' + params['ticketNumber'];
         let projectId = '' + params['projectId'];
-        return this.refresh(projectId, ticketId);
+        return this.reset()
+          .flatMap(it => this.refresh(projectId, ticketId));
       })
       .subscribe(() => {
         this.loading = false;
@@ -394,6 +396,41 @@ export class TicketDetailComponent implements OnInit {
         .title('Error')
         .body(errorBody)
         .open();
+  }
+
+  private reset(): Observable<void> {
+    return Observable.defer(() => {
+      this.ticketEvents = undefined;
+      this.ticketDetail = undefined;
+      this.allTicketTags =  undefined;
+      this.allAssignmentTags = undefined;
+      this.allTimeCategories = undefined;
+      this.interestingUsers = undefined;
+      this.interestingLoggedTimes = undefined;
+      this.comments = undefined;
+      this.relatedTickets = undefined;
+      this.relatedProgresses = undefined;
+
+      this.currentTicketJson = undefined;
+      this.transientUsers = imm.List<TicketDetailTransientUser>();
+      this.transientTags = imm.Set<string>();
+      this.transientTicket = undefined;
+
+      this.currentTicketJson = undefined;
+      this.transientUsers = imm.List<TicketDetailTransientUser>();
+      this.transientTags = imm.Set<string>();
+      this.transientTicket = {
+        title: <string>undefined,
+        storyPoints: <number>undefined,
+        initialEstimatedTime: <number>undefined,
+        currentEstimatedTime: <number>undefined,
+        dueDate: <number>undefined,
+        description: <string>undefined,
+      };
+      this.creatingComment = false;
+      this.commentResetEventObservable = new Subject<string>();
+      return Observable.of(undefined);
+    });
   }
 
   private refresh(projectId: string, ticketId: string): Observable<void> {
