@@ -44,11 +44,7 @@ open class UserController @Inject constructor(
     @GetMapping("/{id}/image")
     open fun getUserImage(@PathVariable("id") id: UUID): UserImageJson {
         val image = userService.getUserImage(id)
-        if (image == null) {
-            return UserImageJson("")
-        } else {
-            return UserImageJson(String(Base64.getEncoder().encode(image), charset("ASCII")))
-        }
+        return UserImageJson(String(Base64.getEncoder().encode(image), charset("ASCII")))
     }
 
     @GetMapping("/name/{name}")
