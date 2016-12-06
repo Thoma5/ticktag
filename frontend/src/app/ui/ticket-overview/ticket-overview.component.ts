@@ -3,9 +3,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ApiCallService } from '../../service';
 import {
   TicketApi, TicketResultJson, PageTicketResultJson, AssignmenttagApi,
-  AssignmentTagResultJson, TicketTagResultJson,
+  AssignmentTagResultJson, UserResultJson, TicketTagResultJson,
   TickettagApi, GetApi, GetResultJson,
-  TicketuserrelationApi, TickettagrelationApi
+  TicketuserrelationApi, TickettagrelationApi, ProjectApi
 } from '../../api';
 import {
   TicketOverview, TicketOverviewTag, TicketOverviewAssTag, TicketOverviewUser
@@ -25,6 +25,7 @@ export class TicketOverviewComponent implements OnInit {
   private tickets: TicketOverview[] = [];
   private allAssignmentTags: imm.Map<string, TicketOverviewAssTag>;
   private allTicketTags: imm.Map<string, TicketOverviewTag>;
+  private allProjectUsers: imm.Map<string, TicketOverviewUser>;
   private projectId: string | null = null;
   sortprop = ['NUMBER_ASC'];
   offset = 0;
@@ -46,6 +47,7 @@ export class TicketOverviewComponent implements OnInit {
     private apiCallService: ApiCallService,
     private ticketApi: TicketApi,
     private assigmentTagsApi: AssignmenttagApi,
+    private projectApi: ProjectApi,
     private ticketTagsApi: TickettagApi,
     private getApi: GetApi,
     private ticketAssignmentApi: TicketuserrelationApi,
@@ -89,8 +91,11 @@ export class TicketOverviewComponent implements OnInit {
     let ticketTagsObs = this.apiCallService
       .callNoError<TicketTagResultJson[]>(p => this.ticketTagsApi.listTicketTagsUsingGETWithHttpInfo(null, projectId, p))
       .map(tts => idListToMap(tts).map(tt => new TicketOverviewTag(tt)).toMap());
+    let projectUsersObs = this.apiCallService
+      .callNoError<UserResultJson[]>(p => this.projectApi.listProjectUsersUsingGETWithHttpInfo(projectId, p))
+      .map(users => idListToMap(users).map(user => new TicketOverviewUser(user)).toMap());
     return Observable
-      .zip(rawTicketObs, assignmentTagsObs, ticketTagsObs)
+      .zip(rawTicketObs, assignmentTagsObs, ticketTagsObs, projectUsersObs)
       .flatMap(tuple => {
         let ticketsResult = tuple[0];
         // We need all assigned users

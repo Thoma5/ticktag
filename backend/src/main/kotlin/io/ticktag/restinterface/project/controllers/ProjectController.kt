@@ -7,6 +7,7 @@ import io.ticktag.restinterface.project.schema.CreateProjectRequestJson
 import io.ticktag.restinterface.project.schema.ProjectResultJson
 import io.ticktag.restinterface.project.schema.ProjectSort
 import io.ticktag.restinterface.project.schema.UpdateProjectRequestJson
+import io.ticktag.restinterface.user.schema.UserResultJson
 import io.ticktag.service.Principal
 import io.ticktag.service.project.dto.CreateProject
 import io.ticktag.service.project.dto.UpdateProject
@@ -51,6 +52,12 @@ open class ProjectController @Inject constructor(
             val content = page.content.map(::ProjectResultJson)
             PageImpl(content, pageRequest, page.totalElements)
         }
+    }
+    @GetMapping(value = "/{id}/users")
+    open fun listProjectUsers(@PathVariable(name = "id") id: UUID,
+                          @AuthenticationPrincipal principal: Principal
+    ): List<UserResultJson> {
+        return projectService.listUserProjectUsers(id).map(::UserResultJson)
     }
 
     @PostMapping
