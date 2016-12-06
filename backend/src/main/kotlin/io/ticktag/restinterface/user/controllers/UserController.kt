@@ -22,8 +22,11 @@ open class UserController @Inject constructor(
 ) {
 
     @PostMapping
-    open fun createUser(@RequestBody req: CreateUserRequestJson): UserResultJson {
-        val user = userService.createUser(CreateUser(mail = req.mail, name = req.name, password = req.password, role = req.role, username = req.username))
+    open fun createUser(@RequestBody req: CreateUserRequestJson,
+                        @AuthenticationPrincipal principal: Principal
+    ): UserResultJson {
+        val create = CreateUser(mail = req.mail, name = req.name, password = req.password, role = req.role, username = req.username)
+        val user = userService.createUser(create, principal)
         return UserResultJson(user)
     }
 
@@ -37,8 +40,10 @@ open class UserController @Inject constructor(
     }
 
     @GetMapping(value = "/{id}")
-    open fun getUser(@PathVariable(name = "id") id: UUID): UserResultJson {
-        return UserResultJson(userService.getUser(id))
+    open fun getUser(@PathVariable(name = "id") id: UUID,
+                     @AuthenticationPrincipal principal: Principal
+    ): UserResultJson {
+        return UserResultJson(userService.getUser(id, principal))
     }
 
     @GetMapping("/{id}/image")
@@ -48,22 +53,28 @@ open class UserController @Inject constructor(
     }
 
     @GetMapping("/name/{name}")
-    open fun getUserByUsername(@PathVariable(name = "name") username: String): UserResultJson {
-        return UserResultJson(userService.getUserByUsername(username))
+    open fun getUserByUsername(@PathVariable(name = "name") username: String,
+                               @AuthenticationPrincipal principal: Principal
+    ): UserResultJson {
+        return UserResultJson(userService.getUserByUsername(username, principal))
     }
 
     // TODO paging, filter, sorting
     @GetMapping
-    open fun listUsers(): List<UserResultJson> {
-        return userService.listUsers().map(::UserResultJson)
+    open fun listUsers(
+            @AuthenticationPrincipal principal: Principal
+    ): List<UserResultJson> {
+        return userService.listUsers(principal).map(::UserResultJson)
     }
 
     @GetMapping("/fuzzy")
     open fun listUsersFuzzy(
-            @RequestParam(name="projectId", required = true) projectId: UUID,
-            @RequestParam(name="q", required = true) query: String,
-            @RequestParam(name="order", required = true) order: List<UserSort>): List<UserResultJson> {
-        val result = userService.listUsersFuzzy(projectId, query, PageRequest(0, 15, Sort(order.map { it.order })))
+            @RequestParam(name = "projectId", required = true) projectId: UUID,
+            @RequestParam(name = "q", required = true) query: String,
+            @RequestParam(name = "order", required = true) order: List<UserSort>,
+            @AuthenticationPrincipal principal: Principal
+    ): List<UserResultJson> {
+        val result = userService.listUsersFuzzy(projectId, query, PageRequest(0, 15, Sort(order.map { it.order })), principal)
         return result.map(::UserResultJson)
     }
 

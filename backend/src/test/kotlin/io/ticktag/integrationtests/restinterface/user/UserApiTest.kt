@@ -1,4 +1,4 @@
-package io.ticktag.restinterface.user
+package io.ticktag.integrationtests.restinterface.user
 
 import io.ticktag.ADMIN_ID
 import io.ticktag.OBSERVER_ID
@@ -33,20 +33,20 @@ class UserApiTest : ApiBaseTest() {
 
     @Test(expected = AccessDeniedException::class)
     fun test_createUser_negative() {
-        withUser(OBSERVER_ID) { ->
+        withUser(OBSERVER_ID) { p ->
             val req = CreateUserRequestJson("a@b.com", "name", "password", "unique_test_user", Role.USER)
-            userController.createUser(req)
+            userController.createUser(req, p)
         }
     }
 
     @Test
     fun test_createUser_positive() {
-        withUser(ADMIN_ID) { ->
+        withUser(ADMIN_ID) { p ->
             val req = CreateUserRequestJson("a@b.com", "name", "password", "unique_test_user", Role.USER)
-            val res = userController.createUser(req)
+            val res = userController.createUser(req, p)
 
             val userId = res.id
-            val storedUser = userController.listUsers()
+            val storedUser = userController.listUsers(p)
                     .filter { it.id == userId }
                     .singleOrNull()
 
@@ -71,7 +71,7 @@ class UserApiTest : ApiBaseTest() {
 
             userController.updateUser(id, UpdateUserRequestJson(oldPassword = "aaaa", password = newPassword, mail = mail, role = Role.ADMIN, name = name), principal)
 
-            val user = userController.getUser(id)
+            val user = userController.getUser(id, principal)
 
             assertEquals(user.name, name)
             assertEquals(user.mail, mail)
@@ -94,7 +94,7 @@ class UserApiTest : ApiBaseTest() {
         withUser(id) { principal ->
             userController.updateUser(id, UpdateUserRequestJson(oldPassword = OBSERVER_PASSWORD, password = newPassword, mail = mail, role = null, name = name), principal)
 
-            val user = userController.getUser(id)
+            val user = userController.getUser(id, principal)
 
             assertEquals(user.name, name)
             assertEquals(user.mail, mail)
@@ -116,7 +116,7 @@ class UserApiTest : ApiBaseTest() {
     }
 
 
-    @Test(expected = org.springframework.security.access.AccessDeniedException::class)
+    @Test(expected = AccessDeniedException::class)
     fun test_checkUpdate_other_user_shouldFail() {
         val ownId = USER_ID
         val otherId = OBSERVER_ID
@@ -127,12 +127,42 @@ class UserApiTest : ApiBaseTest() {
 
     @Test
     fun `listUsersFuzzy should find two users`() {
-        withUser(ADMIN_ID) { ->
-            val users = userController.listUsersFuzzy(UUID.fromString("00000000-0002-0000-0000-000000000001"), "user", listOf(UserSort.NAME_ASC))
+        withUser(ADMIN_ID) { p ->
+            val users = userController.listUsersFuzzy(UUID.fromString("00000000-0002-0000-0000-000000000001"), "user", listOf(UserSort.NAME_ASC), p)
 
             assertEquals(2, users.size)
             assertEquals("Berta Berta", users[0].name)
             assertEquals("Mr. A", users[1].name)
+        }
+    }
+
+    @Test
+    fun `getUser with other user should hide email`() {
+        val newUser = withUser(ADMIN_ID) { p ->
+            userController.createUser(CreateUserRequestJson("newuser@example.com", "newuser", "new user", "password", Role.USER), p)
+        }
+
+        withUser(USER_ID) { p ->
+            val result = userController.getUser(newUser.id, p)
+            assertEquals("new user", result.name)
+            assertNull(result.mail)
+        }
+    }
+
+    @Test
+    fun `getUser with observer should show email`() {
+        withUser(OBSERVER_ID) { p ->
+            val result = userController.getUser(USER_ID, p)
+            assertEquals("user1@ticktag.a", result.mail)
+        }
+    }
+
+    @Test
+    fun `getUser with common project should show email`() {
+        withUser(USER_ID) { p ->
+            val result = userController.getUser(OBSERVER_ID, p)
+            assertEquals("Obelix Observer", result.name)
+            assertEquals("observer@ticktag.a", result.mail)
         }
     }
 }

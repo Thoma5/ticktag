@@ -1,4 +1,4 @@
-package io.ticktag.integrationtests
+package io.ticktag
 
 import com.google.common.io.Resources
 import io.ticktag.persistence.comment.CommentRepository
@@ -62,6 +62,7 @@ abstract class BaseTest {
     fun setUp() {
         datasource.connection.tryw({
             initDb(it)
+            execResource(it, "sql/testCleanup.sql")
             for (sql in loadTestData())
                 execResource(it, sql)
         })
@@ -94,7 +95,7 @@ abstract class BaseTest {
         if (SecurityContextHolder.getContext().authentication != null)
             throw RuntimeException("Called withoutUser even though the security context is already set")
 
-        SecurityContextHolder.getContext().authentication = PreAuthenticatedAuthenticationToken(Principal.INTERNAL, null, emptySet())
+        SecurityContextHolder.getContext().authentication = PreAuthenticatedAuthenticationToken(Principal.Companion.INTERNAL, null, emptySet())
         try {
             return proc()
         } finally {

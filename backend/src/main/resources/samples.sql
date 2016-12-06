@@ -1,4 +1,7 @@
-﻿BEGIN;
+BEGIN;
+
+UPDATE "ticket" SET "description_comment_id" = NULL;
+UPDATE "ticket_tag_group" SET "default_ticket_tag_id" = NULL;
 DELETE FROM "ticket_event_comment_text_changed" CASCADE;
 DELETE FROM "ticket_event_current_estimated_time_changed" CASCADE;
 DELETE FROM "ticket_event_due_date_changed" CASCADE;

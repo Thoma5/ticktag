@@ -14,12 +14,23 @@
   text-decoration: line-through;
 }
 
-.number {
-  width: 5%;
+.number-col {
+  width: 10%;
+}
+
+.loading {
+  width: 1em;
+  height: 1em;
+}
+
+.error {
+  width: 1em;
+  height: 1em;
 }
 
 .title {
   width: 20%;
+  overflow: hidden;
   margin-left: $internal-gap;
 }
 
@@ -29,7 +40,19 @@
   margin-left: $internal-gap;
 }
 
-.progress-numbers {
-  width: 10%;
+.progress-numbers-logged {
+  width: 7.5%;
+  text-align: right;
   margin-left: $internal-gap;
+}
+
+.progress-numbers-estimated {
+  width: 7.5%;
+  text-align: right;
+}
+
+.progress-numbers-initial {
+  width: 7.5%;
+  color: palette(Grey, 600);
+  text-align: right;
 }

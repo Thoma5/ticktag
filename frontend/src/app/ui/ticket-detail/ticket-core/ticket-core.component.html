@@ -23,15 +23,21 @@
         </div>
         <div class='section-header'>Subtickets</div>
         <div class='subtickets'>
-            <tt-subtickets [tickets]='subtickets'>
-            </tt-subtickets>
-            <tt-subticket-add
+            <tt-subtickets
               [parentTicket]='ticket'
-              [allTicketTags]='allTicketTags'
-              [allTimeCategories]='allTimeCategories'
-              [allAssignmentTags]='allAssignmentTags'
-              (ticketAdd)='subticketAdd.emit($event)'
-            ></tt-subticket-add>
+              [tickets]='subtickets'
+              (ticketRestore)='onSubticketRestore($event)'
+            ></tt-subtickets>
+            <div class="subticket-add">
+              <tt-subticket-add
+                [parentTicket]='ticket'
+                [allTicketTags]='allTicketTags'
+                [allTimeCategories]='allTimeCategories'
+                [allAssignmentTags]='allAssignmentTags'
+                [resetEventObservable]='subticketAddResetSubject'
+                (ticketAdd)='subticketAdd.emit($event)'
+              ></tt-subticket-add>
+            </div>
         </div>
         <div class='section-header'>Status</div>
         <div class='status'>
@@ -42,17 +48,18 @@
                 Current estimation: <tt-edit-textview-time [content]="currentEstimatedTime" [transient]="currentEstimatedTimeTransient" (contentChange)="currentEstimatedTimeChange.emit($event)"></tt-edit-textview-time>
             </div>
             <div class='ticket-progress'>
-                Progress: {{ ticket.progress.percent | ttPercent }}
+                <span>Progress: </span>
+                <span>{{ ticket.progress.percent | ttPercent }}</span>
             </div>
             <div class='due-date'>
                 Due date: <tt-edit-textview-datetime [content]="dueDate" [transient]="dueDateTransient" (contentChange)="dueDateChange.emit($event)"></tt-edit-textview-datetime>
             </div>
         </div>
-        <div class='status-progress'>
+        <div *ngIf="ticket.currentEstimatedTime != null" class='status-progress'>
           <tt-progressbar
             [showNumbers]="true"
             [fraction]="ticket.progress.totalLoggedTime"
-            [totalValue]="ticket.progress.currentEstimatedTime">
+            [totalValue]="ticket.progress.totalCurrentEstimatedTime">
           </tt-progressbar>
         </div>
         <div class='section-header'>

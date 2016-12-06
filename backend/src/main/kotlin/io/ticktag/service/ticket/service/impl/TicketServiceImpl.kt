@@ -4,11 +4,8 @@ import io.ticktag.TicktagService
 import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.project.ProjectRepository
 import io.ticktag.persistence.ticket.TicketEventRepository
-import io.ticktag.persistence.ticket.entity.*
 import io.ticktag.persistence.ticket.TicketRepository
-import io.ticktag.persistence.ticket.entity.Comment
-import io.ticktag.persistence.ticket.entity.Ticket
-import io.ticktag.persistence.ticket.entity.TicketTag
+import io.ticktag.persistence.ticket.entity.*
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.*
 import io.ticktag.service.command.service.CommandService
@@ -73,22 +70,12 @@ open class TicketServiceImpl @Inject constructor(
     override fun createTicket(@Valid createTicket: CreateTicket, principal: Principal, @P("authProjectId") projectId: UUID): TicketResult {
 
         val wantToSetParentTicket = createTicket.parentTicket != null
-        val dontWantToCreateSubTicketsInThisUpdate = createTicket.subTickets.isEmpty()
-        val dontWantToReferenceSubTicketsInThisUpdate = createTicket.existingSubTicketIds.isEmpty()
-
-        //implies(q,p) is only false if q is true and p is false
-        if (!(implies(wantToSetParentTicket, (dontWantToCreateSubTicketsInThisUpdate && dontWantToReferenceSubTicketsInThisUpdate)))) {
-            throw TicktagValidationException(listOf(ValidationError("updateUser.parentTicket", ValidationErrorDetail.Other("subTickets are Set"))))
-        }
-
         val wantToSetSubTickets = (createTicket.subTickets.isNotEmpty()) || //creates New SubTickets
                 (createTicket.existingSubTicketIds.isNotEmpty()) // references SubTickets
-        val dontWantToSetParentTicket = createTicket.parentTicket == null
 
-        if (!(implies(wantToSetSubTickets, dontWantToSetParentTicket))) {
-            throw TicktagValidationException(listOf(ValidationError("updateUser.subTickets", ValidationErrorDetail.Other("tickets are Set"))))
+        if (wantToSetParentTicket && wantToSetSubTickets) {
+            throw TicktagValidationException(listOf(ValidationError("createTicket", ValidationErrorDetail.Other("nonestedsubtickets"))))
         }
-
 
         val number = (tickets.findHighestTicketNumberInProject(createTicket.projectID) ?: 0) + 1
         val createTime = Instant.now()
@@ -102,10 +89,9 @@ open class TicketServiceImpl @Inject constructor(
         val user = users.findOne(principal.id) ?: throw NotFoundException()
 
 
-        var parentTicket: Ticket? = null
-        val parentTicketCopy = createTicket.parentTicket
-        if ((parentTicketCopy != null)) {
-            parentTicket = tickets.findOne(parentTicketCopy)
+        val parentTicket: Ticket? = createTicket.parentTicket?.let { tickets.findOne(it) }
+        if (parentTicket?.parentTicket != null) {
+            throw TicktagValidationException(listOf(ValidationError("createTicket", ValidationErrorDetail.Other("nonestedsubtickets"))))
         }
         val newTicket = Ticket.create(number, createTime, title, open, storyPoints, initialEstimatedTime, currentEstimatedTime, dueDate, parentTicket, project, user)
         tickets.insert(newTicket)
@@ -120,23 +106,17 @@ open class TicketServiceImpl @Inject constructor(
         //Assignee
         val ticketAssignmentList = emptyList<TicketAssignmentResult>().toMutableList() // Attach this list after the conversion of newTicket to ticketResult to avoid code duplication
         for ((assignmentTagId, userId) in createTicket.ticketAssignments) {
-            val ticketAssignmentResult = ticketAssignmentService.createTicketAssignment(newTicket.id, assignmentTagId, userId,principal)
+            val ticketAssignmentResult = ticketAssignmentService.createTicketAssignment(newTicket.id, assignmentTagId, userId, principal)
             ticketAssignmentList.add(ticketAssignmentResult)
         }
 
         //SubTickets
         val newSubs: MutableList<UUID> = emptyList<UUID>().toMutableList()
         newSubs.addAll(createTicket.subTickets.map({ sub ->
-            sub.parentTicket = newTicket.id
-            createTicket(sub, principal, projectId).id
+            val subCreateReq = sub.copy(parentTicket = newTicket.id)
+            createTicket(subCreateReq, principal, projectId).id
         }))
-
         newSubs.addAll(createTicket.existingSubTicketIds)
-
-        newSubs.forEach { subID ->
-            val subTicket = tickets.findOne(subID) ?: throw NotFoundException()
-            subTicket.parentTicket = newTicket
-        }
 
         // Execute commands
         commandService.applyCommands(newComment, createTicket.commands, principal)
@@ -147,14 +127,9 @@ open class TicketServiceImpl @Inject constructor(
         return ticketResult
     }
 
-    private fun implies(p: Boolean, q: Boolean): Boolean {
-        return !p || q
-    }
-
-    //TODO: Log Changes in History
     @PreAuthorize(AuthExpr.WRITE_TICKET)
     override fun updateTicket(@Valid updateTicket: UpdateTicket, @P("authTicketId") ticketId: UUID, principal: Principal): TicketResult {
-        val user = users.findOne(principal.id)?: throw NotFoundException()
+        val user = users.findOne(principal.id) ?: throw NotFoundException()
         val ticket = tickets.findOne(ticketId) ?: throw NotFoundException()
 
 
@@ -191,6 +166,14 @@ open class TicketServiceImpl @Inject constructor(
 
         if (updateTicket.parentTicket != null) {
             val parentTicket = tickets.findOne(updateTicket.parentTicket) ?: throw NotFoundException()
+
+            if (parentTicket.parentTicket != null) {
+                throw TicktagValidationException(listOf(ValidationError("updateTicket", ValidationErrorDetail.Other("nonestedsubtickets"))))
+            }
+            if (ticket.subTickets.isNotEmpty()) {
+                throw TicktagValidationException(listOf(ValidationError("updateTicket", ValidationErrorDetail.Other("nonestedsubtickets"))))
+            }
+
             if (ticket.parentTicket != parentTicket)
                 ticketEvents.insert(TicketEventParentChanged.create(ticket, user, ticket.parentTicket, parentTicket))
             ticket.parentTicket = parentTicket

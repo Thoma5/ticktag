@@ -21,7 +21,7 @@ data class CreateTicket(
         val ticketAssignments: List<TicketAssignment>,
         val subTickets: List<CreateTicket>,
         val existingSubTicketIds: List<UUID>,
-        var parentTicket: UUID?,
+        val parentTicket: UUID?,
         val commands: List<Command>
 ) {
     constructor(req: CreateTicketRequestJson, subtickets: List<CreateTicket>, commands: List<Command>) : this(
