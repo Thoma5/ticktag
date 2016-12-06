@@ -155,6 +155,5 @@ export class TicketOverviewComponent implements OnInit {
     if (event.type === 'keydown' && event.event.code === 'Enter') {
       this.router.navigate(['/project', this.projectId, 'ticket', event.row.id]);
     }
-    }
   }
 }

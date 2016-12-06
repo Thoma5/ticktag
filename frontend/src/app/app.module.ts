@@ -69,6 +69,7 @@ import { TicketOverviewComponent } from'./ui/ticket-overview/ticket-overview.com
 import { AssignedUserOverviewComponent } from'./ui/ticket-overview/assigned-user/assigned-user-overview.component';
 import { SpinnerComponent } from './util/spinner/spinner.component';
 import { CommandTextviewComponent } from './ui/ticket-detail/command-textview/command-textview.component';
+import { CommandSearchComponent } from './ui/ticket-overview/command-search/command-search.component';
 import { CommandDescriptionComponent } from './ui/ticket-detail/command-description/command-description.component';
 import { CommandHelpComponent } from './ui/ticket-detail/command-help/command-help.component';
 import { ProgressBarComponent } from './util/progressbar/progressbar.component';
@@ -145,6 +146,7 @@ import {TicketEventOldNewMarkupComponent}
     TicketCommentInputComponent,
     EditButtonComponent,
     CommandTextviewComponent,
+    CommandSearchComponent,
     CommandDescriptionComponent,
     CommandHelpComponent,
     MarkdownTextviewReadComponent,
