@@ -15,6 +15,15 @@ body {
     background-image: url('../public/img/handmadepaper.png')
 }
 
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+
 md-sidenav-layout {
     background: none;
 }

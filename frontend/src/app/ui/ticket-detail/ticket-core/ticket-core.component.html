@@ -3,6 +3,14 @@
         <img src='/img/checkmark_circle.svg' />
     </div>
     <div class='card-content'>
+        <div class='storypoints'>
+          <div class='ribbon'>
+            <div class='ribbon-content'>
+              <tt-ticket-storypoints [points]='storypoints' (pointsChange)='storypointsChange.emit($event)' [transient]="storypointsTransient">
+              </tt-ticket-storypoints>
+            </div>
+          </div>
+        </div>
         <div class='header-row'>
             <h3 class='title'>
                 <div class='title-container'>
@@ -12,8 +20,6 @@
                     </span>
                 </div>
             </h3>
-            <tt-ticket-storypoints [points]='storypoints' (pointsChange)='storypointsChange.emit($event)' [transient]="storypointsTransient">
-            </tt-ticket-storypoints>
         </div>
         <div class='sub-header-row'>
             <div class='tags'>
