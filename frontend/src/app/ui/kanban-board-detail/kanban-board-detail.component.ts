@@ -74,15 +74,29 @@ export class KanbanBoardDetailComponent implements OnInit {
         columns.push(u);
       }
     });
-    let updateObs = this.apiCallService.callNoError<void>(p => this.kanbanBoardApi.updateKanbanBoardsUsingPUTWithHttpInfo(this.kanbanBoard.id, columns, p));
-    let obs = this.apiCallService
-      .call<void>(p => this.ticketTagRelationApi.setTicketTagRelationUsingPUTWithHttpInfo(ticketId, targetTagId, p))
-      .flatMap(result => {
-        return updateObs;
+    let tagIdsOfElement: string[] = [];
+   this.interestingTickets.get(ticketId).tags.forEach(tag => {
+      tagIdsOfElement.push(tag.id);
+      console.log("push: "+tag.id);
+   });
+    console.log("ele Tags: " + tagIdsOfElement);
+    console.log("targetId:" + targetTagId);
+    if(tagIdsOfElement.includes(targetTagId)){
+      let updateObs = this.apiCallService.callNoError<void>(p => this.kanbanBoardApi.updateKanbanBoardsUsingPUTWithHttpInfo(this.kanbanBoard.id, columns, p));
+      this.queue.push(updateObs).subscribe(result => {
+        this.refresh(this.kanbanBoard.projectId, this.kanbanBoard.id).subscribe();
       });
-    this.queue.push(obs).subscribe(result => {
-      this.refresh(this.kanbanBoard.projectId, this.kanbanBoard.id).subscribe();
-    });
+    }else {
+      let updateObs = this.apiCallService.callNoError<void>(p => this.kanbanBoardApi.updateKanbanBoardsUsingPUTWithHttpInfo(this.kanbanBoard.id, columns, p));
+      let obs = this.apiCallService
+        .call<void>(p => this.ticketTagRelationApi.setTicketTagRelationUsingPUTWithHttpInfo(ticketId, targetTagId, p))
+        .flatMap(result => {
+          return updateObs;
+        });
+      this.queue.push(obs).subscribe(result => {
+        this.refresh(this.kanbanBoard.projectId, this.kanbanBoard.id).subscribe();
+      });
+    }
   }
 
   ngOnInit(): void {
