@@ -15,7 +15,16 @@ import io.ticktag.service.user.services.UserService
 import org.springframework.data.domain.Pageable
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
+import java.awt.Color
+import java.awt.Font
+import java.awt.geom.AffineTransform
+import java.awt.geom.Rectangle2D
+import java.awt.image.BufferedImage
+import java.io.ByteArrayOutputStream
+import java.nio.ByteBuffer
+import java.security.MessageDigest
 import java.util.*
+import javax.imageio.ImageIO
 import javax.inject.Inject
 import javax.validation.Valid
 
@@ -26,7 +35,13 @@ open class UserServiceImpl @Inject constructor(
         private val nn: NameNormalizationLibrary
 ) : UserService {
 
-    @PreAuthorize(AuthExpr.USER)
+    @PreAuthorize(AuthExpr.USER)  // TODO maybe refine
+    override fun getUserImage(id: UUID): ByteArray {
+        val user = users.findOne(id) ?: throw NotFoundException()
+        return user.image?.image ?: generateDefaultImagePng(user)
+    }
+
+    @PreAuthorize(AuthExpr.USER)  // TODO maybe refine
     override fun getUserByUsername(username: String, principal: Principal): UserResult {
         return userToDto(users.findByUsername(username) ?: throw NotFoundException(), principal)
     }
@@ -69,7 +84,7 @@ open class UserServiceImpl @Inject constructor(
         val mail = createUser.mail
         val name = createUser.name
         val passwordHash = hashing.hashPassword(createUser.password)
-        val user = User.create(mail, passwordHash, name, createUser.username, createUser.role, UUID.randomUUID(), createUser.profilePic)
+        val user = User.create(mail, passwordHash, name, createUser.username, createUser.role, UUID.randomUUID())
         users.insert(user)
 
         return userToDto(user, principal)
@@ -112,9 +127,6 @@ open class UserServiceImpl @Inject constructor(
             user.name = updateUser.name
         }
 
-        if (updateUser.profilePic != null) {
-            user.profilePic = updateUser.profilePic
-        }
         if (updateUser.role != null) {
             if (principal.hasRole(AuthExpr.ROLE_GLOBAL_ADMIN)) {  //Only Admins can change user roles!
                 user.role = updateUser.role
@@ -142,5 +154,49 @@ open class UserServiceImpl @Inject constructor(
     private fun unsafeUpdateUserPassword(user: User, newPassword: String) {
         user.passwordHash = hashing.hashPassword(newPassword)
         user.currentToken = UUID.randomUUID()
+    }
+
+    private fun generateDefaultImagePng(user: User): ByteArray {
+        val hash = ByteBuffer.wrap(MessageDigest.getInstance("SHA-1").digest(user.username.toByteArray()))
+        val alpha = intToDouble(hash.getInt(0), 0.0, Math.PI)
+        val hue0 = intToDouble(hash.getInt(4), 0.0, 1.0).toFloat()
+        val hue1 = intToDouble(hash.getInt(8), 0.0, 1.0).toFloat()
+        val letter = "${user.username[0].toUpperCase()}"
+
+        val image = BufferedImage(128, 128, BufferedImage.TYPE_INT_RGB)
+        val g = image.createGraphics()
+
+        g.scale(image.width.toDouble(), image.height.toDouble())
+        g.translate(0.5, 0.5)
+        g.rotate(alpha)
+        g.color = Color.getHSBColor(hue0, 0.5f, 1.0f)
+        g.fill(Rectangle2D.Double(-2.0, -2.0, 4.0, 4.0))
+        g.color = Color.getHSBColor(hue1, 0.5f, 1.0f)
+        g.fill(Rectangle2D.Double(0.0, -2.0, 2.0, 4.0))
+
+        g.transform = AffineTransform()
+        val font = Font("Arial", Font.PLAIN, 72)
+        g.font = font
+        g.color = Color.BLACK
+        val bounds = g.fontMetrics.getStringBounds(letter, g)
+        g.drawString(
+                letter,
+                image.width.toFloat() / 2 - bounds.width.toFloat() / 2,
+                image.height.toFloat() / 2 - bounds.height.toFloat() / 2 - bounds.minY.toFloat())
+
+        val bos = ByteArrayOutputStream()
+        ImageIO.write(image, "png", bos)
+        bos.close()
+        return bos.toByteArray()
+    }
+
+    private fun intToDouble(i: Int, from: Double, to: Double): Double {
+        assert(from <= to)
+        var d = i.toDouble()  // [-2^31, 2^31)
+        d -= Int.MIN_VALUE.toDouble()  // [0, 2^32)
+        d /= Int.MAX_VALUE.toDouble() - Int.MIN_VALUE.toDouble()  // [0, 1)
+        d *= to - from  // [0, to-from)
+        d += from  // [from, to)
+        return d
     }
 }

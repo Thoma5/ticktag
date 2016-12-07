@@ -10,7 +10,7 @@ import { ModalModule } from 'angular2-modal';
 import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
 
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
-import { AuthService, ApiCallService, MarkdownService } from './service';
+import { AuthService, ApiCallService, MarkdownService, ImagesService } from './service';
 import { LoginComponent } from './ui/login/login.component';
 import { WhoamiComponent } from './ui/whoami/whoami.component';
 import { HomeComponent } from './ui/home/home.component';
@@ -181,6 +181,7 @@ import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
     ApiCallService,
     AuthService,
     MarkdownService,
+    ImagesService,
   ],
   bootstrap: [AppComponent]
 })

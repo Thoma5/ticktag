@@ -11,6 +11,5 @@ data class CreateUser(
         @field:Pattern(regexp = User.USERNAME_REGEX) val username: String,
         @field:Size(min = 3, max = 30) val name: String,
         @field:Size(min = 1) val password: String,
-        val role: Role,
-        val profilePic: ByteArray?
+        val role: Role
 )

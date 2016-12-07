@@ -25,7 +25,7 @@ open class UserController @Inject constructor(
     open fun createUser(@RequestBody req: CreateUserRequestJson,
                         @AuthenticationPrincipal principal: Principal
     ): UserResultJson {
-        val create = CreateUser(mail = req.mail, name = req.name, password = req.password, role = req.role, profilePic = req.profilePic, username = req.username)
+        val create = CreateUser(mail = req.mail, name = req.name, password = req.password, role = req.role, username = req.username)
         val user = userService.createUser(create, principal)
         return UserResultJson(user)
     }
@@ -35,7 +35,7 @@ open class UserController @Inject constructor(
                         @RequestBody req: UpdateUserRequestJson,
                         @AuthenticationPrincipal principal: Principal): UserResultJson {
         val user = userService.updateUser(principal, id, UpdateUser(mail = req.mail, name = req.name, password = req.password,
-                role = req.role, profilePic = req.profilePic, oldPassword = req.oldPassword))
+                role = req.role, oldPassword = req.oldPassword))
         return UserResultJson(user)
     }
 
@@ -44,6 +44,12 @@ open class UserController @Inject constructor(
                      @AuthenticationPrincipal principal: Principal
     ): UserResultJson {
         return UserResultJson(userService.getUser(id, principal))
+    }
+
+    @GetMapping("/{id}/image")
+    open fun getUserImage(@PathVariable("id") id: UUID): UserImageJson {
+        val image = userService.getUserImage(id)
+        return UserImageJson(String(Base64.getEncoder().encode(image), charset("ASCII")))
     }
 
     @GetMapping("/name/{name}")

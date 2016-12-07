@@ -1,52 +1,16 @@
 BEGIN;
-DELETE FROM "ticket_event_comment_text_changed";
-DELETE FROM "ticket_event_current_estimated_time_changed";
-DELETE FROM "ticket_event_due_date_changed";
-DELETE FROM "ticket_event_initial_estimated_time_changed";
-DELETE FROM "ticket_event_logged_time_added";
-DELETE FROM "ticket_event_logged_time_removed";
-DELETE FROM "ticket_event_mention_added";
-DELETE FROM "ticket_event_parent_changed";
-DELETE FROM "ticket_event_state_changed";
-DELETE FROM "ticket_event_story_points_changed";
-DELETE FROM "ticket_event_tag_added";
-DELETE FROM "ticket_event_tag_removed";
-DELETE FROM "ticket_event_title_changed";
-DELETE FROM "ticket_event_user_added";
-DELETE FROM "ticket_event_user_removed";
-DELETE FROM "ticket_event";
-
-DELETE FROM "logged_time";
-DELETE FROM "time_category";
-DELETE FROM "assigned_ticket_user";
-DELETE FROM "assignment_tag";
-DELETE FROM "assigned_ticket_tag";
-UPDATE TICKET
-SET description_comment_id = NULL;
-DELETE FROM "comment";
-DELETE FROM "ticket";
-UPDATE public.ticket_tag_group
-SET default_ticket_tag_id = NULL;
-DELETE FROM "ticket_tag";
-DELETE FROM "ticket_tag_group";
-DELETE FROM "member";
-DELETE FROM "project";
-DELETE FROM "user";
 
 --########################################## USERS ###################################################################
 --####################################################################################################################
-INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, profile_pic) VALUES
+INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token) VALUES
   ('00000000-0001-0000-0000-000000000101', 'admit', 'admin@ticktag.a', 'Admiral Admin',
-   '$2a$10$mTEkiQq2Wo./aqfekJHPk.5sG8JLWqWYbtMODwk9xQwQp0GtkCiM.', 'ADMIN', '00000000-0001-0000-0000-abcdef123641',
-   NULL); --aaaa
-INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, profile_pic) VALUES
+   '$2a$10$mTEkiQq2Wo./aqfekJHPk.5sG8JLWqWYbtMODwk9xQwQp0GtkCiM.', 'ADMIN', '00000000-0001-0000-0000-abcdef123641'); --aaaa
+INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token) VALUES
   ('00000000-0001-0000-0000-000000000102', 'obelix', 'observer@ticktag.a', 'Obelix Observer',
-   '$2a$10$Ydzo0FR5x8ZweeaeIQS2gevmLqsZuS37.bWRYy.f.u62NG00MAOcS', 'OBSERVER', '00000000-0001-0000-2343-abcdef123641',
-   NULL); --bbbb
-INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, profile_pic) VALUES
+   '$2a$10$Ydzo0FR5x8ZweeaeIQS2gevmLqsZuS37.bWRYy.f.u62NG00MAOcS', 'OBSERVER', '00000000-0001-0000-2343-abcdef123641'); --bbbb
+INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token) VALUES
   ('00000000-0001-0000-0000-000000000103', 'userla', 'user1@ticktag.a', 'Ursula User',
-   '$2a$10$OgvbSbiDxizgC/6K3dhVwO8iY6.QFS6f2PvE1AyJS1Vmo6Rnb3Gve', 'USER', '00000000-0001-8676-0000-abcdef123641',
-   NULL); --cccc
+   '$2a$10$OgvbSbiDxizgC/6K3dhVwO8iY6.QFS6f2PvE1AyJS1Vmo6Rnb3Gve', 'USER', '00000000-0001-8676-0000-abcdef123641'); --cccc
 --######################################## PROJECT ###################################################################
 --####################################################################################################################
 INSERT INTO "project" VALUES

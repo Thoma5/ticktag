@@ -14,7 +14,7 @@ class TicketProgressTest : ApiBaseTest() {
     lateinit var statisticController: StatisticController
 
     override fun loadTestData(): List<String> {
-        return arrayListOf("sql/testBaseSamples.sql", "sql/testProgressTicketSamples.sql")
+        return arrayListOf("sql/testProgressTicketSamples.sql")
     }
 
     @Test

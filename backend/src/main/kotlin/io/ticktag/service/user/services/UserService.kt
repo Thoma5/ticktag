@@ -15,6 +15,7 @@ interface UserService {
     fun listUsers(principal: Principal): List<UserResult>
     fun listRoles(): List<RoleResult>
     fun updateUser(principal: Principal, id: UUID, updateUser: UpdateUser): UserResult
+    fun getUserImage(id: UUID): ByteArray
     fun listUsersFuzzy(projectId: UUID, query: String, pageable: Pageable, principal: Principal): List<UserResult>
     fun getUsers(ids: Collection<UUID>, principal: Principal): Map<UUID, UserResult>
     fun getUserByUsername(username: String, principal: Principal): UserResult

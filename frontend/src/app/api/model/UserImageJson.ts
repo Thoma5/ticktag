@@ -25,23 +25,8 @@
 
 import * as models from './models';
 
-export interface UpdateUserRequestJson {
-    mail?: string;
+export interface UserImageJson {
+    base64: string;
 
-    name?: string;
-
-    password?: string;
-
-    oldPassword?: string;
-
-    role?: UpdateUserRequestJson.RoleEnum;
-
-}
-export namespace UpdateUserRequestJson {
-    export enum RoleEnum {
-        USER = <any> 'USER',
-        OBSERVER = <any> 'OBSERVER',
-        ADMIN = <any> 'ADMIN'
-    }
 }
 
