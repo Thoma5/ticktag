@@ -8,15 +8,25 @@ import { Tag } from '../../util/taginput/taginput.component';
 
 export class TicketDetailProgress {
   readonly ticketId: string;
+  readonly loggedTime: number;
   readonly currentEstimatedTime: number;
+  readonly totalCurrentEstimatedTime: number;
   readonly totalLoggedTime: number;
 
-  get percent(): number { return this.totalLoggedTime / this.currentEstimatedTime; }
+  get percent(): number {
+    if (this.totalCurrentEstimatedTime > 0) {
+      return this.totalLoggedTime / this.totalCurrentEstimatedTime;
+    } else {
+      return 0;
+    }
+  }
 
   constructor(ticketId: string, prog: TicketProgressResultJson) {
     this.ticketId = ticketId;
+    this.loggedTime = prog.loggedTime;
     this.currentEstimatedTime = prog.currentEstimatedTime;
     this.totalLoggedTime = prog.totalLoggedTime;
+    this.totalCurrentEstimatedTime = prog.totalCurrentEstimatedTime;
     Object.freeze(this);
   }
 }
@@ -272,26 +282,34 @@ export class TicketDetailAssTag implements Tag {
 Object.freeze(TicketDetailAssTag.prototype);
 
 export class TicketDetailRelated {
-  readonly id: string;
-  readonly projectId: string;
-  readonly number: number;
-  readonly title: string;
-  readonly open: boolean;
-  readonly currentEstimatedTime: number;
-  readonly progress: TicketDetailProgress|undefined;
-
-  constructor(ticket: TicketResultJson, relatedProgresses: imm.Map<string, TicketDetailProgress>) {
-    this.id = ticket.id;
-    this.projectId = ticket.projectId;
-    this.number = ticket.number;
-    this.title = ticket.title;
-    this.open = ticket.open;
-    this.currentEstimatedTime = ticket.currentEstimatedTime;
-    this.progress = relatedProgresses.get(this.id);
+  constructor(
+  public readonly id: string|undefined,
+  public readonly projectId: string|undefined,
+  public readonly number: number|undefined,
+  public readonly title: string,
+  public readonly description: string,
+  public readonly open: boolean,
+  public readonly currentEstimatedTime: number|undefined,
+  public readonly initialEstimatedTime: number|undefined,
+  public readonly progress: TicketDetailProgress|undefined,
+  public readonly transient: boolean,
+  public readonly error: boolean,
+  ) {
     Object.freeze(this);
   }
 }
 Object.freeze(TicketDetailRelated.prototype);
+
+export function newTicketDetailRelated(ticket: TicketResultJson, relatedProgresses: imm.Map<string, TicketDetailProgress>) {
+  return new TicketDetailRelated(ticket.id, ticket.projectId, ticket.number, ticket.title, ticket.description,
+    ticket.open, ticket.currentEstimatedTime, ticket.initialEstimatedTime, relatedProgresses.get(ticket.id),
+    false, false);
+}
+
+export function newTransientTicketDetailRelated(title: string, description: string, error: boolean) {
+  return new TicketDetailRelated(undefined, undefined, undefined, title, description,
+    true, undefined, undefined, undefined, true, error);
+}
 
 export class TicketDetail {
   readonly comments: imm.List<TicketDetailComment>;
@@ -325,6 +343,7 @@ export class TicketDetail {
       transientUsers: imm.List<TicketDetailTransientUser>,
       transientTags: imm.Set<string>,
       transientTicket: TicketDetailTransientFields,
+      transientSubtickets: imm.Map<string, TicketDetailRelated>,
       progress: TicketDetailProgress,
       ) {
     this.comments = imm.List(ticket.commentIds)
@@ -393,6 +412,7 @@ export class TicketDetail {
     this.projectId = ticket.projectId;
     this.subtickets = imm.Seq(ticket.subTicketIds)
       .map(id => relatedTickets.get(id))
+      .concat(transientSubtickets.valueSeq())
       .filter(t => !!t)
       .toList();
     this.referenced = imm.Seq(ticket.referencedTicketIds)

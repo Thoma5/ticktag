@@ -1,7 +1,43 @@
-<div class='subtickets-container'>
+<div class="subtickets-container">
   <ul>
-    <li *ngFor="let ticket of tickets">
-      <tt-subticket [ticket]='ticket'></tt-subticket>
+    <li *ngIf="tickets.size > 0">
+      <tt-subticket
+        [projectId]="parentTicket.projectId"
+        [ticketId]="parentTicket.id"
+        [number]="parentTicket.number"
+        [title]="'This ticket'"
+        [description]="parentTicket.description"
+        [loggedTime]="parentTicket.progress.loggedTime"
+        [estimatedTime]="parentTicket.progress.currentEstimatedTime"
+        [initialEstimatedTime]="parentTicket.initialEstimatedTime"
+        [open]="parentTicket.open"
+        [showNumber]="false"
+        [showProgress]="parentTicket.initialEstimatedTime != null"
+      ></tt-subticket>
+    </li>
+    <li *ngFor="let ticket of sortedTickets">
+      <!--
+        For subtickets total time should be equal to their time
+        This might change though if we allow nested subtickets
+        Therefore we use the total here
+      -->
+      <tt-subticket
+        [projectId]="ticket.projectId"
+        [ticketId]="ticket.id"
+        [number]="ticket.number"
+        [title]="ticket.title"
+        [description]="ticket.description"
+        [loggedTime]="ticket.progress ? ticket.progress.totalLoggedTime : null"
+        [estimatedTime]="ticket.progress ? ticket.progress.totalCurrentEstimatedTime : null"
+        [initialEstimatedTime]="ticket.initialEstimatedTime"
+        [open]="ticket.open"
+        [showNumber]="ticket.number != null"
+        [showProgress]="ticket.initialEstimatedTime != null"
+        [loading]="ticket.transient && !ticket.error"
+        [error]="ticket.error"
+        [transient]="ticket.transient"
+        (ticketRestore)="ticketRestore.emit($event)"
+      ></tt-subticket>
    </li>
   </ul>
 </div>

@@ -11,7 +11,7 @@ import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
 import { DragulaModule } from 'ng2-dragula';
 
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
-import { AuthService, ApiCallService, MarkdownService } from './service';
+import { AuthService, ApiCallService, MarkdownService, ImagesService } from './service';
 import { LoginComponent } from './ui/login/login.component';
 import { WhoamiComponent } from './ui/whoami/whoami.component';
 import { HomeComponent } from './ui/home/home.component';
@@ -89,6 +89,7 @@ import {BoardApi} from './api/api/BoardApi';
 import {KanbanBoardDetailComponent} from './ui/kanban-board-detail/kanban-board-detail.component';
 import {KanbanCellComponent} from './ui/kanban-board-detail/kanban-cell/kanban-cell.component';
 
+import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
 
 @NgModule({
   imports: [
@@ -103,6 +104,7 @@ import {KanbanCellComponent} from './ui/kanban-board-detail/kanban-cell/kanban-c
     ModalModule.forRoot(),
     BootstrapModalModule,
     DragulaModule,
+    NKDatetimeModule,
   ],
   declarations: [
     AppComponent,
@@ -191,6 +193,7 @@ import {KanbanCellComponent} from './ui/kanban-board-detail/kanban-cell/kanban-c
     ApiCallService,
     AuthService,
     MarkdownService,
+    ImagesService,
   ],
   bootstrap: [AppComponent]
 })

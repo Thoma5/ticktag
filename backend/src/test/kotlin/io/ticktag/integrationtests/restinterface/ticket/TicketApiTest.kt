@@ -1,6 +1,7 @@
 package io.ticktag.integrationtests.restinterface.ticket
 
 import io.ticktag.ADMIN_ID
+import io.ticktag.PROJECT_NO_MEMBERS_ID
 import io.ticktag.USER_ID
 import io.ticktag.integrationtests.restinterface.ApiBaseTest
 import io.ticktag.restinterface.ticket.controllers.TicketController
@@ -10,6 +11,7 @@ import io.ticktag.restinterface.ticket.schema.UpdateTicketRequestJson
 import io.ticktag.restinterface.ticketuserrelation.schema.CreateTicketUserRelationRequestJson
 import io.ticktag.service.NotFoundException
 import io.ticktag.service.TicktagValidationException
+import io.ticktag.service.ValidationErrorDetail
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.hasItem
 import org.junit.Assert.*
@@ -19,6 +21,7 @@ import java.time.Duration
 import java.time.Instant
 import java.util.*
 import javax.inject.Inject
+import kotlin.test.assertFailsWith
 
 class TicketApiTest : ApiBaseTest() {
     @Inject
@@ -116,6 +119,110 @@ class TicketApiTest : ApiBaseTest() {
         }
     }
 
+    @Test
+    fun `create of ticket with nested subtickets should fail`() {
+        withUser(ADMIN_ID) { principal ->
+            val reqSubSub = CreateTicketRequestJson("subsub", true, null, null, null, null, "description",
+                    PROJECT_NO_MEMBERS_ID, emptyList(), emptyList(), emptyList(), null, emptyList())
+            val reqSub = CreateTicketRequestJson("sub", true, null, null, null, null, "description",
+                    PROJECT_NO_MEMBERS_ID, emptyList(), listOf(reqSubSub), emptyList(), null, emptyList())
+            val reqParent = CreateTicketRequestJson("parent", true, null, null, null, null, "description",
+                    PROJECT_NO_MEMBERS_ID, emptyList(), listOf(reqSub), emptyList(), null, emptyList())
+
+            val ex = assertFailsWith(TicktagValidationException::class, { ticketController.createTicket(reqParent, principal) })
+            assertThat(ex.errors.size, `is`(1))
+            val err = ex.errors[0]
+            assertThat(err.field, `is`("createTicket"))
+            val detail = err.detail
+            if (detail is ValidationErrorDetail.Other) {
+                assertThat(detail.name, `is`("nonestedsubtickets"))
+            } else {
+                fail("Wrong error type: " + err.detail.javaClass.kotlin)
+            }
+        }
+    }
+
+    @Test
+    fun `create that would create a nested subticket should fail`() {
+        withUser(ADMIN_ID) { principal ->
+            val reqSub = CreateTicketRequestJson("sub", true, null, null, null, null, "description",
+                    PROJECT_NO_MEMBERS_ID, emptyList(), emptyList(), emptyList(), null, emptyList())
+            val reqParent = CreateTicketRequestJson("parent", true, null, null, null, null, "description",
+                    PROJECT_NO_MEMBERS_ID, emptyList(), listOf(reqSub), emptyList(), null, emptyList())
+
+            val body = ticketController.createTicket(reqParent, principal).body!!
+            val reqSubSub = CreateTicketRequestJson("subsub", true, null, null, null, null, "description",
+                    PROJECT_NO_MEMBERS_ID, emptyList(), emptyList(), emptyList(), body.subTicketIds[0], emptyList())
+
+            val ex = assertFailsWith(TicktagValidationException::class, { ticketController.createTicket(reqSubSub, principal) })
+
+            assertThat(ex.errors.size, `is`(1))
+            val err = ex.errors[0]
+            assertThat(err.field, `is`("createTicket"))
+            val detail = err.detail
+            if (detail is ValidationErrorDetail.Other) {
+                assertThat(detail.name, `is`("nonestedsubtickets"))
+            } else {
+                fail("Wrong error type: " + err.detail.javaClass.kotlin)
+            }
+        }
+    }
+
+    @Test
+    fun `update that would turn the ticket into a nested subticket should fail`() {
+        withUser(ADMIN_ID) { principal ->
+            val reqSub = CreateTicketRequestJson("sub", true, null, null, null, null, "description",
+                    PROJECT_NO_MEMBERS_ID, emptyList(), emptyList(), emptyList(), null, emptyList())
+            val reqParent = CreateTicketRequestJson("parent", true, null, null, null, null, "description",
+                    PROJECT_NO_MEMBERS_ID, emptyList(), listOf(reqSub), emptyList(), null, emptyList())
+            val parentBody = ticketController.createTicket(reqParent, principal).body!!
+            val subId = parentBody.subTicketIds[0]
+            val reqSubSub = CreateTicketRequestJson("subsub", true, null, null, null, null, "description",
+                    PROJECT_NO_MEMBERS_ID, emptyList(), emptyList(), emptyList(), null, emptyList())
+            val subSubBody = ticketController.createTicket(reqSubSub, principal).body!!
+
+            val updateSubSub = UpdateTicketRequestJson(null, null, null, null, null, null, null, subId)
+            val ex = assertFailsWith(TicktagValidationException::class, { ticketController.updateTicket(updateSubSub, subSubBody.id, principal) })
+
+            assertThat(ex.errors.size, `is`(1))
+            val err = ex.errors[0]
+            assertThat(err.field, `is`("updateTicket"))
+            val detail = err.detail
+            if (detail is ValidationErrorDetail.Other) {
+                assertThat(detail.name, `is`("nonestedsubtickets"))
+            } else {
+                fail("Wrong error type: " + err.detail.javaClass.kotlin)
+            }
+        }
+    }
+
+    @Test
+    fun `update that would turn subtickets into nested subtickets should fail`() {
+        withUser(ADMIN_ID) { principal ->
+            val reqSubSub = CreateTicketRequestJson("subsub", true, null, null, null, null, "description",
+                    PROJECT_NO_MEMBERS_ID, emptyList(), emptyList(), emptyList(), null, emptyList())
+            val reqSub = CreateTicketRequestJson("sub", true, null, null, null, null, "description",
+                    PROJECT_NO_MEMBERS_ID, emptyList(), listOf(reqSubSub), emptyList(), null, emptyList())
+            val reqParent = CreateTicketRequestJson("parent", true, null, null, null, null, "description",
+                    PROJECT_NO_MEMBERS_ID, emptyList(), emptyList(), emptyList(), null, emptyList())
+            val parentBody = ticketController.createTicket(reqParent, principal).body!!
+            val subBody = ticketController.createTicket(reqSub, principal).body!!
+
+            val updateSub = UpdateTicketRequestJson(null, null, null, null, null, null, null, parentBody.id)
+            val ex = assertFailsWith(TicktagValidationException::class, { ticketController.updateTicket(updateSub, subBody.id, principal) })
+
+            assertThat(ex.errors.size, `is`(1))
+            val err = ex.errors[0]
+            assertThat(err.field, `is`("updateTicket"))
+            val detail = err.detail
+            if (detail is ValidationErrorDetail.Other) {
+                assertThat(detail.name, `is`("nonestedsubtickets"))
+            } else {
+                fail("Wrong error type: " + err.detail.javaClass.kotlin)
+            }
+        }
+    }
+
 
     @Test(expected = TicktagValidationException::class)
     fun `createTicket negative because of Parent and SubTasks`() {
@@ -160,7 +267,6 @@ class TicketApiTest : ApiBaseTest() {
             assertEquals(result.currentEstimatedTime, (Duration.ofDays(2)))
             assertEquals(result.dueDate, (now))
             assertEquals(result.description, ("description"))
-
         }
     }
 
@@ -273,6 +379,7 @@ class TicketApiTest : ApiBaseTest() {
 
         }
     }
+
     @Test
     fun `listTicketsFuzzy should find some tickets`() {
         withUser(ADMIN_ID) { ->

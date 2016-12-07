@@ -39,7 +39,7 @@ open class GetController @Inject constructor(
         val ticketIds = request.ticketIds
         val loggedTimeIds = request.loggedTimeIds
         val ticketIdsForStatistic = request.ticketIdsForStatistic
-        val users = if (userIds == null) emptyMap() else userService.getUsers(userIds).mapValues { UserResultJson(it.value) }
+        val users = if (userIds == null) emptyMap() else userService.getUsers(userIds, principal).mapValues { UserResultJson(it.value) }
         val tickets = if (ticketIds == null) emptyMap() else ticketService.getTickets(ticketIds, principal).mapValues { TicketResultJson(it.value) }
         val loggedTimes = if (loggedTimeIds == null) emptyMap() else loggedTimeService.getLoggedTimes(loggedTimeIds, principal).mapValues { LoggedTimeResultJson(it.value) }
         val ticketStatistics = if (ticketIdsForStatistic == null) emptyMap() else statisticService.getTicketProgresses(ticketIdsForStatistic, principal).mapValues { TicketProgressResultJson(it.value) }
