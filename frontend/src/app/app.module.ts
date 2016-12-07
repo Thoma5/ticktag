@@ -90,6 +90,7 @@ import {KanbanBoardDetailComponent} from './ui/kanban-board-detail/kanban-board-
 import {KanbanCellComponent} from './ui/kanban-board-detail/kanban-cell/kanban-cell.component';
 
 import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
+import {KanbanCellUserComponent} from './ui/kanban-board-detail/kanban-cell-user/kanban-cell-user.component';
 
 @NgModule({
   imports: [
@@ -171,7 +172,8 @@ import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
 
     KanbanBoardsComponent,
     KanbanBoardDetailComponent,
-    KanbanCellComponent
+    KanbanCellComponent,
+    KanbanCellUserComponent
   ],
   providers: [
     ProjectApi,

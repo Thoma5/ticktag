@@ -10,8 +10,10 @@
     </div>
   </div>
   <div class='users'>
-    <span *ngFor="let user of ticket.users" class="user">
-      <img class="img-circle" width="32" src="http://lorempixel.com/64/64/cats" />
+    <span *ngFor="let user of ticket.users">
+      <tt-kanban-cell-user
+        [user]="user"
+      ></tt-kanban-cell-user>
     </span>
   </div>
   <div class='status-progress'>
