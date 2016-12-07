@@ -24,5 +24,8 @@
 
 .title {
     @extend %title;
+}
+
+.sub-header-row {
     margin-bottom: $medium-gap;
 }

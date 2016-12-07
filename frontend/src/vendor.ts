@@ -9,9 +9,12 @@ import '@angular/router';
 import 'rxjs';
 import '@angularclass/hmr';
 
+
 // Other vendors for example jQuery, Lodash or Bootstrap
 // You can import js, ts, css, sass, ...
 import 'jquery';
+import 'chart.js';
+
 import 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js';
 import 'bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css';
 import 'bootstrap-timepicker/js/bootstrap-timepicker.min.js';
