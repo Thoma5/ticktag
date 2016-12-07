@@ -3,7 +3,7 @@ import * as imm from 'immutable';
 import {ApiCallService} from '../../service/api-call/api-call.service';
 import {BoardApi} from '../../api/api/BoardApi';
 import {Router, ActivatedRoute} from '@angular/router';
-import { Observable } from 'rxjs';
+import {Observable} from 'rxjs';
 import {UserResultJson} from '../../api/model/UserResultJson';
 import {Tag} from '../../util/taginput/taginput.component';
 import {TicketTagResultJson} from '../../api/model/TicketTagResultJson';
@@ -12,14 +12,14 @@ import {KanbanColumnResultJson} from '../../api/model/KanbanColumnResultJson';
 import {GetResultJson} from '../../api/model/GetResultJson';
 import {GetApi} from '../../api/api/GetApi';
 import {TickettagApi} from '../../api/api/TickettagApi';
-import { idListToMap } from '../../util/listmaputils';
+import {idListToMap} from '../../util/listmaputils';
 import {KanbanBoard} from '../kanban-boards/kanban-boards.component';
 import {KanbanBoardReslutJson} from '../../api/model/KanbanBoardReslutJson';
 import {TicketDetailProgress} from '../ticket-detail/ticket-detail';
 import {DragulaService} from 'ng2-dragula';
 import {UpdateKanbanColumnJson} from '../../api/model/UpdateKanbanColumnJson';
 import {TaskQueue} from '../../util/task-queue';
-import {TickettagrelationApi} from "../../api/api/TickettagrelationApi";
+import {TickettagrelationApi} from '../../api/api/TickettagrelationApi';
 
 @Component({
   selector: 'tt-kanban-board-detail',
@@ -45,24 +45,23 @@ export class KanbanBoardDetailComponent implements OnInit {
               private ticketTagsApi: TickettagApi,
               private kanbanBoardApi: BoardApi,
               private dragulaService: DragulaService,
-              private ticketTagRelationApi: TickettagrelationApi
-  ) {
-    dragulaService.dropModel.subscribe((value) => {
+              private ticketTagRelationApi: TickettagrelationApi) {
+    dragulaService.dropModel.subscribe((value: any) => {
       this.onDropModel(value.slice(1));
     });
   }
 
-  shouldBeHidden(ticket:KanbanDetailTicket):boolean{
-    return ticket.number %2 ==0;
+  shouldBeHidden(ticket: KanbanDetailTicket): boolean {
+    return ticket.number % 2 === 0;
   }
 
-  private onDropModel(args) {
-    let target:HTMLDivElement = args[1];
-    let el:HTMLDivElement = args[0]
-    this.updateModel(el.getAttribute("id"),target.getAttribute("id"));
+  private onDropModel(args: any) {
+    let target: HTMLDivElement = args[1];
+    let el: HTMLDivElement = args[0];
+    this.updateModel(el.getAttribute('id'), target.getAttribute('id'));
   }
 
-  private updateModel(ticketId: string,targetTagId: string) {
+  private updateModel(ticketId: string, targetTagId: string) {
     let columns: UpdateKanbanColumnJson[] = [];
     this.kanbanColumns.forEach(c => {
       if (c.id === targetTagId) {
@@ -75,19 +74,21 @@ export class KanbanBoardDetailComponent implements OnInit {
       }
     });
     let tagIdsOfElement: string[] = [];
-   this.interestingTickets.get(ticketId).tags.forEach(tag => {
+    this.interestingTickets.get(ticketId).tags.forEach(tag => {
       tagIdsOfElement.push(tag.id);
-      console.log("push: "+tag.id);
-   });
-    console.log("ele Tags: " + tagIdsOfElement);
-    console.log("targetId:" + targetTagId);
-    if(tagIdsOfElement.includes(targetTagId)){
-      let updateObs = this.apiCallService.callNoError<void>(p => this.kanbanBoardApi.updateKanbanBoardsUsingPUTWithHttpInfo(this.kanbanBoard.id, columns, p));
+      console.log('push: ' + tag.id);
+    });
+    console.log('ele Tags: ' + tagIdsOfElement);
+    console.log('targetId:' + targetTagId);
+    if (tagIdsOfElement.includes(targetTagId)) {
+      let updateObs = this.apiCallService
+        .callNoError<void>(p => this.kanbanBoardApi.updateKanbanBoardsUsingPUTWithHttpInfo(this.kanbanBoard.id, columns, p));
       this.queue.push(updateObs).subscribe(result => {
         this.refresh(this.kanbanBoard.projectId, this.kanbanBoard.id).subscribe();
       });
-    }else {
-      let updateObs = this.apiCallService.callNoError<void>(p => this.kanbanBoardApi.updateKanbanBoardsUsingPUTWithHttpInfo(this.kanbanBoard.id, columns, p));
+    } else {
+      let updateObs = this.apiCallService
+        .callNoError<void>(p => this.kanbanBoardApi.updateKanbanBoardsUsingPUTWithHttpInfo(this.kanbanBoard.id, columns, p));
       let obs = this.apiCallService
         .call<void>(p => this.ticketTagRelationApi.setTicketTagRelationUsingPUTWithHttpInfo(ticketId, targetTagId, p))
         .flatMap(result => {
@@ -101,7 +102,9 @@ export class KanbanBoardDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params
-      .do(() => { this.loading = true; })
+      .do(() => {
+        this.loading = true;
+      })
       .switchMap(params => {
         let projectId = params['projectId'];
         let boardId = params['boardId'];
@@ -138,7 +141,8 @@ export class KanbanBoardDetailComponent implements OnInit {
         let getObs = this.apiCallService
           .callNoError<GetResultJson>(p => this.getApi.getUsingPOSTWithHttpInfo({
             ticketIds: wantedTicketIds,
-            ticketIdsForStatistic: wantedTicketIds}, p));
+            ticketIdsForStatistic: wantedTicketIds
+          }, p));
         return Observable.zip(Observable.of(tuple), getObs);
       })
       .flatMap(tuple => {
@@ -152,7 +156,7 @@ export class KanbanBoardDetailComponent implements OnInit {
         }
 
         let getObs = this.apiCallService
-          .callNoError<GetResultJson>(p => this.getApi.getUsingPOSTWithHttpInfo({ userIds: wantedUserIds }, p));
+          .callNoError<GetResultJson>(p => this.getApi.getUsingPOSTWithHttpInfo({userIds: wantedUserIds}, p));
 
         return Observable.zip(Observable.of(tuple[0]), Observable.of(tuple[1]), getObs);
       })
@@ -245,11 +249,10 @@ export class KanbanDetailTicket {
   readonly projectId: string;
   readonly progress: TicketDetailProgress|undefined;
 
-  constructor(
-    ticket: TicketResultJson,
-    users: imm.Map<string, KanbanDetailUser>,
-    ticketTags: imm.Map<string, KanbanDetailTag>,
-    relatedProgresses: imm.Map<string, TicketDetailProgress>) {
+  constructor(ticket: TicketResultJson,
+              users: imm.Map<string, KanbanDetailUser>,
+              ticketTags: imm.Map<string, KanbanDetailTag>,
+              relatedProgresses: imm.Map<string, TicketDetailProgress>) {
     this.createTime = ticket.createTime;
     this.currentEstimatedTime = ticket.currentEstimatedTime;
     this.dueDate = ticket.dueDate;
@@ -259,7 +262,7 @@ export class KanbanDetailTicket {
     this.number = ticket.number;
     this.open = ticket.open;
     this.storyPoints = ticket.storyPoints;
-    this.tags =  imm.List(ticket.tagIds)
+    this.tags = imm.List(ticket.tagIds)
       .map(tid => ticketTags.get(tid))
       .sort((a, b) => (a.order < b.order) ? -1 : (a.order === b.order ? 0 : 1))
       .toList();

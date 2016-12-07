@@ -1,4 +1,4 @@
-import {Component, Input, ElementRef} from '@angular/core';
+import {Component, Input, ElementRef, OnChanges} from '@angular/core';
 import {KanbanDetailUser} from '../kanban-board-detail.component';
 import {UserApi} from '../../../api/api/UserApi';
 import {ImagesService} from '../../../service/images/images.service';
@@ -9,7 +9,7 @@ import {Subscription} from 'rxjs';
   templateUrl: './kanban-cell-user.component.html',
   styleUrls: ['./kanban-cell-user.component.scss']
 })
-export class KanbanCellUserComponent {
+export class KanbanCellUserComponent implements OnChanges {
   @Input() user: KanbanDetailUser;
 
   private imageSubscription: Subscription;
