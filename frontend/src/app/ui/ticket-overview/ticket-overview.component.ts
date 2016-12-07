@@ -4,8 +4,7 @@ import { ApiCallService } from '../../service';
 import {
   TicketApi, TicketResultJson, PageTicketResultJson, AssignmenttagApi,
   AssignmentTagResultJson, UserResultJson, TicketTagResultJson,
-  TickettagApi, GetApi, GetResultJson,
-  TicketuserrelationApi, TickettagrelationApi, ProjectApi
+  TickettagApi, TicketuserrelationApi, TickettagrelationApi, ProjectApi
 } from '../../api';
 import {
   TicketOverview, TicketOverviewTag, TicketOverviewAssTag, TicketOverviewUser
@@ -49,7 +48,6 @@ export class TicketOverviewComponent implements OnInit {
     private assigmentTagsApi: AssignmenttagApi,
     private projectApi: ProjectApi,
     private ticketTagsApi: TickettagApi,
-    private getApi: GetApi,
     private ticketAssignmentApi: TicketuserrelationApi,
     private ticketTagRelationApi: TickettagrelationApi) {
   }
@@ -96,28 +94,18 @@ export class TicketOverviewComponent implements OnInit {
       .map(users => idListToMap(users).map(user => new TicketOverviewUser(user)).toMap());
     return Observable
       .zip(rawTicketObs, assignmentTagsObs, ticketTagsObs, projectUsersObs)
-      .flatMap(tuple => {
-        let ticketsResult = tuple[0];
-        // We need all assigned users
-        let wantedUserIds: string[] = [];
-        ticketsResult.content.forEach(t => t.ticketUserRelations.map(ta => wantedUserIds.push(ta.userId)));
-
-        let getObs = this.apiCallService
-          .callNoError<GetResultJson>(p => this.getApi.getUsingPOSTWithHttpInfo({ userIds: wantedUserIds }, p));
-
-        return Observable.zip(Observable.of(tuple), getObs);
-      })
       .do(
       tuple => {
-        this.allAssignmentTags = tuple[0][1];
-        this.allTicketTags = tuple[0][2];
-        this.totalElements = tuple[0][0].totalElements;
+        this.allAssignmentTags = tuple[1];
+        this.allTicketTags = tuple[2];
+        this.allProjectUsers = tuple[3];
+        this.totalElements = tuple[0].totalElements;
         this.tickets = [];
         const start = this.offset * this.limit;
         const end = start + this.limit;
         let rows = [...this.rows];
-        tuple[0][0].content.forEach(ticket =>
-          this.tickets.push(this.newTicketOverview(ticket, imm.Map(tuple[1].users).map(u => new TicketOverviewUser(u)).toMap()))
+        tuple[0].content.forEach(ticket =>
+          this.tickets.push(this.newTicketOverview(ticket, tuple[3]))
         );
         for (let i = start; i < end; i++) {
           rows[i] = this.tickets[i - this.offset * this.limit];
@@ -143,6 +131,8 @@ export class TicketOverviewComponent implements OnInit {
       this.sortprop = ['NUMBER_' + event.sorts[0].dir.toUpperCase()];
     } else if (event.sorts[0].prop === 'dueDate') {
       this.sortprop = ['DUE_DATE_' + event.sorts[0].dir.toUpperCase()];
+    } else if (event.sorts[0].prop === 'progress') {
+      this.sortprop = ['PROGRESS_' + event.sorts[0].dir.toUpperCase()];
     }
     this.refresh(this.projectId).subscribe();
   }
