@@ -62,29 +62,22 @@ open class KanbanServiceImpl @Inject constructor(
     override fun listBoards(@P("authProjectId") projectId: UUID): List<KanbanBoardResult> = ticketTagGroups.findExclusiveTicketTagGroupsByProjectId(projectId).map(::KanbanBoardResult)
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
-    override fun updateKanbanBoard(columns: List<UpdateKanbanColumn>, principal: Principal): List<KanbanColumnResult> {
-        var result = emptyList<KanbanColumnResult>().toMutableList()
+    override fun updateKanbanBoard(columns: List<UpdateKanbanColumn>, principal: Principal) {
         for (column in columns) {
-
             kanbanCellRepository.deleteByTagId(column.id)
             var tag = ticketTagRepository.findOne(column.id) ?: throw NotFoundException()
-            var tickets = emptyList<Ticket>().toMutableList()
             if (column.ticketIds.size != 0) {
-
                 var i = 0
                 column.ticketIds.forEach {
                     val ticket = ticketRepository.findOne(it) ?: throw NotFoundException()
-                    tickets.add(ticket)
-                    val kanbanCell = KanbanCell.create(ticket, tag, i)
-                    kanbanCellRepository.insert(kanbanCell)
-                    i++
-                    if (!tag.tickets.map(Ticket::id).contains(it)) {
-                        ticketTagRelationService.createOrGetIfExistsTicketTagRelation(it, tag.id,principal )
+                    if (tag.tickets.contains(ticket)) {
+                        val kanbanCell = KanbanCell.create(ticket, tag, i)
+                        kanbanCellRepository.insert(kanbanCell)
+                        i++
                     }
                 }
             }
-            result.add(KanbanColumnResult(tag, tickets.map { it.id }))
+
         }
-        return result
     }
 }

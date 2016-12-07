@@ -7,8 +7,8 @@
     <div class='container'>
       <div *ngFor="let column of kanbanColumns" class='column-container'>
         <div class='column-header' [style.backgroundColor]="'#' + column.color">{{column.name}}</div>
-        <div class='ticket-container' [dragula]='"first-bag"' [dragulaModel]='column.tickets'>
-          <div *ngFor="let ticket of column.tickets">
+        <div class='ticket-container' id="{{column.id}}" [dragula]='"first-bag"' [dragulaModel]='column.tickets'>
+          <div *ngFor="let ticket of column.tickets" id="{{ticket.id}}">
             <tt-kanban-cell
               [ticket]="ticket"
             ></tt-kanban-cell>

@@ -11,6 +11,6 @@ import java.util.*
 interface KanbanService {
     fun listColumns(kanbanBoardId: UUID): List<KanbanColumnResult>
     fun listBoards(projectId: UUID): List<KanbanBoardResult>
-    fun updateKanbanBoard(columns: List<UpdateKanbanColumn>, principal: Principal): List<KanbanColumnResult>
+    fun updateKanbanBoard(columns: List<UpdateKanbanColumn>, principal: Principal)
     fun getBoard(boardId: UUID): KanbanBoardResult
 }

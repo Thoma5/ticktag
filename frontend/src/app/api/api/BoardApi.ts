@@ -122,7 +122,7 @@ export class BoardApi {
      * @param id id
      * @param columns columns
      */
-    public updateKanbanBoardsUsingPUT(id: string, columns: Array<models.UpdateKanbanColumnJson>, extraHttpRequestParams?: any): Observable<Array<models.KanbanColumnResultJson>> {
+    public updateKanbanBoardsUsingPUT(id: string, columns: Array<models.UpdateKanbanColumnJson>, extraHttpRequestParams?: any): Observable<{}> {
         return this.updateKanbanBoardsUsingPUTWithHttpInfo(id, columns, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {

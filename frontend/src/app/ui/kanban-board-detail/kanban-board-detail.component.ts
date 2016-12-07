@@ -19,6 +19,7 @@ import {TicketDetailProgress} from '../ticket-detail/ticket-detail';
 import {DragulaService} from 'ng2-dragula';
 import {UpdateKanbanColumnJson} from '../../api/model/UpdateKanbanColumnJson';
 import {TaskQueue} from '../../util/task-queue';
+import {TickettagrelationApi} from "../../api/api/TickettagrelationApi";
 
 @Component({
   selector: 'tt-kanban-board-detail',
@@ -43,34 +44,45 @@ export class KanbanBoardDetailComponent implements OnInit {
               private getApi: GetApi,
               private ticketTagsApi: TickettagApi,
               private kanbanBoardApi: BoardApi,
-              private dragulaService: DragulaService
+              private dragulaService: DragulaService,
+              private ticketTagRelationApi: TickettagrelationApi
   ) {
     dragulaService.dropModel.subscribe((value) => {
       this.onDropModel(value.slice(1));
     });
   }
 
-  private onDropModel(args) {
-    this.updateModel();
+  shouldBeHidden(ticket:KanbanDetailTicket):boolean{
+    return ticket.number %2 ==0;
   }
 
-  private updateModel() {
+  private onDropModel(args) {
+    let target:HTMLDivElement = args[1];
+    let el:HTMLDivElement = args[0]
+    this.updateModel(el.getAttribute("id"),target.getAttribute("id"));
+  }
+
+  private updateModel(ticketId: string,targetTagId: string) {
     let columns: UpdateKanbanColumnJson[] = [];
     this.kanbanColumns.forEach(c => {
-      let newArray: string[] = [];
-      for (let t of c.tickets) {
-        newArray.push(t.id);
+      if (c.id === targetTagId) {
+        let newArray: string[] = [];
+        for (let t of c.tickets) {
+          newArray.push(t.id);
+        }
+        let u = {id: c.id, ticketIds: newArray};
+        columns.push(u);
       }
-      let u = {id: c.id, ticketIds: newArray};
-      columns.push(u);
     });
-    console.log(columns);
-    let updateObs = this.apiCallService.callNoError<KanbanColumnResultJson[]>(p => this.kanbanBoardApi.updateKanbanBoardsUsingPUTWithHttpInfo(this.kanbanBoard.id, columns, p));
-    this.queue.push(updateObs)
-      .subscribe((result) => {
-        console.log(result);
-        this.refresh(this.kanbanBoard.projectId, this.kanbanBoard.id).subscribe();
+    let updateObs = this.apiCallService.callNoError<void>(p => this.kanbanBoardApi.updateKanbanBoardsUsingPUTWithHttpInfo(this.kanbanBoard.id, columns, p));
+    let obs = this.apiCallService
+      .call<void>(p => this.ticketTagRelationApi.setTicketTagRelationUsingPUTWithHttpInfo(ticketId, targetTagId, p))
+      .flatMap(result => {
+        return updateObs;
       });
+    this.queue.push(obs).subscribe(result => {
+      this.refresh(this.kanbanBoard.projectId, this.kanbanBoard.id).subscribe();
+    });
   }
 
   ngOnInit(): void {
