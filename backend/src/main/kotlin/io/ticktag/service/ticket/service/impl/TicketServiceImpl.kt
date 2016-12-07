@@ -13,6 +13,7 @@ import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.*
 import io.ticktag.service.command.service.CommandService
 import io.ticktag.service.ticket.dto.CreateTicket
+import io.ticktag.service.ticket.dto.ProgressResult
 import io.ticktag.service.ticket.dto.TicketResult
 import io.ticktag.service.ticket.dto.UpdateTicket
 import io.ticktag.service.ticket.service.TicketService
@@ -223,6 +224,7 @@ open class TicketServiceImpl @Inject constructor(
                 storyPoints = t.storyPoints,
                 initialEstimatedTime = t.initialEstimatedTime,
                 currentEstimatedTime = t.currentEstimatedTime,
+                progress = ProgressResult(t.progress),
                 dueDate = t.dueDate,
                 description = t.descriptionComment.text,
                 projectId = t.project.id,

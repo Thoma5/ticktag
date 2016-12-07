@@ -258,4 +258,29 @@ CREATE TABLE IF NOT EXISTS "ticket_event_logged_time_removed" (
 CREATE INDEX ON "ticket_event_logged_time_removed" ("comment_id");
 CREATE INDEX ON "ticket_event_logged_time_removed" ("time_category_id");
 
+CREATE VIEW view_progress AS
+  SELECT
+    t1.id AS ticket_id,
+    CAST ((coalesce(t1.initial_estimated_time, 0) + coalesce(sum(t2.initial_estimated_time), 0)) AS BIGINT ) AS initial_estimated_time,
+    CAST ((coalesce(t1.current_estimated_time, 0) + coalesce(sum(t2.current_estimated_time), 0)) AS BIGINT ) AS current_estimated_time,
+    CAST ((coalesce(sum(lt1.time), 0) + coalesce(sum(lt2.time), 0)) AS BIGINT )AS logged_time,
+    CASE WHEN (coalesce(t1.initial_estimated_time, 0) + coalesce(sum(t2.initial_estimated_time), 0)) = 0
+      THEN NULL
+    ELSE
+      CAST (((coalesce(sum(lt1.time), 0) + coalesce(sum(lt2.time), 0)) /
+      (coalesce(t1.initial_estimated_time, 0) + coalesce(sum(t2.initial_estimated_time), 0))) AS FLOAT4 ) END AS initial_progress,
+    CASE WHEN (coalesce(t1.current_estimated_time, 0) + coalesce(sum(t2.current_estimated_time), 0)) = 0
+      THEN NULL
+    ELSE
+      CAST (((coalesce(sum(lt1.time), 0) + coalesce(sum(lt2.time), 0)) /
+      (coalesce(t1.current_estimated_time, 0) + coalesce(sum(t2.current_estimated_time), 0))) AS FLOAT4 ) END AS progress
+  FROM ticket t1
+    LEFT JOIN comment c1 ON c1.ticket_id = t1.id
+    LEFT JOIN logged_time lt1 ON lt1.comment_id = c1.id
+    LEFT JOIN ticket t2 ON t2.parent_ticket_id = t1.id
+    LEFT JOIN comment c2 ON c2.ticket_id = t2.id
+    LEFT JOIN logged_time lt2 ON lt2.comment_id = c2.id
+  GROUP BY t1.id;
+
+
 COMMIT;
