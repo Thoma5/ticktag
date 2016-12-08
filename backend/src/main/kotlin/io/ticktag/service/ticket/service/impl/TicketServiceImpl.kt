@@ -4,18 +4,13 @@ import io.ticktag.TicktagService
 import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.project.ProjectRepository
 import io.ticktag.persistence.ticket.TicketEventRepository
-import io.ticktag.persistence.ticket.entity.*
+import io.ticktag.persistence.ticket.TicketFilterRepository
 import io.ticktag.persistence.ticket.TicketRepository
-import io.ticktag.persistence.ticket.entity.Comment
-import io.ticktag.persistence.ticket.entity.Ticket
-import io.ticktag.persistence.ticket.entity.TicketTag
+import io.ticktag.persistence.ticket.entity.*
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.*
 import io.ticktag.service.command.service.CommandService
-import io.ticktag.service.ticket.dto.CreateTicket
-import io.ticktag.service.ticket.dto.ProgressResult
-import io.ticktag.service.ticket.dto.TicketResult
-import io.ticktag.service.ticket.dto.UpdateTicket
+import io.ticktag.service.ticket.dto.*
 import io.ticktag.service.ticket.service.TicketService
 import io.ticktag.service.ticketassignment.dto.TicketAssignmentResult
 import io.ticktag.service.ticketassignment.services.TicketAssignmentService
@@ -32,6 +27,7 @@ import javax.validation.Valid
 @TicktagService
 open class TicketServiceImpl @Inject constructor(
         private val tickets: TicketRepository,
+        private val ticketFilterRepository: TicketFilterRepository,
         private val projects: ProjectRepository,
         private val users: UserRepository,
         private val comments: CommentRepository,
@@ -47,7 +43,11 @@ open class TicketServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listTickets(@P("authProjectId") project: UUID, pageable: Pageable): Page<TicketResult> {
-        val page = tickets.findByProjectId(project, pageable)
+        var filter = TicketFilter()
+        filter.project = project
+        filter.progressFrom = 0.6.toFloat()
+        filter.progressGreater = true
+        val page = ticketFilterRepository.findAll(filter, pageable)
         val content = page.content.map { toResultDto(it) }
         return PageImpl(content, pageable, page.totalElements)
     }
