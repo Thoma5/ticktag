@@ -34,7 +34,6 @@ export class BurnDownChartComponent implements OnInit {
     private idealDecreasePerDay: number;
     private idealData: number[] = [];
     private actualData: number[] = [];
-    private labelData: string[] = [];
 
     public datePickerOpts = {
         autoclose: true,
@@ -60,26 +59,31 @@ export class BurnDownChartComponent implements OnInit {
         this.refresh();
     }
 
+    resetData() {
+        this.actualData = [];
+        this.idealData = [];
+        this.lineChartLabels = [];
+    }
+
     updateChart() {
         this.lineChartData = [
             { data: this.actualData, label: this.lineChartData[0].label },
             { data: this.idealData, label: this.lineChartData[1].label }
-        ]
-//        this.lineChartLabels = $.extend({}, this.labelData);
+        ];
     }
 
     addDay(actual: number, ideal: number, label: string) {
         this.actualData.push(actual);
         this.idealData.push(ideal);
-        this.labelData.push(label);
+        this.lineChartLabels.push(label);
     }
 
     // lineChart
     public lineChartData: Array<any> = [
-        { data: [65, 59, 80, 81, 56, 55, 40], label: 'Ideal Tasks Remaining' },
-        { data: [28, 48, 40, 19, 86, 27, 90], label: 'Actual Task Remaining' },
+        { data: [], label: 'Actual Task Remaining' },
+        { data: [], label: 'Ideal Tasks Remaining' },
     ];
-    public lineChartLabels: Array<any> = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+    public lineChartLabels: Array<any> = [];
     public lineChartOptions: any = {
         animation: false,
         responsive: true,
@@ -93,27 +97,27 @@ export class BurnDownChartComponent implements OnInit {
             yAxes: [{
                 scaleLabel: {
                     display: true,
-                    labelString: 'Sum of Task Estimates (hours)'
+                    labelString: 'Story Points'
                 }
             }]
         }
     };
     public lineChartColors: Array<any> = [
-        { // green
-            backgroundColor: 'rgba(0,0,0,0)',
-            borderColor: 'rgba(159, 221, 150, 1)',
-            pointBackgroundColor: 'rgba(148,159,177,1)',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-        },
         { // red
             backgroundColor: 'rgba(0,0,0,0)',
             borderColor: 'rgba(229, 107, 107, 1)',
-            pointBackgroundColor: 'rgba(77,83,96,1)',
+            pointBackgroundColor: 'rgba(229, 107, 107, 1)',
             pointBorderColor: '#fff',
             pointHoverBackgroundColor: '#fff',
             pointHoverBorderColor: 'rgba(77,83,96,1)'
+        },
+        { // green
+            backgroundColor: 'rgba(0,0,0,0)',
+            borderColor: 'rgba(159, 221, 150, 1)',
+            pointBackgroundColor: 'rgba(159, 221, 150, 1)',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: 'rgba(148,159,177,0.8)'
         },
     ];
     public lineChartLegend: boolean = true;
@@ -134,15 +138,18 @@ export class BurnDownChartComponent implements OnInit {
 
     private refresh(): Observable<void> {
         console.log('projectId is' + this.projectId);
-
+        const fromMoment = moment(this.fromDate);
         this.startIdealLine = 100;
-        this.daysBetween = moment(this.toDate).diff(moment(this.fromDate), 'days') + 1;
-        this.idealDecreasePerDay = this.startIdealLine / this.daysBetween;
+        this.daysBetween = moment(this.toDate).diff(fromMoment, 'days') + 1;
+        this.idealDecreasePerDay = this.startIdealLine / (this.daysBetween - 1);
 
         console.log(this.daysBetween);
+
+        this.resetData();
         for (var i = 0; i < this.daysBetween; i++) {
-            this.addDay(100, this.startIdealLine, 'bla');
+            this.addDay(100, Math.round(this.startIdealLine * 10) / 10, fromMoment.format('YYYY-MM-DD'));
             this.startIdealLine = this.startIdealLine - this.idealDecreasePerDay;
+            fromMoment.add(1, 'day');
         }
         this.updateChart();
 
