@@ -1,4 +1,20 @@
 BEGIN;
+DELETE FROM "ticket_event_comment_text_changed";
+DELETE FROM "ticket_event_current_estimated_time_changed";
+DELETE FROM "ticket_event_due_date_changed";
+DELETE FROM "ticket_event_initial_estimated_time_changed";
+DELETE FROM "ticket_event_logged_time_added";
+DELETE FROM "ticket_event_logged_time_removed";
+DELETE FROM "ticket_event_mention_added";
+DELETE FROM "ticket_event_parent_changed";
+DELETE FROM "ticket_event_state_changed";
+DELETE FROM "ticket_event_story_points_changed";
+DELETE FROM "ticket_event_tag_added";
+DELETE FROM "ticket_event_tag_removed";
+DELETE FROM "ticket_event_title_changed";
+DELETE FROM "ticket_event_user_added";
+DELETE FROM "ticket_event_user_removed";
+DELETE From "ticket_event";
 
 DELETE FROM "logged_time";
 DELETE FROM "time_category";

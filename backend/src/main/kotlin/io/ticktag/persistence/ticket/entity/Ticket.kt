@@ -69,9 +69,9 @@ open class Ticket protected constructor() {
     open var currentEstimatedTime: Duration? = null
 
     @Immutable
-    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    @OneToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "id", referencedColumnName = "ticket_id", nullable = true)
-    lateinit open var progress: Progress
+    open var progress: Progress?  = null
 
 
     @Column(name = "due_date", nullable = true)

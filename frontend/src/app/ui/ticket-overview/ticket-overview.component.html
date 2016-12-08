@@ -4,7 +4,9 @@
   </div>
   <div *ngIf="!loading">
     <div class="search row">
-    <!--  <div class="col-md-4"><tt-command-search [allTicketTags]="allTicketTags" [allAssignmentTags]="allAssignmentTags"></tt-command-search></div>> -->
+    <div class="col-md-4">
+      <tt-command-search [allTicketTags]="allTicketTags" [allUsers]="allProjectUsers" [allAssignmentTags]="allAssignmentTags">
+        </tt-command-search></div>
     </div>
     <swui-datatable class="material" [rows]="rows" [columns]="columns" [columnMode]="'force'" [headerHeight]="32" [rowHeight]="'auto'"
       [footerHeight]="32" [externalPaging]="true" [count]="totalElements" [offset]="offset" [limit]="limit" [scrollbarH]="true"
@@ -44,8 +46,14 @@
       </swui-datatable-column>
       <swui-datatable-column name="Progress" minWidth="128" width="128" maxWidth="128">
         <template let-row="row" let-value="value" swui-datatable-cell-template>
-          <div style="border:solid 1px #555;margin:2px;">
-            <div style="background:#00bfff;height:10px" [style.width]="value*100+'%'"></div>
+          <div *ngIf="value !== '' && value <= 1" style="border:solid 0.11em #d3d3d3; margin:0.5em" tooltip="{{value*100 | number : '1.0-0'}}%" tooltipPlacement="bottom" tooltipTrigger="mouseenter">
+            <div style="background:linear-gradient(to bottom, #00b7ea 0%,#009ec3 100%);height:0.8em" [style.width]="value*100+'%'"></div>
+          </div>
+           <div *ngIf="value !== '' && value > 1" style="border:solid 0.11em #d3d3d3; margin:0.5em" tooltip="{{value*100 | number : '1.0-0'}}%" tooltipPlacement="bottom" tooltipTrigger="mouseenter">
+            <div style="background:linear-gradient(to bottom, #ff3019 0%,#cf0404 100%);height:0.8em" [style.width]="100+'%'"></div>
+          </div>
+          <div *ngIf="value === ''" style="margin-left: 3em" tooltip="No estimation!" tooltipPlacement="bottom" tooltipTrigger="mouseenter">
+            -
           </div>
         </template>
       </swui-datatable-column>
