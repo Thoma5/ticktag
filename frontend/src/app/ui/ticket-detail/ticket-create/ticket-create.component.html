@@ -1,0 +1,31 @@
+<div class="wrapper">
+  <div class="title">
+    <input [ttFocus] type="text" [(ngModel)]="title" placeholder="Title">
+  </div>
+  <div class="description">
+    <tt-command-textview
+        [initialContent]="'Description text...'"
+        [projectId]="projectId"
+        [activeTags]="activeTags"
+        [assignedUsers]="assignedUsers"
+        [allTicketTags]="allTicketTags"
+        [allTimeCategories]="allTimeCategories"
+        [allAssignmentTags]="allAssignmentTags"
+        (contentChange)="this.description = $event"
+        (save)="onSubmit()"
+    >
+    </tt-command-textview>
+  </div>
+  <div class="bottom">
+    <div class="help">
+      <tt-command-description
+          [commands]="description.commands"
+      >
+      </tt-command-description>
+      <tt-command-help></tt-command-help>
+    </div>
+    <div class="buttons">
+      <input type="button" class="btn btn-primary button-submit" value="Save" (click)="onSubmit()">
+    </div>
+  </div>
+</div>

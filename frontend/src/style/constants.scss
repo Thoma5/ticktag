@@ -16,8 +16,15 @@ $base-line-height: 1.5;
     font-size: ($base-pt * 1.5);
 }
 
+// Colors
+$font-color: palette(Black, Primary);
+$edit-font-color: palette(Black, Disabled);
+$edit-font-color-focus: palette(Black, Secondary);
+$background-primary: palette(White, 500);
+$background-secondary: palette(Grey, 100);
+
 // Layout stuff
-$card-background: palette(White, 500);
+$card-background: $background-primary;
 $card-shadow: 0 ($px * 1rem) ($px * 3rem) rgba(0,0,0,0.12);
 $card-padding: 1rem;
 $thin-line: ($px * 1rem);  // Use whenever you want to use "one pixel"
@@ -25,11 +32,6 @@ $small-gap: 1rem;   // Use for margins between seperate complex elements in a "s
 $medium-gap: 2rem;  // Use for seperation of sections or subsections
 $large-gap: 4rem;   // Use for seperation of section oif medium does not cut it.
 $internal-gap: 1ex; // Use for internal spacing, like in tables or if you need a larger space character.
-
-// Colors
-$font-color: palette(Black, Primary);
-$edit-font-color: palette(Black, Disabled);
-$edit-font-color-focus: palette(Black, Secondary);
 
 // Other stuff :)
 $fast-transition: 75ms ease-in-out;
@@ -53,6 +55,7 @@ $fast-transition: 75ms ease-in-out;
     background: $card-background;
     box-shadow: $card-shadow;
     padding: $card-padding;
+    border-radius: ($px * 2rem);
 }
 
 // User/Project icon

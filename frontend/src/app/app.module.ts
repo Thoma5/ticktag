@@ -85,6 +85,7 @@ import {TicketEventTagComponent} from './ui/ticket-detail/ticket-events/ticket-e
 import {TicketEventOldNewMarkupComponent}
   from './ui/ticket-detail/ticket-events/ticket-event-old-new-markup/ticket-event-old-new-markup.component';
 import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
+import { TicketCreateComponent } from './ui/ticket-detail/ticket-create/ticket-create.component';
 
 @NgModule({
   imports: [
@@ -152,6 +153,7 @@ import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
     CommandHelpComponent,
     MarkdownTextviewReadComponent,
     ProgressBarComponent,
+    TicketCreateComponent,
 
     HumanizeDurationPipe,
     FormatMomentPipe,

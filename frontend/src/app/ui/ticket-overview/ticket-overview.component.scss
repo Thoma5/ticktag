@@ -11,10 +11,40 @@
 .search{
   margin-top:  $medium-gap;
 }
+
 .tooltip > .tooltip-inner {
-    background-color: #73AD21; 
-    color: #FFFFFF; 
+    background-color: #73AD21;
+    color: #FFFFFF;
     border: 1px solid green;
     padding: 15px;
     font-size: 20px;
+}
+
+.overview {
+  position: relative;
+  z-index: 0;
+}
+
+.bottom {
+  margin-top: $small-gap;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+// TODO maybe we can find a nicer way to position this, but it is difficult
+.create-overlay {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.create-popup {
+  @extend %card;
+  box-shadow: 0 ($px * 1rem) ($px * 16rem) rgba(0,0,0,0.6);
 }
