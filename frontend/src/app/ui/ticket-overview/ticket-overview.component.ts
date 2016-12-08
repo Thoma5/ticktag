@@ -168,7 +168,6 @@ export class TicketOverviewComponent implements OnInit {
   }
 
   onStopCreate() {
-    console.log('Stop create');
     this.creating = false;
   }
 }

@@ -26,6 +26,8 @@ export class TicketCreateComponent {
   readonly activeTags = imm.List.of();
   readonly assignedUsers = imm.List.of();
 
+  @Input() working = false;
+
   @Output() readonly ticketAdd = new EventEmitter<TicketCreateEvent>();
 
   description: CommentTextviewSaveEvent = this.getEmptyDescription();
@@ -37,7 +39,7 @@ export class TicketCreateComponent {
       title: this.title,
       description: this.description.text,
       commands: this.description.commands
-    })
+    });
   }
 
   private getEmptyDescription(): CommentTextviewSaveEvent {
