@@ -18,7 +18,7 @@ open class TicketEventController @Inject constructor(
         private val ticketEventService: TicketEventService
 ) {
 
-    @GetMapping("/statechangedevent")
+    @GetMapping(value = "/statechangedevent")
     open fun listTicketStateChangedEvents(@RequestParam(name = "ticketIds") ticketIds: List<UUID>):List<TicketEventResultJson> {
         return ticketEventService.findAllStateChangedEvents(ticketIds).map { e ->
             when (e) {
