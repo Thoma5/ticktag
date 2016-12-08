@@ -82,7 +82,9 @@ export class TicketOverviewComponent implements OnInit {
     this.reloading = true;
     let rawTicketObs = this.apiCallService
       .callNoError<PageTicketResultJson>(p => this.ticketApi
-        .listTicketsUsingGETWithHttpInfo(projectId, this.sortprop, this.offset, this.limit, p));
+        .listTicketsUsingGETWithHttpInfo(projectId, this.sortprop,
+        undefined, undefined, undefined, undefined, undefined, undefined,
+        undefined, undefined, undefined, undefined, undefined, this.offset, this.limit, p));
     let assignmentTagsObs = this.apiCallService
       .callNoError<AssignmentTagResultJson[]>(p => this.assigmentTagsApi.listAssignmentTagsUsingGETWithHttpInfo(projectId, p))
       .map(ats => idListToMap(ats).map(at => new TicketOverviewAssTag(at, 0)).toMap());  // TODO ordering

@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
+import java.time.Instant
 import java.util.*
 import javax.inject.Inject
 
@@ -28,13 +29,24 @@ open class TicketController @Inject constructor(
 ) {
 
     @GetMapping
-    open fun listTickets(@RequestParam(name = "projectId") req: UUID,
+    open fun listTickets(@RequestParam(name = "projectId") projectId: UUID,
+                         @RequestParam(name = "number", required = false) number: Int?,
+                         @RequestParam(name = "title", required = false) title: String?,
+                         @RequestParam(name = "tags", required = false) tags: List<String>?,
+                         @RequestParam(name = "users",  required = false) user: List<String>?,
+                         @RequestParam(name = "progressOne", required = false) progressOne: Float?,
+                         @RequestParam(name = "progressTwo",  required = false) progressTwo: Float?,
+                         @RequestParam(name = "progressGreater", required = false) progressGreater: Boolean?,
+                         @RequestParam(name = "dueDateOne",  required = false) dueDateOne: Instant?,
+                         @RequestParam(name = "dueDateTwo",  required = false) dueDateTwo: Instant?,
+                         @RequestParam(name = "dueDateGreater", required = false) dueDateGreater: Boolean?,
+                         @RequestParam(name = "open", required = false) open: Boolean?,
                          @RequestParam(name = "page", defaultValue = "0", required = false) page: Int,
                          @RequestParam(name = "size", defaultValue = "50", required = false) size: Int,
                          @RequestParam(name = "order", required = true) order: List<TicketSort>): Page<TicketResultJson> {
 
         val pageRequest = PageRequest(page, size, Sort(order.map { it.order }))
-        val page = ticketService.listTickets(req, pageRequest)
+        val page = ticketService.listTickets(projectId, number, title, tags, user, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, open, pageRequest)
         val content = page.content.map(::TicketResultJson)
         return PageImpl(content, pageRequest, page.totalElements)
     }
