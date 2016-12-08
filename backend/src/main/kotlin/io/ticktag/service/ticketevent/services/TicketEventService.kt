@@ -5,4 +5,5 @@ import java.util.*
 
 interface TicketEventService {
     fun listTicketEvents(ticketId: UUID): List<TicketEventResult>
+    fun findAllStateChangedEvents(ticketIds: List<UUID>): List<TicketEventResult>
 }

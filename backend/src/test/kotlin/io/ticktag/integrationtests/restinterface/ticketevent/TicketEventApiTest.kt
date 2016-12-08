@@ -34,6 +34,17 @@ class TicketEventApiTest : ApiBaseTest() {
     val loggedTimeId = UUID.fromString("00000000-0008-0000-0000-000000000001")
     val user = UUID.fromString("00000000-0001-0000-0000-000000000001")
 
+    /* TODO
+    @Test
+    fun test_getAllStateChangedEvents() {
+     val ticketIds = ArrayList<UUID>();
+        ticketIds.add(ticketId);
+        withUser(user) { principal ->
+            ticketEventController.findAllStateChangedEvents(ticketIds);
+        }
+    }
+
+    */
   @Test
     fun test_ticketDescriptionChangedShouldAddEvent() {
         withUser(user) { principal ->

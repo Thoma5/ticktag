@@ -16,6 +16,16 @@ open class TicketEventServiceImpl @Inject constructor(
         private val ticketEvents: TicketEventRepository
 ) : TicketEventService {
 
+    @PreAuthorize(AuthExpr.USER) //TODO Check per Ticket
+    override fun findAllStateChangedEvents(ticketIds: List<UUID>): List<TicketEventResult> {
+        return ticketEvents.findByTicketIdIn(ticketIds).filter { e -> e is TicketEventStateChanged } .map { e ->
+            when (e) {
+                is TicketEventStateChanged -> TicketEventStateChangedResult(e)
+                else -> throw RuntimeException()
+            }
+        }
+    }
+
     @PreAuthorize(AuthExpr.READ_TICKET)
     override fun listTicketEvents(@P("authTicketId") ticketId: UUID): List<TicketEventResult> {
         return ticketEvents.findByTicketIdOrderByTimeAsc(ticketId).map { e ->
