@@ -67,8 +67,18 @@
 
     <div *ngIf="creating" class="create-overlay" (click)="onStopCreate()">
       <div class="create-popup" (click)="$event.stopPropagation()">
-        <tt-ticket-create>
-        </tt-ticket-create>
+        <div class="head">
+          <h3 class="title">
+            Create Ticket
+          </h3>
+          <button type="button" class="exit" (click)="onStopCreate()">
+            <i class='fa fa-times'></i>
+          </button>
+        </div>
+        <div class="body">
+          <tt-ticket-create>
+          </tt-ticket-create>
+        </div>
       </div>
     </div>
   </div>
