@@ -36,8 +36,6 @@ export interface UpdateUserRequestJson {
 
     role?: UpdateUserRequestJson.RoleEnum;
 
-    profilePic?: Array<string>;
-
 }
 export namespace UpdateUserRequestJson {
     export enum RoleEnum {

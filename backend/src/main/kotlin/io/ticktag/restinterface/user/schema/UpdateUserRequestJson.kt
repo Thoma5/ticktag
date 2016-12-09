@@ -7,7 +7,5 @@ data class UpdateUserRequestJson(
         val name: String?,
         val password: String?,
         val oldPassword: String?,
-        val role: Role?,
-        val profilePic: ByteArray?
-
+        val role: Role?
 )

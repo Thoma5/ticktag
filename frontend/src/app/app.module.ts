@@ -10,7 +10,7 @@ import { ModalModule } from 'angular2-modal';
 import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
 
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
-import { AuthService, ApiCallService, MarkdownService } from './service';
+import { AuthService, ApiCallService, MarkdownService, ImagesService } from './service';
 import { LoginComponent } from './ui/login/login.component';
 import { WhoamiComponent } from './ui/whoami/whoami.component';
 import { HomeComponent } from './ui/home/home.component';
@@ -84,7 +84,7 @@ import {TicketEventParentChangedComponent}
 import {TicketEventTagComponent} from './ui/ticket-detail/ticket-events/ticket-event-tag/ticket-event-tag.component';
 import {TicketEventOldNewMarkupComponent}
   from './ui/ticket-detail/ticket-events/ticket-event-old-new-markup/ticket-event-old-new-markup.component';
-
+import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
 
 @NgModule({
   imports: [
@@ -98,6 +98,7 @@ import {TicketEventOldNewMarkupComponent}
     MaterialModule.forRoot(),
     ModalModule.forRoot(),
     BootstrapModalModule,
+    NKDatetimeModule,
   ],
   declarations: [
     AppComponent,
@@ -182,6 +183,7 @@ import {TicketEventOldNewMarkupComponent}
     ApiCallService,
     AuthService,
     MarkdownService,
+    ImagesService,
   ],
   bootstrap: [AppComponent]
 })

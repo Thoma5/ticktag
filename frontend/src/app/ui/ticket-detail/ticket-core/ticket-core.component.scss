@@ -6,13 +6,14 @@
     position: relative;
 }
 
-.card-content * {
-    z-index: 1;
+.card-content {
+  z-index: 1;
+  position: relative;
 }
 
 .closed {
-    width: 16rem;
-    height: 16rem;
+    width: 15rem;
+    height: 15rem;
     position: absolute;
     top: -5rem;
     right: -5rem;
@@ -133,4 +134,62 @@
   }
 }
 
+.subticket-add {
+  margin-top: $small-gap;
+}
 
+.storypoints {
+  position: absolute;
+  top: -$card-padding;
+  right: 8rem;
+}
+
+$ribbon-base: 1.5em;
+$ribbon-color: palette(Blue, 500);
+
+.ribbon {
+  background-color: $ribbon-color;
+  float: left;
+  border-radius: $ribbon-base/10 $ribbon-base/10 0px 0px;
+  border: none;
+  width: $ribbon-base*3;
+  height: $ribbon-base*4;
+  position: relative;
+  padding: $ribbon-base/10;
+  display: flex;
+  flex-direction: row;
+  box-shadow: 0 $ribbon-base/50 $ribbon-base/10 rgba(0,0,0,0.5);
+
+  &:hover {
+
+    &::before {
+    }
+    &::after {
+    }
+  }
+
+  &::before {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-top: $ribbon-base solid $ribbon-color;
+      border-right: $ribbon-base*2 solid transparent;
+  }
+  &::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 0;
+      height: 0;
+      border-top: $ribbon-base solid $ribbon-color;
+      border-left: $ribbon-base*2 solid transparent;
+  }
+
+  .ribbon-content {
+    margin: auto;
+  }
+}
