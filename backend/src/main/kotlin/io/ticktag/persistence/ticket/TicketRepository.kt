@@ -3,6 +3,7 @@ package io.ticktag.persistence.ticket
 import io.ticktag.TicktagRepository
 import io.ticktag.persistence.TicktagCrudRepository
 import io.ticktag.persistence.escapeHqlLike
+import io.ticktag.persistence.orderByClause
 import io.ticktag.persistence.ticket.entity.Ticket
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -43,6 +44,7 @@ open class TicketRepositoryImpl @Inject constructor(private val em: EntityManage
                 upper(cast(t.number as string)) like '%'||upper(:number)||'%' escape '!'
                 or upper(t.title) like '%'||upper(:title)||'%' escape '!'
             )
+            ${pageable.orderByClause()}
         """, Ticket::class.java)
                 .setParameter("project", projectId)
                 .setParameter("number", number.escapeHqlLike('!'))
