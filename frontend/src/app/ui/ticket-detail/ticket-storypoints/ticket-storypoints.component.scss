@@ -18,7 +18,7 @@ tt-edit-textview-posnumber {
 
 :host /deep/ {
     tt-edit-button {
-        font-size: $points-font-size;
+        font-size: ($points-font-size * 0.75);
         position: absolute;
         right: 0;
         top: 0;
