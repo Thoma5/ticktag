@@ -44,7 +44,6 @@ import { OpenClosedButtonComponent } from './ui/ticket-detail/open-closed-button
 import { TicketCommentsComponent } from './ui/ticket-detail/ticket-comments/ticket-comments.component';
 import { TicketCommentComponent } from './ui/ticket-detail/ticket-comment/ticket-comment.component';
 import { TicketCommentInputComponent } from './ui/ticket-detail/ticket-comment-input/ticket-comment-input.component';
-import { TicketStorypointsComponent } from './ui/ticket-detail/ticket-storypoints/ticket-storypoints.component';
 import { TicketFilterComponent } from './ui/ticket-overview/ticket-filter/ticket-filter.component';
 import { AssignedUserComponent } from './ui/ticket-detail/assigned-user/assigned-user.component';
 import { SubticketsComponent } from './ui/ticket-detail/subtickets/subtickets.component';
@@ -129,7 +128,6 @@ import { TicketCreateComponent } from './ui/ticket-detail/ticket-create/ticket-c
     EditTextviewTimeEditComponent,
     EditTextviewTimeReadComponent,
     OpenClosedButtonComponent,
-    TicketStorypointsComponent,
     AssignedUserComponent,
     AssignedUserOverviewComponent,
     SubticketsComponent,
