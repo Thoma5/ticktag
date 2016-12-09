@@ -111,6 +111,11 @@
 }
 
 .description-edit-wrapper {
+  .command-textview {
+    background-color: $background-secondary;
+    border-radius: ($px * 6rem);
+  }
+
   .under {
     display: flex;
     flex-direction: row;
