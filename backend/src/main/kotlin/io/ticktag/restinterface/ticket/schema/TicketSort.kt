@@ -12,7 +12,7 @@ enum class TicketSort(val order: Sort.Order) {
     DUE_DATE_DESC(Sort.Order(Sort.Direction.DESC, "dueDate")),
     STORY_POINTS_ASC(Sort.Order(Sort.Direction.ASC, "storyPoints")),
     STORY_POINTS_DESC(Sort.Order(Sort.Direction.DESC, "storyPoints")),
-    PROGRESS_ASC(Sort.Order(Sort.Direction.ASC, "progressProgress")),
-    PROGRESS_DESC(Sort.Order(Sort.Direction.DESC, "progressProgress"));
+    PROGRESS_ASC(Sort.Order(Sort.Direction.ASC, "progress")),
+    PROGRESS_DESC(Sort.Order(Sort.Direction.DESC, "progress"));
 }
 
