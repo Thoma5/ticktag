@@ -55,7 +55,7 @@ open class UserServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
-    override fun listUsersFuzzy(@P("#authProjectId") projectId: UUID, query: String, pageable: Pageable, principal: Principal): List<UserResult> {
+    override fun listUsersFuzzy(@P("authProjectId") projectId: UUID, query: String, pageable: Pageable, principal: Principal): List<UserResult> {
         return users.findByProjectIdAndFuzzy(projectId, "%$query%", "%$query%", "%${nn.normalize(query)}%", pageable)
                 .map({ userToDto(it, principal) })
     }
