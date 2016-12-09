@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Modal } from 'angular2-modal/plugins/bootstrap';
 import { ApiCallService } from '../../service';
 import {
   TicketApi, TicketResultJson, PageTicketResultJson, AssignmenttagApi,
@@ -10,9 +11,11 @@ import {
   TicketOverview, TicketOverviewTag, TicketOverviewAssTag, TicketOverviewUser
 } from './ticket-overview';
 import { TicketFilter } from './ticket-filter/ticket-filter';
+import { TicketCreateEvent } from '../ticket-detail/ticket-create/ticket-create.component';
 import { idListToMap } from '../../util/listmaputils';
 import * as imm from 'immutable';
 import { Observable } from 'rxjs';
+import { showError } from '../../util/error';
 
 @Component({
   selector: 'tt-ticket-overview',
@@ -54,7 +57,8 @@ export class TicketOverviewComponent implements OnInit {
     private projectApi: ProjectApi,
     private ticketTagsApi: TickettagApi,
     private ticketAssignmentApi: TicketuserrelationApi,
-    private ticketTagRelationApi: TickettagrelationApi) {
+    private ticketTagRelationApi: TickettagrelationApi,
+    private modal: Modal) {
   }
 
   private newTicketOverview(
@@ -169,5 +173,35 @@ export class TicketOverviewComponent implements OnInit {
 
   onStopCreate() {
     this.creating = false;
+  }
+
+  onTicketCreate(val: TicketCreateEvent): void {
+    let obs = this.apiCallService
+      .call(p => this.ticketApi.createTicketUsingPOSTWithHttpInfo({
+        title: val.title,
+        open: true,
+        storyPoints: null,
+        initialEstimatedTime: null,
+        currentEstimatedTime: null,
+        dueDate: null,
+        projectId: val.projectId,
+        description: val.description,
+        ticketAssignments: [],
+        subTickets: [],
+        existingSubTicketIds: [],
+        parentTicketId: null,
+        commands: val.commands.toArray(),
+      }, p));
+
+    this.creating = true;
+    obs.subscribe(result => {
+      this.creating = false;
+
+      if (!result.isValid) {
+        showError(this.modal, result);
+      } else {
+        // TODO refresh
+      }
+    });
   }
 }

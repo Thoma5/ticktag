@@ -76,7 +76,10 @@
           </button>
         </div>
         <div class="body">
-          <tt-ticket-create>
+          <tt-ticket-create
+            [projectId]="projectId"
+            (ticketAdd)="onTicketCreate($event)"
+          >
           </tt-ticket-create>
         </div>
       </div>
