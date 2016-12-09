@@ -1,0 +1,111 @@
+<div class='group'>
+  <div class='header-row'>
+    <div class='user'>
+      <div class='user-icon'><img src='about:blank' class="user-image" /></div>
+      <div class='user-info'>
+        <div class='user-name'><span>{{firstEvent().user.name}}</span></div>
+      </div>
+    </div>
+  </div>
+  <div *ngFor='let event of group.events' class="event">
+    <div [ngSwitch]='event.rawEvent.type' class='content'>
+      <div *ngSwitchCase='"TicketEventTitleChangedResultJson"'>
+        <tt-ticket-event-old-new
+        [title]='"Title changed"'
+        [oldString]='event.rawEvent.srcTitle'
+        [newString]='event.rawEvent.dstTitle'
+        ></tt-ticket-event-old-new>
+      </div>
+      <div *ngSwitchCase='"TicketEventCurrentEstimatedTimeChangedResultJson"'>
+        <tt-ticket-event-old-new
+        [title]='"Current estimated time changed"'
+        [oldString]='event.rawEvent.srcCurrentEstimatedTime | ttHumanizeDuration'
+        [newString]='event.rawEvent.dstCurrentEstimatedTime | ttHumanizeDuration'
+        ></tt-ticket-event-old-new>
+      </div>
+      <div *ngSwitchCase='"TicketEventParentChangedResultJson"'>
+        <tt-ticket-event-parent-ticket-changed
+          [title]='"Parent ticket changed"'
+          [srcParent]='event.srcParent'
+          [dstParent]='event.dstParent'
+        ></tt-ticket-event-parent-ticket-changed>
+      </div>
+      <div *ngSwitchCase='"TicketEventCommentTextChangedResultJson"'>
+        <tt-ticket-event-old-new-markup
+          [title]='"Description text changed"'
+          [oldString]='event.rawEvent.srcText'
+          [newString]='event.rawEvent.dstText'
+        ></tt-ticket-event-old-new-markup>
+      </div>
+      <div *ngSwitchCase='"TicketEventDueDateChangedResultJson"'>
+        <tt-ticket-event-old-new
+          [title]='"Due date changed"'
+          [oldString]='event.rawEvent.srcDueDate | ttFormatMoment'
+          [newString]='event.rawEvent.dstDueDate | ttFormatMoment'
+        ></tt-ticket-event-old-new>
+      </div>
+      <div *ngSwitchCase='"TicketEventInitialEstimatedTimeChangedResultJson"'>
+        <tt-ticket-event-old-new
+          [title]='"Initial estimated time changed"'
+          [oldString]='event.rawEvent.srcInitialEstimatedTime | ttHumanizeDuration'
+          [newString]='event.rawEvent.dstInitialEstimatedTime | ttHumanizeDuration'
+        ></tt-ticket-event-old-new>
+      </div>
+      <div *ngSwitchCase='"TicketEventStateChangedResultJson"'>
+        <tt-ticket-event-old-new
+          [title]='"State changed"'
+          [oldString]='event.rawEvent.srcState ? "Open" : "Close"'
+          [newString]='event.rawEvent.dstState ? "Open" : "Close"'
+        ></tt-ticket-event-old-new>
+      </div>
+      <div *ngSwitchCase='"TicketEventUserAddedResultJson"'>
+        <tt-ticket-event-user
+          [user]='event.addedUser'
+          [tag]='event.assignmentTag'
+          [added]='true'
+        ></tt-ticket-event-user>
+      </div>
+      <div *ngSwitchCase='"TicketEventUserRemovedResultJson"'>
+        <tt-ticket-event-user
+          [user]='event.removedUser'
+          [tag]='event.assignmentTag'
+          [added]='false'
+        ></tt-ticket-event-user>
+      </div>
+      <div *ngSwitchCase='"TicketEventStoryPointsChangedResultJson"'>
+        <tt-ticket-event-old-new
+          [title]='"Story points changed"'
+          [oldString]='event.rawEvent.srcStoryPoints'
+          [newString]='event.rawEvent.dstStoryPoints'
+        ></tt-ticket-event-old-new>
+      </div>
+      <div *ngSwitchCase='"TicketEventLoggedTimeRemovedResultJson"'>
+        <tt-ticket-event-old-new
+          [title]='"Logged time removed"'
+          [oldString]='event.category.name + " " + (event.loggedTime | ttHumanizeDuration)'
+        ></tt-ticket-event-old-new>
+      </div>
+      <div *ngSwitchCase='"TicketEventLoggedTimeAddedResultJson"'>
+        <tt-ticket-event-old-new
+          [title]='"Logged time added"'
+          [newString]='event.category.name + " " + (event.loggedTime | ttHumanizeDuration)'
+        ></tt-ticket-event-old-new>
+      </div>
+      <div *ngSwitchCase='"TicketEventTagRemovedResultJson"'>
+        <tt-ticket-event-tag
+          [tag]='event.tag'
+          [added]='false'
+        ></tt-ticket-event-tag>
+      </div>
+      <div *ngSwitchCase='"TicketEventTagAddedResultJson"'>
+        <tt-ticket-event-tag
+          [tag]='event.tag'
+          [added]='true'
+        ></tt-ticket-event-tag>
+      </div>
+    </div>
+  </div>
+  <p class="bottom-info">
+    Created on {{  firstEvent().time | ttFormatMoment }}
+  </p>
+</div>

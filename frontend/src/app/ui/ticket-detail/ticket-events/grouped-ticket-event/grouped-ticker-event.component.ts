@@ -3,14 +3,15 @@ import { TicketEvent } from '../../ticket-detail';
 import { ImagesService } from '../../../../service';
 import { UserApi } from '../../../../api';
 import { Subscription } from 'rxjs';
+import {GroupedTicketEvent} from '../ticket-events.component';
 
 @Component({
-  selector: 'tt-ticket-event',
-  templateUrl: './ticket-event.component.html',
+  selector: 'tt-grouped-ticket-event',
+  templateUrl: 'grouped-ticket-event.component.html',
   styleUrls: ['../ticket-events.component.scss']
 })
-export class TicketEventComponent implements OnChanges {
-  @Input() event: TicketEvent;
+export class GroupedTicketEventComponent implements OnChanges {
+  @Input() group: GroupedTicketEvent;
 
   private imageSubscription: Subscription;
 
@@ -25,12 +26,16 @@ export class TicketEventComponent implements OnChanges {
       this.imageSubscription.unsubscribe();
     }
     this.imageSubscription = this.images.loadImage(
-        'user-image-' + this.event.user.id,
-        p => this.userApi.getUserImageUsingGETWithHttpInfo(this.event.user.id, p))
+        'user-image-' + this.firstEvent().user.id,
+        p => this.userApi.getUserImageUsingGETWithHttpInfo(this.firstEvent().user.id, p))
       .subscribe(data => {
         const element = (this.element.nativeElement as HTMLElement).querySelector('.user-image') as HTMLImageElement;
         element.src = data;
         this.imageSubscription = null;
       });
+  }
+
+  firstEvent(): TicketEvent {
+    return this.group.events[0];
   }
 }
