@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
+import org.springframework.format.FormatterRegistry
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageConverter
@@ -45,6 +46,7 @@ open class RestConfig : WebMvcConfigurerAdapter() {
                 .registerModule(ParameterNamesModule())
                 .registerModule(Jdk8Module())
                 .registerModule(JavaTimeModule())
+                .registerModule(PrettyUUIDModule())
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true)
                 .configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true)
                 .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true)
@@ -53,8 +55,12 @@ open class RestConfig : WebMvcConfigurerAdapter() {
         return mapper
     }
 
-    override fun configureMessageConverters(converters: MutableList<HttpMessageConverter<*>>?) {
-        converters?.add(MappingJackson2HttpMessageConverter(objectMapper()))
+    override fun configureMessageConverters(converters: MutableList<HttpMessageConverter<*>>) {
+        converters.add(MappingJackson2HttpMessageConverter(objectMapper()))
+    }
+
+    override fun addFormatters(registry: FormatterRegistry) {
+        registry.addConverter(PrettyUUIDConverter())
     }
 }
 

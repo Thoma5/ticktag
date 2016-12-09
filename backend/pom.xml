@@ -19,6 +19,7 @@
         <kotlin.version>1.0.5</kotlin.version>
 
         <commons-lang.version>3.5</commons-lang.version>
+        <commons-codec.version>1.10</commons-codec.version>
 
         <slf4j.version>1.7.21</slf4j.version>
         <logback.version>1.1.7</logback.version>
@@ -33,6 +34,8 @@
         <postgresql.version>9.4.1211</postgresql.version>
         <jetty.version>9.3.13.v20161014</jetty.version>
         <swagger.version>2.6.0</swagger.version>
+        <hibernate-validator.version>5.3.1.Final</hibernate-validator.version>
+        <javax-el.version>2.2.6</javax-el.version>
 
         <junit.version>4.12</junit.version>
         <mockito.version>2.2.9</mockito.version>
@@ -52,7 +55,11 @@
             <artifactId>commons-lang3</artifactId>
             <version>${commons-lang.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>${commons-codec.version}</version>
+        </dependency>
 
         <!-- Logging -->
         <dependency>
@@ -181,12 +188,12 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>5.3.1.Final</version>
+            <version>${hibernate-validator.version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.web</groupId>
             <artifactId>javax.el</artifactId>
-            <version>2.2.6</version>
+            <version>${javax-el.version}</version>
         </dependency>
 
         <!-- Jackson -->
