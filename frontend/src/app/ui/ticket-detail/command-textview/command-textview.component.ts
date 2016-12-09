@@ -284,7 +284,6 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
                 .valueSeq()
                 .flatMap(it => it)
                 .toArray();
-            console.dir(aus);
             if (aus.length === 0) { return; }
             this.instance.showHint({
                 hint: () => ({
@@ -297,5 +296,14 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
             });
             return;
         }
+
+        this.instance.showHint({
+            hint: () => ({
+                list: new Array<string>(),
+                from: cursor,
+                to: cursor
+            }),
+            completeSingle: false,
+        });
     }
 }
