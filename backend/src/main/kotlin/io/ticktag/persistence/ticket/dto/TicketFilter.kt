@@ -37,7 +37,8 @@ data class TicketFilter(val project: UUID, val number: Int?, val title: String?,
             val join = root.join<Ticket, TicketTag>("tags")
             val ticketTagPath = root.get<TicketTag>("tags")
             query.multiselect(ticketTagPath)
-            query.groupBy(root.get<UUID>("id"))
+            query.groupBy(root.get<UUID>("id"), root.get<Progress>("progress").get<Float>("progress"))
+            query.having(cb.greaterThanOrEqualTo(cb.count(join.get<TicketTag>("normalizedName")),tags.size.toLong()))
             val ttags = join.get<TicketTag>("normalizedName")
             predicates.add(cb.isTrue(ttags.`in`(tags)))
         }
@@ -45,7 +46,7 @@ data class TicketFilter(val project: UUID, val number: Int?, val title: String?,
             val join = root.join<Ticket, AssignedTicketUser>("assignedTicketUsers")
             val userPath = root.get<User>("assignedTicketUsers")
             query.multiselect(userPath)
-            query.groupBy(root.get<UUID>("id"),join.get<Ticket>("ticket").get<UUID>("id"))
+            query.groupBy(root.get<UUID>("id"),join.get<Ticket>("ticket").get<UUID>("id"), root.get<Progress>("progress").get<Float>("progress"))
             val tusers = join.get<User>("user").get<String>("username")
             predicates.add(cb.isTrue(tusers.`in`(users)))
         }
