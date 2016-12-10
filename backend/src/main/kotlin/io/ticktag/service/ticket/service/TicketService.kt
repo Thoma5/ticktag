@@ -22,6 +22,9 @@ interface TicketService {
                     dueDateOne: Instant?,
                     dueDateTwo: Instant?,
                     dueDateGreater: Boolean?,
+                    storyPointsOne: Int?,
+                    storyPointsTwo: Int?,
+                    storyPointsGreater: Boolean?,
                     open: Boolean?,
                     pageable: Pageable): Page<TicketResult>
     fun listTickets(project: UUID, pageable: Pageable): Page<TicketResult>

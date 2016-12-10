@@ -9,6 +9,7 @@ import {
 import {
   TicketOverview, TicketOverviewTag, TicketOverviewAssTag, TicketOverviewUser
 } from './ticket-overview';
+import { TicketFilter } from './ticket-filter/ticket-filter';
 import { idListToMap } from '../../util/listmaputils';
 import * as imm from 'immutable';
 import { Observable } from 'rxjs';
@@ -26,6 +27,7 @@ export class TicketOverviewComponent implements OnInit {
   private allTicketTags: imm.Map<string, TicketOverviewTag>;
   private allProjectUsers: imm.Map<string, TicketOverviewUser>;
   private projectId: string | null = null;
+  private ticketFilter: TicketFilter = new TicketFilter(undefined, undefined, undefined, undefined);
   sortprop = ['NUMBER_ASC'];
   offset = 0;
   limit = 10;
@@ -83,8 +85,11 @@ export class TicketOverviewComponent implements OnInit {
     let rawTicketObs = this.apiCallService
       .callNoError<PageTicketResultJson>(p => this.ticketApi
         .listTicketsUsingGETWithHttpInfo(projectId, this.sortprop,
-        undefined, undefined, undefined, undefined, undefined, undefined,
-        undefined, undefined, undefined, undefined, undefined, this.offset, this.limit, p));
+        this.ticketFilter.ticketNumber, this.ticketFilter.title, this.ticketFilter.tags, this.ticketFilter.users,
+        this.ticketFilter.progressOne, this.ticketFilter.progressTwo, this.ticketFilter.progressGreater,
+        this.ticketFilter.dueDateOne, this.ticketFilter.dueDateTwo, this.ticketFilter.dueDateGreater,
+        this.ticketFilter.storyPointsOne, this.ticketFilter.storyPointsTwo, this.ticketFilter.storyPointsGreater,
+        this.ticketFilter.open, this.offset, this.limit, p));
     let assignmentTagsObs = this.apiCallService
       .callNoError<AssignmentTagResultJson[]>(p => this.assigmentTagsApi.listAssignmentTagsUsingGETWithHttpInfo(projectId, p))
       .map(ats => idListToMap(ats).map(at => new TicketOverviewAssTag(at, 0)).toMap());  // TODO ordering
@@ -139,9 +144,11 @@ export class TicketOverviewComponent implements OnInit {
     this.refresh(this.projectId).subscribe();
   }
 
-  updateFilter(event: any) {
+  updateFilter(event: TicketFilter) {
     // TODO  filter our data
+    console.log('event');
     this.offset = 0;
+    this.ticketFilter = event;
     this.refresh(this.projectId).subscribe();
   }
 

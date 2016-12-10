@@ -149,12 +149,15 @@ export class TicketApi {
      * @param dueDateOne dueDateOne
      * @param dueDateTwo dueDateTwo
      * @param dueDateGreater dueDateGreater
+     * @param storyPointsOne storyPointsOne
+     * @param storyPointsTwo storyPointsTwo
+     * @param storyPointsGreater storyPointsGreater
      * @param open open
      * @param page page
      * @param size size
      */
-    public listTicketsUsingGET(projectId: string, order: Array<string>, number?: number, title?: string, tags?: Array<string>, users?: Array<string>, progressOne?: number, progressTwo?: number, progressGreater?: boolean, dueDateOne?: number, dueDateTwo?: number, dueDateGreater?: boolean, open?: boolean, page?: number, size?: number, extraHttpRequestParams?: any): Observable<models.PageTicketResultJson> {
-        return this.listTicketsUsingGETWithHttpInfo(projectId, order, number, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, open, page, size, extraHttpRequestParams)
+    public listTicketsUsingGET(projectId: string, order: Array<string>, number?: number, title?: string, tags?: Array<string>, users?: Array<string>, progressOne?: number, progressTwo?: number, progressGreater?: boolean, dueDateOne?: number, dueDateTwo?: number, dueDateGreater?: boolean, storyPointsOne?: number, storyPointsTwo?: number, storyPointsGreater?: boolean, open?: boolean, page?: number, size?: number, extraHttpRequestParams?: any): Observable<models.PageTicketResultJson> {
+        return this.listTicketsUsingGETWithHttpInfo(projectId, order, number, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open, page, size, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -394,11 +397,14 @@ export class TicketApi {
      * @param dueDateOne dueDateOne
      * @param dueDateTwo dueDateTwo
      * @param dueDateGreater dueDateGreater
+     * @param storyPointsOne storyPointsOne
+     * @param storyPointsTwo storyPointsTwo
+     * @param storyPointsGreater storyPointsGreater
      * @param open open
      * @param page page
      * @param size size
      */
-    public listTicketsUsingGETWithHttpInfo(projectId: string, order: Array<string>, number?: number, title?: string, tags?: Array<string>, users?: Array<string>, progressOne?: number, progressTwo?: number, progressGreater?: boolean, dueDateOne?: number, dueDateTwo?: number, dueDateGreater?: boolean, open?: boolean, page?: number, size?: number, extraHttpRequestParams?: any): Observable<Response> {
+    public listTicketsUsingGETWithHttpInfo(projectId: string, order: Array<string>, number?: number, title?: string, tags?: Array<string>, users?: Array<string>, progressOne?: number, progressTwo?: number, progressGreater?: boolean, dueDateOne?: number, dueDateTwo?: number, dueDateGreater?: boolean, storyPointsOne?: number, storyPointsTwo?: number, storyPointsGreater?: boolean, open?: boolean, page?: number, size?: number, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/ticket`;
 
         let queryParameters = new URLSearchParams();
@@ -443,6 +449,15 @@ export class TicketApi {
         }
         if (dueDateGreater !== undefined) {
             queryParameters.set('dueDateGreater', <any>dueDateGreater);
+        }
+        if (storyPointsOne !== undefined) {
+            queryParameters.set('storyPointsOne', <any>storyPointsOne);
+        }
+        if (storyPointsTwo !== undefined) {
+            queryParameters.set('storyPointsTwo', <any>storyPointsTwo);
+        }
+        if (storyPointsGreater !== undefined) {
+            queryParameters.set('storyPointsGreater', <any>storyPointsGreater);
         }
         if (open !== undefined) {
             queryParameters.set('open', <any>open);

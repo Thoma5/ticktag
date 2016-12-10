@@ -45,6 +45,7 @@ import { TicketCommentsComponent } from './ui/ticket-detail/ticket-comments/tick
 import { TicketCommentComponent } from './ui/ticket-detail/ticket-comment/ticket-comment.component';
 import { TicketCommentInputComponent } from './ui/ticket-detail/ticket-comment-input/ticket-comment-input.component';
 import { TicketStorypointsComponent } from './ui/ticket-detail/ticket-storypoints/ticket-storypoints.component';
+import { TicketFilterComponent } from './ui/ticket-overview/ticket-filter/ticket-filter.component';
 import { AssignedUserComponent } from './ui/ticket-detail/assigned-user/assigned-user.component';
 import { SubticketsComponent } from './ui/ticket-detail/subtickets/subtickets.component';
 import { SubticketComponent } from './ui/ticket-detail/subticket/subticket.component';
@@ -69,7 +70,6 @@ import { TicketOverviewComponent } from'./ui/ticket-overview/ticket-overview.com
 import { AssignedUserOverviewComponent } from'./ui/ticket-overview/assigned-user/assigned-user-overview.component';
 import { SpinnerComponent } from './util/spinner/spinner.component';
 import { CommandTextviewComponent } from './ui/ticket-detail/command-textview/command-textview.component';
-import { CommandSearchComponent } from './ui/ticket-overview/command-search/command-search.component';
 import { CommandDescriptionComponent } from './ui/ticket-detail/command-description/command-description.component';
 import { CommandHelpComponent } from './ui/ticket-detail/command-help/command-help.component';
 import { ProgressBarComponent } from './util/progressbar/progressbar.component';
@@ -113,6 +113,7 @@ import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
     TicketDetailComponent,
     TicketSidebarComponent,
     TicketCoreComponent,
+    TicketFilterComponent,
     EditableTextviewComponent,
     EditTextviewStringComponent,
     EditTextviewStringEditComponent,
@@ -147,7 +148,6 @@ import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
     TicketCommentInputComponent,
     EditButtonComponent,
     CommandTextviewComponent,
-    CommandSearchComponent,
     CommandDescriptionComponent,
     CommandHelpComponent,
     MarkdownTextviewReadComponent,

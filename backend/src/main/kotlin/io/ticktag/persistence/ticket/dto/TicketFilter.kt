@@ -18,7 +18,8 @@ import javax.persistence.criteria.Root
 data class TicketFilter(val project: UUID, val number: Int?, val title: String?, val tags: List<String>?,
                         val users: List<String>?, val progressOne: Float?, val progressTwo: Float?,
                         val progressGreater: Boolean?, val dueDateFrom: Instant?, val dueDateTwo: Instant?,
-                        val dueDateGreater: Boolean?, val open: Boolean?) : Specification<Ticket> {
+                        val dueDateGreater: Boolean?, val storyPointsOne: Int?, val storyPointsTwo: Int?,
+                        val storyPointsGreater: Boolean?, val open: Boolean?) : Specification<Ticket> {
 
 
     val predicates = emptyList<Predicate>().toMutableList()
@@ -57,7 +58,7 @@ data class TicketFilter(val project: UUID, val number: Int?, val title: String?,
                 if (progressGreater == true) {
                     predicates.add(cb.greaterThan(root.get<Progress>("progress").get<Float>("progress"), progressOne))
                 } else {
-                    predicates.add(cb.lessThanOrEqualTo(root.get<Progress>("progress").get<Float>("progress"), progressOne))
+                    predicates.add(cb.lessThan(root.get<Progress>("progress").get<Float>("progress"), progressOne))
                 }
             } else {
                 predicates.add(cb.equal(root.get<Progress>("progress").get<List<String>>("progress"), progressOne))
@@ -69,7 +70,20 @@ data class TicketFilter(val project: UUID, val number: Int?, val title: String?,
             if (dueDateGreater == true) {
                 predicates.add(cb.greaterThan(root.get<Instant>("dueDate"), dueDateFrom))
             } else {
-                predicates.add(cb.lessThanOrEqualTo(root.get<Instant>("dueDate"), dueDateFrom))
+                predicates.add(cb.lessThan(root.get<Instant>("dueDate"), dueDateFrom))
+            }
+        }
+        if (storyPointsOne != null) {
+            if (storyPointsTwo != null) {
+                predicates.add(cb.between(root.get<Int>("storyPoints"), storyPointsOne, storyPointsTwo))
+            } else if (storyPointsGreater != null) {
+                if (storyPointsGreater == true) {
+                    predicates.add(cb.greaterThan(root.get<Int>("storyPoints"), storyPointsOne))
+                } else {
+                    predicates.add(cb.lessThan(root.get<Int>("storyPoints"), storyPointsOne))
+                }
+            } else {
+                predicates.add(cb.equal(root.get<Int>("storyPoints"), storyPointsOne))
             }
         }
         if (open != null) {

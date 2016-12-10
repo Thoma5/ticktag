@@ -55,16 +55,32 @@ open class TicketServiceImpl @Inject constructor(
                              dueDateOne: Instant?,
                              dueDateTwo: Instant?,
                              dueDateGreater: Boolean?,
+                             storyPointsOne: Int?,
+                             storyPointsTwo: Int?,
+                             storyPointsGreater: Boolean?,
                              open: Boolean?,
                              pageable: Pageable): Page<TicketResult> {
-        val filter = TicketFilter(project, number, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, open)
+
+        if ( progressOne?.isNaN()?:false || progressOne?.isInfinite()?:false ) {
+            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueProgressOne"))))
+        }
+        if ( progressTwo?.isNaN()?:false || progressTwo?.isInfinite()?:false ) {
+            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueProgressTwo"))))
+        }
+        if ( tags?.contains("")?:false ) {
+            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueInTags"))))
+        }
+        if ( users?.contains("")?:false ) {
+            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueInTags"))))
+        }
+        val filter = TicketFilter(project, number, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater,  storyPointsOne, storyPointsTwo, storyPointsGreater, open)
         val page = tickets.findAll(filter, pageable)
         val content = page.content.map { toResultDto(it) }
         return PageImpl(content, pageable, page.totalElements)
     }
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listTickets(@P("authProjectId") project: UUID, pageable: Pageable): Page<TicketResult> {
-        return listTickets(project, null, null, null, null, null, null, null, null, null, null, null, pageable)
+        return listTickets(project, null, null, null, null, null, null, null, null, null, null, null, null, null, null, pageable)
     }
 
     @PreAuthorize(AuthExpr.READ_TICKET)
