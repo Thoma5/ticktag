@@ -7,6 +7,7 @@ import io.ticktag.persistence.orderByClause
 import io.ticktag.persistence.ticket.entity.Ticket
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import java.util.*
@@ -15,7 +16,8 @@ import javax.persistence.EntityManager
 
 @TicktagRepository
 interface TicketRepository : TicktagCrudRepository<Ticket, UUID>, TicketRepositoryCustom {
-    fun findByProjectId(projectId: UUID,pageable: Pageable): Page<Ticket>
+
+    fun findAll(spec: Specification<Ticket>?, pageable: Pageable?): Page<Ticket>
 
     @Query("Select max(t.number) from Ticket t where project.id = :projectId ")
     fun findHighestTicketNumberInProject(@Param("projectId") projectId: UUID): Int?

@@ -72,10 +72,14 @@ export class TicketOverview {
   readonly createTime: number;
   readonly createdBy: TicketOverviewUser;
   readonly currentEstimatedTime: number|undefined;
+  readonly totalCurrentEstimatedTime: number|undefined;
   readonly dueDate: number|undefined;
   readonly description: string;
   readonly id: string;
   readonly initialEstimatedTime: number|undefined;
+  readonly totalInitialEstimatedTime: number|undefined;
+  readonly loggedTime: number|undefined;
+  readonly progress: number|undefined;
   readonly number: number;
   readonly open: boolean;
   readonly storyPoints: number|undefined;
@@ -91,10 +95,14 @@ export class TicketOverview {
       assignmentTags: imm.Map<string, TicketOverviewAssTag>) {
     this.createTime = ticket.createTime;
     this.currentEstimatedTime = ticket.currentEstimatedTime;
+    this.totalCurrentEstimatedTime = ticket.totalCurrentEstimatedTime;
     this.dueDate = ticket.dueDate;
     this.description = ticket.description;
     this.id = ticket.id;
     this.initialEstimatedTime = ticket.initialEstimatedTime;
+    this.totalInitialEstimatedTime = ticket.totalInitialEstimatedTime;
+    this.progress = ticket.progress;
+    this.loggedTime = ticket.loggedTime;
     this.number = ticket.number;
     this.open = ticket.open;
     this.storyPoints = ticket.storyPoints;

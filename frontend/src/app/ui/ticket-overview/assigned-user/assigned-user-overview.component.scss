@@ -1,31 +1,10 @@
 @import "../../../../style/constants.scss";
 
-.assigned-user {
-    display: flex;
-    flex-direction: row;
+.tooltip-container {
+    background: white;
+    color: black;
+    margin-top: 1000px;
 }
-
-.image {
-    @extend %user-icon;
-    flex-grow: 0;
-    flex-shrink: 0;
-}
-
-.info {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    flex-shrink: 1;
-    margin-left: $internal-gap;
-}
-
-.name {
-    font-weight: bold;
-    flex-grow: 0;
-    flex-shrink: 0;
-}
-
-.tags {
-    flex-grow: 1;
-    flex-shrink: 1;
+.assignees img{
+    margin: 0 0.5em 0 0;
 }

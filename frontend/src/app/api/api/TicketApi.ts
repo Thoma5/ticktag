@@ -139,11 +139,25 @@ export class TicketApi {
      * 
      * @param projectId projectId
      * @param order order
+     * @param number number
+     * @param title title
+     * @param tags tags
+     * @param users users
+     * @param progressOne progressOne
+     * @param progressTwo progressTwo
+     * @param progressGreater progressGreater
+     * @param dueDateOne dueDateOne
+     * @param dueDateTwo dueDateTwo
+     * @param dueDateGreater dueDateGreater
+     * @param storyPointsOne storyPointsOne
+     * @param storyPointsTwo storyPointsTwo
+     * @param storyPointsGreater storyPointsGreater
+     * @param open open
      * @param page page
      * @param size size
      */
-    public listTicketsUsingGET(projectId: string, order: Array<string>, page?: number, size?: number, extraHttpRequestParams?: any): Observable<models.PageTicketResultJson> {
-        return this.listTicketsUsingGETWithHttpInfo(projectId, order, page, size, extraHttpRequestParams)
+    public listTicketsUsingGET(projectId: string, order: Array<string>, number?: number, title?: string, tags?: Array<string>, users?: Array<string>, progressOne?: number, progressTwo?: number, progressGreater?: boolean, dueDateOne?: number, dueDateTwo?: number, dueDateGreater?: boolean, storyPointsOne?: number, storyPointsTwo?: number, storyPointsGreater?: boolean, open?: boolean, page?: number, size?: number, extraHttpRequestParams?: any): Observable<models.PageTicketResultJson> {
+        return this.listTicketsUsingGETWithHttpInfo(projectId, order, number, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open, page, size, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -373,10 +387,24 @@ export class TicketApi {
      * 
      * @param projectId projectId
      * @param order order
+     * @param number number
+     * @param title title
+     * @param tags tags
+     * @param users users
+     * @param progressOne progressOne
+     * @param progressTwo progressTwo
+     * @param progressGreater progressGreater
+     * @param dueDateOne dueDateOne
+     * @param dueDateTwo dueDateTwo
+     * @param dueDateGreater dueDateGreater
+     * @param storyPointsOne storyPointsOne
+     * @param storyPointsTwo storyPointsTwo
+     * @param storyPointsGreater storyPointsGreater
+     * @param open open
      * @param page page
      * @param size size
      */
-    public listTicketsUsingGETWithHttpInfo(projectId: string, order: Array<string>, page?: number, size?: number, extraHttpRequestParams?: any): Observable<Response> {
+    public listTicketsUsingGETWithHttpInfo(projectId: string, order: Array<string>, number?: number, title?: string, tags?: Array<string>, users?: Array<string>, progressOne?: number, progressTwo?: number, progressGreater?: boolean, dueDateOne?: number, dueDateTwo?: number, dueDateGreater?: boolean, storyPointsOne?: number, storyPointsTwo?: number, storyPointsGreater?: boolean, open?: boolean, page?: number, size?: number, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/ticket`;
 
         let queryParameters = new URLSearchParams();
@@ -391,6 +419,48 @@ export class TicketApi {
         }
         if (projectId !== undefined) {
             queryParameters.set('projectId', <any>projectId);
+        }
+        if (number !== undefined) {
+            queryParameters.set('number', <any>number);
+        }
+        if (title !== undefined) {
+            queryParameters.set('title', <any>title);
+        }
+        if (tags !== undefined) {
+            queryParameters.set('tags', <any>tags);
+        }
+        if (users !== undefined) {
+            queryParameters.set('users', <any>users);
+        }
+        if (progressOne !== undefined) {
+            queryParameters.set('progressOne', <any>progressOne);
+        }
+        if (progressTwo !== undefined) {
+            queryParameters.set('progressTwo', <any>progressTwo);
+        }
+        if (progressGreater !== undefined) {
+            queryParameters.set('progressGreater', <any>progressGreater);
+        }
+        if (dueDateOne !== undefined) {
+            queryParameters.set('dueDateOne', <any>dueDateOne);
+        }
+        if (dueDateTwo !== undefined) {
+            queryParameters.set('dueDateTwo', <any>dueDateTwo);
+        }
+        if (dueDateGreater !== undefined) {
+            queryParameters.set('dueDateGreater', <any>dueDateGreater);
+        }
+        if (storyPointsOne !== undefined) {
+            queryParameters.set('storyPointsOne', <any>storyPointsOne);
+        }
+        if (storyPointsTwo !== undefined) {
+            queryParameters.set('storyPointsTwo', <any>storyPointsTwo);
+        }
+        if (storyPointsGreater !== undefined) {
+            queryParameters.set('storyPointsGreater', <any>storyPointsGreater);
+        }
+        if (open !== undefined) {
+            queryParameters.set('open', <any>open);
         }
         if (page !== undefined) {
             queryParameters.set('page', <any>page);

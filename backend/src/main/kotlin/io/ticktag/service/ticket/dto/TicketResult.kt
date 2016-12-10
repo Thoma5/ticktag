@@ -15,6 +15,7 @@ data class TicketResult(
         val storyPoints: Int?,
         val initialEstimatedTime: Duration?,
         val currentEstimatedTime: Duration?,
+        val progress: ProgressResult,
         val dueDate: Instant?,
         val description: String,
         val projectId: UUID,
