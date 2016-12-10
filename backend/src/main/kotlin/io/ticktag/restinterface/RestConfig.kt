@@ -61,6 +61,7 @@ open class RestConfig : WebMvcConfigurerAdapter() {
 
     override fun addFormatters(registry: FormatterRegistry) {
         registry.addConverter(PrettyUUIDConverter())
+        registry.addConverter(InstantConverter())
     }
 }
 

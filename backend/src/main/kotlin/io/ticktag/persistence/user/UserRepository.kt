@@ -1,7 +1,9 @@
 package io.ticktag.persistence.user
 
 import io.ticktag.TicktagRepository
-import io.ticktag.persistence.*
+import io.ticktag.persistence.TicktagCrudRepository
+import io.ticktag.persistence.escapeHqlLike
+import io.ticktag.persistence.orderByClause
 import io.ticktag.persistence.user.entity.User
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query

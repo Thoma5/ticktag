@@ -73,10 +73,10 @@ export class TicketFilterComponent implements OnInit {
                         <p>!sp:&lt;10</p>
                         <p>!sp:10</p>
                     <h3>Filter due dates</h3>
-                        <p>!dueDate:01/01/1970-01/01/2020 </p>
-                        <p>!dueDate:&gt;01/01/1970 </p>
-                        <p>!dueDate:&lt;01/01/1970</p>
-                        <p>!dueDate:01/01/1970</p>
+                        <p>!dueDate:1970-01-01/2038-01-19 </p>
+                        <p>!dueDate:&gt;2038-01-19 </p>
+                        <p>!dueDate:&lt;2038-01-19</p>
+                        <p>!dueDate:2038-01-19</p>
                     <h3>Filter progress</h3>
                         <p>!progress:1%-10% </p>
                         <p>!progress:&gt;10% </p>
@@ -215,6 +215,7 @@ export class TicketFilterComponent implements OnInit {
         let finalFilter = new TicketFilter(title, ticketNumber, tags, users, progressOne, progressTwo,
             progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo,
             storyPointsGreater, open);
+            console.log(finalFilter);
         this.ticketFilter.emit(finalFilter);
     }
 

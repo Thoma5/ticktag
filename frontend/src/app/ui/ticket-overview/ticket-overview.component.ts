@@ -27,7 +27,8 @@ export class TicketOverviewComponent implements OnInit {
   private allTicketTags: imm.Map<string, TicketOverviewTag>;
   private allProjectUsers: imm.Map<string, TicketOverviewUser>;
   private projectId: string | null = null;
-  private ticketFilter: TicketFilter = new TicketFilter(undefined, undefined, undefined, undefined);
+  private ticketFilter: TicketFilter = new TicketFilter(undefined, undefined, undefined, undefined, undefined,
+  undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
   sortprop = ['NUMBER_ASC'];
   offset = 0;
   limit = 10;
@@ -103,6 +104,7 @@ export class TicketOverviewComponent implements OnInit {
       .zip(rawTicketObs, assignmentTagsObs, ticketTagsObs, projectUsersObs)
       .do(
       tuple => {
+        console.log(tuple)
         this.allAssignmentTags = tuple[1];
         this.allTicketTags = tuple[2];
         this.allProjectUsers = tuple[3];
@@ -146,7 +148,6 @@ export class TicketOverviewComponent implements OnInit {
 
   updateFilter(event: TicketFilter) {
     // TODO  filter our data
-    console.log('event');
     this.offset = 0;
     this.ticketFilter = event;
     this.refresh(this.projectId).subscribe();
