@@ -24,17 +24,20 @@ ASSIGNMENT_TAGS = (
 )
 TIME_CATS = ("Implementing", "Reviewing", "Meeting", "Planning")
 
-def random_datetime():
-    try:
-        return datetime(
-            random.randint(2016, 2018),
-            random.randint(1, 12),
-            random.randint(1, 31),
-            random.randint(0, 23),
-            random.randint(0, 59))
-    except ValueError:
-        # Quality error recovery if the day is out of bounds
-        return random_datetime()
+def random_datetime(may_none):
+    if may_none and random.random() < 0.1:
+        return None
+    else:
+        try:
+            return datetime(
+                random.randint(2016, 2018),
+                random.randint(1, 12),
+                random.randint(1, 31),
+                random.randint(0, 23),
+                random.randint(0, 59))
+        except ValueError:
+            # Quality error recovery if the day is out of bounds
+            return random_datetime(may_none)
 
 def random_comment():
     return '\n\n'.join(faker.paragraphs(nb=random.randint(1, 10)))
@@ -120,7 +123,7 @@ class Project:
         self.id = uuid4()
         self.name = "Big Project"
         self.description = faker.sentence()
-        self.time = random_datetime()
+        self.time = random_datetime(False)
     
     def insert(self):
         return """
@@ -221,7 +224,7 @@ class Comment:
         self.id = uuid4()
         self.user = user
         self.ticket = ticket
-        self.time = random_datetime()
+        self.time = random_datetime(False)
         self.text = random_comment()
 
     def insert(self):
@@ -249,7 +252,7 @@ class Ticket:
         self.initial_est = random_est_time()
         self.current_est = self.initial_est
         self.comments = [self.description_comment]
-        self.due_date = random_datetime()
+        self.due_date = random_datetime(False)
     
     def insert(self):
         s = """
@@ -324,7 +327,7 @@ def create_event(users, tickets, tag_groups, assignment_tags, time_cats, ticket)
         sql(id),
         sql(ticket.id),
         sql(user.id),
-        sql(random_datetime())))
+        sql(random_datetime(False))))
 
     def comment_text_changed():
         print("insert into ticket_event_comment_text_changed values ({}, {}, {}, {});".format(
@@ -340,8 +343,8 @@ def create_event(users, tickets, tag_groups, assignment_tags, time_cats, ticket)
     def due_date_changed():
         print("insert into ticket_event_due_date_changed values ({}, {}, {});".format(
             sql(id),
-            sql(random_datetime()),
-            sql(random_datetime())))
+            sql(random_datetime(True)),
+            sql(random_datetime(True))))
     def initial_est_time_changed():
         print("insert into ticket_event_initial_estimated_time_changed values ({}, {}, {});".format(
             sql(id),
@@ -432,7 +435,7 @@ def main():
         print("insert into member values ({}, {}, 'USER', {});".format(
             sql(user.id),
             sql(project.id),
-            sql(random_datetime())))
+            sql(random_datetime(False))))
     
     tag_groups = [TicketTagGroup(project, i, group) for i, group in enumerate(TICKET_TAGS)]
     for group in tag_groups:
