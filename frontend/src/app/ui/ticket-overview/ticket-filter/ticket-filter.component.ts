@@ -215,7 +215,6 @@ export class TicketFilterComponent implements OnInit {
         let finalFilter = new TicketFilter(title, ticketNumber, tags, users, progressOne, progressTwo,
             progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo,
             storyPointsGreater, open);
-            console.log(finalFilter);
         this.ticketFilter.emit(finalFilter);
     }
 
