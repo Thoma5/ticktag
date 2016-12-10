@@ -5,7 +5,7 @@ from uuid import uuid4, UUID
 from faker import Factory
 
 USER_COUNT = 100
-TICKET_COUNT = 100
+TICKET_COUNT = 1000
 PASSWORD_HASH = bcrypt.hashpw(b"password", bcrypt.gensalt(prefix=b"2a")).decode("ASCII")
 TICKET_TAGS = (
     ((("Bug", "c23b22"), ("Feature", "77dd77"), ("Idea", "fdfd96")), 0.9, "Type"),
@@ -47,6 +47,9 @@ def subticket_count():
 
 def event_count():
     return random.randint(0, 200)
+
+def reference_count():
+    return random.randint(0, 10)
 
 def random_est_time():
     if random.random() < 0.1:
@@ -456,6 +459,15 @@ def main():
     for ticket in tickets:
         for i in range(event_count()):
             create_event(users, tickets, tag_groups, assignment_tags, time_cats, ticket)
+
+        inserted = set()
+        for i in range(reference_count()):
+            comment_id = random.choice(ticket.comments).id
+            if comment_id not in inserted:
+                print("insert into mentioned_ticket values ({}, {});".format(
+                    sql(comment_id),
+                    sql(random.choice(tickets).id)))
+                inserted.add(comment_id)
 
     print("commit;")
     print("vacuum full freeze analyze;")
