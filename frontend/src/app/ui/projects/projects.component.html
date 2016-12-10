@@ -29,7 +29,7 @@
       </swui-datatable-column>
       <swui-datatable-column name="Created" prop="creationDate" minWidth="128" width="128" maxWidth="128">
         <template let-row="row" let-value="value" swui-datatable-cell-template>
-          {{value | date: 'dd/MM/yyyy'}}
+          {{value | date: 'yyyy-MM-dd'}}
         </template>
       </swui-datatable-column>
       <swui-datatable-column name="Description" minWidth="256" width="256" maxWidth="1024">

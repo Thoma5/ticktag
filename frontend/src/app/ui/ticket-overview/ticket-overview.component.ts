@@ -104,7 +104,6 @@ export class TicketOverviewComponent implements OnInit {
       .zip(rawTicketObs, assignmentTagsObs, ticketTagsObs, projectUsersObs)
       .do(
       tuple => {
-        console.log(tuple)
         this.allAssignmentTags = tuple[1];
         this.allTicketTags = tuple[2];
         this.allProjectUsers = tuple[3];
