@@ -47,6 +47,7 @@ export class TicketFilterComponent implements OnInit {
             this.filters.push('!user:' + e.username);
 
         });
+        this.query = '!open:true';
     }
     select(item: string) {
         this.selected.push(item);
