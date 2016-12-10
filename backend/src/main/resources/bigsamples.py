@@ -1,26 +1,26 @@
 #!/usr/bin/env python3
 import random, re, bcrypt
-from datetime import datetime
+from datetime import datetime, timedelta
 from uuid import uuid4, UUID
 from faker import Factory
 
 USER_COUNT = 100
-TICKET_COUNT = 1000
+TICKET_COUNT = 100
 PASSWORD_HASH = bcrypt.hashpw(b"password", bcrypt.gensalt(prefix=b"2a")).decode("ASCII")
 TICKET_TAGS = (
-    (("Bug", "Feature", "Idea"), 0.9, "Type"),
-    (("Critical", "High", "Low"), 0.25, "Severity"),
-    (("Not Planned", "Backlog", "Sprint 1", "Sprint 2", "Sprint 3", "Sprint 4"), 1, "Sprint"),
-    (("Regression",), 0.01, "Regression"),
-    (("Easy", "Hard"), 0.1, "Difficulty"),
-    (("UI", "Frontend", "Backend", "Database"), 0.7, "Layer"),
+    ((("Bug", "c23b22"), ("Feature", "77dd77"), ("Idea", "fdfd96")), 0.9, "Type"),
+    ((("Critical", "c23b22"), ("High", "ffb347"), ("Low", "aec6cf")), 0.25, "Severity"),
+    ((("Not Planned", "eeeeee"), ("Backlog", "bbbbbb"), ("Sprint 1", "bbbbbb"), ("Sprint 2", "bbbbbb"), ("Sprint 3", "bbbbbb"), ("Sprint 4", "bbbbbb")), 1, "Sprint"),
+    ((("Regression", "ffd1dc"),), 0.01, "Regression"),
+    ((("Easy", "779ecb"), ("Hard", "c23b22")), 0.1, "Difficulty"),
+    ((("UI", "fafafa"), ("Frontend", "fafafa"), ("Backend", "fafafa"), ("Database", "fafafa")), 0.7, "Layer"),
 )
 ASSIGNMENT_TAGS = (
-    ("Ticket Owner", (0.8,)),
-    ("Implementer", (0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7)),
-    ("Reviewer", (0.7, 0.5, 0.3, 0.1)),
-    ("Domain Expert", (0.3, 0.9, 0.8, 0.1)),
-    ("Blocked", (0.01, 0.5, 0.5)),
+    ("Ticket Owner", (0.8,), "b19cd9"),
+    ("Implementer", (0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7), "fdfd96"),
+    ("Reviewer", (0.7, 0.5, 0.3, 0.1), "aec6cf"),
+    ("Domain Expert", (0.3, 0.9, 0.8, 0.1), "77dd77"),
+    ("Blocked", (0.01, 0.5, 0.5), "ff6961"),
 )
 TIME_CATS = ("Implementing", "Reviewing", "Meeting", "Planning")
 
@@ -28,16 +28,7 @@ def random_datetime(may_none):
     if may_none and random.random() < 0.1:
         return None
     else:
-        try:
-            return datetime(
-                random.randint(2016, 2018),
-                random.randint(1, 12),
-                random.randint(1, 31),
-                random.randint(0, 23),
-                random.randint(0, 59))
-        except ValueError:
-            # Quality error recovery if the day is out of bounds
-            return random_datetime(may_none)
+        return datetime.now() - timedelta(hours=random.randint(1, 365*24))
 
 def random_comment():
     return '\n\n'.join(faker.paragraphs(nb=random.randint(1, 10)))
@@ -73,7 +64,7 @@ def random_status():
     return random.random() < 0.8
 
 def random_logged_time(time_left=None, may_none=True):
-    if (not may_none) or ((time_left is None or time_left >= 60000000000) and random.random() < 0.1):
+    if (not may_none) or ((time_left is None or time_left >= 60000000000) and random.random() < 0.05):
         if time_left is None:
             time_left = 360000000000000
         return random.randint(60000000000, time_left)
@@ -137,11 +128,11 @@ class Project:
             sql(None))
 
 class TicketTag:
-    def __init__(self, group, name, order):
+    def __init__(self, group, tag, order):
         self.id = uuid4()
         self.ticket_tag_group = group
-        self.name = name
-        self.color = "ffffaa"
+        self.name = tag[0]
+        self.color = tag[1]
         self.order = order
         self.normalized_name = re.sub(r"[^a-z0-9_]", "", self.name.lower())
     
@@ -162,7 +153,7 @@ class AssignmentTag:
         self.id = uuid4()
         self.project = project
         self.name = tag[0]
-        self.color = "ffffaa"
+        self.color = tag[2]
         self.normalized_name = re.sub(r"[^a-z0-9_]", "", self.name.lower())
         self.chances = tag[1]
     
@@ -252,7 +243,8 @@ class Ticket:
         self.initial_est = random_est_time()
         self.current_est = self.initial_est
         self.comments = [self.description_comment]
-        self.due_date = random_datetime(False)
+        self.due_date = random_datetime(True)
+        self.create_time = random_datetime(False)
     
     def insert(self):
         s = """
@@ -265,13 +257,13 @@ class Ticket:
             sql(self.project.id),
             sql(self.created_by.id),
             sql(None),
-            sql(self.due_date),
+            sql(self.create_time),
             sql(self.title),
             sql(self.open),
             sql(self.story_points),
             sql(self.initial_est),
             sql(self.current_est),
-            sql(None))
+            sql(self.due_date))
         s += self.description_comment.insert()
         s += "\nupdate ticket set description_comment_id = {} where id = {};".format(sql(self.description_comment.id), sql(self.id))
         return s
