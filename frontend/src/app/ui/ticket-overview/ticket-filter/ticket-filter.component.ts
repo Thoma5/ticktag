@@ -126,7 +126,7 @@ export class TicketFilterComponent implements OnInit {
                 if (command[1] && command[1].length > 0) {
                     if (command[0].indexOf('!#') === 0) {
                         let tempNr = parseInt(command[1], 10);
-                        if (tempNr !== NaN) {
+                        if (tempNr !== tempNr) {
                             ticketNumber = tempNr;
                         } else {
                             console.log('Invalid input for filter number command');

@@ -28,10 +28,10 @@ export class TicketOverviewComponent implements OnInit {
   private allProjectUsers: imm.Map<string, TicketOverviewUser>;
   private projectId: string | null = null;
   private ticketFilter: TicketFilter = new TicketFilter(undefined, undefined, undefined, undefined, undefined,
-  undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+  undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, true);
   sortprop = ['NUMBER_ASC'];
   offset = 0;
-  limit = 10;
+  limit = 30;
   totalElements = 0;
   rows: TicketOverview[] = [];
   iconsCss = {

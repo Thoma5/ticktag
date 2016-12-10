@@ -8,18 +8,18 @@
       <tt-ticket-filter [allTicketTags]="allTicketTags" [allUsers]="allProjectUsers" (ticketFilter)="updateFilter($event)">
         </tt-ticket-filter></div>
     </div>
-    <swui-datatable class="material" [rows]="rows" [columns]="columns" [columnMode]="'force'" [headerHeight]="32" [rowHeight]="'auto'"
+    <swui-datatable class="material" [rows]="rows" [columns]="columns" [columnMode]="'force'" [headerHeight]="32" [rowHeight]="32"
       [footerHeight]="32" [externalPaging]="true" [count]="totalElements" [offset]="offset" [limit]="limit" [scrollbarH]="true"
       [scrollbarV]="false" [loadingIndicator]="reloading" [externalSorting]="true" (sort)="onSort($event)" (page)='onPage($event)'
       [cssClasses]="iconsCss" [selectionType]="'row'" (activate)="activate($event)">
       <swui-datatable-column name="#" prop="number"  width="48" maxWidth="48" resizeable="false">
-        <template let-value="value" swui-datatable-cell-template>
-          {{value}}
+        <template let-row="row" let-value="value" swui-datatable-cell-template>
+          <s *ngIf="!row.open" style="color: grey;">#{{value}}</s><p *ngIf="row.open">#{{value}}</p>
         </template>
       </swui-datatable-column>
       <swui-datatable-column name="Title" minWidth="128" width="256">
         <template let-row="row" let-value="value" swui-datatable-cell-template>
-          <a routerLink="/project/{{projectId}}/ticket/{{row.id}}">{{value}}</a>
+          <a routerLink="/project/{{projectId}}/ticket/{{row.id}}"><s  style="color: grey;" *ngIf="!row.open">{{value}}</s><p *ngIf="row.open">{{value}}</p></a>
         </template>
       </swui-datatable-column>
       <swui-datatable-column name="Tags"  minWidth="64" width="256" maxWidth="512" sortable="false">
@@ -34,12 +34,12 @@
           </div>
         </template>
       </swui-datatable-column>
-      <swui-datatable-column name="SP" prop="storyPoints" minWidth="64" width="64" maxWidth="64" resizeable="false">
+      <swui-datatable-column name="SP" prop="storyPoints" minWidth="96" width="96" maxWidth="96" resizeable="false">
         <template let-row="row" let-value="value" swui-datatable-cell-template>
           {{value}}
         </template>
       </swui-datatable-column>
-      <swui-datatable-column name="Due Date" prop="dueDate" minWidth="110" width="110" maxWidth="110">
+      <swui-datatable-column name="Due Date" prop="dueDate" minWidth="128" width="128" maxWidth="128" resizeable="false">
         <template let-row="row" let-value="value" swui-datatable-cell-template>
           {{value | date: 'yyyy-MM-dd'}}
         </template>

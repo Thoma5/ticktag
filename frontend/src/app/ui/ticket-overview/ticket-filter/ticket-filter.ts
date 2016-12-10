@@ -20,16 +20,16 @@ export class TicketFilter {
         dueDateOne: number, dueDateTwo: number, dueDateGreater: boolean, storyPointsOne: number,
         storyPointsTwo: number, storyPointsGreater: boolean, open: boolean) {
         this.title = title === '' ? undefined : title;
-        this.ticketNumber = ticketNumber === NaN ? undefined : ticketNumber;
-        this.ticketNumber = ticketNumber === NaN ? undefined : ticketNumber;
-        this.ticketNumber = ticketNumber === NaN ? undefined : ticketNumber;
+        this.ticketNumber = ticketNumber !== ticketNumber ? undefined : ticketNumber;
+        this.ticketNumber = ticketNumber !== ticketNumber ? undefined : ticketNumber;
+        this.ticketNumber = ticketNumber !== ticketNumber ? undefined : ticketNumber;
         this.tags = (tags ? tags : []).length > 0 ? tags : undefined;
         this.users = (users ? users : []).length > 0 ? users : undefined;
-        this.progressOne = progressOne === NaN ? undefined : progressOne;
-        this.progressTwo = progressTwo === NaN ? undefined : progressTwo;
+        this.progressOne = progressOne !== progressOne ? undefined : progressOne;
+        this.progressTwo = progressTwo !== progressTwo ? undefined : progressTwo;
         this.progressGreater = progressGreater;
-        this.dueDateOne = dueDateOne === NaN ? undefined : dueDateOne;
-        this.dueDateTwo = dueDateTwo === NaN ? undefined : dueDateTwo;
+        this.dueDateOne = dueDateOne !== dueDateOne ? undefined : dueDateOne;
+        this.dueDateTwo = dueDateTwo !== dueDateTwo ? undefined : dueDateTwo;
         this.dueDateGreater = dueDateGreater;
         this.storyPointsOne = storyPointsOne;
         this.storyPointsTwo = storyPointsTwo;
