@@ -386,7 +386,7 @@ class TicketApiTest : ApiBaseTest() {
             val tickets = ticketController.listTicketsFuzzy(UUID.fromString("00000000-0002-0000-0000-000000000001"), "USerS", listOf(TicketSort.NUMBER_ASC))
 
             assertEquals(4, tickets.size)
-            assertEquals(tickets.map { it.number }, listOf(2, 3, 4, 5))
+            assertEquals(listOf(2, 3, 4, 5), tickets.map { it.number })
         }
     }
 
