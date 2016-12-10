@@ -76,7 +76,7 @@ import { ProgressBarComponent } from './util/progressbar/progressbar.component';
 import {TicketEventsComponent} from './ui/ticket-detail/ticket-events/ticket-events.component';
 import {TicketEventOldNewComponent} from './ui/ticket-detail/ticket-events/ticket-event-old-new/ticket-event-old-new.component';
 import {TicketeventApi} from './api/api/TicketeventApi';
-import {TicketEventComponent} from './ui/ticket-detail/ticket-events/ticket-event/ticker-event.component';
+import {TicketEventComponent} from './ui/ticket-detail/ticket-events/ticket-event/ticket-event.component';
 import {TicketEventUserComponent} from './ui/ticket-detail/ticket-events/ticket-event-user/ticket-event-user.component';
 import {TicketEventParentChangedComponent}
   from './ui/ticket-detail/ticket-events/ticket-event-parent-ticket-changed/ticket-event-parent-ticket-changed.component';

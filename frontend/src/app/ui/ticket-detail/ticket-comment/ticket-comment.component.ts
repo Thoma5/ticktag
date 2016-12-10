@@ -1,8 +1,6 @@
-import { Component, Input, OnChanges, ElementRef } from '@angular/core';
+import { Component, Input, } from '@angular/core';
 import { TicketDetailComment, TicketDetailAssTag } from '../ticket-detail';
 import * as imm from 'immutable';
-import { Subscription } from 'rxjs';
-import { ImagesService } from '../../../service';
 import { UserApi } from '../../../api';
 
 @Component({
@@ -10,29 +8,14 @@ import { UserApi } from '../../../api';
   templateUrl: './ticket-comment.component.html',
   styleUrls: ['./ticket-comment.component.scss']
 })
-export class TicketCommentComponent implements OnChanges {
+export class TicketCommentComponent {
   @Input() comment: TicketDetailComment;
   @Input() userTags: imm.List<TicketDetailAssTag>;
+  readonly imagePath = '';
 
-  private imageSubscription: Subscription;
-
-  constructor(
-    private images: ImagesService,
-    private userApi: UserApi,
-    private element: ElementRef
-  ) {}
-
-  ngOnChanges(): void {
-    if (this.imageSubscription) {
-      this.imageSubscription.unsubscribe();
-    }
-    this.imageSubscription = this.images.loadImage(
-        'user-image-' + this.comment.user.id,
-        p => this.userApi.getUserImageUsingGETWithHttpInfo(this.comment.user.id, p))
-      .subscribe(data => {
-        const element = (this.element.nativeElement as HTMLElement).querySelector('.user-image') as HTMLImageElement;
-        element.src = data;
-        this.imageSubscription = null;
-      });
+  constructor(private userApi: UserApi) {
+    // This is a terrible, terrible hack to bypass the visibility modifier
+    // But I don't know how else to get the base path
+    this.imagePath = (<any>userApi).basePath + '/user/image';
   }
 }

@@ -3,9 +3,9 @@ package io.ticktag
 import io.ticktag.library.LibraryConfig
 import io.ticktag.persistence.PersistenceConfig
 import io.ticktag.restinterface.RestConfig
-import io.ticktag.swaggerinterface.SwaggerConfig
 import io.ticktag.service.ServiceConfig
 import io.ticktag.service.fallbackadmin.services.FallbackAdminService
+import io.ticktag.swaggerinterface.SwaggerConfig
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.FilterHolder
 import org.eclipse.jetty.servlet.ServletContextHandler
@@ -19,6 +19,7 @@ import org.springframework.web.context.ContextLoaderListener
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext
 import org.springframework.web.filter.DelegatingFilterProxy
 import org.springframework.web.servlet.DispatcherServlet
+import java.time.Clock
 import java.util.*
 import javax.servlet.DispatcherType
 import javax.validation.Validation
@@ -48,6 +49,11 @@ open class TicktagApplication {
     @Bean
     open fun startupListener(fallbackAdminService: FallbackAdminService): StartupListener {
         return StartupListener(fallbackAdminService)
+    }
+
+    @Bean
+    open fun clock(): Clock {
+        return Clock.systemUTC()
     }
 }
 

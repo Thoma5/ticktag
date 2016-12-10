@@ -28,6 +28,8 @@ import * as models from './models';
 export interface UserResultJson {
     id: string;
 
+    imageId: string;
+
     mail?: string;
 
     name: string;
