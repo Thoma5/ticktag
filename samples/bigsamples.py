@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import random, re, bcrypt
 from datetime import datetime, timedelta
-from uuid import uuid4, UUID
+from uuid import UUID
 from faker import Factory
 
 USER_COUNT = 100
@@ -28,7 +28,7 @@ def random_datetime(may_none):
     if may_none and random.random() < 0.1:
         return None
     else:
-        return datetime.now() - timedelta(hours=random.randint(1, 365*24))
+        return datetime(year=2016, month=12, day=10, hour=15) - timedelta(hours=random.randint(1, 365*24))
 
 def random_comment():
     return '\n\n'.join(faker.paragraphs(nb=random.randint(1, 10)))
@@ -74,8 +74,12 @@ def random_logged_time(time_left=None, may_none=True):
     else:
         return None
 
+def random_uuid():
+    return UUID(int=random.randint(0, 2**128-1))
+
 faker = Factory.create('de_AT')
-faker.seed(2017)
+faker.random.seed(2017, version=2)
+random.seed(2017, version=2)
 
 def sql(value):
     if value is None:
@@ -91,13 +95,13 @@ def sql(value):
 
 class User:
     def __init__(self):
-        self.id = uuid4()
+        self.id = random_uuid()
         self.name = faker.name()
         self.username = re.sub(r"[^a-z0-9_]", "", self.name.lower())
         self.mail = re.sub(r"[^a-z0-9_]", "", self.name.lower()) + "@example.invalid"
         self.password_hash = PASSWORD_HASH
         self.role = "USER"
-        self.current_token = uuid4()
+        self.current_token = random_uuid()
 
     def insert(self):
         return """
@@ -114,7 +118,7 @@ class User:
 
 class Project:
     def __init__(self):
-        self.id = uuid4()
+        self.id = random_uuid()
         self.name = "Big Project"
         self.description = faker.sentence()
         self.time = random_datetime(False)
@@ -132,7 +136,7 @@ class Project:
 
 class TicketTag:
     def __init__(self, group, tag, order):
-        self.id = uuid4()
+        self.id = random_uuid()
         self.ticket_tag_group = group
         self.name = tag[0]
         self.color = tag[1]
@@ -153,7 +157,7 @@ class TicketTag:
 
 class AssignmentTag:
     def __init__(self, project, tag):
-        self.id = uuid4()
+        self.id = random_uuid()
         self.project = project
         self.name = tag[0]
         self.color = tag[2]
@@ -173,7 +177,7 @@ class AssignmentTag:
 
 class TimeCat:
     def __init__(self, project, cat):
-        self.id = uuid4()
+        self.id = random_uuid()
         self.project = project
         self.name = cat
         self.normalized_name = re.sub(r"[^a-z0-9_]", "", self.name.lower())
@@ -190,7 +194,7 @@ class TimeCat:
 
 class TicketTagGroup:
     def __init__(self, project, order, group):
-        self.id = uuid4()
+        self.id = random_uuid()
         self.project = project
         self.tags = [TicketTag(self, tag, order*100+i) for i, tag in enumerate(group[0])]
         self.default_ticket_tag = self.tags[0] if group[1] == 1 else None
@@ -215,7 +219,7 @@ class TicketTagGroup:
 
 class Comment:
     def __init__(self, ticket, user):
-        self.id = uuid4()
+        self.id = random_uuid()
         self.user = user
         self.ticket = ticket
         self.time = random_datetime(False)
@@ -234,7 +238,7 @@ class Comment:
 
 class Ticket:
     def __init__(self, project, users, number, parent):
-        self.id = uuid4()
+        self.id = random_uuid()
         self.number = number
         self.project = project
         self.created_by = random.choice(users)
@@ -304,7 +308,7 @@ def create_ticket(project, users, time_cats, tag_groups, assignment_tags, i, par
         time = random_logged_time(time_left)
         while time:
             print("insert into logged_time values ({}, {}, {}, {});".format(
-                sql(uuid4()),
+                sql(random_uuid()),
                 sql(comment.id),
                 sql(random.choice(time_cats).id),
                 sql(time)))
@@ -315,7 +319,7 @@ def create_ticket(project, users, time_cats, tag_groups, assignment_tags, i, par
     return ticket
 
 def create_event(users, tickets, tag_groups, assignment_tags, time_cats, ticket):
-    id = uuid4()
+    id = random_uuid()
     user = random.choice(users)
 
     print("insert into ticket_event values ({}, {}, {}, {});".format(
