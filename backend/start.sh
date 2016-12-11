@@ -32,5 +32,5 @@ if $RECREATE_DB; then
     psql $CONN -f $SAMPLES_SQL
 fi
 
-./mvnw compile
+./mvnw clean compile
 ./mvnw -DTICKTAG_CONFIG=$PROP_FILE exec:java -Dexec.mainClass=io.ticktag.TicktagApplicationKt
