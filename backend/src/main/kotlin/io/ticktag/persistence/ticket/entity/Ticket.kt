@@ -2,12 +2,26 @@ package io.ticktag.persistence.ticket.entity
 
 import io.ticktag.persistence.project.entity.Project
 import io.ticktag.persistence.user.entity.User
-import org.hibernate.annotations.Immutable
+import org.hibernate.annotations.*
 import java.time.Duration
 import java.time.Instant
 import java.util.*
 import javax.persistence.*
+import javax.persistence.CascadeType
+import javax.persistence.Entity
+import javax.persistence.Table
 
+@NamedEntityGraphs(
+        value =
+NamedEntityGraph(name = "Ticket.deep", attributeNodes = arrayOf(
+        NamedAttributeNode("comments"),
+        NamedAttributeNode("mentioningComments", subgraph = "mentioningComments")
+),
+        subgraphs = arrayOf(
+                NamedSubgraph(name="mentioningComments", attributeNodes = arrayOf(
+                    NamedAttributeNode("mentionedTickets")
+                ))
+        )))
 @Entity
 @Table(name = "ticket")
 open class Ticket protected constructor() {
@@ -22,16 +36,16 @@ open class Ticket protected constructor() {
             o.title = title
             o.open = open
             o.storyPoints = storyPoints
-            o.initialEstimatedTime = initialEstimatedTime?:currentEstimatedTime
-            o.currentEstimatedTime = currentEstimatedTime?:initialEstimatedTime
+            o.initialEstimatedTime = initialEstimatedTime ?: currentEstimatedTime
+            o.currentEstimatedTime = currentEstimatedTime ?: initialEstimatedTime
             o.dueDate = dueDate
             o.parentTicket = parentTicket
             o.subTickets = mutableListOf()
             o.project = project
             o.createdBy = createdBy
             o.tags = mutableListOf()
-            o.mentioningComments = mutableListOf()
-            o.comments = mutableListOf()
+            o.mentioningComments = mutableSetOf()
+            o.comments = mutableSetOf()
             o.assignedTicketUsers = mutableListOf()
             o.events = mutableListOf()
             o.parentChangedEventsDst = mutableListOf()
@@ -71,7 +85,7 @@ open class Ticket protected constructor() {
     @Immutable
     @OneToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "id", referencedColumnName = "ticket_id", nullable = true)
-    open var progress: Progress?  = null
+    open var progress: Progress? = null
 
 
     @Column(name = "due_date", nullable = true)
@@ -106,11 +120,11 @@ open class Ticket protected constructor() {
     lateinit open var tags: MutableList<TicketTag>
 
     @ManyToMany(mappedBy = "mentionedTickets")
-    lateinit open var mentioningComments: MutableList<Comment>
+    lateinit open var mentioningComments: MutableSet<Comment>
         protected set
 
     @OneToMany(mappedBy = "ticket", cascade = arrayOf(CascadeType.REMOVE))
-    lateinit open var comments: MutableList<Comment>
+    lateinit open var comments: MutableSet<Comment>
         protected set
 
     @OneToMany(mappedBy = "ticket", cascade = arrayOf(CascadeType.REMOVE))
