@@ -73,6 +73,7 @@ import { CommandTextviewComponent } from './ui/ticket-detail/command-textview/co
 import { CommandDescriptionComponent } from './ui/ticket-detail/command-description/command-description.component';
 import { CommandHelpComponent } from './ui/ticket-detail/command-help/command-help.component';
 import { ProgressBarComponent } from './util/progressbar/progressbar.component';
+import { UserImageComponent } from './util/user-image/user-image.component';
 
 import {TicketEventsComponent} from './ui/ticket-detail/ticket-events/ticket-events.component';
 import {TicketEventOldNewComponent} from './ui/ticket-detail/ticket-events/ticket-event-old-new/ticket-event-old-new.component';
@@ -163,6 +164,7 @@ import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
     SelectAllDirective,
     LoadingComponent,
     SpinnerComponent,
+    UserImageComponent,
   ],
   providers: [
     ProjectApi,
