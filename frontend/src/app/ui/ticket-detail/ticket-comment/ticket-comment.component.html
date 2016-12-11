@@ -1,6 +1,8 @@
 <div class='comment'>
     <div class='header-row'>
-        <div class='user-icon'><img src="{{ imagePath }}/{{ comment.user.imageId}}" class="user-image" /></div>
+        <div class='user-icon'>
+          <tt-user-image [imageId]="comment.user.imageId"></tt-user-image>
+        </div>
         <div class='user-info'><div>
             <span class='user-name'>{{comment.user.name}}</span>
             <span *ngFor="let tag of userTags" class='user-tag' [style.backgroundColor]="'#' + tag.color">

@@ -1,7 +1,9 @@
 <div class='event'>
   <div class='header-row'>
     <div class='user'>
-      <div class='user-icon'><img src="{{ imagePath }}/{{ event.user.imageId}}" class="user-image" /></div>
+      <div class='user-icon'>
+        <tt-user-image [imageId]="event.user.imageId"></tt-user-image>
+      </div>
       <div class='user-info'>
         <div class='user-name'><span>{{event.user.name}}</span></div>
       </div>
