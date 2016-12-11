@@ -13,6 +13,7 @@ import io.ticktag.service.project.dto.CreateProject
 import io.ticktag.service.project.dto.UpdateProject
 import io.ticktag.service.project.services.ProjectService
 import io.ticktag.service.tickettaggroup.service.TicketTagGroupService
+import io.ticktag.service.user.services.UserService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
@@ -27,7 +28,7 @@ import javax.inject.Inject
 @Api(tags = arrayOf("project"), description = "project management")
 open class ProjectController @Inject constructor(
         private val projectService: ProjectService,
-        private val ticketTagGroupService: TicketTagGroupService
+        private val userService: UserService
 ) {
     //TODO: adjust default values
     @GetMapping
@@ -53,11 +54,12 @@ open class ProjectController @Inject constructor(
             PageImpl(content, pageRequest, page.totalElements)
         }
     }
+
     @GetMapping(value = "/{id}/users")
     open fun listProjectUsers(@PathVariable(name = "id") id: UUID,
-                          @AuthenticationPrincipal principal: Principal
+                              @AuthenticationPrincipal principal: Principal
     ): List<UserResultJson> {
-        return projectService.listUserProjectUsers(id).map(::UserResultJson)
+        return userService.listUsersInProject(id, principal).map(::UserResultJson)
     }
 
     @PostMapping

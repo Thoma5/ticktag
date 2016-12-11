@@ -3,6 +3,8 @@ package io.ticktag.service.user.services.impl
 import io.ticktag.ApplicationProperties
 import io.ticktag.TicktagService
 import io.ticktag.library.hashing.HashingLibrary
+import io.ticktag.persistence.member.entity.Member
+import io.ticktag.persistence.project.ProjectRepository
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.persistence.user.entity.Role
 import io.ticktag.persistence.user.entity.User
@@ -35,6 +37,7 @@ import javax.validation.Valid
 @TicktagService
 open class UserServiceImpl @Inject constructor(
         private val users: UserRepository,
+        private val projects: ProjectRepository,
         private val hashing: HashingLibrary,
         private val props: ApplicationProperties,
         private val clock: Clock
@@ -114,6 +117,13 @@ open class UserServiceImpl @Inject constructor(
     override fun listUsers(principal: Principal): List<UserResult> {
         return users.findAll().map({ userToDto(it, principal) })
     }
+
+    @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
+    override fun listUsersInProject(@P("authProjectId") projectId: UUID, principal: Principal): List<UserResult> {
+        val project = projects.findOne(projectId) ?: throw NotFoundException()
+        return project.members.map(Member::user).map({ userToDto(it, principal)})
+    }
+
 
     @PreAuthorize(AuthExpr.ADMIN) // TODO should probably be more granular
     override fun listRoles(): List<RoleResult> {
