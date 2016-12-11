@@ -1,7 +1,7 @@
 package io.ticktag.service
 
-import io.ticktag.persistence.loggedtime.LoggedTimeRepository
 import io.ticktag.persistence.comment.CommentRepository
+import io.ticktag.persistence.loggedtime.LoggedTimeRepository
 import io.ticktag.persistence.member.MemberRepository
 import io.ticktag.persistence.member.entity.ProjectRole
 import io.ticktag.persistence.ticket.AssignmentTagRepository
@@ -11,9 +11,16 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
 import java.util.*
 
+enum class Scope {
+    INTERNAL,
+    ANONYMOUS,
+    REGULAR
+}
+
 data class Principal(
         val id: UUID,
         val role: Role?,
+        val scope: Scope,
         private val members: MemberRepository?,
         private val comments: CommentRepository?,
         private val assignmenttags: AssignmentTagRepository?,
@@ -21,10 +28,13 @@ data class Principal(
         private val loggedTimes: LoggedTimeRepository?
 ) {
     companion object {
-        val INTERNAL = Principal(UUID(-1, -1), null, null, null, null, null, null)
+        val INTERNAL = Principal(UUID(-1, -1), null, Scope.INTERNAL, null, null, null, null, null)
+        val ANONYMOUS = Principal(UUID(-1, -1), null, Scope.ANONYMOUS, null, null, null, null, null)
     }
 
-    fun isInternal(): Boolean = members == null
+    fun isInternal(): Boolean = scope == Scope.INTERNAL
+
+    fun isAnonymous(): Boolean = scope == Scope.ANONYMOUS
 
     fun isId(otherId: UUID?): Boolean {
 
@@ -175,7 +185,7 @@ class AuthExpr private constructor() {
 fun <T> withInternalPrincipal(cb: () -> T): T {
     val ctx = SecurityContextHolder.getContext()
     if (ctx.authentication != null)
-        throw Exception("Cannot replate the current security principal.")
+        throw Exception("Cannot replace the current security principal.")
     ctx.authentication = PreAuthenticatedAuthenticationToken(Principal.INTERNAL, null, emptySet())
     try {
         return cb()
