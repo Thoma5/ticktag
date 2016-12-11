@@ -25,7 +25,7 @@ import {
 import { SubticketCreateEvent } from './subticket-add/subticket-add.component';
 import { idListToMap } from '../../util/listmaputils';
 import * as imm from 'immutable';
-import { CommentTextviewSaveEvent } from './command-textview/command-textview.component';
+import { CommandTextviewSaveEvent } from '../../util/command-textview/command-textview.component';
 import { showError } from '../../util/error';
 
 @Component({
@@ -240,7 +240,7 @@ export class TicketDetailComponent implements OnInit {
     this.newTicketDetail();
   }
 
-  onCommentCreate(event: CommentTextviewSaveEvent): void {
+  onCommentCreate(event: CommandTextviewSaveEvent): void {
     this.creatingComment = true;
     let obs = this.apiCallService
       .call<void>(p => this.commentsApi.createCommentUsingPOSTWithHttpInfo({

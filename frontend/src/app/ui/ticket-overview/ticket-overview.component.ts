@@ -5,10 +5,13 @@ import { ApiCallService } from '../../service';
 import {
   TicketApi, TicketResultJson, PageTicketResultJson, AssignmenttagApi,
   AssignmentTagResultJson, UserResultJson, TicketTagResultJson,
-  TickettagApi, TicketuserrelationApi, TickettagrelationApi, ProjectApi
+  TimeCategoryJson,
+  TickettagApi, TicketuserrelationApi, TickettagrelationApi, ProjectApi,
+  TimecategoryApi
 } from '../../api';
 import {
-  TicketOverview, TicketOverviewTag, TicketOverviewAssTag, TicketOverviewUser
+  TicketOverview, TicketOverviewTag, TicketOverviewAssTag, TicketOverviewUser,
+  TicketOverviewTimeCategory
 } from './ticket-overview';
 import { TicketFilter } from './ticket-filter/ticket-filter';
 import { TicketCreateEvent } from '../ticket-detail/ticket-create/ticket-create.component';
@@ -28,6 +31,7 @@ export class TicketOverviewComponent implements OnInit {
   private tickets: TicketOverview[] = [];
   private allAssignmentTags: imm.Map<string, TicketOverviewAssTag>;
   private allTicketTags: imm.Map<string, TicketOverviewTag>;
+  private allTimeCategories: imm.Map<string, TicketOverviewTimeCategory>;
   private allProjectUsers: imm.Map<string, TicketOverviewUser>;
   private projectId: string | null = null;
   private ticketFilter: TicketFilter = new TicketFilter(undefined, undefined, undefined, undefined, undefined,
@@ -47,6 +51,7 @@ export class TicketOverviewComponent implements OnInit {
   };
 
   creating = false;
+  createRunning = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -58,6 +63,7 @@ export class TicketOverviewComponent implements OnInit {
     private ticketTagsApi: TickettagApi,
     private ticketAssignmentApi: TicketuserrelationApi,
     private ticketTagRelationApi: TickettagrelationApi,
+    private timeCategoryApi: TimecategoryApi,
     private modal: Modal) {
   }
 
@@ -106,13 +112,17 @@ export class TicketOverviewComponent implements OnInit {
     let projectUsersObs = this.apiCallService
       .callNoError<UserResultJson[]>(p => this.projectApi.listProjectUsersUsingGETWithHttpInfo(projectId, p))
       .map(users => idListToMap(users).map(user => new TicketOverviewUser(user)).toMap());
+    let timeCategoriesObs = this.apiCallService
+      .callNoError<TimeCategoryJson[]>(p => this.timeCategoryApi.listProjectTimeCategoriesUsingGETWithHttpInfo(projectId, p))
+      .map(tcs => idListToMap(tcs).map(tc => new TicketOverviewTimeCategory(tc)).toMap());
     return Observable
-      .zip(rawTicketObs, assignmentTagsObs, ticketTagsObs, projectUsersObs)
+      .zip(rawTicketObs, assignmentTagsObs, ticketTagsObs, projectUsersObs, timeCategoriesObs)
       .do(
       tuple => {
         this.allAssignmentTags = tuple[1];
         this.allTicketTags = tuple[2];
         this.allProjectUsers = tuple[3];
+        this.allTimeCategories = tuple[4];
         this.totalElements = tuple[0].totalElements;
         this.tickets = [];
         const start = this.offset * this.limit;
@@ -193,14 +203,15 @@ export class TicketOverviewComponent implements OnInit {
         commands: val.commands.toArray(),
       }, p));
 
-    this.creating = true;
-    obs.subscribe(result => {
-      this.creating = false;
-
+    this.createRunning = true;
+    obs
+      .do(() => this.createRunning = false)
+      .subscribe(result => {
       if (!result.isValid) {
         showError(this.modal, result);
       } else {
-        // TODO refresh
+        this.creating = false;
+        this.refresh(this.projectId).subscribe();
       }
     });
   }

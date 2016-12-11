@@ -78,7 +78,11 @@
         <div class="body">
           <tt-ticket-create
             [projectId]="projectId"
+            [allTicketTags]="allTicketTags"
+            [allTimeCategories]="allTimeCategories"
+            [allAssignmentTags]= "allAssignmentTags"
             (ticketAdd)="onTicketCreate($event)"
+            [working]="createRunning"
           >
           </tt-ticket-create>
         </div>

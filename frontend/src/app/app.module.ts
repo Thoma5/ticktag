@@ -68,9 +68,9 @@ import { LoadingComponent } from './util/loading/loading.component';
 import { TicketOverviewComponent } from'./ui/ticket-overview/ticket-overview.component';
 import { AssignedUserOverviewComponent } from'./ui/ticket-overview/assigned-user/assigned-user-overview.component';
 import { SpinnerComponent } from './util/spinner/spinner.component';
-import { CommandTextviewComponent } from './ui/ticket-detail/command-textview/command-textview.component';
-import { CommandDescriptionComponent } from './ui/ticket-detail/command-description/command-description.component';
-import { CommandHelpComponent } from './ui/ticket-detail/command-help/command-help.component';
+import { CommandTextviewComponent } from './util/command-textview/command-textview.component';
+import { CommandDescriptionComponent } from './util/command-description/command-description.component';
+import { CommandHelpComponent } from './util/command-help/command-help.component';
 import { ProgressBarComponent } from './util/progressbar/progressbar.component';
 
 import {TicketEventsComponent} from './ui/ticket-detail/ticket-events/ticket-events.component';
