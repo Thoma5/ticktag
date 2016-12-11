@@ -18,8 +18,8 @@ class AssignmentTagApiTest : ApiBaseTest() {
 
     @Inject lateinit var assignmentTagController: AssignmentTagController
 
-    var assignmentTagId = UUID.fromString("00000000-0006-0000-0000-000000000001")
-    var projectId = UUID.fromString("00000000-0002-0000-0000-000000000001")
+    var assignmentTagId: UUID = UUID.fromString("00000000-0006-0000-0000-000000000001")
+    var projectId: UUID = UUID.fromString("00000000-0002-0000-0000-000000000001")
     var name = "New Assignment Tag"
     var color = "00ffff"
 
@@ -62,12 +62,8 @@ class AssignmentTagApiTest : ApiBaseTest() {
         withUser(LOCAL_USER_ID) { principal ->
             val assignmentTag = assignmentTagController.getAssignmentTag(assignmentTagId)
 
-            if (assignmentTag != null) {
-                assertEquals(assignmentTag.name, "Implementing")
-                assertEquals(assignmentTag.color, "0000ff")
-            } else {
-                fail()
-            }
+            assertEquals(assignmentTag.name, "Implementing")
+            assertEquals(assignmentTag.color, "0000ff")
         }
     }
 
@@ -86,12 +82,8 @@ class AssignmentTagApiTest : ApiBaseTest() {
 
             val updatedTag = assignmentTagController.updateAssignmentTag(assignmentTagId, req)
 
-            if (updatedTag != null) {
-                assertEquals(updatedTag.name, name2)
-                assertEquals(updatedTag.color, color2)
-            } else {
-                fail()
-            }
+            assertEquals(updatedTag.name, name2)
+            assertEquals(updatedTag.color, color2)
         }
     }
 

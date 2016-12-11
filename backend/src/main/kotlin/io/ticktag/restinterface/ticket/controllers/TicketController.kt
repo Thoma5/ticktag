@@ -44,11 +44,11 @@ open class TicketController @Inject constructor(
                          @RequestParam(name = "storyPointsTwo",  required = false) storyPointsTwo: Int?,
                          @RequestParam(name = "storyPointsGreater", required = false) storyPointsGreater: Boolean?,
                          @RequestParam(name = "open", required = false) open: Boolean?,
-                         @RequestParam(name = "page", defaultValue = "0", required = false) page: Int,
+                         @RequestParam(name = "page", defaultValue = "0", required = false) pageNumber: Int,
                          @RequestParam(name = "size", defaultValue = "50", required = false) size: Int,
                          @RequestParam(name = "order", required = true) order: List<TicketSort>): Page<TicketResultJson> {
 
-        val pageRequest = PageRequest(page, size, Sort(order.map { it.order }))
+        val pageRequest = PageRequest(pageNumber, size, Sort(order.map { it.order }))
         val page = ticketService.listTickets(projectId, number, title, tags, user, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open, pageRequest)
         val content = page.content.map(::TicketResultJson)
         return PageImpl(content, pageRequest, page.totalElements)

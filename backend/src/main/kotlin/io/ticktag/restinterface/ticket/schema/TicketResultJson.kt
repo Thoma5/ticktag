@@ -1,7 +1,6 @@
 package io.ticktag.restinterface.ticket.schema
 
 import io.ticktag.restinterface.ticketuserrelation.schema.TicketUserRelationResultJson
-import io.ticktag.service.loggedtime.dto.CreateLoggedTime
 import io.ticktag.service.ticket.dto.TicketResult
 import java.time.Duration
 import java.time.Instant

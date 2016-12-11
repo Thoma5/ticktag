@@ -1,4 +1,4 @@
-package io.ticktag.integrationtests.restinterface.loggedime
+package io.ticktag.integrationtests.restinterface.loggedtime
 
 import io.ticktag.ADMIN_ID
 import io.ticktag.integrationtests.restinterface.ApiBaseTest
@@ -6,12 +6,12 @@ import io.ticktag.restinterface.loggedtime.controller.LoggedTimeController
 import io.ticktag.restinterface.loggedtime.schema.CreateLoggedTimeJson
 import io.ticktag.restinterface.loggedtime.schema.UpdateLoggedTimeJson
 import io.ticktag.service.NotFoundException
-import junit.framework.Assert.assertEquals
 import org.junit.Test
 import org.springframework.security.access.AccessDeniedException
 import java.time.Duration
 import java.util.*
 import javax.inject.Inject
+import kotlin.test.assertEquals
 
 class LoggedTimeApiTest : ApiBaseTest() {
     @Inject
