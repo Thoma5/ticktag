@@ -12,7 +12,7 @@ import io.ticktag.service.Principal
 import io.ticktag.service.project.dto.CreateProject
 import io.ticktag.service.project.dto.UpdateProject
 import io.ticktag.service.project.services.ProjectService
-import io.ticktag.service.tickettaggroup.service.TicketTagGroupService
+import io.ticktag.service.user.services.UserService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
@@ -27,11 +27,11 @@ import javax.inject.Inject
 @Api(tags = arrayOf("project"), description = "project management")
 open class ProjectController @Inject constructor(
         private val projectService: ProjectService,
-        private val ticketTagGroupService: TicketTagGroupService
+        private val userService: UserService
 ) {
     //TODO: adjust default values
     @GetMapping
-    open fun listProjects(@RequestParam(name = "page", defaultValue = "0", required = false) page: Int,
+    open fun listProjects(@RequestParam(name = "page", defaultValue = "0", required = false) pageNumber: Int,
                           @RequestParam(name = "size", defaultValue = "50", required = false) size: Int,
                           @RequestParam(name = "order", defaultValue = "NAME", required = false) order: ProjectSort,
                           @RequestParam(name = "asc", defaultValue = "true", required = false) asc: Boolean,
@@ -41,7 +41,7 @@ open class ProjectController @Inject constructor(
     ): Page<ProjectResultJson> {
         val ascOrder = if (asc) Sort.Direction.ASC else Sort.Direction.DESC
         val sortOrder = Sort.Order(ascOrder, order.fieldName).ignoreCase()
-        val pageRequest = PageRequest(page, size, Sort(sortOrder))
+        val pageRequest = PageRequest(pageNumber, size, Sort(sortOrder))
 
         return if (all) {
             val page = projectService.listAllProjects(name, pageRequest)
@@ -53,11 +53,12 @@ open class ProjectController @Inject constructor(
             PageImpl(content, pageRequest, page.totalElements)
         }
     }
+
     @GetMapping(value = "/{id}/users")
     open fun listProjectUsers(@PathVariable(name = "id") id: UUID,
-                          @AuthenticationPrincipal principal: Principal
+                              @AuthenticationPrincipal principal: Principal
     ): List<UserResultJson> {
-        return projectService.listUserProjectUsers(id).map(::UserResultJson)
+        return userService.listUsersInProject(id, principal).map(::UserResultJson)
     }
 
     @PostMapping

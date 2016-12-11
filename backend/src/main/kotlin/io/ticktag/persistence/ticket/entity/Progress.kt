@@ -1,7 +1,6 @@
 package io.ticktag.persistence.ticket.entity
 
 import java.time.Duration
-import java.time.Instant
 import java.util.*
 import javax.persistence.Column
 import javax.persistence.Entity

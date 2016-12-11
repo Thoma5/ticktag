@@ -10,9 +10,6 @@ import javax.persistence.*
 @Table(name = "ticket_event")
 @Inheritance(strategy = InheritanceType.JOINED)
 open class TicketEvent protected constructor() {
-    companion object {
-    }
-
     @Id
     @Column(name = "id", nullable = false)
     lateinit open var id: UUID

@@ -6,5 +6,4 @@ import io.ticktag.persistence.ticket.entity.TicketTagGroup
 import java.util.*
 
 @TicktagRepository
-interface TicketTagGroupRepository : TicktagCrudRepository<TicketTagGroup, UUID> {
-}
+interface TicketTagGroupRepository : TicktagCrudRepository<TicketTagGroup, UUID>

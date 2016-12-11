@@ -10,6 +10,7 @@ interface UserService {
     fun createUser(createUser: CreateUser, principal: Principal): UserResult
     fun getUser(id: UUID, principal: Principal): UserResult
     fun listUsers(principal: Principal): List<UserResult>
+    fun listUsersInProject(projectId: UUID, principal: Principal): List<UserResult>
     fun listRoles(): List<RoleResult>
     fun updateUser(principal: Principal, id: UUID, updateUser: UpdateUser): UserResult
     fun getUserImage(imageId: TempImageId): ByteArray

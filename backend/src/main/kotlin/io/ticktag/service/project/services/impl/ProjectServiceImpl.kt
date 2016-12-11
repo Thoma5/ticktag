@@ -1,7 +1,6 @@
 package io.ticktag.service.project.services.impl
 
 import io.ticktag.TicktagService
-import io.ticktag.persistence.member.entity.Member
 import io.ticktag.persistence.project.ProjectRepository
 import io.ticktag.persistence.project.entity.Project
 import io.ticktag.service.AuthExpr
@@ -10,7 +9,6 @@ import io.ticktag.service.project.dto.CreateProject
 import io.ticktag.service.project.dto.ProjectResult
 import io.ticktag.service.project.dto.UpdateProject
 import io.ticktag.service.project.services.ProjectService
-import io.ticktag.service.user.dto.UserResult
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
@@ -53,11 +51,6 @@ open class ProjectServiceImpl @Inject constructor(
         val page = projects.findByMembersUserIdAndNameContainingIgnoreCase(userId, name, pageable)
         val content = page.content.map(::ProjectResult)
         return PageImpl(content, pageable, page.totalElements)
-    }
-    @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
-    override fun listUserProjectUsers(@P("authProjectId") id: UUID): List<UserResult> {
-        val project = projects.findOne(id) ?: throw NotFoundException()
-        return project.members.map(Member::user).map(::UserResult)
     }
 
     @PreAuthorize(AuthExpr.ADMIN)
