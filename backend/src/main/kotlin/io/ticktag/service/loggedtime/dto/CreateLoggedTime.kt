@@ -7,8 +7,7 @@ import java.util.*
 
 data class CreateLoggedTime(
         val time: Duration,
-        var commentId: UUID?,
         val categoryId: UUID
 ) {
-    constructor(l: CreateLoggedTimeJson) : this(time = l.time, commentId = l.commentId, categoryId = l.categoryId)
+    constructor(l: CreateLoggedTimeJson) : this(time = l.time, categoryId = l.categoryId)
 }

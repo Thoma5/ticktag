@@ -7,7 +7,7 @@ import java.util.*
 
 interface MemberService {
     fun getMember(userId: UUID, projectId: UUID): MemberResult
-    fun createMember(userId: UUID, projectId: UUID, member: CreateMember): MemberResult
+    fun createMember(userId: UUID, projectId: UUID, createMember: CreateMember): MemberResult
     fun deleteMember(userId: UUID, projectId: UUID)
     fun updateMember(userId: UUID, projectId: UUID, member: UpdateMember): MemberResult
 }
