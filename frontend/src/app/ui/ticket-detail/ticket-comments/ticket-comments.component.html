@@ -1,7 +1,10 @@
 <div class='comments'>
-    <div *ngFor="let comment of comments">
-        <div class='comment-wrapper'>
-            <tt-ticket-comment [comment]='comment.comment' [userTags]='comment.userTags'></tt-ticket-comment>
-        </div>
+  <a *ngIf="showShowMore()" (click)="toggleShowAll()" class="more">
+    <span class="more-text"> Show all comments</span>
+  </a>
+  <div *ngFor="let comment of commentsToDisplay()">
+    <div class='comment-wrapper'>
+      <tt-ticket-comment [comment]='comment.comment' [userTags]='comment.userTags'></tt-ticket-comment>
     </div>
+  </div>
 </div>

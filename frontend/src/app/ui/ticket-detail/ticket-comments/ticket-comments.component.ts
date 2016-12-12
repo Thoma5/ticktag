@@ -16,7 +16,9 @@ export class TicketCommentsComponent implements OnChanges {
   @Input() ticket: TicketDetail;
   @Input() allAssignmentTags: imm.List<TicketDetailAssTag>;
 
+  private showAll: Boolean = false;
   private comments: imm.List<Comment>;
+  private minComments = 3;
 
   ngOnChanges(changes: SimpleChanges): void {
     if ('ticket' in changes || 'allAssignmentTags' in changes) {
@@ -31,5 +33,21 @@ export class TicketCommentsComponent implements OnChanges {
         .sortBy(c => c.comment.createTime)
         .toList();
     }
+  }
+
+  commentsToDisplay(): imm.List<Comment> {
+    if (this.showAll) {
+      return this.comments;
+    } else {
+      return this.comments.slice(-this.minComments).toList();
+    }
+  }
+
+  toggleShowAll() {
+    this.showAll = !this.showAll;
+  }
+
+  showShowMore(): Boolean {
+    return !this.showAll && this.comments.count() > this.minComments;
   }
 }
