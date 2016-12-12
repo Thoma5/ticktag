@@ -19,13 +19,12 @@ public class CheckDurationValidator implements ConstraintValidator<CheckDuration
         boolean isValid;
         isValid = !value.isNegative();
 
-        if(!isValid) {
+        if (!isValid) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate( "{com.mycompany.constraints.CheckCase.message}"  ).addConstraintViolation();
+            context.buildConstraintViolationWithTemplate("{com.mycompany.constraints.CheckCase.message}").addConstraintViolation();
         }
         return isValid;
     }
-
 
 
 }

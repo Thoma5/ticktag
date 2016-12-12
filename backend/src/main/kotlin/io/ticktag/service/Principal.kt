@@ -125,6 +125,7 @@ data class Principal(
     }
 
 }
+
 class AuthExpr private constructor() {
     companion object {
         const val ROLE_GLOBAL_ADMIN = "ADMIN"

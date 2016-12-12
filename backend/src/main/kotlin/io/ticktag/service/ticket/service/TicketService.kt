@@ -27,6 +27,7 @@ interface TicketService {
                     storyPointsGreater: Boolean?,
                     open: Boolean?,
                     pageable: Pageable): Page<TicketResult>
+
     fun listTickets(project: UUID, pageable: Pageable): Page<TicketResult>
     fun getTicket(id: UUID): TicketResult
     fun getTickets(ids: Collection<UUID>, principal: Principal): Map<UUID, TicketResult>

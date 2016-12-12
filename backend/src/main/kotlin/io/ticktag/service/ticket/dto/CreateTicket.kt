@@ -7,8 +7,6 @@ import java.time.Duration
 import java.time.Instant
 import java.util.*
 import javax.validation.Valid
-import javax.validation.constraints.AssertTrue
-
 import javax.validation.constraints.DecimalMin
 import javax.validation.constraints.Size
 

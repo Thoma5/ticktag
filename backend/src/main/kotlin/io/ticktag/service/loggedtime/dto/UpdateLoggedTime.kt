@@ -6,7 +6,6 @@ import java.util.*
 
 
 data class UpdateLoggedTime(@field:CheckDuration val time: Duration?,
-                            val categoryId: UUID?)
-{
+                            val categoryId: UUID?) {
 
 }

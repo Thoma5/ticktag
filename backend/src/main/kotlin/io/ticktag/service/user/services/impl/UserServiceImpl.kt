@@ -121,7 +121,7 @@ open class UserServiceImpl @Inject constructor(
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listUsersInProject(@P("authProjectId") projectId: UUID, principal: Principal): List<UserResult> {
         val project = projects.findOne(projectId) ?: throw NotFoundException()
-        return project.members.map(Member::user).map({ userToDto(it, principal)})
+        return project.members.map(Member::user).map({ userToDto(it, principal) })
     }
 
 

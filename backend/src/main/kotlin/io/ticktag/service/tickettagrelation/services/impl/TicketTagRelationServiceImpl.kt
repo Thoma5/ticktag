@@ -22,7 +22,7 @@ open class TicketTagRelationServiceImpl(
         private val tags: TicketTagRepository,
         private val ticketEvents: TicketEventRepository,
         private val users: UserRepository
-        ) : TicketTagRelationService {
+) : TicketTagRelationService {
 
     @PreAuthorize(AuthExpr.READ_TICKET_TAG_RELATION)
     override fun getTicketTagRelation(@P("authTicketId") ticketId: UUID, tagId: UUID): TicketTagRelationResult {
@@ -36,7 +36,7 @@ open class TicketTagRelationServiceImpl(
     override fun createOrGetIfExistsTicketTagRelation(@P("authTicketId") ticketId: UUID, tagId: UUID, principal: Principal): TicketTagRelationResult {
         val ticket = tickets.findOne(ticketId) ?: throw NotFoundException()
         val tag = tags.findOne(tagId) ?: throw NotFoundException()
-        val user = users.findOne(principal.id)?: throw NotFoundException()
+        val user = users.findOne(principal.id) ?: throw NotFoundException()
 
         if (tag.ticketTagGroup.project.id != ticket.project.id) {
             throw NotFoundException()
@@ -62,7 +62,7 @@ open class TicketTagRelationServiceImpl(
     @PreAuthorize(AuthExpr.WRITE_TICKET_TAG_RELATION)
     override fun deleteTicketTagRelation(@P("authTicketId") ticketId: UUID, tagId: UUID, principal: Principal) {
         val ticket = tickets.findOne(ticketId) ?: throw NotFoundException()
-        val user = users.findOne(principal.id)?: throw NotFoundException()
+        val user = users.findOne(principal.id) ?: throw NotFoundException()
 
         val assignedTag = ticket.tags.find { it.id == tagId } ?: throw NotFoundException()
         ticketEvents.insert(TicketEventTagRemoved.create(ticket, user, assignedTag))

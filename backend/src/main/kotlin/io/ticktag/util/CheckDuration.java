@@ -1,11 +1,11 @@
 package io.ticktag.util;
+
+import javax.validation.Constraint;
+import javax.validation.Payload;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-
-import javax.validation.Constraint;
-import javax.validation.Payload;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
@@ -18,9 +18,9 @@ public @interface CheckDuration {
     String message() default "{org.hibernate.validator.referenceguide.chapter06.CheckCase." +
             "message}";
 
-    Class<?>[] groups() default { };
+    Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default { };
+    Class<? extends Payload>[] payload() default {};
 
 
     @Target({ElementType.FIELD})
