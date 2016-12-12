@@ -1,7 +1,9 @@
 <div class='group'>
   <div class='header-row'>
     <div class='user'>
-      <div class='user-icon'><img src='about:blank' class="user-image" /></div>
+      <div class='user-icon'>
+        <tt-user-image [imageId]="firstEvent().user.imageId"></tt-user-image>
+      </div>
       <div class='user-info'>
         <div class='user-name'><span>{{firstEvent().user.name}}</span></div>
       </div>
