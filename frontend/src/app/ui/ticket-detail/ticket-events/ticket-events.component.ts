@@ -35,7 +35,7 @@ export class TicketEventsComponent {
     if (currentGroup.user.id !== e.user.id) { return false; }
 
     let startTime = currentGroup.events[0].time;
-    let timeFrame = 15 * 1000 * 60; //15 min
+    let timeFrame = 15 * 1000 * 60; // 15 min
     let newTime = e.time;
     return newTime < (startTime + timeFrame);
   }
