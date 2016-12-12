@@ -1,14 +1,16 @@
 package io.ticktag.service.loggedtime.service.impl
 
 import io.ticktag.TicktagService
-import io.ticktag.persistence.loggedtime.LoggedTimeRepository
 import io.ticktag.persistence.comment.CommentRepository
+import io.ticktag.persistence.loggedtime.LoggedTimeRepository
 import io.ticktag.persistence.ticket.TicketEventRepository
 import io.ticktag.persistence.ticket.entity.LoggedTime
 import io.ticktag.persistence.ticket.entity.TicketEventLoggedTimeAdded
 import io.ticktag.persistence.ticket.entity.TicketEventLoggedTimeRemoved
 import io.ticktag.persistence.timecategory.TimeCategoryRepository
-import io.ticktag.service.*
+import io.ticktag.service.AuthExpr
+import io.ticktag.service.NotFoundException
+import io.ticktag.service.Principal
 import io.ticktag.service.loggedtime.dto.CreateLoggedTime
 import io.ticktag.service.loggedtime.dto.LoggedTimeResult
 import io.ticktag.service.loggedtime.dto.UpdateLoggedTime
@@ -56,7 +58,6 @@ open class LoggedTimeServiceImpl @Inject constructor(
     @PreAuthorize(AuthExpr.EDIT_COMMENT)
     override fun createLoggedTime(createLoggedTime: CreateLoggedTime, @P("authCommentId") commentId: UUID): LoggedTimeResult {
         val duration = createLoggedTime.time
-        val commentId = createLoggedTime.commentId ?: throw  TicktagValidationException(listOf(ValidationError("createLoggedTime.commentId", ValidationErrorDetail.Other("commentId is null"))))
         val comment = comments.findOne(commentId) ?: throw NotFoundException()
         val category = timeCategorys.findOne(createLoggedTime.categoryId) ?: throw NotFoundException()
         val newLoggedTime = LoggedTime.create(duration, comment, category)

@@ -5,14 +5,21 @@ import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.user.schema.*
 import io.ticktag.service.Principal
 import io.ticktag.service.user.dto.CreateUser
+import io.ticktag.service.user.dto.TempImageId
 import io.ticktag.service.user.dto.UpdateUser
 import io.ticktag.service.user.services.UserService
+import org.apache.commons.codec.binary.Base64
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import org.springframework.http.CacheControl
+import org.springframework.http.MediaType
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
+import java.time.Duration
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import javax.servlet.http.HttpServletResponse
 
 @TicktagRestInterface
 @RequestMapping("/user")
@@ -20,6 +27,10 @@ import javax.inject.Inject
 open class UserController @Inject constructor(
         private val userService: UserService
 ) {
+    companion object {
+        val IMAGE_CACHE_DURATION = Duration.ofMinutes(10)
+    }
+
 
     @PostMapping
     open fun createUser(@RequestBody req: CreateUserRequestJson,
@@ -46,10 +57,15 @@ open class UserController @Inject constructor(
         return UserResultJson(userService.getUser(id, principal))
     }
 
-    @GetMapping("/{id}/image")
-    open fun getUserImage(@PathVariable("id") id: UUID): UserImageJson {
-        val image = userService.getUserImage(id)
-        return UserImageJson(String(Base64.getEncoder().encode(image), charset("ASCII")))
+    @ResponseBody
+    @GetMapping("/image/{imageId}")
+    open fun getUserImage(@PathVariable("imageId") imageId: String, response: HttpServletResponse) {
+        val dto = TempImageId(Base64.decodeBase64(imageId))
+        val image = userService.getUserImage(dto)
+        val cacheControlValue = CacheControl.maxAge(IMAGE_CACHE_DURATION.seconds, TimeUnit.SECONDS).headerValue
+        response.setHeader("Cache-Control", cacheControlValue)
+        response.contentType = MediaType.IMAGE_PNG_VALUE
+        response.outputStream.write(image)
     }
 
     @GetMapping("/name/{name}")

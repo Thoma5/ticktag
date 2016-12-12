@@ -3,7 +3,7 @@ package io.ticktag.integrationtests.restinterface.ticket
 import io.ticktag.ADMIN_ID
 import io.ticktag.integrationtests.restinterface.ApiBaseTest
 import io.ticktag.restinterface.statistic.controller.StatisticController
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.util.*
 import javax.inject.Inject

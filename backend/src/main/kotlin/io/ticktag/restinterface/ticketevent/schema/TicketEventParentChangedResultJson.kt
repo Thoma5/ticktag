@@ -1,6 +1,5 @@
 package io.ticktag.restinterface.ticketevent.schema
 
-import io.ticktag.restinterface.ticketevent.schema.TicketEventResultJson
 import io.ticktag.service.ticketevent.dto.TicketEventParentChangedResult
 import java.util.*
 

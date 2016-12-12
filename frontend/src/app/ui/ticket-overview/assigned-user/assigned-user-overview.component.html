@@ -1,6 +1,7 @@
-<div class='row image'>
-  <img class="img-circle" width="32" src="http://lorempixel.com/64/64/cats" />
-</div>
-<div class="row">
-  <p>{{user.username}}</p>
+<div class="assignees">
+  <div *ngFor="let user of usersList"
+    tooltip="{{user.username}}" tooltipPlacement="bottom" tooltipTrigger="mouseenter" tooltipClass="user-tooltip"
+    class="user-image">
+    <tt-user-image [imageId]="user.imageId"></tt-user-image>
+  </div>
 </div>

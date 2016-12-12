@@ -11,6 +11,7 @@ interface ApplicationProperties {
 
     val serverSecret: String
     val serverNumber: Int
+    val serverImageSecret: String
 
     val adminMail: String
     val adminPassword: String

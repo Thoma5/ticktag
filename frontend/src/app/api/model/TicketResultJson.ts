@@ -42,11 +42,17 @@ export interface TicketResultJson {
 
     initialEstimatedTime?: number;
 
+    initialProgress?: number;
+
+    loggedTime?: number;
+
     number: number;
 
     open: boolean;
 
     parentTicketId?: string;
+
+    progress?: number;
 
     projectId: string;
 
@@ -63,6 +69,10 @@ export interface TicketResultJson {
     ticketUserRelations: Array<models.TicketUserRelationResultJson>;
 
     title: string;
+
+    totalCurrentEstimatedTime?: number;
+
+    totalInitialEstimatedTime?: number;
 
 }
 

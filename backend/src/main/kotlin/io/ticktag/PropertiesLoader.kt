@@ -33,6 +33,8 @@ class PropertiesLoader {
                 get() = props["server.secret"] as String
             override val serverNumber: Int
                 get() = (props["server.number"] as String).toInt()
+            override val serverImageSecret: String
+                get() = props["server.image.secret"] as String
             override val adminMail: String
                 get() = props["admin.mail"] as String
             override val adminPassword: String

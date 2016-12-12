@@ -3,13 +3,13 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ApiCallService } from '../../service';
 import {
   TicketApi, TicketResultJson, PageTicketResultJson, AssignmenttagApi,
-  AssignmentTagResultJson, TicketTagResultJson,
-  TickettagApi, GetApi, GetResultJson,
-  TicketuserrelationApi, TickettagrelationApi
+  AssignmentTagResultJson, UserResultJson, TicketTagResultJson,
+  TickettagApi, TicketuserrelationApi, TickettagrelationApi, ProjectApi
 } from '../../api';
 import {
   TicketOverview, TicketOverviewTag, TicketOverviewAssTag, TicketOverviewUser
 } from './ticket-overview';
+import { TicketFilter } from './ticket-filter/ticket-filter';
 import { idListToMap } from '../../util/listmaputils';
 import * as imm from 'immutable';
 import { Observable } from 'rxjs';
@@ -25,10 +25,13 @@ export class TicketOverviewComponent implements OnInit {
   private tickets: TicketOverview[] = [];
   private allAssignmentTags: imm.Map<string, TicketOverviewAssTag>;
   private allTicketTags: imm.Map<string, TicketOverviewTag>;
+  private allProjectUsers: imm.Map<string, TicketOverviewUser>;
   private projectId: string | null = null;
+  private ticketFilter: TicketFilter = new TicketFilter(undefined, undefined, undefined, undefined, undefined,
+  undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, true);
   sortprop = ['NUMBER_ASC'];
   offset = 0;
-  limit = 10;
+  limit = 30;
   totalElements = 0;
   rows: TicketOverview[] = [];
   iconsCss = {
@@ -46,8 +49,8 @@ export class TicketOverviewComponent implements OnInit {
     private apiCallService: ApiCallService,
     private ticketApi: TicketApi,
     private assigmentTagsApi: AssignmenttagApi,
+    private projectApi: ProjectApi,
     private ticketTagsApi: TickettagApi,
-    private getApi: GetApi,
     private ticketAssignmentApi: TicketuserrelationApi,
     private ticketTagRelationApi: TickettagrelationApi) {
   }
@@ -82,37 +85,35 @@ export class TicketOverviewComponent implements OnInit {
     this.reloading = true;
     let rawTicketObs = this.apiCallService
       .callNoError<PageTicketResultJson>(p => this.ticketApi
-        .listTicketsUsingGETWithHttpInfo(projectId, this.sortprop, this.offset, this.limit, p));
+        .listTicketsUsingGETWithHttpInfo(projectId, this.sortprop,
+        this.ticketFilter.ticketNumber, this.ticketFilter.title, this.ticketFilter.tags, this.ticketFilter.users,
+        this.ticketFilter.progressOne, this.ticketFilter.progressTwo, this.ticketFilter.progressGreater,
+        this.ticketFilter.dueDateOne, this.ticketFilter.dueDateTwo, this.ticketFilter.dueDateGreater,
+        this.ticketFilter.storyPointsOne, this.ticketFilter.storyPointsTwo, this.ticketFilter.storyPointsGreater,
+        this.ticketFilter.open, this.offset, this.limit, p));
     let assignmentTagsObs = this.apiCallService
       .callNoError<AssignmentTagResultJson[]>(p => this.assigmentTagsApi.listAssignmentTagsUsingGETWithHttpInfo(projectId, p))
       .map(ats => idListToMap(ats).map(at => new TicketOverviewAssTag(at, 0)).toMap());  // TODO ordering
     let ticketTagsObs = this.apiCallService
       .callNoError<TicketTagResultJson[]>(p => this.ticketTagsApi.listTicketTagsUsingGETWithHttpInfo(null, projectId, p))
       .map(tts => idListToMap(tts).map(tt => new TicketOverviewTag(tt)).toMap());
+    let projectUsersObs = this.apiCallService
+      .callNoError<UserResultJson[]>(p => this.projectApi.listProjectUsersUsingGETWithHttpInfo(projectId, p))
+      .map(users => idListToMap(users).map(user => new TicketOverviewUser(user)).toMap());
     return Observable
-      .zip(rawTicketObs, assignmentTagsObs, ticketTagsObs)
-      .flatMap(tuple => {
-        let ticketsResult = tuple[0];
-        // We need all assigned users
-        let wantedUserIds: string[] = [];
-        ticketsResult.content.forEach(t => t.ticketUserRelations.map(ta => wantedUserIds.push(ta.userId)));
-
-        let getObs = this.apiCallService
-          .callNoError<GetResultJson>(p => this.getApi.getUsingPOSTWithHttpInfo({ userIds: wantedUserIds }, p));
-
-        return Observable.zip(Observable.of(tuple), getObs);
-      })
+      .zip(rawTicketObs, assignmentTagsObs, ticketTagsObs, projectUsersObs)
       .do(
       tuple => {
-        this.allAssignmentTags = tuple[0][1];
-        this.allTicketTags = tuple[0][2];
-        this.totalElements = tuple[0][0].totalElements;
+        this.allAssignmentTags = tuple[1];
+        this.allTicketTags = tuple[2];
+        this.allProjectUsers = tuple[3];
+        this.totalElements = tuple[0].totalElements;
         this.tickets = [];
         const start = this.offset * this.limit;
         const end = start + this.limit;
         let rows = [...this.rows];
-        tuple[0][0].content.forEach(ticket =>
-          this.tickets.push(this.newTicketOverview(ticket, imm.Map(tuple[1].users).map(u => new TicketOverviewUser(u)).toMap()))
+        tuple[0].content.forEach(ticket =>
+          this.tickets.push(this.newTicketOverview(ticket, tuple[3]))
         );
         for (let i = start; i < end; i++) {
           rows[i] = this.tickets[i - this.offset * this.limit];
@@ -138,22 +139,24 @@ export class TicketOverviewComponent implements OnInit {
       this.sortprop = ['NUMBER_' + event.sorts[0].dir.toUpperCase()];
     } else if (event.sorts[0].prop === 'dueDate') {
       this.sortprop = ['DUE_DATE_' + event.sorts[0].dir.toUpperCase()];
+    } else if (event.sorts[0].prop === 'progress') {
+      this.sortprop = ['PROGRESS_' + event.sorts[0].dir.toUpperCase()];
     }
     this.refresh(this.projectId).subscribe();
   }
 
-  updateFilter(event: any) {
+  updateFilter(event: TicketFilter) {
     // TODO  filter our data
     this.offset = 0;
+    this.ticketFilter = event;
     this.refresh(this.projectId).subscribe();
   }
 
-  onTagClicked(event: any) {
+  onTagClicked(event: TicketOverviewTag) {
     console.log(event); // TODO add to filter
   }
-
   activate(event: any) {
-    if (event.type === 'dblclick') {
+    if (event.type === 'keydown' && event.event.code === 'Enter') {
       this.router.navigate(['/project', this.projectId, 'ticket', event.row.id]);
     }
   }

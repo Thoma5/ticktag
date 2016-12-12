@@ -31,10 +31,10 @@ open class MemberServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.ADMIN)
-    override fun createMember(userId: UUID, projectId: UUID, member: CreateMember): MemberResult {
+    override fun createMember(userId: UUID, projectId: UUID, createMember: CreateMember): MemberResult {
         val user = users.findOne(userId) ?: throw NotFoundException()
         val project = projects.findOne(projectId) ?: throw NotFoundException()
-        val member = Member.create(user, project, member.role, Date())
+        val member = Member.create(user, project, createMember.role, Date())
         members.insert(member)
         return MemberResult(member)
     }
