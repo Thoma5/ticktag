@@ -1,8 +1,5 @@
-import { Component, Input, OnChanges, ElementRef } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { TicketEvent } from '../../ticket-detail';
-import { ImagesService } from '../../../../service';
-import { UserApi } from '../../../../api';
-import { Subscription } from 'rxjs';
 import {GroupedTicketEvent} from '../ticket-events.component';
 
 @Component({
