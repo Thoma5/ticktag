@@ -19,6 +19,7 @@ import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
 import java.util.*
 import javax.inject.Inject
+import javax.validation.Valid
 
 @TicktagService
 open class LoggedTimeServiceImpl @Inject constructor(
@@ -56,7 +57,7 @@ open class LoggedTimeServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.EDIT_COMMENT)
-    override fun createLoggedTime(createLoggedTime: CreateLoggedTime, @P("authCommentId") commentId: UUID): LoggedTimeResult {
+    override fun createLoggedTime(@Valid createLoggedTime: CreateLoggedTime, @P("authCommentId") commentId: UUID): LoggedTimeResult {
         val duration = createLoggedTime.time
         val comment = comments.findOne(commentId) ?: throw NotFoundException()
         val category = timeCategorys.findOne(createLoggedTime.categoryId) ?: throw NotFoundException()
@@ -67,7 +68,7 @@ open class LoggedTimeServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.EDIT_TIME_LOG)
-    override fun updateLoggedTime(updateLoggedTime: UpdateLoggedTime, @P("authLoggedTimeId") loggedTimeId: UUID): LoggedTimeResult {
+    override fun updateLoggedTime(@Valid updateLoggedTime: UpdateLoggedTime, @P("authLoggedTimeId") loggedTimeId: UUID): LoggedTimeResult {
         val loggedTime = loggedTimes.findOne(loggedTimeId) ?: throw NotFoundException()
 
         val timeChanged = updateLoggedTime.time != null && loggedTime.time != updateLoggedTime.time

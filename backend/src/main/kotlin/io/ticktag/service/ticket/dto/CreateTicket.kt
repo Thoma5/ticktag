@@ -5,6 +5,7 @@ import io.ticktag.service.command.dto.Command
 import java.time.Duration
 import java.time.Instant
 import java.util.*
+import javax.validation.constraints.AssertTrue
 
 import javax.validation.constraints.DecimalMin
 import javax.validation.constraints.Size
@@ -29,4 +30,6 @@ data class CreateTicket(
             req.currentEstimatedTime, req.dueDate, req.description, req.projectId,
             req.ticketAssignments.map(::TicketAssignment), subtickets,
             req.existingSubTicketIds, req.parentTicketId, commands)
+
+
 }
