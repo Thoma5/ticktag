@@ -1,6 +1,6 @@
 <div class='comments'>
   <a *ngIf="showShowMore()" (click)="toggleShowAll()" class="more">
-    <span class="more-text"> Show all comments</span>
+    <span class="more-text">Show all comments</span>
   </a>
   <div *ngFor="let comment of commentsToDisplay()">
     <div class='comment-wrapper'>

@@ -1,7 +1,10 @@
 <div class='events'>
-    <div *ngFor='let group of groupedEvents'>
-        <div class='event-wrapper'>
-          <tt-grouped-ticket-event [group]='group'></tt-grouped-ticket-event>
-        </div>
+  <a *ngIf="showShowMore()" (click)="toggleShowAll()" class="more">
+    <span class="more-text">Show all activities</span>
+  </a>
+  <div *ngFor='let group of groupedEventsToDisplay()'>
+    <div class='event-wrapper'>
+      <tt-grouped-ticket-event [group]='group'></tt-grouped-ticket-event>
     </div>
+  </div>
 </div>

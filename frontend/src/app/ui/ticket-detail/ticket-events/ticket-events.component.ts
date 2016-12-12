@@ -10,6 +10,9 @@ import {TicketEvent, TicketDetailUser} from '../ticket-detail';
 export class TicketEventsComponent {
   groupedEvents: GroupedTicketEvent[];
 
+  private showAll: Boolean = false;
+  private minGroups = 3;
+
   private _events: imm.List<TicketEvent>;
   get events(): imm.List<TicketEvent> { return this._events; }
 
@@ -36,6 +39,22 @@ export class TicketEventsComponent {
     let timeFrame = 15 * 1000 * 60; // 15 min
     let newTime = e.time;
     return newTime < (startTime + timeFrame);
+  }
+
+  groupedEventsToDisplay(): GroupedTicketEvent[] {
+    if (this.showAll) {
+      return this.groupedEvents;
+    } else {
+      return this.groupedEvents.slice(-this.minGroups);
+    }
+  }
+
+  toggleShowAll() {
+    this.showAll = !this.showAll;
+  }
+
+  showShowMore(): Boolean {
+    return !this.showAll && this.groupedEvents.length > this.minGroups;
   }
 
 }
