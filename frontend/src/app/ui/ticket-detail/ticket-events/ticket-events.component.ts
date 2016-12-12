@@ -20,8 +20,6 @@ export class TicketEventsComponent {
     let currentGroup: GroupedTicketEvent;
     this.groupedEvents = [];
     events.forEach(e => {
-      console.log('ID: ' + e.id);
-      console.log(e.time);
       if (!TicketEventsComponent.canBeGrouped(currentGroup, e)) {
         currentGroup = new GroupedTicketEvent(e.user);
         this.groupedEvents.push(currentGroup);
