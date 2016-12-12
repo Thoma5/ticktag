@@ -1,11 +1,10 @@
-package io.ticktag.restinterface.tickettagrelation
+package io.ticktag.integrationtests.restinterface.tickettagrelation
 
 
 import io.ticktag.*
 import io.ticktag.integrationtests.restinterface.ApiBaseTest
 import io.ticktag.restinterface.tickettagrelation.controllers.TicketTagRelationController
 import io.ticktag.service.NotFoundException
-import junit.framework.Assert.fail
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
@@ -13,6 +12,7 @@ import org.springframework.security.access.AccessDeniedException
 import java.util.*
 import javax.inject.Inject
 import kotlin.test.assertFailsWith
+import kotlin.test.fail
 
 class TicketTagRelationApiTest : ApiBaseTest() {
     @Inject lateinit var ticketTagRelationController: TicketTagRelationController

@@ -103,10 +103,10 @@ export class UserApi {
     /**
      * getUserImage
      * 
-     * @param id id
+     * @param imageId imageId
      */
-    public getUserImageUsingGET(id: string, extraHttpRequestParams?: any): Observable<models.UserImageJson> {
-        return this.getUserImageUsingGETWithHttpInfo(id, extraHttpRequestParams)
+    public getUserImageUsingGET(imageId: string, extraHttpRequestParams?: any): Observable<{}> {
+        return this.getUserImageUsingGETWithHttpInfo(imageId, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -291,16 +291,16 @@ export class UserApi {
     /**
      * getUserImage
      * 
-     * @param id id
+     * @param imageId imageId
      */
-    public getUserImageUsingGETWithHttpInfo(id: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/user/${id}/image`;
+    public getUserImageUsingGETWithHttpInfo(imageId: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/user/image/${imageId}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'id' is not null or undefined
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling getUserImageUsingGET.');
+        // verify required parameter 'imageId' is not null or undefined
+        if (imageId === null || imageId === undefined) {
+            throw new Error('Required parameter imageId was null or undefined when calling getUserImageUsingGET.');
         }
 
 

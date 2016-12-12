@@ -5,7 +5,6 @@ import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.loggedtime.schema.CreateLoggedTimeJson
 import io.ticktag.restinterface.loggedtime.schema.LoggedTimeResultJson
 import io.ticktag.restinterface.loggedtime.schema.UpdateLoggedTimeJson
-import io.ticktag.service.NotFoundException
 import io.ticktag.service.loggedtime.dto.CreateLoggedTime
 import io.ticktag.service.loggedtime.dto.UpdateLoggedTime
 import io.ticktag.service.loggedtime.service.LoggedTimeService
@@ -46,7 +45,7 @@ open class LoggedTimeController @Inject constructor(
 
     @PostMapping
     open fun createLoggedTime(@RequestBody req: CreateLoggedTimeJson): LoggedTimeResultJson {
-        val newLoggedTime = loggedTimeService.createLoggedTime(CreateLoggedTime(req.time, req.commentId, req.categoryId), req.commentId ?: throw NotFoundException())
+        val newLoggedTime = loggedTimeService.createLoggedTime(CreateLoggedTime(req.time, req.categoryId), req.commentId)
         return LoggedTimeResultJson(newLoggedTime)
     }
 

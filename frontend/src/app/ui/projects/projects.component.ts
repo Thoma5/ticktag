@@ -26,6 +26,7 @@ export class ProjectsComponent implements OnInit {
   limit = 15;
   rows: ProjectResultJson[] = [];
   totalElements = 0;
+  filter: string = '';
   private allProjects: boolean = false;
   private user: User;
 
@@ -88,16 +89,26 @@ export class ProjectsComponent implements OnInit {
   }
 
   updateFilter(event: any) {
-    let val = event.target.value;
+    this.filter = event.target.value;
 
     // filter our data
     this.offset = 0;
-    this.getProjects(this.offset, this.limit, this.sortprop, this.asc, val);
+    this.getProjects(this.offset, this.limit, this.sortprop, this.asc, this.filter);
   }
 
   activate(event: any) {
-    if (event.type === 'dblclick') {
+    if (event.type === 'keydown' && event.event.code === 'Enter') {
       this.router.navigate(['/project', event.row.id, 'tickets']);
     }
+  }
+
+  onDeleteClicked(id: string) {
+    this.apiCallService
+      .call<ProjectResultJson>(h => this.projectApi.deleteProjectUsingDELETEWithHttpInfo(id, h))
+      .subscribe( param => {
+        this.refresh = true;
+        this.getProjects(this.offset, this.limit, this.sortprop, this.asc, undefined);
+      }
+      );
   }
 }

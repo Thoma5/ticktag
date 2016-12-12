@@ -9,7 +9,6 @@ import java.util.*
 
 @TicktagRepository
 interface TicketTagGroupRepository : TicktagCrudRepository<TicketTagGroup, UUID> {
-
     @Query("SELECT g from TicketTagGroup g " +
             "WHERE g.project.id = :projectId AND g.exclusive = true")
     fun findExclusiveTicketTagGroupsByProjectId(@Param("projectId") projectId: UUID) : List<TicketTagGroup>

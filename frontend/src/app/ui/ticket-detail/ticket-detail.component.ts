@@ -493,6 +493,12 @@ export class TicketDetailComponent implements OnInit {
               if (e.srcParentId) { wantedTicketIds.push(e.srcParentId); }
               if (e.dstParentId) { wantedTicketIds.push(e.dstParentId); }
               break;
+            case 'TicketEventUserAddedResultJson':
+              wantedUserIds.push(e.addedUserId);
+              break;
+            case 'TicketEventUserRemovedResultJson':
+              wantedUserIds.push(e.removedUserId);
+              break;
           }
         });
 

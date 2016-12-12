@@ -119,8 +119,7 @@ open class CommandServiceImpl(
                     val cat = timeCategories.findByNormalizedNameAndProjectId(nn.normalize(command.category), ticket.project.id)
                     if (cat != null) {
                         tryCommand(errors, index) {
-                            // TODO why needs createLoggedTime the comment id twice???
-                            loggedTimeService.createLoggedTime(CreateLoggedTime(command.duration, comment.id, cat.id), comment.id)
+                            loggedTimeService.createLoggedTime(CreateLoggedTime(command.duration, cat.id), comment.id)
                         }
                     } else {
                         failedCommand(errors, index)

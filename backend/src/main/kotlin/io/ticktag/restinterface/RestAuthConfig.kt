@@ -1,13 +1,14 @@
 package io.ticktag.restinterface
 
 import io.ticktag.ApplicationProperties
-import io.ticktag.persistence.loggedtime.LoggedTimeRepository
 import io.ticktag.persistence.comment.CommentRepository
+import io.ticktag.persistence.loggedtime.LoggedTimeRepository
 import io.ticktag.persistence.member.MemberRepository
 import io.ticktag.persistence.ticket.AssignmentTagRepository
 import io.ticktag.persistence.timecategory.TimeCategoryRepository
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.Principal
+import io.ticktag.service.Scope
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -110,7 +111,7 @@ open class RestSecurityConfigBeans {
                             val token = RestAuthToken.fromString(rawToken.extendedInformation)
                             val user = users.findOne(token.userId)
                             if (user != null && user.currentToken == token.currentToken) {
-                                val principal = Principal(user.id, user.role, members, comments, assignmentTags, timeCategories, loggedTimes)
+                                val principal = Principal(user.id, user.role, Scope.REGULAR, members, comments, assignmentTags, timeCategories, loggedTimes)
                                 val auth = PreAuthenticatedAuthenticationToken(principal, null, emptySet())
                                 auth.details = WebAuthenticationDetails(request)
                                 SecurityContextHolder.getContext().authentication = auth
@@ -119,6 +120,11 @@ open class RestSecurityConfigBeans {
                     } catch (ex: Exception) {
                         LOG.info("Got an illegal token (exception was $ex)")
                     }
+                } else {
+                    val principal = Principal.ANONYMOUS
+                    val auth = PreAuthenticatedAuthenticationToken(principal, null, emptySet())
+                    auth.details = WebAuthenticationDetails(request)
+                    SecurityContextHolder.getContext().authentication = auth
                 }
 
                 filterChain.doFilter(request, response)

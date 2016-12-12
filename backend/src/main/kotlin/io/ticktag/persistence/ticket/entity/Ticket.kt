@@ -2,6 +2,7 @@ package io.ticktag.persistence.ticket.entity
 
 import io.ticktag.persistence.project.entity.Project
 import io.ticktag.persistence.user.entity.User
+import org.hibernate.annotations.Immutable
 import java.time.Duration
 import java.time.Instant
 import java.util.*
@@ -66,6 +67,12 @@ open class Ticket protected constructor() {
 
     @Column(name = "current_estimated_time", nullable = true)
     open var currentEstimatedTime: Duration? = null
+
+    @Immutable
+    @OneToOne(optional = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "id", referencedColumnName = "ticket_id", nullable = true)
+    open var progress: Progress?  = null
+
 
     @Column(name = "due_date", nullable = true)
     open var dueDate: Instant? = null

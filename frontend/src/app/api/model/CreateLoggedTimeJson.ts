@@ -28,7 +28,7 @@ import * as models from './models';
 export interface CreateLoggedTimeJson {
     time: number;
 
-    commentId?: string;
+    commentId: string;
 
     categoryId: string;
 

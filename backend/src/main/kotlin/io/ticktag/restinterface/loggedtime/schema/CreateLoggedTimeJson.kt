@@ -5,6 +5,6 @@ import java.util.*
 
 data class CreateLoggedTimeJson(
         val time: Duration,
-        val commentId: UUID?,
+        val commentId: UUID,
         val categoryId: UUID
 )

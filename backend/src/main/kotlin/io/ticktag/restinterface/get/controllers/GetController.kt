@@ -5,11 +5,11 @@ import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.get.schema.GetRequestJson
 import io.ticktag.restinterface.get.schema.GetResultJson
 import io.ticktag.restinterface.loggedtime.schema.LoggedTimeResultJson
+import io.ticktag.restinterface.statistic.schema.TicketProgressResultJson
 import io.ticktag.restinterface.ticket.schema.TicketResultJson
 import io.ticktag.restinterface.user.schema.UserResultJson
 import io.ticktag.service.Principal
 import io.ticktag.service.loggedtime.service.LoggedTimeService
-import io.ticktag.restinterface.statistic.schema.TicketProgressResultJson
 import io.ticktag.service.statistic.service.StatisticService
 import io.ticktag.service.ticket.service.TicketService
 import io.ticktag.service.user.services.UserService

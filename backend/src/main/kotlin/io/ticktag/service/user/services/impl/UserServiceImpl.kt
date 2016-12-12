@@ -1,20 +1,23 @@
 package io.ticktag.service.user.services.impl
 
+import io.ticktag.ApplicationProperties
 import io.ticktag.TicktagService
 import io.ticktag.library.hashing.HashingLibrary
-import io.ticktag.library.unicode.NameNormalizationLibrary
+import io.ticktag.persistence.member.entity.Member
+import io.ticktag.persistence.project.ProjectRepository
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.persistence.user.entity.Role
 import io.ticktag.persistence.user.entity.User
 import io.ticktag.service.*
-import io.ticktag.service.user.dto.CreateUser
-import io.ticktag.service.user.dto.RoleResult
-import io.ticktag.service.user.dto.UpdateUser
-import io.ticktag.service.user.dto.UserResult
+import io.ticktag.service.user.dto.*
 import io.ticktag.service.user.services.UserService
+import org.apache.commons.codec.binary.Hex
 import org.springframework.data.domain.Pageable
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.crypto.encrypt.BytesEncryptor
+import org.springframework.security.crypto.encrypt.Encryptors
 import java.awt.Color
 import java.awt.Font
 import java.awt.geom.AffineTransform
@@ -23,6 +26,9 @@ import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import java.security.MessageDigest
+import java.time.Clock
+import java.time.Duration
+import java.time.Instant
 import java.util.*
 import javax.imageio.ImageIO
 import javax.inject.Inject
@@ -31,13 +37,25 @@ import javax.validation.Valid
 @TicktagService
 open class UserServiceImpl @Inject constructor(
         private val users: UserRepository,
+        private val projects: ProjectRepository,
         private val hashing: HashingLibrary,
-        private val nn: NameNormalizationLibrary
+        private val props: ApplicationProperties,
+        private val clock: Clock
 ) : UserService {
+    companion object {
+        val IMAGE_ID_VALID_DURATION: Duration = Duration.ofDays(1)
+    }
 
-    @PreAuthorize(AuthExpr.USER)  // TODO maybe refine
-    override fun getUserImage(id: UUID): ByteArray {
-        val user = users.findOne(id) ?: throw NotFoundException()
+    // Authorization is performed via the temp image ids which are kept secret and expire
+    @PreAuthorize(AuthExpr.ANONYMOUS)
+    override fun getUserImage(imageId: TempImageId): ByteArray {
+        val (userId, timestamp) = decodeTempImageId(imageId) ?: throw AccessDeniedException("Invalid id")
+        val now = Instant.now(clock)
+        val latestValidTime = now.minus(IMAGE_ID_VALID_DURATION)
+        if (timestamp.isBefore(latestValidTime)) {
+            throw AccessDeniedException("Expired id")
+        }
+        val user = users.findOne(userId) ?: throw NotFoundException()
         return user.image?.image ?: generateDefaultImagePng(user)
     }
 
@@ -55,8 +73,8 @@ open class UserServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
-    override fun listUsersFuzzy(@P("#authProjectId") projectId: UUID, query: String, pageable: Pageable, principal: Principal): List<UserResult> {
-        return users.findByProjectIdAndFuzzy(projectId, "%$query%", "%$query%", "%${nn.normalize(query)}%", pageable)
+    override fun listUsersFuzzy(@P("authProjectId") projectId: UUID, query: String, pageable: Pageable, principal: Principal): List<UserResult> {
+        return users.findByProjectIdAndFuzzy(projectId, query, query, query, pageable)
                 .map({ userToDto(it, principal) })
     }
 
@@ -66,7 +84,7 @@ open class UserServiceImpl @Inject constructor(
         if (hashing.checkPassword(password, user.passwordHash)) {
             // This is the only function that may bypass the userToDto function
             // We just checked the password so we can return all the information
-            return UserResult(user)
+            return UserResult(user, encodeTempImageId(user.id))
         } else {
             return null
         }
@@ -99,6 +117,13 @@ open class UserServiceImpl @Inject constructor(
     override fun listUsers(principal: Principal): List<UserResult> {
         return users.findAll().map({ userToDto(it, principal) })
     }
+
+    @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
+    override fun listUsersInProject(@P("authProjectId") projectId: UUID, principal: Principal): List<UserResult> {
+        val project = projects.findOne(projectId) ?: throw NotFoundException()
+        return project.members.map(Member::user).map({ userToDto(it, principal)})
+    }
+
 
     @PreAuthorize(AuthExpr.ADMIN) // TODO should probably be more granular
     override fun listRoles(): List<RoleResult> {
@@ -145,9 +170,9 @@ open class UserServiceImpl @Inject constructor(
         val haveCommonProject = viewedUserProjects.intersect(callingUserProjects).isNotEmpty()
 
         if (isGlobalObserver || isSelf || haveCommonProject) {
-            return UserResult(user)
+            return UserResult(user, encodeTempImageId(user.id))
         } else {
-            return UserResult(user).copy(mail = null)
+            return UserResult(user, encodeTempImageId(user.id)).copy(mail = null)
         }
     }
 
@@ -198,5 +223,48 @@ open class UserServiceImpl @Inject constructor(
         d *= to - from  // [0, to-from)
         d += from  // [from, to)
         return d
+    }
+
+    private fun decodeTempImageId(id: TempImageId): Pair<UUID, Instant>? {
+        val encryptor = getTempImageIdEncryptor()
+        try {
+            val decryptedData = encryptor.decrypt(id.data)
+
+            if (decryptedData.size != 28) {
+                return null
+            }
+
+            val buffer = ByteBuffer.wrap(decryptedData)
+            val idMsbs = buffer.getLong(0)
+            val idLsbs = buffer.getLong(8)
+            val timeSeconds = buffer.getLong(16)
+            val timeNanos = buffer.getInt(24)
+
+            // Nanos are stored as an int and the getter returns an int, but the constructor takes a long
+            return Pair(UUID(idMsbs, idLsbs), Instant.ofEpochSecond(timeSeconds, timeNanos.toLong()))
+        } catch (e: Exception) {
+            // Yes we blanket catch exceptions here because encryptor.decrypt() can apparently fail when provided with
+            // bad data but we don't know what it can fail with
+            return null
+        }
+    }
+
+    private fun encodeTempImageId(id: UUID, time: Instant = Instant.now(clock)): TempImageId {
+        val buffer = ByteBuffer.allocate(16 + 12)
+        buffer.putLong(id.mostSignificantBits)
+        buffer.putLong(id.leastSignificantBits)
+        buffer.putLong(time.epochSecond)
+        buffer.putInt(time.nano)
+        val bytes = buffer.array()
+
+        val encryptor = getTempImageIdEncryptor()
+        val encryptedBytes = encryptor.encrypt(bytes)
+        return TempImageId(encryptedBytes)
+    }
+
+    private fun getTempImageIdEncryptor(): BytesEncryptor {
+        // We don't have a salt and we don't want/need one
+        val secret = Hex.encodeHexString(props.serverImageSecret.toByteArray(charset = Charsets.US_ASCII))
+        return Encryptors.standard(secret, secret)
     }
 }

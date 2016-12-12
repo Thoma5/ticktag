@@ -262,6 +262,7 @@ CREATE TABLE IF NOT EXISTS "ticket_event_logged_time_removed" (
 CREATE INDEX ON "ticket_event_logged_time_removed" ("comment_id");
 CREATE INDEX ON "ticket_event_logged_time_removed" ("time_category_id");
 
+
 CREATE TABLE IF NOT EXISTS "kanban_cell"(
   "id"             UUID PRIMARY KEY,
   "ticket_tag_id"  UUID NOT NULL REFERENCES "ticket_tag",
@@ -269,4 +270,29 @@ CREATE TABLE IF NOT EXISTS "kanban_cell"(
   "order"          INTEGER NOT NULL
 );
 
+CREATE VIEW view_progress AS
+  SELECT
+    t.*,
+    CASE WHEN t.initial_estimated_time = 0
+      THEN NULL
+    ELSE t.logged_time :: REAL / t.initial_estimated_time :: REAL END AS initial_progress,
+    CASE WHEN t.current_estimated_time = 0
+      THEN NULL
+    ELSE t.logged_time :: REAL / t.current_estimated_time :: REAL END AS progress
+  FROM (
+         SELECT
+           t.id                                                         AS ticket_id,
+           (SELECT coalesce(sum(tt.initial_estimated_time), 0)
+            FROM ticket tt
+            WHERE tt.id = t.id OR tt.parent_ticket_id = t.id) :: BIGINT AS initial_estimated_time,
+           (SELECT coalesce(sum(tt.current_estimated_time), 0)
+            FROM ticket tt
+            WHERE tt.id = t.id OR tt.parent_ticket_id = t.id) :: BIGINT AS current_estimated_time,
+           (SELECT coalesce(sum(lt.time), 0)
+            FROM ticket tt
+              JOIN comment cc ON cc.ticket_id = tt.id
+              JOIN logged_time lt ON lt.comment_id = cc.id
+            WHERE tt.id = t.id OR tt.parent_ticket_id = t.id) :: BIGINT AS logged_time
+         FROM ticket t
+       ) t;
 COMMIT;
