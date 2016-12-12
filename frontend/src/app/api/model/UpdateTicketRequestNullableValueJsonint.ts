@@ -25,22 +25,8 @@
 
 import * as models from './models';
 
-export interface UpdateTicketRequestJson {
-    title?: models.UpdateTicketRequestNotnullValueJsonstring;
-
-    open?: models.UpdateTicketRequestNotnullValueJsonboolean;
-
-    storyPoints?: models.UpdateTicketRequestNullableValueJsonint;
-
-    initialEstimatedTime?: models.UpdateTicketRequestNullableValueJsonDuration;
-
-    currentEstimatedTime?: models.UpdateTicketRequestNullableValueJsonDuration;
-
-    dueDate?: models.UpdateTicketRequestNullableValueJsonInstant;
-
-    description?: models.UpdateTicketRequestNotnullValueJsonstring;
-
-    parentTicketId?: models.UpdateTicketRequestNullableValueJsonstring;
+export interface UpdateTicketRequestNullableValueJsonint {
+    value?: number;
 
 }
 

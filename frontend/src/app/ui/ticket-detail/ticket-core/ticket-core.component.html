@@ -48,17 +48,29 @@
         <div class='section-header'>Status</div>
         <div class='status'>
             <div class='initial-estimation'>
-                Initial estimation: <tt-edit-textview-time [content]="initialEstimatedTime" [transient]="initialEstimatedTimeTransient" (contentChange)="initialEstimatedTimeChange.emit($event)"></tt-edit-textview-time>
+                Initial estimation: <tt-edit-textview-time
+                    [content]="initialEstimatedTime"
+                    [transient]="initialEstimatedTimeTransient"
+                    (contentChange)="initialEstimatedTimeChange.emit($event)"
+                    [nullable]="true"></tt-edit-textview-time>
             </div>
             <div class='current-estimation'>
-                Current estimation: <tt-edit-textview-time [content]="currentEstimatedTime" [transient]="currentEstimatedTimeTransient" (contentChange)="currentEstimatedTimeChange.emit($event)"></tt-edit-textview-time>
+                Current estimation: <tt-edit-textview-time
+                    [content]="currentEstimatedTime"
+                    [transient]="currentEstimatedTimeTransient"
+                    (contentChange)="currentEstimatedTimeChange.emit($event)"
+                    [nullable]="true"></tt-edit-textview-time>
             </div>
             <div class='ticket-progress'>
                 <span>Progress: </span>
                 <span>{{ ticket.progress.percent | ttPercent }}</span>
             </div>
             <div class='due-date'>
-                Due date: <tt-edit-textview-datetime [content]="dueDate" [transient]="dueDateTransient" (contentChange)="dueDateChange.emit($event)"></tt-edit-textview-datetime>
+                Due date: <tt-edit-textview-datetime
+                    [content]="dueDate"
+                    [transient]="dueDateTransient"
+                    (contentChange)="dueDateChange.emit($event)"
+                    [nullable]="true"></tt-edit-textview-datetime>
             </div>
         </div>
         <div *ngIf="ticket.currentEstimatedTime != null" class='status-progress'>

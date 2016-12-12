@@ -7,6 +7,8 @@ import io.ticktag.restinterface.loggedtime.controller.LoggedTimeController
 import io.ticktag.restinterface.loggedtime.schema.CreateLoggedTimeJson
 import io.ticktag.restinterface.ticket.controllers.TicketController
 import io.ticktag.restinterface.ticket.schema.UpdateTicketRequestJson
+import io.ticktag.restinterface.ticket.schema.UpdateTicketRequestNotnullValueJson
+import io.ticktag.restinterface.ticket.schema.UpdateTicketRequestNullableValueJson
 import io.ticktag.restinterface.ticketevent.controllers.TicketEventController
 import io.ticktag.restinterface.ticketuserrelation.controllers.TicketUserRelationController
 import org.junit.Assert
@@ -27,19 +29,27 @@ class TicketEventApiTest : ApiBaseTest() {
     @Inject lateinit var loggedTimeController: LoggedTimeController
     @Inject lateinit var ticketAssignmentController: TicketUserRelationController
 
-    val ticketId = UUID.fromString("00000000-0003-0000-0000-000000000006")
-    val parentTicketId = UUID.fromString("00000000-0003-0000-0000-000000000001")
-    val commendId = UUID.fromString("00000000-0004-0000-0000-000000000008")
-    val assignmentTagId = UUID.fromString("00000000-0006-0000-0000-000000000003")
-    val loggedTimeId = UUID.fromString("00000000-0008-0000-0000-000000000001")
-    val user = UUID.fromString("00000000-0001-0000-0000-000000000001")
+    private val ticketId = UUID.fromString("00000000-0003-0000-0000-000000000006")
+    private val parentTicketId = UUID.fromString("00000000-0003-0000-0000-000000000001")
+    private val commendId = UUID.fromString("00000000-0004-0000-0000-000000000008")
+    private val assignmentTagId = UUID.fromString("00000000-0006-0000-0000-000000000003")
+    private val loggedTimeId = UUID.fromString("00000000-0008-0000-0000-000000000001")
+    private val user = UUID.fromString("00000000-0001-0000-0000-000000000001")
 
-  @Test
+    @Test
     fun test_ticketDescriptionChangedShouldAddEvent() {
         withUser(user) { principal ->
             val sizeBefore = ticketEventController.listTicketEvents(ticketId).size
             val ticket = ticketController.getTicket(ticketId)
-            ticketController.updateTicket(UpdateTicketRequestJson(ticket.title, ticket.open, ticket.storyPoints, ticket.initialEstimatedTime, ticket.currentEstimatedTime, ticket.dueDate, "New Description", null), ticketId, principal)
+            ticketController.updateTicket(UpdateTicketRequestJson(
+                    UpdateTicketRequestNotnullValueJson(ticket.title),
+                    UpdateTicketRequestNotnullValueJson(ticket.open),
+                    UpdateTicketRequestNullableValueJson(ticket.storyPoints),
+                    UpdateTicketRequestNullableValueJson(ticket.initialEstimatedTime),
+                    UpdateTicketRequestNullableValueJson(ticket.currentEstimatedTime),
+                    UpdateTicketRequestNullableValueJson(ticket.dueDate),
+                    UpdateTicketRequestNotnullValueJson("New Description"),
+                    null), ticketId, principal)
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
         }
     }
@@ -49,7 +59,15 @@ class TicketEventApiTest : ApiBaseTest() {
         withUser(user) { principal ->
             val sizeBefore = ticketEventController.listTicketEvents(ticketId).size
             val ticket = ticketController.getTicket(ticketId)
-            ticketController.updateTicket(UpdateTicketRequestJson(ticket.title, ticket.open, ticket.storyPoints, ticket.initialEstimatedTime, Duration.ofHours(10), ticket.dueDate, ticket.description, null), ticketId, principal)
+            ticketController.updateTicket(UpdateTicketRequestJson(
+                    UpdateTicketRequestNotnullValueJson(ticket.title),
+                    UpdateTicketRequestNotnullValueJson(ticket.open),
+                    UpdateTicketRequestNullableValueJson(ticket.storyPoints),
+                    UpdateTicketRequestNullableValueJson(ticket.initialEstimatedTime),
+                    UpdateTicketRequestNullableValueJson(Duration.ofHours(10)),
+                    UpdateTicketRequestNullableValueJson(ticket.dueDate),
+                    UpdateTicketRequestNotnullValueJson(ticket.description),
+                    null), ticketId, principal)
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
         }
     }
@@ -59,7 +77,15 @@ class TicketEventApiTest : ApiBaseTest() {
         withUser(user) { principal ->
             val sizeBefore = ticketEventController.listTicketEvents(ticketId).size
             val ticket = ticketController.getTicket(ticketId)
-            ticketController.updateTicket(UpdateTicketRequestJson(ticket.title, ticket.open, ticket.storyPoints, ticket.initialEstimatedTime, ticket.currentEstimatedTime, Instant.parse("2017-01-01T16:00:00Z"), ticket.description, null), ticketId, principal)
+            ticketController.updateTicket(UpdateTicketRequestJson(
+                    UpdateTicketRequestNotnullValueJson(ticket.title),
+                    UpdateTicketRequestNotnullValueJson(ticket.open),
+                    UpdateTicketRequestNullableValueJson(ticket.storyPoints),
+                    UpdateTicketRequestNullableValueJson(ticket.initialEstimatedTime),
+                    UpdateTicketRequestNullableValueJson(ticket.currentEstimatedTime),
+                    UpdateTicketRequestNullableValueJson(Instant.parse("2017-01-01T16:00:00Z")),
+                    UpdateTicketRequestNotnullValueJson(ticket.description),
+                    null), ticketId, principal)
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
         }
     }
@@ -73,20 +99,18 @@ class TicketEventApiTest : ApiBaseTest() {
             val sizeBefore = ticketEventController.listTicketEvents(ticketId).size
             loggedTimeController.createLoggedTime(CreateLoggedTimeJson(Duration.ofHours(1), commendId, categoryId))
 
-            val ticket = ticketController.getTicket(ticketId)
+            ticketController.getTicket(ticketId)
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
         }
     }
 
     @Test
     fun test_ticketLoggedTimeRemovedShouldAddEvent() {
-        val categoryId = UUID.fromString("00000000-0007-0000-0000-000000000001")
-
         withUser(user) { principal ->
             val sizeBefore = ticketEventController.listTicketEvents(ticketId).size
             loggedTimeController.deleteLoggedTime(loggedTimeId)
 
-            val ticket = ticketController.getTicket(ticketId)
+            ticketController.getTicket(ticketId)
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
         }
     }
@@ -100,7 +124,15 @@ class TicketEventApiTest : ApiBaseTest() {
         withUser(user) { principal ->
             val sizeBefore = ticketEventController.listTicketEvents(ticketId).size
             val ticket = ticketController.getTicket(ticketId)
-            ticketController.updateTicket(UpdateTicketRequestJson(ticket.title, ticket.open, ticket.storyPoints, ticket.initialEstimatedTime, ticket.currentEstimatedTime, Instant.parse("2017-01-01T16:00:00Z"), ticket.description, parentTicketId), ticketId, principal)
+            ticketController.updateTicket(UpdateTicketRequestJson(
+                    UpdateTicketRequestNotnullValueJson(ticket.title),
+                    UpdateTicketRequestNotnullValueJson(ticket.open),
+                    UpdateTicketRequestNullableValueJson(ticket.storyPoints),
+                    UpdateTicketRequestNullableValueJson(ticket.initialEstimatedTime),
+                    UpdateTicketRequestNullableValueJson(ticket.currentEstimatedTime),
+                    UpdateTicketRequestNullableValueJson(Instant.parse("2017-01-01T16:00:00Z")),
+                    UpdateTicketRequestNotnullValueJson(ticket.description),
+                    UpdateTicketRequestNullableValueJson(parentTicketId)), ticketId, principal)
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
         }
     }
@@ -110,7 +142,15 @@ class TicketEventApiTest : ApiBaseTest() {
         withUser(user) { principal ->
             val sizeBefore = ticketEventController.listTicketEvents(ticketId).size
             val ticket = ticketController.getTicket(ticketId)
-            ticketController.updateTicket(UpdateTicketRequestJson("New Title", ticket.open, ticket.storyPoints, ticket.initialEstimatedTime, ticket.currentEstimatedTime, ticket.dueDate, ticket.description, null), ticketId, principal)
+            ticketController.updateTicket(UpdateTicketRequestJson(
+                    UpdateTicketRequestNotnullValueJson("New Title"),
+                    UpdateTicketRequestNotnullValueJson(ticket.open),
+                    UpdateTicketRequestNullableValueJson(ticket.storyPoints),
+                    UpdateTicketRequestNullableValueJson(ticket.initialEstimatedTime),
+                    UpdateTicketRequestNullableValueJson(ticket.currentEstimatedTime),
+                    UpdateTicketRequestNullableValueJson(ticket.dueDate),
+                    UpdateTicketRequestNotnullValueJson(ticket.description),
+                    null), ticketId, principal)
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
         }
     }
@@ -120,7 +160,15 @@ class TicketEventApiTest : ApiBaseTest() {
         withUser(user) { principal ->
             val sizeBefore = ticketEventController.listTicketEvents(ticketId).size
             val ticket = ticketController.getTicket(ticketId)
-            ticketController.updateTicket(UpdateTicketRequestJson(ticket.title, !ticket.open, ticket.storyPoints, ticket.initialEstimatedTime, ticket.currentEstimatedTime, ticket.dueDate, ticket.description, null), ticketId, principal)
+            ticketController.updateTicket(UpdateTicketRequestJson(
+                    UpdateTicketRequestNotnullValueJson(ticket.title),
+                    UpdateTicketRequestNotnullValueJson(!ticket.open),
+                    UpdateTicketRequestNullableValueJson(ticket.storyPoints),
+                    UpdateTicketRequestNullableValueJson(ticket.initialEstimatedTime),
+                    UpdateTicketRequestNullableValueJson(ticket.currentEstimatedTime),
+                    UpdateTicketRequestNullableValueJson(ticket.dueDate),
+                    UpdateTicketRequestNotnullValueJson(ticket.description),
+                    null), ticketId, principal)
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
         }
     }
@@ -130,7 +178,15 @@ class TicketEventApiTest : ApiBaseTest() {
         withUser(user) { principal ->
             val sizeBefore = ticketEventController.listTicketEvents(ticketId).size
             val ticket = ticketController.getTicket(ticketId)
-            ticketController.updateTicket(UpdateTicketRequestJson(ticket.title, ticket.open, 100, ticket.initialEstimatedTime, ticket.currentEstimatedTime, ticket.dueDate, ticket.description, null), ticketId, principal)
+            ticketController.updateTicket(UpdateTicketRequestJson(
+                    UpdateTicketRequestNotnullValueJson(ticket.title),
+                    UpdateTicketRequestNotnullValueJson(ticket.open),
+                    UpdateTicketRequestNullableValueJson(100),
+                    UpdateTicketRequestNullableValueJson(ticket.initialEstimatedTime),
+                    UpdateTicketRequestNullableValueJson(ticket.currentEstimatedTime),
+                    UpdateTicketRequestNullableValueJson(ticket.dueDate),
+                    UpdateTicketRequestNotnullValueJson(ticket.description),
+                    null), ticketId, principal)
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
         }
     }
@@ -165,7 +221,15 @@ class TicketEventApiTest : ApiBaseTest() {
         withUser(user) { principal ->
             val sizeBefore = ticketEventController.listTicketEvents(ticketId).size
             val ticket = ticketController.getTicket(ticketId)
-            ticketController.updateTicket(UpdateTicketRequestJson(ticket.title, ticket.open, ticket.storyPoints, ticket.initialEstimatedTime, ticket.currentEstimatedTime, ticket.dueDate, ticket.description, null), ticketId, principal)
+            ticketController.updateTicket(UpdateTicketRequestJson(
+                    UpdateTicketRequestNotnullValueJson(ticket.title),
+                    UpdateTicketRequestNotnullValueJson(ticket.open),
+                    UpdateTicketRequestNullableValueJson(ticket.storyPoints),
+                    UpdateTicketRequestNullableValueJson(ticket.initialEstimatedTime),
+                    UpdateTicketRequestNullableValueJson(ticket.currentEstimatedTime),
+                    UpdateTicketRequestNullableValueJson(ticket.dueDate),
+                    UpdateTicketRequestNotnullValueJson(ticket.description),
+                    null), ticketId, principal)
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore)
         }
     }

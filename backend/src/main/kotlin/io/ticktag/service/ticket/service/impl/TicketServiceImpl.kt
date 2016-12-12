@@ -178,35 +178,41 @@ open class TicketServiceImpl @Inject constructor(
                 ticketEvents.insert(TicketEventStateChanged.create(ticket, user, ticket.open, updateTicket.open))
             ticket.open = updateTicket.open
         }
-        if (updateTicket.storyPoints != null) {
+        if (updateTicket.storyPoints != null || updateTicket.storyPointsNull) {
             if (ticket.storyPoints != updateTicket.storyPoints)
                 ticketEvents.insert(TicketEventStoryPointsChanged.create(ticket, user, ticket.storyPoints, updateTicket.storyPoints))
             ticket.storyPoints = updateTicket.storyPoints
         }
-        if (updateTicket.initialEstimatedTime != null) {
+        if (updateTicket.initialEstimatedTime != null || updateTicket.initialEstimatedTimeNull) {
             if (ticket.initialEstimatedTime != updateTicket.initialEstimatedTime)
                 ticketEvents.insert(TicketEventInitialEstimatedTimeChanged.create(ticket, user, ticket.initialEstimatedTime, updateTicket.initialEstimatedTime))
             ticket.initialEstimatedTime = updateTicket.initialEstimatedTime
         }
-        if (updateTicket.currentEstimatedTime != null) {
+        if (updateTicket.currentEstimatedTime != null || updateTicket.currentEstimatedTimeNull) {
             if (ticket.currentEstimatedTime != updateTicket.currentEstimatedTime)
                 ticketEvents.insert(TicketEventCurrentEstimatedTimeChanged.create(ticket, user, ticket.currentEstimatedTime, updateTicket.currentEstimatedTime))
             ticket.currentEstimatedTime = updateTicket.currentEstimatedTime
         }
-        if (updateTicket.dueDate != null) {
+        if (updateTicket.dueDate != null || updateTicket.dueDateNull) {
             if (ticket.dueDate != updateTicket.dueDate)
                 ticketEvents.insert(TicketEventDueDateChanged.create(ticket, user, ticket.dueDate, updateTicket.dueDate))
             ticket.dueDate = updateTicket.dueDate
         }
 
-        if (updateTicket.parentTicket != null) {
-            val parentTicket = tickets.findOne(updateTicket.parentTicket) ?: throw NotFoundException()
+        if (updateTicket.parentTicket != null || updateTicket.parentTicketNull) {
+            val parentTicket = if (updateTicket.parentTicket != null) {
+                val parentTicket = tickets.findOne(updateTicket.parentTicket) ?: throw NotFoundException()
 
-            if (parentTicket.parentTicket != null) {
-                throw TicktagValidationException(listOf(ValidationError("updateTicket", ValidationErrorDetail.Other("nonestedsubtickets"))))
-            }
-            if (ticket.subTickets.isNotEmpty()) {
-                throw TicktagValidationException(listOf(ValidationError("updateTicket", ValidationErrorDetail.Other("nonestedsubtickets"))))
+                if (parentTicket.parentTicket != null) {
+                    throw TicktagValidationException(listOf(ValidationError("updateTicket", ValidationErrorDetail.Other("nonestedsubtickets"))))
+                }
+                if (ticket.subTickets.isNotEmpty()) {
+                    throw TicktagValidationException(listOf(ValidationError("updateTicket", ValidationErrorDetail.Other("nonestedsubtickets"))))
+                }
+
+                parentTicket
+            } else {
+                null
             }
 
             if (ticket.parentTicket != parentTicket)
