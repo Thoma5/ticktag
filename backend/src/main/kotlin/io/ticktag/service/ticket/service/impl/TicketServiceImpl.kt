@@ -245,7 +245,10 @@ open class TicketServiceImpl @Inject constructor(
         LOG.trace("Getting mentioning tickets")
         val mentioningTickets = tickets.findMentioningTickets(ids).groupBy({ it.first }, { it.second })
 
-        val dtos = ts.map { toResultDtoInternal(it, comments, mentioningTickets, mentionedTickets) }
+        LOG.trace("Getting progress")
+        val progresses = tickets.findProgressesByTicketIds(ids).associateBy({ it.first }, { it.second })
+
+        val dtos = ts.map { toResultDtoInternal(it, comments, mentioningTickets, mentionedTickets, progresses) }
         return dtos
     }
 
@@ -256,7 +259,9 @@ open class TicketServiceImpl @Inject constructor(
     private fun toResultDtoInternal(t: Ticket,
                                     allNormalComments: Map<UUID, List<Comment>>,
                                     allReferencingTickets: Map<UUID, List<Ticket>>,
-                                    allReferencedTickets: Map<UUID, List<Ticket>>): TicketResult {
+                                    allReferencedTickets: Map<UUID, List<Ticket>>,
+                                    allProgresses: Map<UUID, Progress>
+    ): TicketResult {
         val comments = allNormalComments[t.id] ?: emptyList()
         val realCommentIds = comments.map(Comment::id)
 
@@ -266,6 +271,8 @@ open class TicketServiceImpl @Inject constructor(
         val referencedTickets = allReferencedTickets[t.id] ?: emptyList()
         val referencedTicketIds = referencedTickets.map { it.id }
 
+        val progress = allProgresses[t.id]
+
         return TicketResult(id = t.id,
                 number = t.number,
                 createTime = t.createTime,
@@ -274,7 +281,7 @@ open class TicketServiceImpl @Inject constructor(
                 storyPoints = t.storyPoints,
                 initialEstimatedTime = t.initialEstimatedTime,
                 currentEstimatedTime = t.currentEstimatedTime,
-                progress = ProgressResult(t.progress),
+                progress = ProgressResult(progress),
                 dueDate = t.dueDate,
                 description = t.descriptionComment.text,
                 projectId = t.project.id,

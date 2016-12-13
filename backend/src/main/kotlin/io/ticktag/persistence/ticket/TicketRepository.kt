@@ -4,6 +4,7 @@ import io.ticktag.TicktagRepository
 import io.ticktag.persistence.TicktagCrudRepository
 import io.ticktag.persistence.escapeHqlLike
 import io.ticktag.persistence.orderByClause
+import io.ticktag.persistence.ticket.entity.Progress
 import io.ticktag.persistence.ticket.entity.Ticket
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -31,6 +32,9 @@ interface TicketRepository : TicktagCrudRepository<Ticket, UUID>, TicketReposito
 
     @Query("select new kotlin.Pair(t.id, m) from Ticket t join t.mentioningComments c join c.ticket m where t.id in :ids")
     fun findMentioningTickets(@Param("ids") ids: Collection<UUID>): List<Pair<UUID, Ticket>>
+
+    @Query("select new kotlin.Pair(t.id, p) from Ticket t join t.progress p where t.id in :ids")
+    fun findProgressesByTicketIds(@Param("ids") ids: Collection<UUID>): List<Pair<UUID, Progress>>
 }
 
 interface TicketRepositoryCustom {

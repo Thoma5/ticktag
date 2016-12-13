@@ -1,5 +1,6 @@
 package io.ticktag.persistence.ticket.entity
 
+import org.hibernate.annotations.Immutable
 import java.time.Duration
 import java.util.*
 import javax.persistence.Column
@@ -7,6 +8,7 @@ import javax.persistence.Entity
 import javax.persistence.Id
 import javax.persistence.Table
 
+@Immutable
 @Entity
 @Table(name = "view_progress")
 open class Progress protected constructor() {
