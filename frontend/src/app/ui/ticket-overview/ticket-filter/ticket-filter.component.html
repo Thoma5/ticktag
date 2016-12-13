@@ -2,7 +2,7 @@
   <div class="col-md-5">
     <div class="input-group">
     <span class="input-group-btn" ><button class="btn btn-secondary" (click)="onManualClick()"> <span class="glyphicon glyphicon-filter" ></span></button></span>
-    <input id="filterInput" type="text" class="form-control" [(ngModel)]=query (input)=filter() aria-describedby="filterInfo">
+    <input #filterInput id="filter-input" type="text" class="form-control" [(ngModel)]=query (input)=debounce(filterInput.value) aria-describedby="filterInfo">
   </div>
   </div>
 </div>

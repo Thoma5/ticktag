@@ -1,6 +1,8 @@
 import {
     Component, Input, Output, ElementRef, OnInit, EventEmitter, ViewContainerRef
 } from '@angular/core';
+import { Subject } from 'rxjs/Subject';
+import '../../../util/rxjs-extensions';
 import * as grammar from '../../../service/command/grammar';
 import * as imm from 'immutable';
 import { Overlay } from 'angular2-modal';
@@ -11,6 +13,7 @@ import {
 } from '../../ticket-overview/ticket-overview';
 import { TicketFilter } from './ticket-filter';
 import * as moment from 'moment';
+
 
 export type CommentTextviewSaveEvent = {
     commands: imm.List<grammar.Cmd>,
@@ -27,12 +30,11 @@ export class TicketFilterComponent implements OnInit {
     @Input() allTicketTags: imm.Map<string, TicketOverviewTag>;
     @Output() ticketFilter = new EventEmitter<TicketFilter>();
 
-    public selected: string[] = [];
     public elementRef: ElementRef;
     public query: string = '';
     public filters: string[] = ['!#:', '!tag:', '!user:', '!progress:', '!timespan:',
         '!before:', '!since:', '!status', 'open', 'closed', 'dd/MM/yyyy'];
-    public filteredList: string[] = [];
+    private searchTerms = new Subject<string>();
 
     constructor(myElement: ElementRef, overlay: Overlay, vcRef: ViewContainerRef, public modal: Modal) {
         this.elementRef = myElement;
@@ -48,12 +50,14 @@ export class TicketFilterComponent implements OnInit {
 
         });
         this.query = '!open:true';
+
+        this.searchTerms
+            .debounceTime(800)
+            .distinctUntilChanged()
+            .subscribe(term => this.filter(term));
+
     }
-    select(item: string) {
-        this.selected.push(item);
-        this.query = '';
-        this.filteredList = [];
-    }
+
     onManualClick() {
         this.modal.alert()
             .size('lg')
@@ -94,10 +98,14 @@ export class TicketFilterComponent implements OnInit {
         `)
             .open();
     }
+    debounce(query: string): void {
+        this.searchTerms.next(query);
+    }
 
-    filter() {
+
+    filter(query: string) {
         // let filter: HTMLInputElement = this.elementRef.nativeElement.querySelector('#filterInput');
-        let queryArray = this.query.split(' ');
+        let queryArray = query.split(' ');
         let title = '';
         let ticketNumber: number;
         let tags: string[] = [];
@@ -207,11 +215,7 @@ export class TicketFilterComponent implements OnInit {
                     }
                 }
 
-
             }
-
-
-
         });
         let finalFilter = new TicketFilter(title, ticketNumber, tags, users, progressOne, progressTwo,
             progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo,
