@@ -42,6 +42,8 @@ interface TicketRepositoryCustom {
     fun findProgressesByTicketIds(@Param("ids") ids: Collection<UUID>): List<Pair<UUID, Progress>>
 
     fun findSubticketsByTicketIds(@Param("ids") ids: Collection<UUID>): List<Pair<UUID, Ticket>>
+
+    fun findParentTicketsByTicketIds(@Param("ids") ids: Collection<UUID>): List<Pair<UUID, Ticket>>
 }
 
 open class TicketRepositoryImpl @Inject constructor(private val em: EntityManager) : TicketRepositoryCustom {
@@ -68,6 +70,13 @@ open class TicketRepositoryImpl @Inject constructor(private val em: EntityManage
 
     override fun findSubticketsByTicketIds(ids: Collection<UUID>): List<Pair<UUID, Ticket>> {
         return em.createQuery("select p.id, t from Ticket t join t.parentTicket p where p.id in :ids", Array<Any>::class.java)
+                .setParameter("ids", ids)
+                .resultList
+                .map { Pair(it[0] as UUID, it[1] as Ticket) }
+    }
+
+    override fun findParentTicketsByTicketIds(ids: Collection<UUID>): List<Pair<UUID, Ticket>> {
+        return em.createQuery("select s.id, p from Ticket p join p.subTickets s where s.id in :ids", Array<Any>::class.java)
                 .setParameter("ids", ids)
                 .resultList
                 .map { Pair(it[0] as UUID, it[1] as Ticket) }

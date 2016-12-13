@@ -32,9 +32,18 @@ interface UserRepositoryCustom {
             name: String,
             username: String,
             pageable: Pageable): List<User>
+
+    fun findCreatorsByTicketIds(ids: Collection<UUID>): List<Pair<UUID, User>>
 }
 
 open class UserRepositoryImpl @Inject constructor(private val em: EntityManager) : UserRepositoryCustom {
+    override fun findCreatorsByTicketIds(ids: Collection<UUID>): List<Pair<UUID, User>> {
+        return em.createQuery("select t.id, c from Ticket t join t.createdBy c left join fetch c.image where t.id in :ids", Array<Any>::class.java)
+                .setParameter("ids", ids)
+                .resultList
+                .map { Pair(it[0] as UUID, it[1] as User) }
+    }
+
     override fun findByProjectIdAndFuzzy(projectId: UUID, mail: String, name: String, username: String, pageable: Pageable): List<User> {
         return em.createQuery("""
             select u
