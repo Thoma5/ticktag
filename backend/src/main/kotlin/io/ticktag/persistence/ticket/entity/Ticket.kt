@@ -71,7 +71,6 @@ open class Ticket protected constructor() {
     @JoinColumn(name = "id", referencedColumnName = "ticket_id", nullable = false)
     open var progress: Progress? = null
 
-
     @Column(name = "due_date", nullable = true)
     open var dueDate: Instant? = null
 

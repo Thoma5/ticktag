@@ -6,6 +6,7 @@ import io.ticktag.persistence.escapeHqlLike
 import io.ticktag.persistence.orderByClause
 import io.ticktag.persistence.ticket.entity.Progress
 import io.ticktag.persistence.ticket.entity.Ticket
+import io.ticktag.persistence.ticket.entity.TicketTag
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
@@ -44,9 +45,21 @@ interface TicketRepositoryCustom {
     fun findSubticketsByTicketIds(@Param("ids") ids: Collection<UUID>): List<Pair<UUID, Ticket>>
 
     fun findParentTicketsByTicketIds(@Param("ids") ids: Collection<UUID>): List<Pair<UUID, Ticket>>
+
+    fun findTagsByTicketIds(@Param("ids") ids: Collection<UUID>): List<Pair<UUID, TicketTag>>
 }
 
 open class TicketRepositoryImpl @Inject constructor(private val em: EntityManager) : TicketRepositoryCustom {
+    override fun findTagsByTicketIds(ids: Collection<UUID>): List<Pair<UUID, TicketTag>> {
+        return em.createQuery("""
+            select ti.id, ta from Ticket ti
+            join ti.tags ta
+            where ti.id in :ids""", Array<Any>::class.java)
+                .setParameter("ids", ids)
+                .resultList
+                .map { Pair(it[0] as UUID, it[1] as TicketTag) }
+    }
+
     override fun findMentionedTickets(ids: Collection<UUID>): List<Pair<UUID, Ticket>> {
         return em.createQuery("select m.id, t from Ticket t join t.mentioningComments c join c.ticket m where m.id in :ids", Array<Any>::class.java)
                 .setParameter("ids", ids)

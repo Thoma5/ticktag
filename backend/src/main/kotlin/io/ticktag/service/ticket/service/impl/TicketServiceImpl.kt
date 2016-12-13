@@ -3,6 +3,7 @@ package io.ticktag.service.ticket.service.impl
 import io.ticktag.TicktagService
 import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.project.ProjectRepository
+import io.ticktag.persistence.project.entity.Project
 import io.ticktag.persistence.ticket.TicketEventRepository
 import io.ticktag.persistence.ticket.TicketRepository
 import io.ticktag.persistence.ticket.dto.TicketFilter
@@ -266,18 +267,27 @@ open class TicketServiceImpl @Inject constructor(
         LOG.info("Getting creators")
         val creators = users.findCreatorsByTicketIds(ids).associateBy({ it.first }, { it.second })
 
+        LOG.info("Getting projects")
+        val allProjects = projects.findByTicketIds(ids).associateBy({ it.first }, { it.second })
+
+        LOG.info("Getting tags")
+        val tags = tickets.findTagsByTicketIds(ids).groupBy({ it.first }, { it.second })
+
         LOG.info("Mapping")
         val dtos = ts.map {
             toResultDtoInternal(it,
-                realComments,
-                mentioningTickets,
-                mentionedTickets,
-                progresses,
-                subtickets,
-                assignedUsers,
-                descriptions,
-                parentTickets,
-                creators)
+                    realComments,
+                    mentioningTickets,
+                    mentionedTickets,
+                    progresses,
+                    subtickets,
+                    assignedUsers,
+                    descriptions,
+                    parentTickets,
+                    creators,
+                    allProjects,
+                    tags
+            )
         }
         return dtos
     }
@@ -295,7 +305,9 @@ open class TicketServiceImpl @Inject constructor(
                                     allAssignments: Map<UUID, List<AssignedTicketUser>>,
                                     allDescriptions: Map<UUID, Comment>,
                                     allParentTickets: Map<UUID, Ticket>,
-                                    allCreators: Map<UUID, User>
+                                    allCreators: Map<UUID, User>,
+                                    allProjects: Map<UUID, Project>,
+                                    allTags: Map<UUID, List<TicketTag>>
     ): TicketResult {
         val comments = allNormalComments[t.id] ?: emptyList()
         val realCommentIds = comments.map(Comment::id)
@@ -319,6 +331,10 @@ open class TicketServiceImpl @Inject constructor(
 
         val creator = allCreators[t.id]!!
 
+        val project = allProjects[t.id]!!
+
+        val tags = allTags[t.id] ?: emptyList()
+
         return TicketResult(id = t.id,
                 number = t.number,
                 createTime = t.createTime,
@@ -330,12 +346,12 @@ open class TicketServiceImpl @Inject constructor(
                 progress = ProgressResult(progress),
                 dueDate = t.dueDate,
                 description = description.text,
-                projectId = t.project.id,
+                projectId = project.id,
                 ticketAssignments = assignedUsers.map(::TicketAssignmentResult),
                 subTicketIds = subticketIds,
                 parentTicketId = parent?.id,
                 createdBy = creator.id,
-                tagIds = t.tags.map(TicketTag::id),
+                tagIds = tags.map(TicketTag::id),
                 referencedTicketIds = referencedTicketIds,
                 referencingTicketIds = referencingTicketIds,
                 commentIds = realCommentIds)
