@@ -235,22 +235,24 @@ open class TicketServiceImpl @Inject constructor(
     }
 
     private fun toResultDtos(ts: Collection<Ticket>): List<TicketResult> {
-        LOG.trace("Getting ticket ids")
+        LOG.info("Getting ticket ids")
         val ids = ts.map(Ticket::id)
-        LOG.trace("Getting comments")
+        LOG.info("Getting comments")
         val comments = comments.findNonDescriptionCommentsByTicketIds(ids).groupBy({ it.first }, { it.second })
 
-        LOG.trace("Getting mentioned tickets")
+        LOG.info("Getting mentioned tickets")
         val mentionedTickets = tickets.findMentionedTickets(ids).groupBy({ it.first }, { it.second })
-        LOG.trace("Getting mentioning tickets")
+        LOG.info("Getting mentioning tickets")
         val mentioningTickets = tickets.findMentioningTickets(ids).groupBy({ it.first }, { it.second })
 
-        LOG.trace("Getting progress")
+        LOG.info("Getting progress")
         val progresses = tickets.findProgressesByTicketIds(ids).associateBy({ it.first }, { it.second })
 
-        LOG.trace("Getting subtickets")
-        val subtickets = tickets.findSubticketsByTicketIds(ids).groupBy({ it.first }, { it.second })
+        LOG.info("Getting subtickets")
+        val subticketsx = tickets.findSubticketsByTicketIds(ids)
+        val subtickets = emptyMap<UUID, List<Ticket>>()
 
+        LOG.info("Mapping")
         val dtos = ts.map { toResultDtoInternal(it, comments, mentioningTickets, mentionedTickets, progresses, subtickets) }
         return dtos
     }

@@ -26,18 +26,6 @@ interface TicketRepository : TicktagCrudRepository<Ticket, UUID>, TicketReposito
     fun findByIds(@Param("ids") ids: Collection<UUID>): List<Ticket>
 
     fun findByNumber(number: Int): Ticket?
-
-    @Query("select new kotlin.Pair(m.id, t) from Ticket t join t.mentioningComments c join c.ticket m where m.id in :ids")
-    fun findMentionedTickets(@Param("ids") ids: Collection<UUID>): List<Pair<UUID, Ticket>>
-
-    @Query("select new kotlin.Pair(t.id, m) from Ticket t join t.mentioningComments c join c.ticket m where t.id in :ids")
-    fun findMentioningTickets(@Param("ids") ids: Collection<UUID>): List<Pair<UUID, Ticket>>
-
-    @Query("select new kotlin.Pair(t.id, p) from Ticket t join t.progress p where t.id in :ids")
-    fun findProgressesByTicketIds(@Param("ids") ids: Collection<UUID>): List<Pair<UUID, Progress>>
-
-    @Query("select new kotlin.Pair(t.id, s) from Ticket t join t.subTickets s where t.id in :ids")
-    fun findSubticketsByTicketIds(@Param("ids") ids: Collection<UUID>): List<Pair<UUID, Ticket>>
 }
 
 interface TicketRepositoryCustom {
@@ -46,9 +34,45 @@ interface TicketRepositoryCustom {
             number: String,
             title: String,
             pageable: Pageable): List<Ticket>
+
+    fun findMentionedTickets(@Param("ids") ids: Collection<UUID>): List<Pair<UUID, Ticket>>
+
+    fun findMentioningTickets(@Param("ids") ids: Collection<UUID>): List<Pair<UUID, Ticket>>
+
+    fun findProgressesByTicketIds(@Param("ids") ids: Collection<UUID>): List<Pair<UUID, Progress>>
+
+    fun findSubticketsByTicketIds(@Param("ids") ids: Collection<UUID>): List<Pair<UUID, Ticket>>
 }
 
 open class TicketRepositoryImpl @Inject constructor(private val em: EntityManager) : TicketRepositoryCustom {
+    override fun findMentionedTickets(ids: Collection<UUID>): List<Pair<UUID, Ticket>> {
+        return em.createQuery("select m.id, t from Ticket t join t.mentioningComments c join c.ticket m where m.id in :ids", Array<Any>::class.java)
+                .setParameter("ids", ids)
+                .resultList
+                .map { Pair(it[0] as UUID, it[1] as Ticket) }
+    }
+
+    override fun findMentioningTickets(ids: Collection<UUID>): List<Pair<UUID, Ticket>> {
+        return em.createQuery("select t.id, m from Ticket t join t.mentioningComments c join c.ticket m where t.id in :ids", Array<Any>::class.java)
+                .setParameter("ids", ids)
+                .resultList
+                .map { Pair(it[0] as UUID, it[1] as Ticket) }
+    }
+
+    override fun findProgressesByTicketIds(ids: Collection<UUID>): List<Pair<UUID, Progress>> {
+        return em.createQuery("select p.id, p from Progress p where p.id in :ids", Array<Any>::class.java)
+                .setParameter("ids", ids)
+                .resultList
+                .map { Pair(it[0] as UUID, it[1] as Progress) }
+    }
+
+    override fun findSubticketsByTicketIds(ids: Collection<UUID>): List<Pair<UUID, Ticket>> {
+        return em.createQuery("select p.id, t from Ticket t join t.parentTicket p where p.id in :ids", Array<Any>::class.java)
+                .setParameter("ids", ids)
+                .resultList
+                .map { Pair(it[0] as UUID, it[1] as Ticket) }
+    }
+
     override fun findByProjectIdAndFuzzy(projectId: UUID, number: String, title: String, pageable: Pageable): List<Ticket> {
         return em.createQuery("""
             select t
