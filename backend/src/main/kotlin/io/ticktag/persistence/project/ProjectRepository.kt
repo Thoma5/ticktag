@@ -18,9 +18,17 @@ interface ProjectRepository : TicktagCrudRepository<Project, UUID>, ProjectRepos
 
 interface ProjectRepositoryCustom {
     fun findByTicketIds(ids: Collection<UUID>): Map<UUID, Project>
+    fun findByUserIds(ids: Collection<UUID>): Map<UUID, List<Project>>
 }
 
 open class ProjectRepositoryImpl @Inject() constructor(private val em: EntityManager) : ProjectRepositoryCustom {
+    override fun findByUserIds(ids: Collection<UUID>): Map<UUID, List<Project>> {
+        return em.createQuery("select u.id, p from User u join u.memberships m join m.project p where u.id in :ids", Array<Any>::class.java)
+                .setParameter("ids", ids)
+                .resultList
+                .groupBy({ it[0] as UUID }, { it[1] as Project })
+    }
+
     override fun findByTicketIds(ids: Collection<UUID>): Map<UUID, Project> {
         return em.createQuery("select t.id, p from Ticket t join t.project p where t.id in :ids", Array<Any>::class.java)
                 .setParameter("ids", ids)

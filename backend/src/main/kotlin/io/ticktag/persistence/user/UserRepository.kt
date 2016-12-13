@@ -14,14 +14,14 @@ import javax.persistence.EntityManager
 
 @TicktagRepository
 interface UserRepository : TicktagCrudRepository<User, UUID>, UserRepositoryCustom {
-    @Query("select u from User u join fetch u.image where lower(u.mail) = lower(:mail)")
-    fun findByMailIgnoreCase(mail: String): User?
+    @Query("select u from User u left join fetch u.image where lower(u.mail) = lower(:mail)")
+    fun findByMailIgnoreCase(@Param("mail") mail: String): User?
 
     @Query("select u from User u left join fetch u.image where u.username = :username")
-    fun findByUsername(username: String): User?
+    fun findByUsername(@Param("username") username: String): User?
 
-    @Query("select u from User u join fetch u.memberships m join fetch m.project left join fetch u.image where u.id = :id")
-    fun findOneWithProjects(@Param("id") id: UUID): User?
+    @Query("select u from User u join u.memberships m join m.project p left join fetch u.image where p.id = :projectId")
+    fun findInProject(@Param("projectId") projectId: UUID): List<User>
 
     @Query("select u from User u left join fetch u.image where u.id in :ids")
     fun findByIds(@Param("ids") ids: Collection<UUID>): List<User>

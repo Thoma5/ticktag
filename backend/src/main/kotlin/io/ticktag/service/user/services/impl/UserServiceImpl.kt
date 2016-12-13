@@ -3,8 +3,8 @@ package io.ticktag.service.user.services.impl
 import io.ticktag.ApplicationProperties
 import io.ticktag.TicktagService
 import io.ticktag.library.hashing.HashingLibrary
-import io.ticktag.persistence.member.entity.Member
 import io.ticktag.persistence.project.ProjectRepository
+import io.ticktag.persistence.project.entity.Project
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.persistence.user.entity.Role
 import io.ticktag.persistence.user.entity.User
@@ -69,13 +69,12 @@ open class UserServiceImpl @Inject constructor(
         if (ids.isEmpty()) {
             return emptyMap()
         }
-        return users.findByIds(ids).map({ userToDto(it, principal) }).associateBy { it.id }
+        return usersToDto(users.findByIds(ids), principal).associateBy { it.id }
     }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listUsersFuzzy(@P("authProjectId") projectId: UUID, query: String, pageable: Pageable, principal: Principal): List<UserResult> {
-        return users.findByProjectIdAndFuzzy(projectId, query, query, query, pageable)
-                .map({ userToDto(it, principal) })
+        return usersToDto(users.findByProjectIdAndFuzzy(projectId, query, query, query, pageable), principal)
     }
 
     @PreAuthorize(AuthExpr.ANONYMOUS)
@@ -115,13 +114,13 @@ open class UserServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.ADMIN) // TODO should probably be more granular
     override fun listUsers(principal: Principal): List<UserResult> {
-        return users.findAll().map({ userToDto(it, principal) })
+        return usersToDto(users.findAll(), principal)
     }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listUsersInProject(@P("authProjectId") projectId: UUID, principal: Principal): List<UserResult> {
         val project = projects.findOne(projectId) ?: throw NotFoundException()
-        return project.members.map(Member::user).map({ userToDto(it, principal)})
+        return usersToDto(users.findInProject(projectId), principal)
     }
 
 
@@ -162,11 +161,24 @@ open class UserServiceImpl @Inject constructor(
         return userToDto(user, principal)
     }
 
+    private fun usersToDto(us: List<User>, principal: Principal): List<UserResult> {
+        val allIds = listOf(principal.id) + us.map(User::id)
+        val projects = projects.findByUserIds(allIds)
+
+        return us.map { userToDtoInternal(it, projects, principal) }
+    }
+
     private fun userToDto(user: User, principal: Principal): UserResult {
+        return usersToDto(listOf(user), principal)[0]
+    }
+
+    private fun userToDtoInternal(user: User,
+                                  projects: Map<UUID, List<Project>>,
+                                  principal: Principal): UserResult {
         val isGlobalObserver = principal.hasRole(AuthExpr.ROLE_GLOBAL_OBSERVER)
         val isSelf = principal.isId(user.id)
-        val viewedUserProjects = user.memberships.map { it.project }
-        val callingUserProjects = users.findOne(principal.id)?.memberships?.map { it.project } ?: emptyList()
+        val viewedUserProjects = projects[user.id] ?: emptyList()
+        val callingUserProjects = projects[principal.id] ?: emptyList()
         val haveCommonProject = viewedUserProjects.intersect(callingUserProjects).isNotEmpty()
 
         if (isGlobalObserver || isSelf || haveCommonProject) {
