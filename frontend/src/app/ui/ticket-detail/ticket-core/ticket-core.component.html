@@ -75,7 +75,7 @@
         </div>
         <div class='description-container'>
             <div class='description-wrapper' *ngIf="!editingDescription">
-                <tt-markdown-textview-read [content]="description"></tt-markdown-textview-read>
+                <tt-markdown-textview-read [content]="description" [commands]="true" [projectId]="ticket.projectId"></tt-markdown-textview-read>
             </div>
             <div class='description-edit-wrapper' *ngIf="editingDescription">
                 <tt-command-textview [noCommands]="true" [projectId]="ticket.projectId" [resetEventObservable]="descriptionResetSubject" (contentChange)="onDescriptionChange($event)"></tt-command-textview>

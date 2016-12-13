@@ -9,6 +9,7 @@ import {GroupedTicketEvent} from '../ticket-events.component';
 })
 export class GroupedTicketEventComponent {
   @Input() group: GroupedTicketEvent;
+  @Input() projectId: string;
 
   firstEvent(): TicketEvent {
     return this.group.events[0];

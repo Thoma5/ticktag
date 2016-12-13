@@ -4,7 +4,7 @@
   </a>
   <div *ngFor="let comment of commentsToDisplay()">
     <div class='comment-wrapper'>
-      <tt-ticket-comment [comment]='comment.comment' [userTags]='comment.userTags'></tt-ticket-comment>
+      <tt-ticket-comment [comment]='comment.comment' [userTags]='comment.userTags' [projectId]="ticket.projectId"></tt-ticket-comment>
     </div>
   </div>
 </div>
