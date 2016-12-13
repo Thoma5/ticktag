@@ -4,6 +4,8 @@
   </div>
   <div *ngIf="!loading">
     <h1 class='title'>{{kanbanBoard.name}}</h1>
+    <tt-ticket-filter [allTicketTags]="allTicketTagsForFilter" [allUsers]="allProjectUsers" (ticketFilter)="updateFilter($event)">
+    </tt-ticket-filter>
     <div class='container'>
       <div *ngFor="let column of kanbanColumns" class='column-container'>
         <div class='column-header' [style.backgroundColor]="'#' + column.color">{{column.name}}</div>

@@ -4,12 +4,11 @@ import io.ticktag.TicktagService
 import io.ticktag.persistence.kanban.KanbanCellRepository
 import io.ticktag.persistence.kanban.entity.KanbanCell
 import io.ticktag.persistence.ticket.TicketRepository
+import io.ticktag.persistence.ticket.dto.TicketFilter
 import io.ticktag.persistence.ticket.entity.Ticket
 import io.ticktag.persistence.tickettag.TicketTagRepository
 import io.ticktag.persistence.tickettaggroup.TicketTagGroupRepository
-import io.ticktag.service.AuthExpr
-import io.ticktag.service.NotFoundException
-import io.ticktag.service.Principal
+import io.ticktag.service.*
 import io.ticktag.service.kanbanBoard.dto.KanbanBoardResult
 import io.ticktag.service.kanbanBoard.dto.KanbanColumnResult
 import io.ticktag.service.kanbanBoard.dto.UpdateKanbanColumn
@@ -17,6 +16,7 @@ import io.ticktag.service.kanbanBoard.services.KanbanService
 import io.ticktag.service.tickettagrelation.services.TicketTagRelationService
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
+import java.time.Instant
 import java.util.*
 import javax.inject.Inject
 
@@ -30,11 +30,41 @@ open class KanbanServiceImpl @Inject constructor(
 ) : KanbanService {
 
     @PreAuthorize(AuthExpr.READ_TICKET_TAG_FOR_GROUP)
-    override fun listColumns(@P("authTicketTagGroupId") kanbanBoardId: UUID): List<KanbanColumnResult> {
+    override fun listColumns(@P("authTicketTagGroupId") kanbanBoardId: UUID,
+                             number: Int?,
+                             title: String?,
+                             tags: List<String>?,
+                             users: List<String>?,
+                             progressOne: Float?,
+                             progressTwo: Float?,
+                             progressGreater: Boolean?,
+                             dueDateOne: Instant?,
+                             dueDateTwo: Instant?,
+                             dueDateGreater: Boolean?,
+                             storyPointsOne: Int?,
+                             storyPointsTwo: Int?,
+                             storyPointsGreater: Boolean?,
+                             open: Boolean?): List<KanbanColumnResult> {
+        if ( progressOne?.isNaN()?:false || progressOne?.isInfinite()?:false ) {
+            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueProgressOne"))))
+        }
+        if ( progressTwo?.isNaN()?:false || progressTwo?.isInfinite()?:false ) {
+            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueProgressTwo"))))
+        }
+        if ( tags?.contains("")?:false ) {
+            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueInTags"))))
+        }
+        if ( users?.contains("")?:false ) {
+            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueInTags"))))
+        }
+
         val columns = ticketTagRepository.findByTicketTagGroupIdOrderByOrderAsc(kanbanBoardId)
         var result = emptyList<KanbanColumnResult>().toMutableList()
-
+        val filter = TicketFilter(columns.first().ticketTagGroup.project.id, number, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater,  storyPointsOne, storyPointsTwo, storyPointsGreater, open)
+        val filteredTickets = ticketRepository.findAll(filter)
         for (column in columns) {
+
+
             var tickets: MutableList<Ticket> = mutableListOf()
             val aktTickets = column.tickets
             val lastSort = kanbanCellRepository.findByTicketTagId(column.id)
@@ -48,6 +78,7 @@ open class KanbanServiceImpl @Inject constructor(
                 kanbanCellRepository.insert(kanbanCell)
                 i++
             }
+            tickets = tickets.filter { t -> filteredTickets.contains(t) }.toMutableList()
 
             result.add(KanbanColumnResult(column, tickets.map { it.id }))
         }

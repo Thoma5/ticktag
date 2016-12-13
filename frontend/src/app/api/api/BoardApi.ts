@@ -104,9 +104,23 @@ export class BoardApi {
      * listKanbanColumns
      * 
      * @param id id
+     * @param number number
+     * @param title title
+     * @param tags tags
+     * @param users users
+     * @param progressOne progressOne
+     * @param progressTwo progressTwo
+     * @param progressGreater progressGreater
+     * @param dueDateOne dueDateOne
+     * @param dueDateTwo dueDateTwo
+     * @param dueDateGreater dueDateGreater
+     * @param storyPointsOne storyPointsOne
+     * @param storyPointsTwo storyPointsTwo
+     * @param storyPointsGreater storyPointsGreater
+     * @param open open
      */
-    public listKanbanColumnsUsingGET(id: string, extraHttpRequestParams?: any): Observable<Array<models.KanbanColumnResultJson>> {
-        return this.listKanbanColumnsUsingGETWithHttpInfo(id, extraHttpRequestParams)
+    public listKanbanColumnsUsingGET(id: string, number?: number, title?: string, tags?: Array<string>, users?: Array<string>, progressOne?: number, progressTwo?: number, progressGreater?: boolean, dueDateOne?: number, dueDateTwo?: number, dueDateGreater?: boolean, storyPointsOne?: number, storyPointsTwo?: number, storyPointsGreater?: boolean, open?: boolean, extraHttpRequestParams?: any): Observable<Array<models.KanbanColumnResultJson>> {
+        return this.listKanbanColumnsUsingGETWithHttpInfo(id, number, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -229,8 +243,22 @@ export class BoardApi {
      * listKanbanColumns
      * 
      * @param id id
+     * @param number number
+     * @param title title
+     * @param tags tags
+     * @param users users
+     * @param progressOne progressOne
+     * @param progressTwo progressTwo
+     * @param progressGreater progressGreater
+     * @param dueDateOne dueDateOne
+     * @param dueDateTwo dueDateTwo
+     * @param dueDateGreater dueDateGreater
+     * @param storyPointsOne storyPointsOne
+     * @param storyPointsTwo storyPointsTwo
+     * @param storyPointsGreater storyPointsGreater
+     * @param open open
      */
-    public listKanbanColumnsUsingGETWithHttpInfo(id: string, extraHttpRequestParams?: any): Observable<Response> {
+    public listKanbanColumnsUsingGETWithHttpInfo(id: string, number?: number, title?: string, tags?: Array<string>, users?: Array<string>, progressOne?: number, progressTwo?: number, progressGreater?: boolean, dueDateOne?: number, dueDateTwo?: number, dueDateGreater?: boolean, storyPointsOne?: number, storyPointsTwo?: number, storyPointsGreater?: boolean, open?: boolean, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/board/${id}/columns`;
 
         let queryParameters = new URLSearchParams();
@@ -238,6 +266,48 @@ export class BoardApi {
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling listKanbanColumnsUsingGET.');
+        }
+        if (number !== undefined) {
+            queryParameters.set('number', <any>number);
+        }
+        if (title !== undefined) {
+            queryParameters.set('title', <any>title);
+        }
+        if (tags !== undefined) {
+            queryParameters.set('tags', <any>tags);
+        }
+        if (users !== undefined) {
+            queryParameters.set('users', <any>users);
+        }
+        if (progressOne !== undefined) {
+            queryParameters.set('progressOne', <any>progressOne);
+        }
+        if (progressTwo !== undefined) {
+            queryParameters.set('progressTwo', <any>progressTwo);
+        }
+        if (progressGreater !== undefined) {
+            queryParameters.set('progressGreater', <any>progressGreater);
+        }
+        if (dueDateOne !== undefined) {
+            queryParameters.set('dueDateOne', <any>dueDateOne);
+        }
+        if (dueDateTwo !== undefined) {
+            queryParameters.set('dueDateTwo', <any>dueDateTwo);
+        }
+        if (dueDateGreater !== undefined) {
+            queryParameters.set('dueDateGreater', <any>dueDateGreater);
+        }
+        if (storyPointsOne !== undefined) {
+            queryParameters.set('storyPointsOne', <any>storyPointsOne);
+        }
+        if (storyPointsTwo !== undefined) {
+            queryParameters.set('storyPointsTwo', <any>storyPointsTwo);
+        }
+        if (storyPointsGreater !== undefined) {
+            queryParameters.set('storyPointsGreater', <any>storyPointsGreater);
+        }
+        if (open !== undefined) {
+            queryParameters.set('open', <any>open);
         }
 
 

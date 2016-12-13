@@ -13,6 +13,7 @@ import java.util.*
 import javax.inject.Inject
 import  io.ticktag.service.kanbanBoard.dto.UpdateKanbanColumn
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import java.time.Instant
 
 @TicktagRestInterface
 @RequestMapping("/board")
@@ -27,8 +28,22 @@ open class KanbanBoardController @Inject constructor(
     }
 
     @GetMapping(value = "/{id}/columns")
-    open fun listKanbanColumns(@PathVariable id: UUID): List<KanbanColumnResultJson> {
-        return kanbanService.listColumns(id).map(::KanbanColumnResultJson)
+    open fun listKanbanColumns(@PathVariable id: UUID,
+                               @RequestParam(name = "number", required = false) number: Int?,
+                               @RequestParam(name = "title", required = false) title: String?,
+                               @RequestParam(name = "tags", required = false) tags: List<String>?,
+                               @RequestParam(name = "users",  required = false) user: List<String>?,
+                               @RequestParam(name = "progressOne", required = false) progressOne: Float?,
+                               @RequestParam(name = "progressTwo",  required = false) progressTwo: Float?,
+                               @RequestParam(name = "progressGreater", required = false) progressGreater: Boolean?,
+                               @RequestParam(name = "dueDateOne",  required = false) dueDateOne: Instant?,
+                               @RequestParam(name = "dueDateTwo",  required = false) dueDateTwo: Instant?,
+                               @RequestParam(name = "dueDateGreater", required = false) dueDateGreater: Boolean?,
+                               @RequestParam(name = "storyPointsOne",  required = false) storyPointsOne: Int?,
+                               @RequestParam(name = "storyPointsTwo",  required = false) storyPointsTwo: Int?,
+                               @RequestParam(name = "storyPointsGreater", required = false) storyPointsGreater: Boolean?,
+                               @RequestParam(name = "open", required = false) open: Boolean?): List<KanbanColumnResultJson> {
+        return kanbanService.listColumns(id, number, title, tags, user, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open).map(::KanbanColumnResultJson)
     }
 
     @GetMapping(value = "/{id}")

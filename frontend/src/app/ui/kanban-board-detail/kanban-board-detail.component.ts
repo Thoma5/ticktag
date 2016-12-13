@@ -20,6 +20,9 @@ import {DragulaService} from 'ng2-dragula';
 import {UpdateKanbanColumnJson} from '../../api/model/UpdateKanbanColumnJson';
 import {TaskQueue} from '../../util/task-queue';
 import {TickettagrelationApi} from '../../api/api/TickettagrelationApi';
+import {TicketOverviewTag, TicketOverviewUser, TicketOverviewAssTag} from "../ticket-overview/ticket-overview";
+import {ProjectApi} from "../../api/api/ProjectApi";
+import {TicketFilter} from "../ticket-overview/ticket-filter/ticket-filter";
 
 @Component({
   selector: 'tt-kanban-board-detail',
@@ -35,7 +38,10 @@ export class KanbanBoardDetailComponent implements OnInit {
   private interestingTickets: imm.Map<string, KanbanDetailTicket>;
   private interestingUsers: imm.Map<string, KanbanDetailUser>;
   private relatedProgresses: imm.Map<string, TicketDetailProgress>;
-
+  private allTicketTagsForFilter: imm.Map<string, TicketOverviewTag>;
+  private allProjectUsers: imm.Map<string, TicketOverviewUser>;
+  private ticketFilter: TicketFilter = new TicketFilter(undefined, undefined, undefined, undefined, undefined,
+    undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, true);
   private loading = true;
 
   constructor(private route: ActivatedRoute,
@@ -45,6 +51,7 @@ export class KanbanBoardDetailComponent implements OnInit {
               private ticketTagsApi: TickettagApi,
               private kanbanBoardApi: BoardApi,
               private dragulaService: DragulaService,
+              private projectApi: ProjectApi,
               private ticketTagRelationApi: TickettagrelationApi) {
     dragulaService.dropModel.subscribe((value: any) => {
       this.onDropModel(value.slice(1));
@@ -120,14 +127,25 @@ export class KanbanBoardDetailComponent implements OnInit {
       .callNoError<KanbanBoardReslutJson>(p => this.kanbanBoardApi.getKanbanBoardUsingGETWithHttpInfo(boardId, p));
 
     let kanbanColumnObs = this.apiCallService
-      .callNoError<KanbanColumnResultJson[]>(p => this.kanbanBoardApi.listKanbanColumnsUsingGETWithHttpInfo(boardId, p));
+      .callNoError<KanbanColumnResultJson[]>(p => this.kanbanBoardApi.listKanbanColumnsUsingGETWithHttpInfo(boardId, this.ticketFilter.ticketNumber, this.ticketFilter.title, this.ticketFilter.tags, this.ticketFilter.users,
+        this.ticketFilter.progressOne, this.ticketFilter.progressTwo, this.ticketFilter.progressGreater,
+        this.ticketFilter.dueDateOne, this.ticketFilter.dueDateTwo, this.ticketFilter.dueDateGreater,
+        this.ticketFilter.storyPointsOne, this.ticketFilter.storyPointsTwo, this.ticketFilter.storyPointsGreater,
+        this.ticketFilter.open, p));
 
     let ticketTagsObs = this.apiCallService
       .callNoError<TicketTagResultJson[]>(p => this.ticketTagsApi.listTicketTagsUsingGETWithHttpInfo(null, projectId, p))
       .map(tts => idListToMap(tts).map(tt => new KanbanDetailTag(tt)).toMap());
+
+    let projectUsersObs = this.apiCallService
+      .callNoError<UserResultJson[]>(p => this.projectApi.listProjectUsersUsingGETWithHttpInfo(projectId, p))
+      .map(users => idListToMap(users).map(user => new TicketOverviewUser(user)).toMap());
+
+
     return Observable
-      .zip(kanbanColumnObs, ticketTagsObs, kanbanBoardObs)
+      .zip(kanbanColumnObs, ticketTagsObs, kanbanBoardObs, projectUsersObs)
       .flatMap(tuple => {
+        this.allProjectUsers = tuple[3]
         let columnResults = tuple[0];
         let wantedTicketIds: string[] = [];
         columnResults.forEach(c => {
@@ -162,6 +180,7 @@ export class KanbanBoardDetailComponent implements OnInit {
       })
       .do(tuple => {
         this.allTicketTags = tuple[0][1];
+        this.allTicketTagsForFilter = tuple[0][1];
         this.kanbanBoard = new KanbanBoard(tuple[0][2]);
         this.interestingUsers = imm.Map(tuple[2].users).map(u => new KanbanDetailUser(u)).toMap();
         this.relatedProgresses = imm.Map(tuple[1].ticketStatistics).map((p, tid) => new TicketDetailProgress(tid, p)).toMap();
@@ -170,6 +189,12 @@ export class KanbanBoardDetailComponent implements OnInit {
         this.kanbanColumns = imm.List(tuple[0][0]).map(c => new KanbanDetailColumn(c, this.interestingTickets)).toList();
       })
       .map(it => undefined);
+  }
+  updateFilter(event: TicketFilter) {
+    // TODO  filter our data
+    this.ticketFilter = event;
+    console.log(this.ticketFilter)
+    this.refresh(this.kanbanBoard.projectId, this.kanbanBoard.id).subscribe();
   }
 }
 

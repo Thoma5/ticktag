@@ -18,7 +18,7 @@ import javax.persistence.EntityManager
 interface TicketRepository : TicktagCrudRepository<Ticket, UUID>, TicketRepositoryCustom {
 
     fun findAll(spec: Specification<Ticket>?, pageable: Pageable?): Page<Ticket>
-
+    fun findAll(spec: Specification<Ticket>?): List<Ticket>
     @Query("Select max(t.number) from Ticket t where project.id = :projectId ")
     fun findHighestTicketNumberInProject(@Param("projectId") projectId: UUID): Int?
 
