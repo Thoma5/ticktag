@@ -40,7 +40,7 @@ open class TicketServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun getTicket(@P("authProjectId") projectId: UUID, ticketNumber: Int): TicketResult {
-        return getTicket((tickets.findByProjectIdAndNumber(projectId, ticketNumber) ?: throw NotFoundException()).id)
+        return toResultDto(tickets.findByProjectIdAndNumber(projectId, ticketNumber) ?: throw NotFoundException())
     }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
