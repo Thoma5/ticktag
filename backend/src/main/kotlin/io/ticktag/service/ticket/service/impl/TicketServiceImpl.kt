@@ -249,8 +249,7 @@ open class TicketServiceImpl @Inject constructor(
         val progresses = tickets.findProgressesByTicketIds(ids).associateBy({ it.first }, { it.second })
 
         LOG.info("Getting subtickets")
-        val subticketsx = tickets.findSubticketsByTicketIds(ids)
-        val subtickets = emptyMap<UUID, List<Ticket>>()
+        val subtickets = tickets.findSubticketsByTicketIds(ids).groupBy({ it.first }, { it.second })
 
         LOG.info("Mapping")
         val dtos = ts.map { toResultDtoInternal(it, comments, mentioningTickets, mentionedTickets, progresses, subtickets) }

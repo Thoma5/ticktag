@@ -1,8 +1,6 @@
 package io.ticktag.persistence.ticket.entity
 
 import io.ticktag.persistence.user.entity.User
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
 import java.time.Instant
 import java.util.*
 import javax.persistence.*
