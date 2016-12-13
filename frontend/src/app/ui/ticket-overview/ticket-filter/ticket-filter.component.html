@@ -1,8 +1,11 @@
 <div class="row">
-  <div class="col-md-5">
-    <div class="input-group">
-    <span class="input-group-btn" ><button class="btn btn-secondary" (click)="onManualClick()"> <span class="glyphicon glyphicon-filter" ></span></button></span>
-    <input #filterInput id="filter-input" type="text" class="form-control" [(ngModel)]=query (input)=debounce(filterInput.value) aria-describedby="filterInfo">
+<div class="form-group" [ngClass]="{'has-error has-feedback': error===true}">
+  <div class="input-group col-md-5">
+    <span class="input-group-btn"><button class="btn btn-secondary" (click)="onManualClick()"> <span class="glyphicon glyphicon-filter" ></span></button>
+    </span>
+    <input #filterInput id="filterInput" type="text" class="form-control filter-input" [(ngModel)]=query (input)=debounce(filterInput.value)>
+    <span class="glyphicon glyphicon-remove form-control-feedback filter-error"></span>
   </div>
-  </div>
+  <div class="col-md-5"><label class="control-label col-md-5 filter-error-label" for="filterInput">affe</label></div>
+</div>
 </div>

@@ -34,6 +34,8 @@ export class TicketFilterComponent implements OnInit {
     public query: string = '';
     public filters: string[] = ['!#:', '!tag:', '!user:', '!progress:', '!timespan:',
         '!before:', '!since:', '!status', 'open', 'closed', 'dd/MM/yyyy'];
+    public error = true;
+    public errorMsg = 'Syntax Error: ';
     private searchTerms = new Subject<string>();
 
     constructor(myElement: ElementRef, overlay: Overlay, vcRef: ViewContainerRef, public modal: Modal) {
