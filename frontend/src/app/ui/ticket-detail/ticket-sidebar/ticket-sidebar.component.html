@@ -35,8 +35,8 @@
         <h2>Referenced Tickets</h2>
         <ul class="ticket-refs">
             <li *ngFor="let ticket of ticket.referenced" class="ticket-ref">
-                <span class="number"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.id]">#{{ ticket.number }}</a></span>
-                <span class="title"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.id]">{{ ticket.title }}</a></span>
+                <span class="number"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.number]">#{{ ticket.number }}</a></span>
+                <span class="title"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.number]">{{ ticket.title }}</a></span>
             </li>
         </ul>
     </div>
@@ -45,8 +45,8 @@
         <h2>Referenced by</h2>
         <ul class="ticket-refs">
             <li *ngFor="let ticket of ticket.referencedBy" class="ticket-ref">
-                <span class="number"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.id]">#{{ ticket.number }}</a></span>
-                <span class="title"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.id]">{{ ticket.title }}</a></span>
+                <span class="number"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.number]">#{{ ticket.number }}</a></span>
+                <span class="title"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.number]">{{ ticket.title }}</a></span>
             </li>
         </ul>
     </div>

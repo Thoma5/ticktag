@@ -47,6 +47,11 @@ open class TicketServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
+    override fun getTicket(@P("authProjectId") projectId: UUID, ticketNumber: Int): TicketResult {
+        return toResultDto(tickets.findByProjectIdAndNumber(projectId, ticketNumber) ?: throw NotFoundException())
+    }
+
+    @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listTicketsFuzzy(@P("authProjectId") project: UUID, query: String, pageable: Pageable): List<TicketResult> {
         val result = tickets.findByProjectIdAndFuzzy(project, query, query, pageable)
         return toResultDtos(result)

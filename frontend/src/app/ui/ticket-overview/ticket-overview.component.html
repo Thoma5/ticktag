@@ -19,7 +19,7 @@
       </swui-datatable-column>
       <swui-datatable-column name="Title" minWidth="128" width="256">
         <template let-row="row" let-value="value" swui-datatable-cell-template>
-          <a routerLink="/project/{{projectId}}/ticket/{{row.id}}"><s  style="color: grey;" *ngIf="!row.open">{{value}}</s><p *ngIf="row.open">{{value}}</p></a>
+          <a routerLink="/project/{{projectId}}/ticket/{{row.number}}"><s  style="color: grey;" *ngIf="!row.open">{{value}}</s><p *ngIf="row.open">{{value}}</p></a>
         </template>
       </swui-datatable-column>
       <swui-datatable-column name="Tags"  minWidth="64" width="256" maxWidth="512" sortable="false">
