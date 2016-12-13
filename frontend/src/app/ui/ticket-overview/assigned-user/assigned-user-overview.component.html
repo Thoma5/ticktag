@@ -1,4 +1,7 @@
 <div class="assignees">
-  <img *ngFor="let user of usersList" tooltip="{{user.username}}" tooltipPlacement="bottom" tooltipTrigger="mouseenter" tooltipClass="user-tooltip"
-    class="img-circle" width="22" height="22" src="http://lorempixel.com/22/22/cats" />
+  <div *ngFor="let user of usersList"
+    tooltip="{{user.username}}" tooltipPlacement="bottom" tooltipTrigger="mouseenter" tooltipClass="user-tooltip"
+    class="user-image">
+    <tt-user-image [imageId]="user.imageId"></tt-user-image>
+  </div>
 </div>

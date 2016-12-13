@@ -72,11 +72,12 @@ import { CommandTextviewComponent } from './util/command-textview/command-textvi
 import { CommandDescriptionComponent } from './util/command-description/command-description.component';
 import { CommandHelpComponent } from './util/command-help/command-help.component';
 import { ProgressBarComponent } from './util/progressbar/progressbar.component';
+import { UserImageComponent } from './util/user-image/user-image.component';
 
 import {TicketEventsComponent} from './ui/ticket-detail/ticket-events/ticket-events.component';
 import {TicketEventOldNewComponent} from './ui/ticket-detail/ticket-events/ticket-event-old-new/ticket-event-old-new.component';
 import {TicketeventApi} from './api/api/TicketeventApi';
-import {TicketEventComponent} from './ui/ticket-detail/ticket-events/ticket-event/ticket-event.component';
+import {GroupedTicketEventComponent} from './ui/ticket-detail/ticket-events/grouped-ticket-event/grouped-ticket-event.component';
 import {TicketEventUserComponent} from './ui/ticket-detail/ticket-events/ticket-event-user/ticket-event-user.component';
 import {TicketEventParentChangedComponent}
   from './ui/ticket-detail/ticket-events/ticket-event-parent-ticket-changed/ticket-event-parent-ticket-changed.component';
@@ -138,7 +139,7 @@ import { TicketCreateComponent } from './ui/ticket-detail/ticket-create/ticket-c
     TicketCommentsComponent,
     TicketCommentComponent,
     TicketEventsComponent,
-    TicketEventComponent,
+    GroupedTicketEventComponent,
     TicketEventOldNewComponent,
     TicketEventOldNewMarkupComponent,
     TicketEventUserComponent,
@@ -163,6 +164,7 @@ import { TicketCreateComponent } from './ui/ticket-detail/ticket-create/ticket-c
     SelectAllDirective,
     LoadingComponent,
     SpinnerComponent,
+    UserImageComponent,
   ],
   providers: [
     ProjectApi,

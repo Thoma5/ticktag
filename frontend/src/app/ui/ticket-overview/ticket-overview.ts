@@ -21,12 +21,14 @@ export class TicketOverviewUser {
   readonly mail: string;
   readonly name: string;
   readonly username: string;
+  readonly imageId: string;
 
   constructor(user: UserResultJson) {
     this.id = user.id;
     this.mail = user.mail;
     this.name = user.name;
     this.username = user.username;
+    this.imageId = user.imageId;
     Object.freeze(this);
   }
 }

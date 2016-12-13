@@ -152,3 +152,24 @@ export function parseTime(string: string): number {
     }
   }
 }
+
+export function htmlifyCommands(string: string, projectId: string): string {
+  let commandRegex = new RegExp(r(
+    String.raw`(${SEPERATOR_FRONT_REGEX})(${COMMAND_REGEX})(?=${SEPERATOR_BACK_REGEX})`
+  ), 'gimu');
+  string = string.replace(commandRegex, '$1<span style="font-size:75%; color: gray;">$2</span>');
+
+  let ticketRefRegex = new RegExp(r(
+    String.raw`(${SEPERATOR_FRONT_REGEX})#([0-9]+)(?=${SEPERATOR_BACK_REGEX})`
+  ), 'gimu');
+  string = string.replace(
+    ticketRefRegex,
+    `$1<a
+      href="/project/${projectId}/ticket/$2"
+      data-projectId="${projectId}"
+      data-ticketNumber="$2"
+      class="grammar-htmlifyCommands">#$2</a>`
+  );
+
+  return string;
+}
