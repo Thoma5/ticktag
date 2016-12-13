@@ -2,6 +2,7 @@ package io.ticktag.service.statistic.service.impl
 
 import io.ticktag.TicktagService
 import io.ticktag.persistence.ticket.TicketRepository
+import io.ticktag.persistence.ticket.entity.Progress
 import io.ticktag.persistence.ticket.entity.Ticket
 import io.ticktag.service.AuthExpr
 import io.ticktag.service.NotFoundException
@@ -26,49 +27,32 @@ open class StatisticServiceImpl @Inject constructor(
         if (permittedIds.isEmpty()) {
             return emptyMap()
         }
-        return tickets.findByIds(permittedIds).associateBy { it.id }.mapValues { calculateTicketProgress(it.value) }
+        return calculateTicketProgresses(tickets.findByIds(permittedIds)).mapKeys { it.key.id }
     }
 
     @PreAuthorize(AuthExpr.READ_TICKET)
     override fun getTicketProgress(id: UUID): TicketProgressResult {
         val ticket = tickets.findOne(id) ?: throw NotFoundException()
-        return calculateTicketProgress(ticket)
+        return calculateTicketProgresses(listOf(ticket)).values.single()
     }
 
-    private fun calculateTicketProgress(ticket: Ticket): TicketProgressResult {
-        val allRelevantTickets = listOf(ticket) + ticket.subTickets
-
-        val totalEstimatedTime = allRelevantTickets.map { subTicket ->
-            subTicket.currentEstimatedTime ?: subTicket.initialEstimatedTime ?: Duration.ZERO
-        }.fold(Duration.ZERO, Duration::plus)
-
-        val totalLoggedTime = allRelevantTickets.map { t ->
-            val estimatedTime = estimatedTimeForTicket(t)
-            var loggedTime = loggedTimeForTicket(t)
-            if (loggedTime > estimatedTime) { // logged Time may not be greater than logged Time
-                loggedTime = estimatedTime
-            }
-            loggedTime
-        }.fold(Duration.ZERO, Duration::plus)
-
-        val estimatedTime = estimatedTimeForTicket(ticket)
-        var loggedTime = loggedTimeForTicket(ticket)
-        if (loggedTime > estimatedTime) {
-            loggedTime = estimatedTime
-        }
-
-        return TicketProgressResult(loggedTime, estimatedTime, totalLoggedTime, totalEstimatedTime)
+    private fun calculateTicketProgresses(ts: List<Ticket>): Map<Ticket, TicketProgressResult> {
+        val allProgresses = tickets.findProgressesByTicketIds(ts.map(Ticket::id))
+        return ts.associateBy({ it }, { calculateTicketProgress(it, allProgresses) })
     }
 
-    private fun loggedTimeForTicket(ticket: Ticket): Duration {
-        var duration = Duration.ZERO
-        ticket.comments
-                .flatMap { it.loggedTimes }
-                .forEach { duration += it.time }
-        return duration
+    private fun calculateTicketProgress(
+            ticket: Ticket,
+            allProgresses: Map<UUID, Progress>
+    ): TicketProgressResult {
+        val progress = allProgresses[ticket.id]!!
+        val totalEstimatedTime = estimatedTime(progress.totalInitialEstimatedTime, progress.currentEstimatedTime)
+        val estimatedTime = estimatedTime(ticket.initialEstimatedTime, ticket.currentEstimatedTime)
+
+        return TicketProgressResult(progress.loggedTime, estimatedTime, progress.totalLoggedTime, totalEstimatedTime)
     }
 
-    private fun estimatedTimeForTicket(ticket: Ticket): Duration {
-        return ticket.currentEstimatedTime ?: ticket.initialEstimatedTime ?: Duration.ZERO
+    private fun estimatedTime(initial: Duration?, current: Duration?): Duration {
+        return current ?: initial ?: Duration.ZERO
     }
 }
