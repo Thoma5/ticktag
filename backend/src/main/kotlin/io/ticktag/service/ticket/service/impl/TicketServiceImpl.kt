@@ -239,41 +239,41 @@ open class TicketServiceImpl @Inject constructor(
     }
 
     private fun toResultDtos(ts: Collection<Ticket>): List<TicketResult> {
-        LOG.info("Getting ticket ids")
+        LOG.trace("Getting ticket ids")
         val ids = ts.map(Ticket::id)
-        LOG.info("Getting comments")
+        LOG.trace("Getting comments")
         val realComments = comments.findNonDescriptionCommentsByTicketIds(ids).groupBy({ it.first }, { it.second })
 
-        LOG.info("Getting mentioned tickets")
+        LOG.trace("Getting mentioned tickets")
         val mentionedTickets = tickets.findMentionedTickets(ids).groupBy({ it.first }, { it.second })
-        LOG.info("Getting mentioning tickets")
+        LOG.trace("Getting mentioning tickets")
         val mentioningTickets = tickets.findMentioningTickets(ids).groupBy({ it.first }, { it.second })
 
-        LOG.info("Getting progress")
+        LOG.trace("Getting progress")
         val progresses = tickets.findProgressesByTicketIds(ids).associateBy({ it.first }, { it.second })
 
-        LOG.info("Getting subtickets")
+        LOG.trace("Getting subtickets")
         val subtickets = tickets.findSubticketsByTicketIds(ids).groupBy({ it.first }, { it.second })
 
-        LOG.info("Getting assignments")
+        LOG.trace("Getting assignments")
         val assignedUsers = assignments.findByTicketIds(ids).groupBy({ it.first }, { it.second })
 
-        LOG.info("Getting descriptions")
+        LOG.trace("Getting descriptions")
         val descriptions = comments.findDescriptionCommentsByTicketIds(ids).associateBy({ it.first }, { it.second })
 
-        LOG.info("Getting parent tickets")
+        LOG.trace("Getting parent tickets")
         val parentTickets = tickets.findParentTicketsByTicketIds(ids).associateBy({ it.first }, { it.second })
 
-        LOG.info("Getting creators")
+        LOG.trace("Getting creators")
         val creators = users.findCreatorsByTicketIds(ids).associateBy({ it.first }, { it.second })
 
-        LOG.info("Getting projects")
+        LOG.trace("Getting projects")
         val allProjects = projects.findByTicketIds(ids).associateBy({ it.first }, { it.second })
 
-        LOG.info("Getting tags")
+        LOG.trace("Getting tags")
         val tags = tickets.findTagsByTicketIds(ids).groupBy({ it.first }, { it.second })
 
-        LOG.info("Mapping")
+        LOG.trace("Mapping")
         val dtos = ts.map {
             toResultDtoInternal(it,
                     realComments,
