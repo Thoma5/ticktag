@@ -7,6 +7,7 @@ import io.ticktag.persistence.ticket.TicketEventRepository
 import io.ticktag.persistence.ticket.TicketRepository
 import io.ticktag.persistence.ticket.dto.TicketFilter
 import io.ticktag.persistence.ticket.entity.*
+import io.ticktag.persistence.ticketassignment.TicketAssignmentRepository
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.*
 import io.ticktag.service.command.service.CommandService
@@ -34,6 +35,7 @@ open class TicketServiceImpl @Inject constructor(
         private val projects: ProjectRepository,
         private val users: UserRepository,
         private val comments: CommentRepository,
+        private val assignments: TicketAssignmentRepository,
         private val ticketAssignmentService: TicketAssignmentService,
         private val commandService: CommandService,
         private val ticketEvents: TicketEventRepository
@@ -251,8 +253,11 @@ open class TicketServiceImpl @Inject constructor(
         LOG.info("Getting subtickets")
         val subtickets = tickets.findSubticketsByTicketIds(ids).groupBy({ it.first }, { it.second })
 
+        LOG.info("Getting assignments")
+        val assignedUsers = assignments.findByTicketIds(ids).groupBy({ it.first }, { it.second })
+
         LOG.info("Mapping")
-        val dtos = ts.map { toResultDtoInternal(it, comments, mentioningTickets, mentionedTickets, progresses, subtickets) }
+        val dtos = ts.map { toResultDtoInternal(it, comments, mentioningTickets, mentionedTickets, progresses, subtickets, assignedUsers) }
         return dtos
     }
 
@@ -265,7 +270,8 @@ open class TicketServiceImpl @Inject constructor(
                                     allReferencingTickets: Map<UUID, List<Ticket>>,
                                     allReferencedTickets: Map<UUID, List<Ticket>>,
                                     allProgresses: Map<UUID, Progress>,
-                                    allSubtickets: Map<UUID, List<Ticket>>
+                                    allSubtickets: Map<UUID, List<Ticket>>,
+                                    allAssignments: Map<UUID, List<AssignedTicketUser>>
     ): TicketResult {
         val comments = allNormalComments[t.id] ?: emptyList()
         val realCommentIds = comments.map(Comment::id)
@@ -281,6 +287,8 @@ open class TicketServiceImpl @Inject constructor(
         val subtickets = allSubtickets[t.id] ?: emptyList()
         val subticketIds = subtickets.map(Ticket::id)
 
+        val assignedUsers = allAssignments[t.id] ?: emptyList()
+
         return TicketResult(id = t.id,
                 number = t.number,
                 createTime = t.createTime,
@@ -293,7 +301,7 @@ open class TicketServiceImpl @Inject constructor(
                 dueDate = t.dueDate,
                 description = t.descriptionComment.text,
                 projectId = t.project.id,
-                ticketAssignments = t.assignedTicketUsers.map(::TicketAssignmentResult),
+                ticketAssignments = assignedUsers.map(::TicketAssignmentResult),
                 subTicketIds = subticketIds,
                 parentTicketId = t.parentTicket?.id,
                 createdBy = t.createdBy.id,
