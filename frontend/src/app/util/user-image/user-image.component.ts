@@ -1,14 +1,13 @@
 import { Component, Input } from '@angular/core';
-import { TicketEvent } from '../../ticket-detail';
-import { UserApi } from '../../../../api';
+import { UserApi } from '../../api';
 
 @Component({
-  selector: 'tt-ticket-event',
-  templateUrl: './ticket-event.component.html',
-  styleUrls: ['../ticket-events.component.scss']
+  selector: 'tt-user-image',
+  templateUrl: 'user-image.component.html',
+  styleUrls: ['./user-image.component.scss'],
 })
-export class TicketEventComponent {
-  @Input() event: TicketEvent;
+export class UserImageComponent {
+  @Input() imageId: string;
   readonly imagePath = '';
 
   constructor(private userApi: UserApi) {

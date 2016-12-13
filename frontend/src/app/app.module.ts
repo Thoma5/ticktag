@@ -73,11 +73,12 @@ import { CommandTextviewComponent } from './ui/ticket-detail/command-textview/co
 import { CommandDescriptionComponent } from './ui/ticket-detail/command-description/command-description.component';
 import { CommandHelpComponent } from './ui/ticket-detail/command-help/command-help.component';
 import { ProgressBarComponent } from './util/progressbar/progressbar.component';
+import { UserImageComponent } from './util/user-image/user-image.component';
 
 import {TicketEventsComponent} from './ui/ticket-detail/ticket-events/ticket-events.component';
 import {TicketEventOldNewComponent} from './ui/ticket-detail/ticket-events/ticket-event-old-new/ticket-event-old-new.component';
 import {TicketeventApi} from './api/api/TicketeventApi';
-import {TicketEventComponent} from './ui/ticket-detail/ticket-events/ticket-event/ticket-event.component';
+import {GroupedTicketEventComponent} from './ui/ticket-detail/ticket-events/grouped-ticket-event/grouped-ticket-event.component';
 import {TicketEventUserComponent} from './ui/ticket-detail/ticket-events/ticket-event-user/ticket-event-user.component';
 import {TicketEventParentChangedComponent}
   from './ui/ticket-detail/ticket-events/ticket-event-parent-ticket-changed/ticket-event-parent-ticket-changed.component';
@@ -139,7 +140,7 @@ import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
     TicketCommentsComponent,
     TicketCommentComponent,
     TicketEventsComponent,
-    TicketEventComponent,
+    GroupedTicketEventComponent,
     TicketEventOldNewComponent,
     TicketEventOldNewMarkupComponent,
     TicketEventUserComponent,
@@ -163,6 +164,7 @@ import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
     SelectAllDirective,
     LoadingComponent,
     SpinnerComponent,
+    UserImageComponent,
   ],
   providers: [
     ProjectApi,
