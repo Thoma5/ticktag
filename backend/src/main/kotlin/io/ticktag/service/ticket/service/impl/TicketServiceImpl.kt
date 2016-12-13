@@ -17,6 +17,7 @@ import io.ticktag.service.ticket.dto.UpdateTicket
 import io.ticktag.service.ticket.service.TicketService
 import io.ticktag.service.ticketassignment.dto.TicketAssignmentResult
 import io.ticktag.service.ticketassignment.services.TicketAssignmentService
+import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
@@ -37,10 +38,14 @@ open class TicketServiceImpl @Inject constructor(
         private val commandService: CommandService,
         private val ticketEvents: TicketEventRepository
 ) : TicketService {
+    companion object {
+        private val LOG = LoggerFactory.getLogger(TicketServiceImpl::class.java)
+    }
+
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listTicketsFuzzy(@P("authProjectId") project: UUID, query: String, pageable: Pageable): List<TicketResult> {
         val result = tickets.findByProjectIdAndFuzzy(project, query, query, pageable)
-        return result.map { toResultDto(it) }
+        return toResultDtos(result)
     }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
@@ -61,23 +66,24 @@ open class TicketServiceImpl @Inject constructor(
                              open: Boolean?,
                              pageable: Pageable): Page<TicketResult> {
 
-        if ( progressOne?.isNaN()?:false || progressOne?.isInfinite()?:false ) {
+        if (progressOne?.isNaN() ?: false || progressOne?.isInfinite() ?: false) {
             throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueProgressOne"))))
         }
-        if ( progressTwo?.isNaN()?:false || progressTwo?.isInfinite()?:false ) {
+        if (progressTwo?.isNaN() ?: false || progressTwo?.isInfinite() ?: false) {
             throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueProgressTwo"))))
         }
-        if ( tags?.contains("")?:false ) {
+        if (tags?.contains("") ?: false) {
             throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueInTags"))))
         }
-        if ( users?.contains("")?:false ) {
+        if (users?.contains("") ?: false) {
             throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueInTags"))))
         }
-        val filter = TicketFilter(project, number, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater,  storyPointsOne, storyPointsTwo, storyPointsGreater, open)
+        val filter = TicketFilter(project, number, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open)
         val page = tickets.findAll(filter, pageable)
-        val content = page.content.map { toResultDto(it) }
+        val content = toResultDtos(page.content)
         return PageImpl(content, pageable, page.totalElements)
     }
+
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listTickets(@P("authProjectId") project: UUID, pageable: Pageable): Page<TicketResult> {
         return listTickets(project, null, null, null, null, null, null, null, null, null, null, null, null, null, null, pageable)
@@ -97,7 +103,7 @@ open class TicketServiceImpl @Inject constructor(
         if (permittedIds.isEmpty()) {
             return emptyMap()
         }
-        return tickets.findByIds(permittedIds).map({ toResultDto(it) }).associateBy { it.id }
+        return toResultDtos(tickets.findByIds(permittedIds)).associateBy { it.id }
     }
 
     //TODO: Reference: Mentions, Tags
@@ -228,10 +234,37 @@ open class TicketServiceImpl @Inject constructor(
         tickets.delete(tickets.findOne(id) ?: throw NotFoundException())
     }
 
+    private fun toResultDtos(ts: Collection<Ticket>): List<TicketResult> {
+        LOG.trace("Getting ticket ids")
+        val ids = ts.map(Ticket::id)
+        LOG.trace("Getting comments")
+        val comments = comments.findNonDescriptionCommentsByTicketIds(ids).groupBy({ it.first }, { it.second })
+
+        LOG.trace("Getting mentioned tickets")
+        val mentionedTickets = tickets.findMentionedTickets(ids).groupBy({ it.first }, { it.second })
+        LOG.trace("Getting mentioning tickets")
+        val mentioningTickets = tickets.findMentioningTickets(ids).groupBy({ it.first }, { it.second })
+
+        val dtos = ts.map { toResultDtoInternal(it, comments, mentioningTickets, mentionedTickets) }
+        return dtos
+    }
+
     private fun toResultDto(t: Ticket): TicketResult {
-        val realCommentIds = t.comments.filter { c -> c.describedTicket == null }.map(Comment::id)
-        val referencingTicketIds = t.mentioningComments.map { it.ticket.id }
-        val referencedTicketIds = t.comments.flatMap { it.mentionedTickets }.map(Ticket::id)
+        return toResultDtos(listOf(t))[0]
+    }
+
+    private fun toResultDtoInternal(t: Ticket,
+                                    allNormalComments: Map<UUID, List<Comment>>,
+                                    allReferencingTickets: Map<UUID, List<Ticket>>,
+                                    allReferencedTickets: Map<UUID, List<Ticket>>): TicketResult {
+        val comments = allNormalComments[t.id] ?: emptyList()
+        val realCommentIds = comments.map(Comment::id)
+
+        val referencingTickets = allReferencingTickets[t.id] ?: emptyList()
+        val referencingTicketIds = referencingTickets.map(Ticket::id)
+
+        val referencedTickets = allReferencedTickets[t.id] ?: emptyList()
+        val referencedTicketIds = referencedTickets.map { it.id }
 
         return TicketResult(id = t.id,
                 number = t.number,

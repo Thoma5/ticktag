@@ -2,26 +2,12 @@ package io.ticktag.persistence.ticket.entity
 
 import io.ticktag.persistence.project.entity.Project
 import io.ticktag.persistence.user.entity.User
-import org.hibernate.annotations.*
+import org.hibernate.annotations.Immutable
 import java.time.Duration
 import java.time.Instant
 import java.util.*
 import javax.persistence.*
-import javax.persistence.CascadeType
-import javax.persistence.Entity
-import javax.persistence.Table
 
-@NamedEntityGraphs(
-        value =
-NamedEntityGraph(name = "Ticket.deep", attributeNodes = arrayOf(
-        NamedAttributeNode("comments"),
-        NamedAttributeNode("mentioningComments", subgraph = "mentioningComments")
-),
-        subgraphs = arrayOf(
-                NamedSubgraph(name="mentioningComments", attributeNodes = arrayOf(
-                    NamedAttributeNode("mentionedTickets")
-                ))
-        )))
 @Entity
 @Table(name = "ticket")
 open class Ticket protected constructor() {

@@ -8,7 +8,6 @@ import io.ticktag.persistence.ticket.entity.Ticket
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
-import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import java.util.*
@@ -17,8 +16,6 @@ import javax.persistence.EntityManager
 
 @TicktagRepository
 interface TicketRepository : TicktagCrudRepository<Ticket, UUID>, TicketRepositoryCustom {
-
-    @EntityGraph("Ticket.deep")
     fun findAll(spec: Specification<Ticket>?, pageable: Pageable?): Page<Ticket>
 
     @Query("Select max(t.number) from Ticket t where project.id = :projectId ")
@@ -28,6 +25,12 @@ interface TicketRepository : TicktagCrudRepository<Ticket, UUID>, TicketReposito
     fun findByIds(@Param("ids") ids: Collection<UUID>): List<Ticket>
 
     fun findByNumber(number: Int): Ticket?
+
+    @Query("select new kotlin.Pair(m.id, t) from Ticket t join t.mentioningComments c join c.ticket m where m.id in :ids")
+    fun findMentionedTickets(@Param("ids") ids: Collection<UUID>): List<Pair<UUID, Ticket>>
+
+    @Query("select new kotlin.Pair(t.id, m) from Ticket t join t.mentioningComments c join c.ticket m where t.id in :ids")
+    fun findMentioningTickets(@Param("ids") ids: Collection<UUID>): List<Pair<UUID, Ticket>>
 }
 
 interface TicketRepositoryCustom {
