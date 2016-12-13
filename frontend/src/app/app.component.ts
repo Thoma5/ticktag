@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, OnDestroy, NgZone } from '@angular/core';
 import '../style/app.scss';
 import { AuthService, User } from './service';
 import { Router } from '@angular/router';
 import { Overlay } from 'angular2-modal';
 import { Modal } from 'angular2-modal/plugins/bootstrap';
+import * as $ from 'jquery';
 
 
 @Component({
@@ -11,16 +12,20 @@ import { Modal } from 'angular2-modal/plugins/bootstrap';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   private title: string;
   private user: User;
-  private router: Router;
+  private directTicketLinkEvent: (eventObject: JQueryEventObject) => any;
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(
     private authService: AuthService,
     private modal: Modal,
-    overlay: Overlay, vcRef: ViewContainerRef) {
+    private overlay: Overlay,
+    private vcRef: ViewContainerRef,
+    private router: Router,
+    private zone: NgZone) {
+
     this.title = 'TickTag';
     overlay.defaultViewContainer = vcRef;
   }
@@ -33,6 +38,24 @@ export class AppComponent implements OnInit {
         console.log(user);
         this.user = user;
       });
+
+    $(document).on('click', 'a.grammar-htmlifyCommands', this.directTicketLinkEvent = (e) => {
+      e.preventDefault();
+      this.zone.run(() => {
+        this.router.navigate([
+          '/project',
+          e.currentTarget.getAttribute('data-projectId'),
+          'ticket',
+          e.currentTarget.getAttribute('data-ticketNumber'),
+        ]);
+      });
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.directTicketLinkEvent) {
+      $(document).off('click', 'a.grammar-htmlifyCommands', this.directTicketLinkEvent);
+    }
   }
 
   logout(): void {

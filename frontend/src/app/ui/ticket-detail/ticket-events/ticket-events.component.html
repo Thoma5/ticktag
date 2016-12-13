@@ -4,7 +4,7 @@
   </a>
   <div *ngFor='let group of groupedEventsToDisplay()'>
     <div class='event-wrapper'>
-      <tt-grouped-ticket-event [group]='group'></tt-grouped-ticket-event>
+      <tt-grouped-ticket-event [group]='group' [projectId]="projectId"></tt-grouped-ticket-event>
     </div>
   </div>
 </div>
