@@ -248,7 +248,10 @@ open class TicketServiceImpl @Inject constructor(
         LOG.trace("Getting progress")
         val progresses = tickets.findProgressesByTicketIds(ids).associateBy({ it.first }, { it.second })
 
-        val dtos = ts.map { toResultDtoInternal(it, comments, mentioningTickets, mentionedTickets, progresses) }
+        LOG.trace("Getting subtickets")
+        val subtickets = tickets.findSubticketsByTicketIds(ids).groupBy({ it.first }, { it.second })
+
+        val dtos = ts.map { toResultDtoInternal(it, comments, mentioningTickets, mentionedTickets, progresses, subtickets) }
         return dtos
     }
 
@@ -260,7 +263,8 @@ open class TicketServiceImpl @Inject constructor(
                                     allNormalComments: Map<UUID, List<Comment>>,
                                     allReferencingTickets: Map<UUID, List<Ticket>>,
                                     allReferencedTickets: Map<UUID, List<Ticket>>,
-                                    allProgresses: Map<UUID, Progress>
+                                    allProgresses: Map<UUID, Progress>,
+                                    allSubtickets: Map<UUID, List<Ticket>>
     ): TicketResult {
         val comments = allNormalComments[t.id] ?: emptyList()
         val realCommentIds = comments.map(Comment::id)
@@ -272,6 +276,9 @@ open class TicketServiceImpl @Inject constructor(
         val referencedTicketIds = referencedTickets.map { it.id }
 
         val progress = allProgresses[t.id]
+
+        val subtickets = allSubtickets[t.id] ?: emptyList()
+        val subticketIds = subtickets.map(Ticket::id)
 
         return TicketResult(id = t.id,
                 number = t.number,
@@ -286,7 +293,7 @@ open class TicketServiceImpl @Inject constructor(
                 description = t.descriptionComment.text,
                 projectId = t.project.id,
                 ticketAssignments = t.assignedTicketUsers.map(::TicketAssignmentResult),
-                subTicketIds = t.subTickets.map(Ticket::id),
+                subTicketIds = subticketIds,
                 parentTicketId = t.parentTicket?.id,
                 createdBy = t.createdBy.id,
                 tagIds = t.tags.map(TicketTag::id),

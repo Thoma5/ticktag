@@ -35,6 +35,9 @@ interface TicketRepository : TicktagCrudRepository<Ticket, UUID>, TicketReposito
 
     @Query("select new kotlin.Pair(t.id, p) from Ticket t join t.progress p where t.id in :ids")
     fun findProgressesByTicketIds(@Param("ids") ids: Collection<UUID>): List<Pair<UUID, Progress>>
+
+    @Query("select new kotlin.Pair(t.id, s) from Ticket t join t.subTickets s where t.id in :ids")
+    fun findSubticketsByTicketIds(@Param("ids") ids: Collection<UUID>): List<Pair<UUID, Ticket>>
 }
 
 interface TicketRepositoryCustom {
