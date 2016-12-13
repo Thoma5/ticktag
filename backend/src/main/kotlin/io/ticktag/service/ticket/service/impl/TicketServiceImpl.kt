@@ -3,11 +3,14 @@ package io.ticktag.service.ticket.service.impl
 import io.ticktag.TicktagService
 import io.ticktag.persistence.comment.CommentRepository
 import io.ticktag.persistence.project.ProjectRepository
+import io.ticktag.persistence.project.entity.Project
 import io.ticktag.persistence.ticket.TicketEventRepository
 import io.ticktag.persistence.ticket.TicketRepository
 import io.ticktag.persistence.ticket.dto.TicketFilter
 import io.ticktag.persistence.ticket.entity.*
+import io.ticktag.persistence.ticketassignment.TicketAssignmentRepository
 import io.ticktag.persistence.user.UserRepository
+import io.ticktag.persistence.user.entity.User
 import io.ticktag.service.*
 import io.ticktag.service.command.service.CommandService
 import io.ticktag.service.ticket.dto.CreateTicket
@@ -17,6 +20,7 @@ import io.ticktag.service.ticket.dto.UpdateTicket
 import io.ticktag.service.ticket.service.TicketService
 import io.ticktag.service.ticketassignment.dto.TicketAssignmentResult
 import io.ticktag.service.ticketassignment.services.TicketAssignmentService
+import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
@@ -33,10 +37,14 @@ open class TicketServiceImpl @Inject constructor(
         private val projects: ProjectRepository,
         private val users: UserRepository,
         private val comments: CommentRepository,
+        private val assignments: TicketAssignmentRepository,
         private val ticketAssignmentService: TicketAssignmentService,
         private val commandService: CommandService,
         private val ticketEvents: TicketEventRepository
 ) : TicketService {
+    companion object {
+        private val LOG = LoggerFactory.getLogger(TicketServiceImpl::class.java)
+    }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun getTicket(@P("authProjectId") projectId: UUID, ticketNumber: Int): TicketResult {
@@ -46,7 +54,7 @@ open class TicketServiceImpl @Inject constructor(
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listTicketsFuzzy(@P("authProjectId") project: UUID, query: String, pageable: Pageable): List<TicketResult> {
         val result = tickets.findByProjectIdAndFuzzy(project, query, query, pageable)
-        return result.map { toResultDto(it) }
+        return toResultDtos(result)
     }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
@@ -67,23 +75,24 @@ open class TicketServiceImpl @Inject constructor(
                              open: Boolean?,
                              pageable: Pageable): Page<TicketResult> {
 
-        if ( progressOne?.isNaN()?:false || progressOne?.isInfinite()?:false ) {
+        if (progressOne?.isNaN() ?: false || progressOne?.isInfinite() ?: false) {
             throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueProgressOne"))))
         }
-        if ( progressTwo?.isNaN()?:false || progressTwo?.isInfinite()?:false ) {
+        if (progressTwo?.isNaN() ?: false || progressTwo?.isInfinite() ?: false) {
             throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueProgressTwo"))))
         }
-        if ( tags?.contains("")?:false ) {
+        if (tags?.contains("") ?: false) {
             throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueInTags"))))
         }
-        if ( users?.contains("")?:false ) {
+        if (users?.contains("") ?: false) {
             throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueInTags"))))
         }
-        val filter = TicketFilter(project, number, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater,  storyPointsOne, storyPointsTwo, storyPointsGreater, open)
+        val filter = TicketFilter(project, number, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open)
         val page = tickets.findAll(filter, pageable)
-        val content = page.content.map { toResultDto(it) }
+        val content = toResultDtos(page.content)
         return PageImpl(content, pageable, page.totalElements)
     }
+
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listTickets(@P("authProjectId") project: UUID, pageable: Pageable): Page<TicketResult> {
         return listTickets(project, null, null, null, null, null, null, null, null, null, null, null, null, null, null, pageable)
@@ -103,7 +112,7 @@ open class TicketServiceImpl @Inject constructor(
         if (permittedIds.isEmpty()) {
             return emptyMap()
         }
-        return tickets.findByIds(permittedIds).map({ toResultDto(it) }).associateBy { it.id }
+        return toResultDtos(tickets.findByIds(permittedIds)).associateBy { it.id }
     }
 
     //TODO: Reference: Mentions, Tags
@@ -234,10 +243,102 @@ open class TicketServiceImpl @Inject constructor(
         tickets.delete(tickets.findOne(id) ?: throw NotFoundException())
     }
 
+    private fun toResultDtos(ts: Collection<Ticket>): List<TicketResult> {
+        LOG.trace("Getting ticket ids")
+        val ids = ts.map(Ticket::id)
+        LOG.trace("Getting comments")
+        val realComments = comments.findNonDescriptionCommentsByTicketIds(ids)
+
+        LOG.trace("Getting mentioned tickets")
+        val mentionedTickets = tickets.findMentionedTickets(ids)
+        LOG.trace("Getting mentioning tickets")
+        val mentioningTickets = tickets.findMentioningTickets(ids)
+
+        LOG.trace("Getting progress")
+        val progresses = tickets.findProgressesByTicketIds(ids)
+
+        LOG.trace("Getting subtickets")
+        val subtickets = tickets.findSubticketsByTicketIds(ids)
+
+        LOG.trace("Getting assignments")
+        val assignedUsers = assignments.findByTicketIds(ids)
+
+        LOG.trace("Getting descriptions")
+        val descriptions = comments.findDescriptionCommentsByTicketIds(ids)
+
+        LOG.trace("Getting parent tickets")
+        val parentTickets = tickets.findParentTicketsByTicketIds(ids)
+
+        LOG.trace("Getting creators")
+        val creators = users.findCreatorsByTicketIds(ids)
+
+        LOG.trace("Getting projects")
+        val allProjects = projects.findByTicketIds(ids)
+
+        LOG.trace("Getting tags")
+        val tags = tickets.findTagsByTicketIds(ids)
+
+        LOG.trace("Mapping")
+        val dtos = ts.map {
+            toResultDtoInternal(it,
+                    realComments,
+                    mentioningTickets,
+                    mentionedTickets,
+                    progresses,
+                    subtickets,
+                    assignedUsers,
+                    descriptions,
+                    parentTickets,
+                    creators,
+                    allProjects,
+                    tags
+            )
+        }
+        return dtos
+    }
+
     private fun toResultDto(t: Ticket): TicketResult {
-        val realCommentIds = t.comments.filter { c -> c.describedTicket == null }.map(Comment::id)
-        val referencingTicketIds = t.mentioningComments.map { it.ticket.id }
-        val referencedTicketIds = t.comments.flatMap { it.mentionedTickets }.map(Ticket::id)
+        return toResultDtos(listOf(t))[0]
+    }
+
+    private fun toResultDtoInternal(t: Ticket,
+                                    allNormalComments: Map<UUID, List<Comment>>,
+                                    allReferencingTickets: Map<UUID, List<Ticket>>,
+                                    allReferencedTickets: Map<UUID, List<Ticket>>,
+                                    allProgresses: Map<UUID, Progress>,
+                                    allSubtickets: Map<UUID, List<Ticket>>,
+                                    allAssignments: Map<UUID, List<AssignedTicketUser>>,
+                                    allDescriptions: Map<UUID, Comment>,
+                                    allParentTickets: Map<UUID, Ticket>,
+                                    allCreators: Map<UUID, User>,
+                                    allProjects: Map<UUID, Project>,
+                                    allTags: Map<UUID, List<TicketTag>>
+    ): TicketResult {
+        val comments = allNormalComments[t.id] ?: emptyList()
+        val realCommentIds = comments.map(Comment::id)
+
+        val referencingTickets = allReferencingTickets[t.id] ?: emptyList()
+        val referencingTicketIds = referencingTickets.map(Ticket::id)
+
+        val referencedTickets = allReferencedTickets[t.id] ?: emptyList()
+        val referencedTicketIds = referencedTickets.map { it.id }
+
+        val progress = allProgresses[t.id]
+
+        val subtickets = allSubtickets[t.id] ?: emptyList()
+        val subticketIds = subtickets.map(Ticket::id)
+
+        val assignedUsers = allAssignments[t.id] ?: emptyList()
+
+        val description = allDescriptions[t.id]!!
+
+        val parent = allParentTickets[t.id]
+
+        val creator = allCreators[t.id]!!
+
+        val project = allProjects[t.id]!!
+
+        val tags = allTags[t.id] ?: emptyList()
 
         return TicketResult(id = t.id,
                 number = t.number,
@@ -247,15 +348,15 @@ open class TicketServiceImpl @Inject constructor(
                 storyPoints = t.storyPoints,
                 initialEstimatedTime = t.initialEstimatedTime,
                 currentEstimatedTime = t.currentEstimatedTime,
-                progress = ProgressResult(t.progress),
+                progress = ProgressResult(progress),
                 dueDate = t.dueDate,
-                description = t.descriptionComment.text,
-                projectId = t.project.id,
-                ticketAssignments = t.assignedTicketUsers.map(::TicketAssignmentResult),
-                subTicketIds = t.subTickets.map(Ticket::id),
-                parentTicketId = t.parentTicket?.id,
-                createdBy = t.createdBy.id,
-                tagIds = t.tags.map(TicketTag::id),
+                description = description.text,
+                projectId = project.id,
+                ticketAssignments = assignedUsers.map(::TicketAssignmentResult),
+                subTicketIds = subticketIds,
+                parentTicketId = parent?.id,
+                createdBy = creator.id,
+                tagIds = tags.map(TicketTag::id),
                 referencedTicketIds = referencedTicketIds,
                 referencingTicketIds = referencingTicketIds,
                 commentIds = realCommentIds)

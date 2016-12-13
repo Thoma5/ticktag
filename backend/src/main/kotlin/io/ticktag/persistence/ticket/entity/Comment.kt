@@ -16,8 +16,7 @@ open class Comment protected constructor() {
             o.text = text
             o.user = user
             o.ticket = ticket
-            o.describedTicket = null
-            o.mentionedTickets = mutableListOf()
+            o.mentionedTickets = mutableSetOf()
             o.loggedTimes = mutableListOf()
             o.textChangedEvents = mutableListOf()
             o.mentionAddedEvents = mutableListOf()
@@ -53,11 +52,11 @@ open class Comment protected constructor() {
             joinColumns = arrayOf(JoinColumn(name = "comment_id", referencedColumnName = "id")),
             inverseJoinColumns = arrayOf(JoinColumn(name = "mentioned_ticket_id", referencedColumnName = "id"))
     )
-    lateinit open var mentionedTickets: MutableList<Ticket>
+    lateinit open var mentionedTickets: MutableSet<Ticket>
         protected set
 
-    @OneToOne(mappedBy = "descriptionComment", optional = true)
-    open var describedTicket: Ticket? = null
+    val isDescription: Boolean
+        get() = ticket.descriptionComment == this
 
     @OneToMany(mappedBy = "comment")
     lateinit open var loggedTimes: MutableList<LoggedTime>

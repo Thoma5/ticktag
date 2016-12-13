@@ -11,5 +11,5 @@ data class ProgressResult(
     val initialProgress: Float?,
     val progress: Float?
 ){
-    constructor(p: Progress?) : this(loggedTime = p?.loggedTime, initalEstimatedTime = p?.initalEstimatedTime, currentEstimatedTime = p?.currentEstimatedTime, initialProgress = p?.initialProgress, progress = p?.progress)
+    constructor(p: Progress?) : this(loggedTime = p?.totalLoggedTime, initalEstimatedTime = p?.totalInitialEstimatedTime, currentEstimatedTime = p?.currentEstimatedTime, initialProgress = p?.totalInitialProgress, progress = p?.totalProgress)
 }
