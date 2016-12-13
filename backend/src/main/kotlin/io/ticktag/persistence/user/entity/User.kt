@@ -2,6 +2,8 @@ package io.ticktag.persistence.user.entity
 
 import io.ticktag.persistence.member.entity.Member
 import io.ticktag.persistence.ticket.entity.*
+import org.hibernate.annotations.LazyToOne
+import org.hibernate.annotations.LazyToOneOption
 import java.util.*
 import javax.persistence.*
 
