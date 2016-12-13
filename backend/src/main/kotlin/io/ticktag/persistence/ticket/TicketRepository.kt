@@ -37,63 +37,63 @@ interface TicketRepositoryCustom {
             title: String,
             pageable: Pageable): List<Ticket>
 
-    fun findMentionedTickets(@Param("ids") ids: Collection<UUID>): List<Pair<UUID, Ticket>>
+    fun findMentionedTickets(@Param("ids") ids: Collection<UUID>): Map<UUID, List<Ticket>>
 
-    fun findMentioningTickets(@Param("ids") ids: Collection<UUID>): List<Pair<UUID, Ticket>>
+    fun findMentioningTickets(@Param("ids") ids: Collection<UUID>): Map<UUID, List<Ticket>>
 
-    fun findProgressesByTicketIds(@Param("ids") ids: Collection<UUID>): List<Pair<UUID, Progress>>
+    fun findProgressesByTicketIds(@Param("ids") ids: Collection<UUID>): Map<UUID, Progress>
 
-    fun findSubticketsByTicketIds(@Param("ids") ids: Collection<UUID>): List<Pair<UUID, Ticket>>
+    fun findSubticketsByTicketIds(@Param("ids") ids: Collection<UUID>): Map<UUID, List<Ticket>>
 
-    fun findParentTicketsByTicketIds(@Param("ids") ids: Collection<UUID>): List<Pair<UUID, Ticket>>
+    fun findParentTicketsByTicketIds(@Param("ids") ids: Collection<UUID>): Map<UUID, Ticket>
 
-    fun findTagsByTicketIds(@Param("ids") ids: Collection<UUID>): List<Pair<UUID, TicketTag>>
+    fun findTagsByTicketIds(@Param("ids") ids: Collection<UUID>): Map<UUID, List<TicketTag>>
 }
 
 open class TicketRepositoryImpl @Inject constructor(private val em: EntityManager) : TicketRepositoryCustom {
-    override fun findTagsByTicketIds(ids: Collection<UUID>): List<Pair<UUID, TicketTag>> {
+    override fun findTagsByTicketIds(ids: Collection<UUID>): Map<UUID, List<TicketTag>> {
         return em.createQuery("""
             select ti.id, ta from Ticket ti
             join ti.tags ta
             where ti.id in :ids""", Array<Any>::class.java)
                 .setParameter("ids", ids)
                 .resultList
-                .map { Pair(it[0] as UUID, it[1] as TicketTag) }
+                .groupBy( { it[0] as UUID}, { it[1] as TicketTag })
     }
 
-    override fun findMentionedTickets(ids: Collection<UUID>): List<Pair<UUID, Ticket>> {
+    override fun findMentionedTickets(ids: Collection<UUID>): Map<UUID, List<Ticket>> {
         return em.createQuery("select m.id, t from Ticket t join t.mentioningComments c join c.ticket m where m.id in :ids", Array<Any>::class.java)
                 .setParameter("ids", ids)
                 .resultList
-                .map { Pair(it[0] as UUID, it[1] as Ticket) }
+                .groupBy( { it[0] as UUID}, { it[1] as Ticket })
     }
 
-    override fun findMentioningTickets(ids: Collection<UUID>): List<Pair<UUID, Ticket>> {
+    override fun findMentioningTickets(ids: Collection<UUID>): Map<UUID, List<Ticket>> {
         return em.createQuery("select t.id, m from Ticket t join t.mentioningComments c join c.ticket m where t.id in :ids", Array<Any>::class.java)
                 .setParameter("ids", ids)
                 .resultList
-                .map { Pair(it[0] as UUID, it[1] as Ticket) }
+                .groupBy( { it[0] as UUID}, { it[1] as Ticket })
     }
 
-    override fun findProgressesByTicketIds(ids: Collection<UUID>): List<Pair<UUID, Progress>> {
+    override fun findProgressesByTicketIds(ids: Collection<UUID>): Map<UUID, Progress> {
         return em.createQuery("select p.id, p from Progress p where p.id in :ids", Array<Any>::class.java)
                 .setParameter("ids", ids)
                 .resultList
-                .map { Pair(it[0] as UUID, it[1] as Progress) }
+                .associateBy( { it[0] as UUID}, { it[1] as Progress })
     }
 
-    override fun findSubticketsByTicketIds(ids: Collection<UUID>): List<Pair<UUID, Ticket>> {
+    override fun findSubticketsByTicketIds(ids: Collection<UUID>): Map<UUID, List<Ticket>> {
         return em.createQuery("select p.id, t from Ticket t join t.parentTicket p where p.id in :ids", Array<Any>::class.java)
                 .setParameter("ids", ids)
                 .resultList
-                .map { Pair(it[0] as UUID, it[1] as Ticket) }
+                .groupBy( { it[0] as UUID}, { it[1] as Ticket })
     }
 
-    override fun findParentTicketsByTicketIds(ids: Collection<UUID>): List<Pair<UUID, Ticket>> {
+    override fun findParentTicketsByTicketIds(ids: Collection<UUID>): Map<UUID, Ticket> {
         return em.createQuery("select s.id, p from Ticket p join p.subTickets s where s.id in :ids", Array<Any>::class.java)
                 .setParameter("ids", ids)
                 .resultList
-                .map { Pair(it[0] as UUID, it[1] as Ticket) }
+                .associateBy( { it[0] as UUID}, { it[1] as Ticket })
     }
 
     override fun findByProjectIdAndFuzzy(projectId: UUID, number: String, title: String, pageable: Pageable): List<Ticket> {

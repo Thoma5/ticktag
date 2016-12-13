@@ -17,14 +17,14 @@ interface ProjectRepository : TicktagCrudRepository<Project, UUID>, ProjectRepos
 }
 
 interface ProjectRepositoryCustom {
-    fun findByTicketIds(ids: Collection<UUID>): List<Pair<UUID, Project>>
+    fun findByTicketIds(ids: Collection<UUID>): Map<UUID, Project>
 }
 
 open class ProjectRepositoryImpl @Inject() constructor(private val em: EntityManager) : ProjectRepositoryCustom {
-    override fun findByTicketIds(ids: Collection<UUID>): List<Pair<UUID, Project>> {
+    override fun findByTicketIds(ids: Collection<UUID>): Map<UUID, Project> {
         return em.createQuery("select t.id, p from Ticket t join t.project p where t.id in :ids", Array<Any>::class.java)
                 .setParameter("ids", ids)
                 .resultList
-                .map { Pair(it[0] as UUID, it[1] as Project) }
+                .associateBy({ it[0] as UUID }, { it[1] as Project })
     }
 }

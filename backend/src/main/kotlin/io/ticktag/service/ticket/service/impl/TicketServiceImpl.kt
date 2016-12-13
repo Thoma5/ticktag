@@ -247,36 +247,36 @@ open class TicketServiceImpl @Inject constructor(
         LOG.trace("Getting ticket ids")
         val ids = ts.map(Ticket::id)
         LOG.trace("Getting comments")
-        val realComments = comments.findNonDescriptionCommentsByTicketIds(ids).groupBy({ it.first }, { it.second })
+        val realComments = comments.findNonDescriptionCommentsByTicketIds(ids)
 
         LOG.trace("Getting mentioned tickets")
-        val mentionedTickets = tickets.findMentionedTickets(ids).groupBy({ it.first }, { it.second })
+        val mentionedTickets = tickets.findMentionedTickets(ids)
         LOG.trace("Getting mentioning tickets")
-        val mentioningTickets = tickets.findMentioningTickets(ids).groupBy({ it.first }, { it.second })
+        val mentioningTickets = tickets.findMentioningTickets(ids)
 
         LOG.trace("Getting progress")
-        val progresses = tickets.findProgressesByTicketIds(ids).associateBy({ it.first }, { it.second })
+        val progresses = tickets.findProgressesByTicketIds(ids)
 
         LOG.trace("Getting subtickets")
-        val subtickets = tickets.findSubticketsByTicketIds(ids).groupBy({ it.first }, { it.second })
+        val subtickets = tickets.findSubticketsByTicketIds(ids)
 
         LOG.trace("Getting assignments")
-        val assignedUsers = assignments.findByTicketIds(ids).groupBy({ it.first }, { it.second })
+        val assignedUsers = assignments.findByTicketIds(ids)
 
         LOG.trace("Getting descriptions")
-        val descriptions = comments.findDescriptionCommentsByTicketIds(ids).associateBy({ it.first }, { it.second })
+        val descriptions = comments.findDescriptionCommentsByTicketIds(ids)
 
         LOG.trace("Getting parent tickets")
-        val parentTickets = tickets.findParentTicketsByTicketIds(ids).associateBy({ it.first }, { it.second })
+        val parentTickets = tickets.findParentTicketsByTicketIds(ids)
 
         LOG.trace("Getting creators")
-        val creators = users.findCreatorsByTicketIds(ids).associateBy({ it.first }, { it.second })
+        val creators = users.findCreatorsByTicketIds(ids)
 
         LOG.trace("Getting projects")
-        val allProjects = projects.findByTicketIds(ids).associateBy({ it.first }, { it.second })
+        val allProjects = projects.findByTicketIds(ids)
 
         LOG.trace("Getting tags")
-        val tags = tickets.findTagsByTicketIds(ids).groupBy({ it.first }, { it.second })
+        val tags = tickets.findTagsByTicketIds(ids)
 
         LOG.trace("Mapping")
         val dtos = ts.map {

@@ -15,11 +15,11 @@ interface TicketAssignmentRepository : TicktagCrudRepository<AssignedTicketUser,
 }
 
 interface TicketAssignmentRepositoryCustom {
-    fun findByTicketIds(ids: Collection<UUID>): List<Pair<UUID, AssignedTicketUser>>
+    fun findByTicketIds(ids: Collection<UUID>): Map<UUID, List<AssignedTicketUser>>
 }
 
 open class TicketAssignmentRepositoryImpl @Inject constructor(private val em: EntityManager) : TicketAssignmentRepositoryCustom {
-    override fun findByTicketIds(ids: Collection<UUID>): List<Pair<UUID, AssignedTicketUser>> {
+    override fun findByTicketIds(ids: Collection<UUID>): Map<UUID, List<AssignedTicketUser>> {
         return em.createQuery(
                 """select ti.id, a from AssignedTicketUser a
                     join fetch a.tag ta
@@ -30,6 +30,6 @@ open class TicketAssignmentRepositoryImpl @Inject constructor(private val em: En
                 """, Array<Any>::class.java)
                 .setParameter("ids", ids)
                 .resultList
-                .map { Pair(it[0] as UUID, it[1] as AssignedTicketUser) }
+                .groupBy({ it[0] as UUID }, { it[1] as AssignedTicketUser })
     }
 }
