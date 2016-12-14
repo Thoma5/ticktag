@@ -11,7 +11,7 @@ data class UserResult(
         val name: String,
         val currentToken: UUID,
         val role: Role,
-        val profile_pic: ByteArray?
+        val imageId: TempImageId
 ) {
-    constructor(u: User) : this(id = u.id, mail = u.mail, name = u.name, currentToken = u.currentToken, role = u.role, profile_pic = u.profilePic, username = u.username)
+    constructor(u: User, imageId: TempImageId) : this(id = u.id, mail = u.mail, name = u.name, currentToken = u.currentToken, role = u.role, username = u.username, imageId = imageId)
 }

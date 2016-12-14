@@ -1,0 +1,9 @@
+To run the script you have to run these commands once:
+- pip3 install --user bcrypt
+- pip3 install --user faker
+or use the requirements.txt file.
+
+After these packages are installed, you can fill the database with the data using:
+- psql -U ticktag -h localhost < drop.sql
+- psql -U ticktag -h localhost < schema.sql
+- ./bigsamples.py | psql -U ticktag -h localhost

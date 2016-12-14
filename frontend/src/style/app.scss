@@ -15,6 +15,15 @@ body {
     background-image: url('../public/img/handmadepaper.png')
 }
 
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+
 md-sidenav-layout {
     background: none;
 }
@@ -24,8 +33,25 @@ main {
     width: 100%;
 }
 
+// Reset the sidenav transforms to allow for fixed elements inside main
+// https://github.com/angular/material2/issues/998
+// http://stackoverflow.com/questions/18724812/position-fixed-but-relative-to-a-container
+.md-sidenav-content {
+  transform: none !important;
+}
+
+md-sidenav-layout {
+  transform: none !important;
+}
+
 .markdown-body {
     em, i {
         font-style: italic;
     }
+}
+
+
+// Reset the background color so we can use our own
+.CodeMirror {
+  background-color: transparent !important;
 }

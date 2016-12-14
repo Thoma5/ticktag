@@ -9,6 +9,7 @@ export class TicketEventOldNewMarkupComponent {
   @Input() title: String;
   @Input() oldString: String;
   @Input() newString: String;
+  @Input() projectId: string;
 
   isOldCollapsed: boolean = true;
   isNewCollapsed: boolean = true;

@@ -1,6 +1,8 @@
 <div class='comment'>
     <div class='header-row'>
-        <div class='user-icon'><img src='http://lorempixel.com/100/100/cats'/></div>
+        <div class='user-icon'>
+          <tt-user-image [imageId]="comment.user.imageId"></tt-user-image>
+        </div>
         <div class='user-info'><div>
             <span class='user-name'>{{comment.user.name}}</span>
             <span *ngFor="let tag of userTags" class='user-tag' [style.backgroundColor]="'#' + tag.color">
@@ -9,7 +11,7 @@
         </div></div>
     </div>
     <div class="content">
-        <tt-markdown-textview-read [content]='comment.text'></tt-markdown-textview-read>
+        <tt-markdown-textview-read [content]='comment.text' [commands]="true" [projectId]="projectId"></tt-markdown-textview-read>
     </div>
     <div class="time-info">
         <p *ngFor="let loggedTime of comment.loggedTimes">

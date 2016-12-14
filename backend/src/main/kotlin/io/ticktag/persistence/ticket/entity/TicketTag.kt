@@ -49,9 +49,6 @@ open class TicketTag protected constructor() {
     lateinit open var tickets: MutableList<Ticket>
         protected set
 
-    @OneToOne(mappedBy = "defaultTicketTag", optional = true)
-    open var defaultTicketTagGroupBackRef: TicketTagGroup? = null
-
     @OneToMany(mappedBy = "tag")
     lateinit open var tagAddedEvents: MutableList<TicketEventTagAdded>
         protected set

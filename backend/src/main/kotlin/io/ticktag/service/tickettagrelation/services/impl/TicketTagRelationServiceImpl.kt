@@ -46,7 +46,7 @@ open class TicketTagRelationServiceImpl(
         if (assignedTag == null) {
             if (tag.ticketTagGroup.exclusive) {
                 // Remove all tags from the same group
-                var deletedTags = ticket.tags.filter { it in tag.ticketTagGroup.ticketTags }.toMutableList()
+                val deletedTags = ticket.tags.filter { it in tag.ticketTagGroup.ticketTags }.toMutableList()
                 deletedTags.forEach {
                     ticketEvents.insert(TicketEventTagRemoved.create(ticket, user, it))
                 }

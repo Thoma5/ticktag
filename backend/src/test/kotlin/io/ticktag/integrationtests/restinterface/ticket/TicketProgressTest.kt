@@ -3,7 +3,7 @@ package io.ticktag.integrationtests.restinterface.ticket
 import io.ticktag.ADMIN_ID
 import io.ticktag.integrationtests.restinterface.ApiBaseTest
 import io.ticktag.restinterface.statistic.controller.StatisticController
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.util.*
 import javax.inject.Inject
@@ -14,7 +14,7 @@ class TicketProgressTest : ApiBaseTest() {
     lateinit var statisticController: StatisticController
 
     override fun loadTestData(): List<String> {
-        return arrayListOf("sql/testBaseSamples.sql", "sql/testProgressTicketSamples.sql")
+        return arrayListOf("sql/testProgressTicketSamples.sql")
     }
 
     @Test
@@ -24,8 +24,8 @@ class TicketProgressTest : ApiBaseTest() {
 
             assertEquals(20, progress.loggedTime.seconds)
             assertEquals(25, progress.currentEstimatedTime.seconds)
-            assertEquals(50, progress.totalLoggedTime.seconds)
-            assertEquals(60, progress.totalCurrentEstimatedTime.seconds)
+            assertEquals(71, progress.totalLoggedTime.seconds)
+            assertEquals(35, progress.totalCurrentEstimatedTime.seconds)
         }
     }
 }
