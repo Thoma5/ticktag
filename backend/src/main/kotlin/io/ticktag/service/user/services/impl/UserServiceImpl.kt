@@ -119,7 +119,7 @@ open class UserServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listUsersInProject(@P("authProjectId") projectId: UUID, principal: Principal): List<UserResult> {
-        val project = projects.findOne(projectId) ?: throw NotFoundException()
+        projects.findOne(projectId) ?: throw NotFoundException()
         return usersToDto(users.findInProject(projectId), principal)
     }
 

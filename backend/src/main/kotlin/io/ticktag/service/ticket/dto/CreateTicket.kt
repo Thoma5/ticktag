@@ -17,7 +17,7 @@ data class CreateTicket(
         @field:PositiveDuration val initialEstimatedTime: Duration?,
         @field:PositiveDuration val currentEstimatedTime: Duration?,
         val dueDate: Instant?,
-        @field:Size(min = 0, max = 5000) val description: String,
+        @field:Size(min = 0, max = 50000) val description: String,
         val projectID: UUID,
         val ticketAssignments: List<TicketAssignment>,
         @Valid val subTickets: List<CreateTicket>,

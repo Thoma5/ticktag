@@ -84,7 +84,6 @@ import {TicketEventParentChangedComponent}
 import {TicketEventTagComponent} from './ui/ticket-detail/ticket-events/ticket-event-tag/ticket-event-tag.component';
 import {TicketEventOldNewMarkupComponent}
   from './ui/ticket-detail/ticket-events/ticket-event-old-new-markup/ticket-event-old-new-markup.component';
-import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
 import { TicketCreateComponent } from './ui/ticket-detail/ticket-create/ticket-create.component';
 
 @NgModule({
@@ -99,7 +98,6 @@ import { TicketCreateComponent } from './ui/ticket-detail/ticket-create/ticket-c
     MaterialModule.forRoot(),
     ModalModule.forRoot(),
     BootstrapModalModule,
-    NKDatetimeModule,
   ],
   declarations: [
     AppComponent,
