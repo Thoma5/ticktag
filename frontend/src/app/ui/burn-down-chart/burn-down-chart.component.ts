@@ -14,16 +14,6 @@ import { LocalStorageService } from 'ng2-webstorage';
 })
 export class BurnDownChartComponent implements OnInit {
 
-    constructor(private route: ActivatedRoute,
-        private router: Router,
-        private apiCallService: ApiCallService,
-        private TicketEventApi: TicketeventApi,
-        private localStorageService: LocalStorageService
-    ) {
-        // Clone Options
-        this.datePickerToOpts = $.extend({}, this.datePickerOpts);
-    }
-
     private projectId: String;
     public search = 'TODO';
     private FROM_KEY = 'BURNDOWN_FROM';
@@ -41,39 +31,6 @@ export class BurnDownChartComponent implements OnInit {
     };
 
     public datePickerToOpts: any;
-
-    handleFromDateChange(dateFrom: Date) {
-        this.fromDate = dateFrom;
-        //  Change object in a way that angular detect the changes
-        this.datePickerToOpts = $.extend({ startDate: dateFrom }, this.datePickerOpts);
-        this.refresh();
-        this.localStorageService.store(this.FROM_KEY, dateFrom);
-    }
-
-    handleToDateChange(dateTo: Date) {
-        this.toDate = dateTo;
-        this.refresh();
-        this.localStorageService.store(this.TO_KEY, dateTo);
-    }
-
-    resetData() {
-        this.actualData = [];
-        this.idealData = [];
-        this.lineChartLabels = [];
-    }
-
-    updateChart() {
-        this.lineChartData = [
-            { data: this.actualData, label: this.lineChartData[0].label },
-            { data: this.idealData, label: this.lineChartData[1].label }
-        ];
-    }
-
-    addDay(actual: number, ideal: number, label: string) {
-        this.actualData.push(actual);
-        this.idealData.push(ideal);
-        this.lineChartLabels.push(label);
-    }
 
     //  lineChart
     public lineChartData: Array<any> = [
@@ -126,7 +83,17 @@ export class BurnDownChartComponent implements OnInit {
     public lineChartType: string = 'line';
 
     private loading = true;
-    ngOnInit(): void {
+    constructor(private route: ActivatedRoute,
+        private router: Router,
+        private apiCallService: ApiCallService,
+        private TicketEventApi: TicketeventApi,
+        private localStorageService: LocalStorageService
+    ) {
+        // Clone Options
+        this.datePickerToOpts = $.extend({}, this.datePickerOpts);
+    }
+
+    public ngOnInit(): void {
         if (this.localStorageService.retrieve(this.FROM_KEY) !== undefined) {
             this.fromDate = new Date(this.localStorageService.retrieve(this.FROM_KEY));
         } else {
@@ -144,6 +111,39 @@ export class BurnDownChartComponent implements OnInit {
             .subscribe(() => {
                 this.loading = false;
             });
+    }
+
+    public handleFromDateChange(dateFrom: Date) {
+        this.fromDate = dateFrom;
+        //  Change object in a way that angular detect the changes
+        this.datePickerToOpts = $.extend({ startDate: dateFrom }, this.datePickerOpts);
+        this.refresh();
+        this.localStorageService.store(this.FROM_KEY, dateFrom);
+    }
+
+    public handleToDateChange(dateTo: Date) {
+        this.toDate = dateTo;
+        this.refresh();
+        this.localStorageService.store(this.TO_KEY, dateTo);
+    }
+
+    private resetData() {
+        this.actualData = [];
+        this.idealData = [];
+        this.lineChartLabels = [];
+    }
+
+    private updateChart() {
+        this.lineChartData = [
+            { data: this.actualData, label: this.lineChartData[0].label },
+            { data: this.idealData, label: this.lineChartData[1].label }
+        ];
+    }
+
+    private addDay(actual: number, ideal: number, label: string) {
+        this.actualData.push(actual);
+        this.idealData.push(ideal);
+        this.lineChartLabels.push(label);
     }
 
     private utcRemoveTime(timestamp: Number): number {
