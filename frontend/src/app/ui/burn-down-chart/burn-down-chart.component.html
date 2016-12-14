@@ -8,7 +8,7 @@
                 <h1 class='title'>Burn Down Chart</h1>
             </div>
             <div class='sub-header-row row'>
-                <div class='col-md-6'></div>
+                <div class='col-md-6'><tt-ticket-filter [allTicketTags]="allTicketTagsForFilter" [allUsers]="allProjectUsers" (ticketFilter)="handleUpdateFilter($event)"></tt-ticket-filter></div>
                 <div class='col-md-3'>
                     <label for='fromDate'>From</label>
                     <datetime id='fromDate' [(ngModel)]="fromDate" (ngModelChange)="handleFromDateChange($event)" [datepicker]="datePickerOpts" [timepicker]="false"></datetime>

@@ -1,11 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiCallService } from '../../service/api-call/api-call.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { TicketEventResultJson } from '../../api/model/TicketEventResultJson';
-import { TicketeventApi } from '../../api/api/TicketeventApi';
-import * as moment from 'moment';
 import { LocalStorageService } from 'ng2-webstorage';
+import { Observable } from 'rxjs';
+import * as moment from 'moment';
+import * as imm from 'immutable'
+import { ApiCallService } from '../../service/api-call/api-call.service';
+import { TicketApi } from '../../api/api/TicketApi';
+import { TickettagApi } from '../../api/api/TickettagApi';
+import { TicketeventApi } from '../../api/api/TicketeventApi';
+import { ProjectApi } from "../../api/api/ProjectApi";
+import { TicketEventResultJson } from '../../api/model/TicketEventResultJson';
+import { TicketStoryPointResultJson } from '../../api/model/TicketStoryPointResultJson';
+import { TicketTagResultJson } from '../../api/model/TicketTagResultJson';
+import { UserResultJson } from '../../api/model/UserResultJson';
+import { TicketOverviewTag, TicketOverviewUser, TicketOverviewAssTag } from "../ticket-overview/ticket-overview";
+import { TicketFilter } from "../ticket-overview/ticket-filter/ticket-filter";
+import { idListToMap } from '../../util/listmaputils';
 
 @Component({
     selector: 'tt-burn-down-chart',
@@ -13,15 +23,18 @@ import { LocalStorageService } from 'ng2-webstorage';
     styleUrls: ['./burn-down-chart.component.scss']
 })
 export class BurnDownChartComponent implements OnInit {
-
-    private projectId: String;
-    public search = 'TODO';
+    private allTicketTagsForFilter: imm.Map<string, TicketOverviewTag>;
+    private allProjectUsers: imm.Map<string, TicketOverviewUser>;
+    private ticketFilter: TicketFilter = new TicketFilter(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, true);
+    private tickets = new Map<string, TicketStoryPointResultJson>();
+    private projectId: string;
     private FROM_KEY = 'BURNDOWN_FROM';
     private TO_KEY = 'BURNDOWN_TO';
     public toDate = new Date();
     public fromDate = new Date();
     private idealData: number[] = [];
     private actualData: number[] = [];
+    private startData = 0;
     public datePickerOpts = {
         autoclose: true,
         todayBtn: 'linked',
@@ -34,8 +47,8 @@ export class BurnDownChartComponent implements OnInit {
 
     //  lineChart
     public lineChartData: Array<any> = [
-        { data: [], label: 'Actual Task Remaining' },
-        { data: [], label: 'Ideal Tasks Remaining' },
+        { data: [], label: 'Actual Story Points Remaining' },
+        { data: [], label: 'Ideal Story Points Remaining' },
     ];
     public lineChartLabels: Array<any> = [];
     public lineChartOptions: any = {
@@ -86,7 +99,10 @@ export class BurnDownChartComponent implements OnInit {
     constructor(private route: ActivatedRoute,
         private router: Router,
         private apiCallService: ApiCallService,
-        private TicketEventApi: TicketeventApi,
+        private ticketEventApi: TicketeventApi,
+        private ticketTagsApi: TickettagApi,
+        private ticketApi: TicketApi,
+        private projectApi: ProjectApi,
         private localStorageService: LocalStorageService
     ) {
         // Clone Options
@@ -106,6 +122,7 @@ export class BurnDownChartComponent implements OnInit {
             .do(() => { this.loading = true; })
             .switchMap(params => {
                 this.projectId = params['projectId'];
+                this.loadData(this.projectId);
                 return this.refresh();
             })
             .subscribe(() => {
@@ -126,6 +143,14 @@ export class BurnDownChartComponent implements OnInit {
         this.refresh();
         this.localStorageService.store(this.TO_KEY, dateTo);
     }
+
+    public handleUpdateFilter(event: TicketFilter) {
+        // TODO  filter our data
+        this.ticketFilter = event;
+        console.log(this.ticketFilter);
+        this.refresh();
+    }
+
 
     private resetData() {
         this.actualData = [];
@@ -154,19 +179,58 @@ export class BurnDownChartComponent implements OnInit {
         return 10;
     }
 
+    private loadData(projectId: string) {
+        let ticketTagsObs = this.apiCallService
+            .callNoError<TicketTagResultJson[]>(p => this.ticketTagsApi.listTicketTagsUsingGETWithHttpInfo(null, projectId, p))
+            .map(tts => idListToMap(tts).map(tt => new TicketOverviewTag(tt)).toMap());
+        let projectUsersObs = this.apiCallService
+            .callNoError<UserResultJson[]>(p => this.projectApi.listProjectUsersUsingGETWithHttpInfo(projectId, p))
+            .map(users => idListToMap(users).map(user => new TicketOverviewUser(user)).toMap());
+        Observable.zip(ticketTagsObs, projectUsersObs).subscribe(tuple => {
+            this.allTicketTagsForFilter = tuple[0];
+            this.allProjectUsers = tuple[1];
+        });
+    }
+
     private refresh(): Observable<any> {
-        const ticketids = ['00000000-0003-0000-0000-000000000003', '00000000-0003-0000-0000-000000000006'];
-        const rawTicketEventsObs = this.apiCallService.callNoError<TicketEventResultJson[]>(p =>
-            this.TicketEventApi.listTicketStateChangedEventsUsingGETWithHttpInfo(ticketids, p));
-        const o = Observable.zip(rawTicketEventsObs);
-        o.subscribe(
-            tuple => {
-                this.refeshAsync(tuple[0]);
+        let rawTicketStoryPointObs = this.apiCallService
+            .callNoError<TicketStoryPointResultJson[]>(p => this.ticketApi
+                .listTicketsStoryPointsUsingGETWithHttpInfo(this.projectId,
+                this.ticketFilter.ticketNumber, this.ticketFilter.title, this.ticketFilter.tags, this.ticketFilter.users,
+                this.ticketFilter.progressOne, this.ticketFilter.progressTwo, this.ticketFilter.progressGreater,
+                this.ticketFilter.dueDateOne, this.ticketFilter.dueDateTwo, this.ticketFilter.dueDateGreater,
+                this.ticketFilter.storyPointsOne, this.ticketFilter.storyPointsTwo, this.ticketFilter.storyPointsGreater, p));
+        rawTicketStoryPointObs.subscribe(
+            result => {
+                console.log(result);
+                this.startData = 0;
+                this.tickets.clear();
+                result.forEach(
+                    next => {
+                        if (next.open) {
+                            this.startData += next.storyPoints;
+                        }
+                        this.tickets.set(next.id, next);
+                    });
+            },
+            error => { },
+            //Subscription Completed
+            () => {
+                const rawTicketEventsObs = this.apiCallService.callNoError<TicketEventResultJson[]>(p =>
+                    this.ticketEventApi.listTicketStateChangedEventsUsingGETWithHttpInfo(Array.from(this.tickets.keys()), p));
+                const o = Observable.zip(rawTicketEventsObs);
+                o.subscribe(
+                    tuple => {
+                        this.refeshAsync(tuple[0]);
+                    });
+
             });
-        return o.map(it => undefined);
+        return rawTicketStoryPointObs.map(it => undefined);
     }
 
     private refeshAsync(result: TicketEventResultJson[]) {
+console.log(result);
+
         const ticketEvents = new Map<Number, TicketEventResultJson[]>();
         const now = moment().valueOf();
         const fromMoment = moment(this.fromDate).startOf('day');
@@ -174,7 +238,7 @@ export class BurnDownChartComponent implements OnInit {
         let idealData: number;
         let actualData: number;
         let idealDecreasePerDay: number;
-        let startLines = 100;
+        let startLines = this.startData.valueOf();
 
         result.forEach(element => {
             const dateUtc = this.utcRemoveTime(element.time);

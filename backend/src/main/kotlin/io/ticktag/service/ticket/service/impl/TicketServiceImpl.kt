@@ -13,10 +13,7 @@ import io.ticktag.persistence.user.UserRepository
 import io.ticktag.persistence.user.entity.User
 import io.ticktag.service.*
 import io.ticktag.service.command.service.CommandService
-import io.ticktag.service.ticket.dto.CreateTicket
-import io.ticktag.service.ticket.dto.ProgressResult
-import io.ticktag.service.ticket.dto.TicketResult
-import io.ticktag.service.ticket.dto.UpdateTicket
+import io.ticktag.service.ticket.dto.*
 import io.ticktag.service.ticket.service.TicketService
 import io.ticktag.service.ticketassignment.dto.TicketAssignmentResult
 import io.ticktag.service.ticketassignment.services.TicketAssignmentService
@@ -43,6 +40,7 @@ open class TicketServiceImpl @Inject constructor(
         private val commandService: CommandService,
         private val ticketEvents: TicketEventRepository
 ) : TicketService {
+
     companion object {
         private val LOG = LoggerFactory.getLogger(TicketServiceImpl::class.java)
     }
@@ -93,6 +91,39 @@ open class TicketServiceImpl @Inject constructor(
         val content = toResultDtos(page.content)
         return PageImpl(content, pageable, page.totalElements)
     }
+
+    @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
+    override fun listTicketsStoryPoints(project: UUID,
+                                        number: Int?,
+                                        title: String?,
+                                        tags: List<String>?,
+                                        users: List<String>?,
+                                        progressOne: Float?,
+                                        progressTwo: Float?,
+                                        progressGreater: Boolean?,
+                                        dueDateOne: Instant?, dueDateTwo: Instant?,
+                                        dueDateGreater: Boolean?,
+                                        storyPointsOne: Int?,
+                                        storyPointsTwo: Int?,
+                                        storyPointsGreater: Boolean?,
+                                        b: Boolean): List<TicketStoryPointResult> {
+        if (progressOne?.isNaN() ?: false || progressOne?.isInfinite() ?: false) {
+            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueProgressOne"))))
+        }
+        if (progressTwo?.isNaN() ?: false || progressTwo?.isInfinite() ?: false) {
+            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueProgressTwo"))))
+        }
+        if (tags?.contains("") ?: false) {
+            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueInTags"))))
+        }
+        if (users?.contains("") ?: false) {
+            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueInTags"))))
+        }
+        val filter = TicketFilter(project, number, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater,null)
+        val ticketResult = tickets.findAll(filter)
+        return ticketResult.map { t -> TicketStoryPointResult(t.id, t.open, t.storyPoints) }
+    }
+
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listTickets(@P("authProjectId") project: UUID, pageable: Pageable): Page<TicketResult> {
