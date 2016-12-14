@@ -1,15 +1,9 @@
 @import '../../../../style/constants.scss';
 
    .filter-error-label{
+       color: red;
        margin: 0.35em 0 0 0;
        padding-left: 0;
        font-weight: 800;
    }
-   .filter-error-icon{
-       padding-left: 0;
-       margin-left: 0;
-   }
-   .filter-input{
-       padding-right: 0;
-       margin-right: 0;
-   }
+ 
