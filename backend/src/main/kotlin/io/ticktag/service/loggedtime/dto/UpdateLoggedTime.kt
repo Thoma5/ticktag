@@ -1,11 +1,9 @@
 package io.ticktag.service.loggedtime.dto
 
-import io.ticktag.util.CheckDuration
+import io.ticktag.util.PositiveDuration
 import java.time.Duration
 import java.util.*
 
 
-data class UpdateLoggedTime(@field:CheckDuration val time: Duration?,
-                            val categoryId: UUID?) {
-
-}
+data class UpdateLoggedTime(@field:PositiveDuration val time: Duration?,
+                            val categoryId: UUID?)
