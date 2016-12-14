@@ -154,7 +154,7 @@ import { ChartsModule } from 'ng2-charts/ng2-charts';
     MarkdownTextviewReadComponent,
     ProgressBarComponent,
     BurnDownChartComponent,
-    
+
     HumanizeDurationPipe,
     FormatMomentPipe,
     MarkdownToHtmlPipe,
