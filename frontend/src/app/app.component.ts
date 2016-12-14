@@ -179,7 +179,7 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
 
     this.modal.alert()
       .size('lg')
-      .title('Other error')
+      .title('Unknown error')
       .body(bodyHtml)
       .open()
       .then(promise => {
