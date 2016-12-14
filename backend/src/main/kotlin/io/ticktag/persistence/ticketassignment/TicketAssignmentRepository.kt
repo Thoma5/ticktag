@@ -2,6 +2,7 @@ package io.ticktag.persistence.ticketassignment
 
 import io.ticktag.TicktagRepository
 import io.ticktag.persistence.TicktagCrudRepository
+import io.ticktag.persistence.nullIfEmpty
 import io.ticktag.persistence.ticket.entity.AssignedTicketUser
 import io.ticktag.persistence.ticket.entity.AssignedTicketUserKey
 import java.util.*
@@ -28,7 +29,7 @@ open class TicketAssignmentRepositoryImpl @Inject constructor(private val em: En
                         left join fetch u.image
                     where ti.id in :ids
                 """, Array<Any>::class.java)
-                .setParameter("ids", ids)
+                .setParameter("ids", ids.nullIfEmpty())
                 .resultList
                 .groupBy({ it[0] as UUID }, { it[1] as AssignedTicketUser })
     }

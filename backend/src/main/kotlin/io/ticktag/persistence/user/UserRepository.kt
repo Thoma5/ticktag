@@ -3,6 +3,7 @@ package io.ticktag.persistence.user
 import io.ticktag.TicktagRepository
 import io.ticktag.persistence.TicktagCrudRepository
 import io.ticktag.persistence.escapeHqlLike
+import io.ticktag.persistence.nullIfEmpty
 import io.ticktag.persistence.orderByClause
 import io.ticktag.persistence.user.entity.User
 import org.springframework.data.domain.Pageable
@@ -23,11 +24,11 @@ interface UserRepository : TicktagCrudRepository<User, UUID>, UserRepositoryCust
     @Query("select u from User u join u.memberships m join m.project p left join fetch u.image where p.id = :projectId")
     fun findInProject(@Param("projectId") projectId: UUID): List<User>
 
-    @Query("select u from User u left join fetch u.image where u.id in :ids")
-    fun findByIds(@Param("ids") ids: Collection<UUID>): List<User>
 }
 
 interface UserRepositoryCustom {
+    fun findByIds(@Param("ids") ids: Collection<UUID>): List<User>
+
     fun findByProjectIdAndFuzzy(
             projectId: UUID,
             mail: String,
@@ -39,9 +40,15 @@ interface UserRepositoryCustom {
 }
 
 open class UserRepositoryImpl @Inject constructor(private val em: EntityManager) : UserRepositoryCustom {
+    override fun findByIds(ids: Collection<UUID>): List<User> {
+        return em.createQuery("select u from User u left join fetch u.image where u.id in :ids", User::class.java)
+                .setParameter("ids", ids.nullIfEmpty())
+                .resultList
+    }
+
     override fun findCreatorsByTicketIds(ids: Collection<UUID>): Map<UUID, User> {
         return em.createQuery("select t.id, c from Ticket t join t.createdBy c left join fetch c.image where t.id in :ids", Array<Any>::class.java)
-                .setParameter("ids", ids)
+                .setParameter("ids", ids.nullIfEmpty())
                 .resultList
                 .associateBy({ it[0] as UUID }, { it[1] as User })
     }

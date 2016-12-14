@@ -11,6 +11,7 @@ import io.ticktag.restinterface.ticket.controllers.TicketController
 import io.ticktag.restinterface.ticketuserrelation.schema.TicketUserRelationResultJson
 import io.ticktag.service.NotFoundException
 import io.ticktag.service.Principal
+import io.ticktag.service.TicktagValidationException
 import org.hamcrest.CoreMatchers.*
 import org.junit.Assert.assertThat
 import org.junit.Test
@@ -97,6 +98,18 @@ class CommentApiTest : ApiBaseTest() {
             val time = loggedTimeController.getLoggedTimesForId(comment.loggedTimeIds[0])
             assertThat(time.categoryId, `is`(TIMECAT_PROJECT_AOU_AUO_IDS[0]))
             assertThat(time.time, `is`(Duration.ofMinutes(90)))
+        }
+    }
+
+    @Test(expected = TicktagValidationException::class)
+    fun `createComment with an invalid time command fail`() {
+        withUser(ADMIN_ID) { principal ->
+
+            val id = createCommentCmd(principal, CommandJson("time", -90, TIMECAT_CONTENT[0], null, null, null))
+
+            val comment = commentController.getComment(id)
+            assertThat(comment.loggedTimeIds.size, `is`(1))
+            val time = loggedTimeController.getLoggedTimesForId(comment.loggedTimeIds[0])
         }
     }
 
@@ -191,6 +204,18 @@ class CommentApiTest : ApiBaseTest() {
             commentController.getComment(id)
             val ticket = ticketController.getTicket(TEST_TICKET)
             assertThat(ticket.currentEstimatedTime, `is`(Duration.ofMinutes(1234)))
+        }
+    }
+
+
+    @Test(expected = TicktagValidationException::class)
+    fun `createComment with an invalid est command should fail`() {
+        withUser(ADMIN_ID) { principal ->
+
+            val id = createCommentCmd(principal, CommandJson("est", -1234, null, null, null, null))
+
+            commentController.getComment(id)
+            val ticket = ticketController.getTicket(TEST_TICKET)
         }
     }
 
