@@ -15,8 +15,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface CheckDuration {
 
-    String message() default "{org.hibernate.validator.referenceguide.chapter06.CheckCase." +
-            "message}";
+    String message() default "{io.ticktag.checkduration" +
+            "duration_may_not_be_negative}";
 
     Class<?>[] groups() default {};
 
