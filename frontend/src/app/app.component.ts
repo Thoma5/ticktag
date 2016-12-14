@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewContainerRef, OnDestroy, NgZone } from '@angular/core';
 import '../style/app.scss';
-import { AuthService, User } from './service';
+import { AuthService, ApiCallService, User, ErrorHandler } from './service';
 import { Router } from '@angular/router';
 import { Overlay } from 'angular2-modal';
 import { Modal } from 'angular2-modal/plugins/bootstrap';
+import { Response } from '@angular/http';
 import * as $ from 'jquery';
 
 
@@ -12,7 +13,7 @@ import * as $ from 'jquery';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
   private title: string;
   private user: User;
   private directTicketLinkEvent: (eventObject: JQueryEventObject) => any;
@@ -24,8 +25,10 @@ export class AppComponent implements OnInit, OnDestroy {
     private overlay: Overlay,
     private vcRef: ViewContainerRef,
     private router: Router,
-    private zone: NgZone) {
+    private zone: NgZone,
+    private apiCallService: ApiCallService) {
 
+    apiCallService.initErrorHandler(this);
     this.title = 'TickTag';
     overlay.defaultViewContainer = vcRef;
   }
@@ -56,6 +59,15 @@ export class AppComponent implements OnInit, OnDestroy {
     if (this.directTicketLinkEvent) {
       $(document).off('click', 'a.grammar-htmlifyCommands', this.directTicketLinkEvent);
     }
+  }
+
+  onError(resp: any): void {
+    if (resp instanceof Response) {
+
+    } else {
+
+    }
+    console.dir(resp);
   }
 
   logout(): void {

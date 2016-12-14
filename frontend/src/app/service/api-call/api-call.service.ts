@@ -17,6 +17,10 @@ function deepFreeze(object: any) {
   }
 }
 
+export abstract class ErrorHandler {
+  abstract onError(resp: any): void;
+}
+
 export type ApiCallFn = (extraParams: any) => Observable<Response>;
 
 export class ApiCallResult<T> {
@@ -53,7 +57,16 @@ export class ApiCallResult<T> {
 
 @Injectable()
 export class ApiCallService {
+  private errorHandler: ErrorHandler | null = null;
+
   constructor(private authService: AuthService) {
+  }
+
+  initErrorHandler(errorHandler: ErrorHandler) {
+    if (this.errorHandler != null) {
+      throw new Error('Error handler is already registered');
+    }
+    this.errorHandler = errorHandler;
   }
 
   callNoError<T>(apiCall: ApiCallFn, extraHeaders?: {[name: string]: string}): Observable<T> {
@@ -63,6 +76,7 @@ export class ApiCallService {
         if (res.isValid) {
           return res.result;
         } else {
+          this.handleError(res);
           throw res;
         }
       });
@@ -97,11 +111,21 @@ export class ApiCallService {
           if (resp.status === 422) {
             return Observable.of(new ApiCallResult<T>(apiCall, extraHeaders || null, false, resp.json()));
           } else {
+            this.handleError(resp);
             throw resp;
           }
         } else {
+          this.handleError(resp);
           throw resp;
         }
       });
+  }
+
+  private handleError(resp: any) {
+    if (this.errorHandler != null) {
+      this.errorHandler.onError(resp);
+    } else {
+      throw new Error('Unhandled error: ' + resp);
+    }
   }
 }
