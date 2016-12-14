@@ -10,10 +10,12 @@ import org.springframework.core.convert.converter.Converter
 import java.nio.ByteBuffer
 import java.util.*
 
+class InvalidUUIDException(msg: String? = null, cause: Throwable? = null) : RuntimeException(msg, cause)
+
 class PrettyUUIDConverter() : Converter<String, UUID> {
     override fun convert(source: String?): UUID {
-        if (source == null) throw IllegalArgumentException("Source must not be null")
-        return uuidFromString(source) ?: throw IllegalArgumentException("Could not convert pretty uuid")
+        if (source == null) throw InvalidUUIDException("UUID can't be null")
+        return uuidFromString(source) ?: throw InvalidUUIDException("Invalid UUID format")
     }
 }
 

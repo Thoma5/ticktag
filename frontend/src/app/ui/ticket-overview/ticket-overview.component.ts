@@ -18,7 +18,7 @@ import { TicketCreateEvent } from '../ticket-detail/ticket-create/ticket-create.
 import { idListToMap } from '../../util/listmaputils';
 import * as imm from 'immutable';
 import { Observable } from 'rxjs';
-import { showError } from '../../util/error';
+import { showValidationError } from '../../util/error';
 
 @Component({
   selector: 'tt-ticket-overview',
@@ -137,7 +137,8 @@ export class TicketOverviewComponent implements OnInit {
         this.rows = rows;
         this.reloading = false;
       })
-      .map(it => undefined);
+      .map(it => undefined)
+      .catch(err => Observable.empty<void>());
   }
 
   onPage(event: any) {
@@ -208,7 +209,7 @@ export class TicketOverviewComponent implements OnInit {
       .do(() => this.createRunning = false)
       .subscribe(result => {
       if (!result.isValid) {
-        showError(this.modal, result);
+        showValidationError(this.modal, result);
       } else {
         this.creating = false;
         this.refresh(this.projectId).subscribe();
