@@ -1,6 +1,7 @@
 package io.ticktag.integrationtests.restinterface.ticket
 
 import io.ticktag.ADMIN_ID
+import io.ticktag.PROJECT_AOU_AUO_ID
 import io.ticktag.PROJECT_NO_MEMBERS_ID
 import io.ticktag.USER_ID
 import io.ticktag.integrationtests.restinterface.ApiBaseTest
@@ -79,7 +80,7 @@ class TicketApiTest : ApiBaseTest() {
     @Test
     fun `listTicket positiv`() {
         withUser(ADMIN_ID) { principal ->
-            val list = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), null,null,null,null,null,null,null,null,null,null,null,null,null,null, 0, 2, listOf(TicketSort.TITLE_ASC))
+            val list = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), null, null, null, null, null, null, null, null, null, null, null, null, null, null, 0, 2, listOf(TicketSort.TITLE_ASC))
             assertEquals(list.size, 2)
         }
     }
@@ -223,6 +224,75 @@ class TicketApiTest : ApiBaseTest() {
         }
     }
 
+    @Test
+    fun `update with initial not set yet should set it to current`() {
+        withUser(ADMIN_ID) { p ->
+            val create = CreateTicketRequestJson("title", true, null, null, null, null, "description",
+                    PROJECT_AOU_AUO_ID, emptyList(), emptyList(), emptyList(), null, emptyList())
+            val ticket = ticketController.createTicket(create, p).body!!
+
+            val req = UpdateTicketRequestJson(null, null, null, null, Duration.ofDays(2), null, null, null)
+            val result = ticketController.updateTicket(req, ticket.id, p)
+
+            assertEquals(result.initialEstimatedTime, req.currentEstimatedTime)
+            assertEquals(result.currentEstimatedTime, req.currentEstimatedTime)
+        }
+    }
+
+    @Test
+    fun `update with current not set yet should set it to initial`() {
+        withUser(ADMIN_ID) { p ->
+            val create = CreateTicketRequestJson("title", true, null, null, null, null, "description",
+                    PROJECT_AOU_AUO_ID, emptyList(), emptyList(), emptyList(), null, emptyList())
+            val ticket = ticketController.createTicket(create, p).body!!
+
+            val req = UpdateTicketRequestJson(null, null, null, Duration.ofDays(2), null, null, null, null)
+            val result = ticketController.updateTicket(req, ticket.id, p)
+
+            assertEquals(result.initialEstimatedTime, req.initialEstimatedTime)
+            assertEquals(result.currentEstimatedTime, req.initialEstimatedTime)
+        }
+    }
+
+    @Test
+    fun `update with initial already set should not changed it to current`() {
+        withUser(ADMIN_ID) { p ->
+            val create = CreateTicketRequestJson("title", true, null, Duration.ofDays(1), null, null, "description",
+                    PROJECT_AOU_AUO_ID, emptyList(), emptyList(), emptyList(), null, emptyList())
+            val ticket = ticketController.createTicket(create, p).body!!
+
+            val req = UpdateTicketRequestJson(null, null, null, null, Duration.ofDays(2), null, null, null)
+            val result = ticketController.updateTicket(req, ticket.id, p)
+
+            assertEquals(result.initialEstimatedTime, create.initialEstimatedTime)
+            assertEquals(result.currentEstimatedTime, req.currentEstimatedTime)
+        }
+    }
+
+    @Test
+    fun `create with only initial should set current to same value`() {
+        withUser(ADMIN_ID) { p ->
+            val create = CreateTicketRequestJson("title", true, null, Duration.ofDays(1), null, null, "description",
+                    PROJECT_AOU_AUO_ID, emptyList(), emptyList(), emptyList(), null, emptyList())
+            val result = ticketController.createTicket(create, p).body!!
+
+            assertEquals(result.initialEstimatedTime, create.initialEstimatedTime)
+            assertEquals(result.currentEstimatedTime, create.initialEstimatedTime)
+        }
+    }
+
+    @Test
+    fun `create with only current should set initial to same value`() {
+        withUser(ADMIN_ID) { p ->
+            val create = CreateTicketRequestJson("title", true, null, null, Duration.ofDays(1), null, "description",
+                    PROJECT_AOU_AUO_ID, emptyList(), emptyList(), emptyList(), null, emptyList())
+            val result = ticketController.createTicket(create, p).body!!
+
+            assertEquals(result.initialEstimatedTime, create.currentEstimatedTime)
+            assertEquals(result.currentEstimatedTime, create.currentEstimatedTime)
+        }
+    }
+
 
     @Test(expected = TicktagValidationException::class)
     fun `createTicket negative because of Parent and SubTasks`() {
@@ -283,7 +353,7 @@ class TicketApiTest : ApiBaseTest() {
     @Test(expected = AccessDeniedException::class)
     fun `listTicket Permission negativ`() {
         withUser(USER_ID) { principal ->
-            ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000004"), null,null,null,null,null,null,null,null,null,null,null,null,null,null, 0, 2, listOf(TicketSort.STORY_POINTS_ASC))
+            ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000004"), null, null, null, null, null, null, null, null, null, null, null, null, null, null, 0, 2, listOf(TicketSort.STORY_POINTS_ASC))
         }
     }
 
@@ -298,8 +368,8 @@ class TicketApiTest : ApiBaseTest() {
     @Test
     fun `listTicket test page number positiv`() {
         withUser(ADMIN_ID) { principal ->
-            val list1 = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), null,null,null,null,null,null,null,null,null,null,null,null,null,null, 0, 2, listOf(TicketSort.TITLE_ASC))
-            val list2 = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), null,null,null,null,null,null,null,null,null,null,null,null,null,null, 1, 2, listOf(TicketSort.TITLE_ASC))
+            val list1 = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), null, null, null, null, null, null, null, null, null, null, null, null, null, null, 0, 2, listOf(TicketSort.TITLE_ASC))
+            val list2 = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, 2, listOf(TicketSort.TITLE_ASC))
 
             assertEquals(list1.contains(list2.elementAt(0)), false)
             assertEquals(list1.contains(list2.elementAt(1)), false)
@@ -310,7 +380,7 @@ class TicketApiTest : ApiBaseTest() {
     @Test
     fun `listTicket test sorting Number positiv`() {
         withUser(ADMIN_ID) { principal ->
-            val list1 = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), null,null,null,null,null,null,null,null,null,null,null,null,null,null, 0, 50, listOf(TicketSort.NUMBER_ASC))
+            val list1 = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), null, null, null, null, null, null, null, null, null, null, null, null, null, null, 0, 50, listOf(TicketSort.NUMBER_ASC))
             if (list1.content.size <= 2) {
                 fail()
             }
@@ -326,7 +396,7 @@ class TicketApiTest : ApiBaseTest() {
     @Test
     fun `listTicket test sorting dueDate positiv`() {
         withUser(ADMIN_ID) { principal ->
-            val list1 = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), null,null,null,null,null,null,null,null,null,null,null,null,null,null, 0, 50, listOf(TicketSort.DUE_DATE_ASC))
+            val list1 = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), null, null, null, null, null, null, null, null, null, null, null, null, null, null, 0, 50, listOf(TicketSort.DUE_DATE_ASC))
             if (list1.content.size <= 2) {
                 fail()
             }
@@ -347,7 +417,7 @@ class TicketApiTest : ApiBaseTest() {
     @Test
     fun `listTicket test sorting title positiv`() {
         withUser(ADMIN_ID) { principal ->
-            val list1 = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), null,null,null,null,null,null,null,null,null,null,null,null,null,null, 0, 50, listOf(TicketSort.TITLE_ASC))
+            val list1 = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), null, null, null, null, null, null, null, null, null, null, null, null, null, null, 0, 50, listOf(TicketSort.TITLE_ASC))
             if (list1.content.size <= 2) {
                 fail()
             }
@@ -363,7 +433,7 @@ class TicketApiTest : ApiBaseTest() {
     @Test
     fun `listTicket test sorting storypoints positiv`() {
         withUser(ADMIN_ID) { principal ->
-            val list1 = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), null,null,null,null,null,null,null,null,null,null,null,null,null,null, 0, 50, listOf(TicketSort.STORY_POINTS_ASC))
+            val list1 = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), null, null, null, null, null, null, null, null, null, null, null, null, null, null, 0, 50, listOf(TicketSort.STORY_POINTS_ASC))
             if (list1.content.size <= 2) {
                 fail()
             }

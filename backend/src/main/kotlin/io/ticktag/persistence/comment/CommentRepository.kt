@@ -2,6 +2,7 @@ package io.ticktag.persistence.comment
 
 import io.ticktag.TicktagRepository
 import io.ticktag.persistence.TicktagCrudRepository
+import io.ticktag.persistence.nullIfEmpty
 import io.ticktag.persistence.ticket.entity.Comment
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -27,7 +28,7 @@ open class CommentRepositoryImpl @Inject constructor(private val em: EntityManag
             select t.id, c from Comment c
             join c.ticket t
             where t.id in :ids and t.descriptionComment <> c""", Array<Any>::class.java)
-                .setParameter("ids", ids)
+                .setParameter("ids", ids.nullIfEmpty())
                 .resultList
                 .groupBy( { it[0] as UUID}, { it[1] as Comment })
     }
@@ -37,7 +38,7 @@ open class CommentRepositoryImpl @Inject constructor(private val em: EntityManag
             select t.id, c from Ticket t
             join t.descriptionComment c
             where t.id in :ids""", Array<Any>::class.java)
-                .setParameter("ids", ids)
+                .setParameter("ids", ids.nullIfEmpty())
                 .resultList
                 .associateBy( { it[0] as UUID}, { it[1] as Comment })
     }

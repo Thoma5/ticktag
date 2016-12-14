@@ -26,6 +26,7 @@ import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
+import java.time.Duration
 import java.time.Instant
 import java.util.*
 import javax.inject.Inject
@@ -143,7 +144,8 @@ open class TicketServiceImpl @Inject constructor(
         if (parentTicket?.parentTicket != null) {
             throw TicktagValidationException(listOf(ValidationError("createTicket", ValidationErrorDetail.Other("nonestedsubtickets"))))
         }
-        val newTicket = Ticket.create(number, createTime, title, open, storyPoints, initialEstimatedTime, currentEstimatedTime, dueDate, parentTicket, project, user)
+        val newTicket = Ticket.create(number, createTime, title, open, storyPoints, null, null, dueDate, parentTicket, project, user)
+        setEstimations(newTicket, initialEstimatedTime, currentEstimatedTime)
         tickets.insert(newTicket)
 
         //Comment
@@ -198,16 +200,9 @@ open class TicketServiceImpl @Inject constructor(
                 ticketEvents.insert(TicketEventStoryPointsChanged.create(ticket, user, ticket.storyPoints, updateTicket.storyPoints))
             ticket.storyPoints = updateTicket.storyPoints
         }
-        if (updateTicket.initialEstimatedTime != null) {
-            if (ticket.initialEstimatedTime != updateTicket.initialEstimatedTime)
-                ticketEvents.insert(TicketEventInitialEstimatedTimeChanged.create(ticket, user, ticket.initialEstimatedTime, updateTicket.initialEstimatedTime))
-            ticket.initialEstimatedTime = updateTicket.initialEstimatedTime
-        }
-        if (updateTicket.currentEstimatedTime != null) {
-            if (ticket.currentEstimatedTime != updateTicket.currentEstimatedTime)
-                ticketEvents.insert(TicketEventCurrentEstimatedTimeChanged.create(ticket, user, ticket.currentEstimatedTime, updateTicket.currentEstimatedTime))
-            ticket.currentEstimatedTime = updateTicket.currentEstimatedTime
-        }
+
+        setEstimationsWithEvents(ticket, updateTicket.initialEstimatedTime, updateTicket.currentEstimatedTime, user)
+
         if (updateTicket.dueDate != null) {
             if (ticket.dueDate != updateTicket.dueDate)
                 ticketEvents.insert(TicketEventDueDateChanged.create(ticket, user, ticket.dueDate, updateTicket.dueDate))
@@ -241,6 +236,41 @@ open class TicketServiceImpl @Inject constructor(
     @PreAuthorize(AuthExpr.WRITE_TICKET)
     override fun deleteTicket(@P("authTicketId") id: UUID) {
         tickets.delete(tickets.findOne(id) ?: throw NotFoundException())
+    }
+
+    private fun setEstimationsWithEvents(ticket: Ticket, initial: Duration?, current: Duration?, user: User) {
+        val prevInitial = ticket.initialEstimatedTime
+        val prevCurrent = ticket.currentEstimatedTime
+
+        setEstimations(ticket, initial, current)
+
+        if (ticket.initialEstimatedTime != prevInitial) {
+            ticketEvents.insert(TicketEventInitialEstimatedTimeChanged.create(ticket, user, prevInitial, ticket.initialEstimatedTime))
+        }
+        if (ticket.currentEstimatedTime != prevCurrent) {
+            ticketEvents.insert(TicketEventCurrentEstimatedTimeChanged.create(ticket, user, prevCurrent, ticket.currentEstimatedTime))
+        }
+    }
+
+    private fun setEstimations(ticket: Ticket, initial: Duration?, current: Duration?) {
+        // TODO needs distinction of "clear field" vs "missing field"
+        val estimation = current ?: initial
+
+        if (initial != null) {
+            ticket.initialEstimatedTime = initial
+        }
+        if (current != null) {
+            ticket.currentEstimatedTime = current
+        }
+
+        if (estimation != null) {
+            if (ticket.initialEstimatedTime == null) {
+                ticket.initialEstimatedTime = estimation
+            }
+            if (ticket.currentEstimatedTime == null) {
+                ticket.currentEstimatedTime = estimation
+            }
+        }
     }
 
     private fun toResultDtos(ts: Collection<Ticket>): List<TicketResult> {

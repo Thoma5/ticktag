@@ -38,7 +38,7 @@ data class TicketFilter(val project: UUID, val number: Int?, val title: String?,
             val join = root.join<Ticket, TicketTag>("tags")
             val ticketTagPath = root.get<TicketTag>("tags")
             query.multiselect(ticketTagPath)
-            query.groupBy(root.get<UUID>("id"), root.get<Progress>("totalProgress").get<Float>("totalProgress"))
+            query.groupBy(root.get<UUID>("id"), root.get<Progress>("progress").get<Float>("totalProgress"))
             query.having(cb.greaterThanOrEqualTo(cb.count(join.get<TicketTag>("normalizedName")), tags.size.toLong()))
             val ttags = join.get<TicketTag>("normalizedName")
             predicates.add(cb.isTrue(ttags.`in`(tags)))
@@ -53,15 +53,15 @@ data class TicketFilter(val project: UUID, val number: Int?, val title: String?,
         }
         if (progressOne != null) {
             if (progressTwo != null) {
-                predicates.add(cb.between(root.get<Progress>("totalProgress").get<Float>("totalProgress"), progressOne, progressTwo))
+                predicates.add(cb.between(root.get<Progress>("progress").get<Float>("totalProgress"), progressOne, progressTwo))
             } else if (progressGreater != null) {
                 if (progressGreater == true) {
-                    predicates.add(cb.greaterThan(root.get<Progress>("totalProgress").get<Float>("totalProgress"), progressOne))
+                    predicates.add(cb.greaterThan(root.get<Progress>("progress").get<Float>("totalProgress"), progressOne))
                 } else {
-                    predicates.add(cb.lessThan(root.get<Progress>("totalProgress").get<Float>("totalProgress"), progressOne))
+                    predicates.add(cb.lessThan(root.get<Progress>("progress").get<Float>("totalProgress"), progressOne))
                 }
             } else {
-                predicates.add(cb.equal(root.get<Progress>("totalProgress").get<List<String>>("totalProgress"), progressOne))
+                predicates.add(cb.equal(root.get<Progress>("progress").get<List<String>>("totalProgress"), progressOne))
             }
         }
         if (dueDateOne != null) {
