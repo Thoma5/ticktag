@@ -10,4 +10,5 @@ import * as imm from 'immutable';
 export class TicketCommentComponent {
   @Input() comment: TicketDetailComment;
   @Input() userTags: imm.List<TicketDetailAssTag>;
+  @Input() projectId: string;
 }

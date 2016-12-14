@@ -14,14 +14,16 @@ import javax.persistence.EntityManager
 
 @TicktagRepository
 interface UserRepository : TicktagCrudRepository<User, UUID>, UserRepositoryCustom {
-    fun findByMailIgnoreCase(mail: String): User?
+    @Query("select u from User u left join fetch u.image where lower(u.mail) = lower(:mail)")
+    fun findByMailIgnoreCase(@Param("mail") mail: String): User?
 
-    fun findByUsername(username: String): User?
+    @Query("select u from User u left join fetch u.image where u.username = :username")
+    fun findByUsername(@Param("username") username: String): User?
 
-    @Query("select u from User u join fetch u.memberships m join fetch m.project where u.id = :id")
-    fun findOneWithProjects(@Param("id") id: UUID): User?
+    @Query("select u from User u join u.memberships m join m.project p left join fetch u.image where p.id = :projectId")
+    fun findInProject(@Param("projectId") projectId: UUID): List<User>
 
-    @Query("select u from User u where u.id in :ids")
+    @Query("select u from User u left join fetch u.image where u.id in :ids")
     fun findByIds(@Param("ids") ids: Collection<UUID>): List<User>
 }
 
@@ -32,14 +34,24 @@ interface UserRepositoryCustom {
             name: String,
             username: String,
             pageable: Pageable): List<User>
+
+    fun findCreatorsByTicketIds(ids: Collection<UUID>): Map<UUID, User>
 }
 
 open class UserRepositoryImpl @Inject constructor(private val em: EntityManager) : UserRepositoryCustom {
+    override fun findCreatorsByTicketIds(ids: Collection<UUID>): Map<UUID, User> {
+        return em.createQuery("select t.id, c from Ticket t join t.createdBy c left join fetch c.image where t.id in :ids", Array<Any>::class.java)
+                .setParameter("ids", ids)
+                .resultList
+                .associateBy({ it[0] as UUID }, { it[1] as User })
+    }
+
     override fun findByProjectIdAndFuzzy(projectId: UUID, mail: String, name: String, username: String, pageable: Pageable): List<User> {
         return em.createQuery("""
             select u
             from User u
             join u.memberships m
+            left join fetch u.image
             where m.project.id = :project
             and (
                 upper(mail) like '%'||upper(:mail)||'%' escape '!'

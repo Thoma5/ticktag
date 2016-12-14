@@ -3,7 +3,7 @@ import {
   TicketDetail, TicketDetailTag, TicketDetailAssTag, TicketDetailTimeCategory
 } from '../ticket-detail';
 import * as imm from 'immutable';
-import { CommentTextviewSaveEvent } from '../command-textview/command-textview.component';
+import { CommandTextviewSaveEvent } from '../../../util/command-textview/command-textview.component';
 import * as grammar from '../../../service/command/grammar';
 import { Observable } from 'rxjs';
 
@@ -20,9 +20,9 @@ export class TicketCommentInputComponent {
   @Input() working = false;
   @Input() resetEventObservable: Observable<string> = null;
 
-  @Output() commentCreate = new EventEmitter<CommentTextviewSaveEvent>();
+  @Output() commentCreate = new EventEmitter<CommandTextviewSaveEvent>();
 
-  content: CommentTextviewSaveEvent = { commands: imm.List<grammar.Cmd>(), text: '' };
+  content: CommandTextviewSaveEvent = { commands: imm.List<grammar.Cmd>(), text: '' };
 
   onSubmit(): void {
     if (this.content != null && !this.working) {

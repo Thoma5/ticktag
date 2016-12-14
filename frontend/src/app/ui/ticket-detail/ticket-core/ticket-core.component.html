@@ -3,14 +3,6 @@
         <img src='/img/checkmark_circle.svg' />
     </div>
     <div class='card-content'>
-        <div class='storypoints'>
-          <div class='ribbon'>
-            <div class='ribbon-content'>
-              <tt-ticket-storypoints [points]='storypoints' (pointsChange)='storypointsChange.emit($event)' [transient]="storypointsTransient">
-              </tt-ticket-storypoints>
-            </div>
-          </div>
-        </div>
         <div class='header-row'>
             <h3 class='title'>
                 <div class='title-container'>
@@ -47,18 +39,24 @@
         </div>
         <div class='section-header'>Status</div>
         <div class='status'>
-            <div class='initial-estimation'>
-                Initial estimation: <tt-edit-textview-time [content]="initialEstimatedTime" [transient]="initialEstimatedTimeTransient" (contentChange)="initialEstimatedTimeChange.emit($event)"></tt-edit-textview-time>
+            <div class="storypoints">
+              <span>Storypoints: </span>
+              <tt-edit-textview-posnumber [content]="storypoints" (contentChange)="storypointsChange.emit($event)" [transient]="storypointsTransient"></tt-edit-textview-posnumber>
             </div>
-            <div class='current-estimation'>
-                Current estimation: <tt-edit-textview-time [content]="currentEstimatedTime" [transient]="currentEstimatedTimeTransient" (contentChange)="currentEstimatedTimeChange.emit($event)"></tt-edit-textview-time>
-            </div>
-            <div class='ticket-progress'>
-                <span>Progress: </span>
-                <span>{{ ticket.progress.percent | ttPercent }}</span>
-            </div>
-            <div class='due-date'>
-                Due date: <tt-edit-textview-datetime [content]="dueDate" [transient]="dueDateTransient" (contentChange)="dueDateChange.emit($event)"></tt-edit-textview-datetime>
+            <div class="status-time">
+              <div class='initial-estimation'>
+                  Initial estimation: <tt-edit-textview-time [content]="initialEstimatedTime" [transient]="initialEstimatedTimeTransient" (contentChange)="initialEstimatedTimeChange.emit($event)"></tt-edit-textview-time>
+              </div>
+              <div class='current-estimation'>
+                  Current estimation: <tt-edit-textview-time [content]="currentEstimatedTime" [transient]="currentEstimatedTimeTransient" (contentChange)="currentEstimatedTimeChange.emit($event)"></tt-edit-textview-time>
+              </div>
+              <div class='ticket-progress'>
+                  <span>Progress: </span>
+                  <span>{{ ticket.progress.percent | ttPercent }}</span>
+              </div>
+              <div class='due-date'>
+                  Due date: <tt-edit-textview-datetime [content]="dueDate" [transient]="dueDateTransient" (contentChange)="dueDateChange.emit($event)"></tt-edit-textview-datetime>
+              </div>
             </div>
         </div>
         <div *ngIf="ticket.currentEstimatedTime != null" class='status-progress'>
@@ -75,10 +73,18 @@
         </div>
         <div class='description-container'>
             <div class='description-wrapper' *ngIf="!editingDescription">
-                <tt-markdown-textview-read [content]="description"></tt-markdown-textview-read>
+                <tt-markdown-textview-read [content]="description" [commands]="true" [projectId]="ticket.projectId"></tt-markdown-textview-read>
             </div>
             <div class='description-edit-wrapper' *ngIf="editingDescription">
-                <tt-command-textview [noCommands]="true" [projectId]="ticket.projectId" [resetEventObservable]="descriptionResetSubject" (contentChange)="onDescriptionChange($event)"></tt-command-textview>
+                <div class="command-textview">
+                  <tt-command-textview
+                    [noCommands]="true"
+                    [projectId]="ticket.projectId"
+                    [resetEventObservable]="descriptionResetSubject"
+                    (contentChange)="onDescriptionChange($event)"
+                    (save)="onSaveDescription()"
+                  ></tt-command-textview>
+                </div>
                 <div class="under">
                     <div class="help">
                         <tt-command-description
