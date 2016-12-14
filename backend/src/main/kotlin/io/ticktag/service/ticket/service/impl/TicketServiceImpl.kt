@@ -186,40 +186,34 @@ open class TicketServiceImpl @Inject constructor(
 
 
         if (updateTicket.title != null) {
-            if (ticket.title != updateTicket.title)
-                ticketEvents.insert(TicketEventTitleChanged.create(ticket, user, ticket.title, updateTicket.title))
-            ticket.title = updateTicket.title
+            if (ticket.title != updateTicket.title.value)
+                ticketEvents.insert(TicketEventTitleChanged.create(ticket, user, ticket.title, updateTicket.title.value))
+            ticket.title = updateTicket.title.value
         }
         if (updateTicket.open != null) {
-            if (ticket.open != updateTicket.open)
-                ticketEvents.insert(TicketEventStateChanged.create(ticket, user, ticket.open, updateTicket.open))
-            ticket.open = updateTicket.open
+            if (ticket.open != updateTicket.open.value)
+                ticketEvents.insert(TicketEventStateChanged.create(ticket, user, ticket.open, updateTicket.open.value))
+            ticket.open = updateTicket.open.value
         }
-        if (updateTicket.storyPoints != null || updateTicket.storyPointsNull) {
-            if (ticket.storyPoints != updateTicket.storyPoints)
-                ticketEvents.insert(TicketEventStoryPointsChanged.create(ticket, user, ticket.storyPoints, updateTicket.storyPoints))
-            ticket.storyPoints = updateTicket.storyPoints
+        if (updateTicket.storyPoints != null) {
+            if (ticket.storyPoints != updateTicket.storyPoints.value)
+                ticketEvents.insert(TicketEventStoryPointsChanged.create(ticket, user, ticket.storyPoints, updateTicket.storyPoints.value))
+            ticket.storyPoints = updateTicket.storyPoints.value
         }
 
-        var newInitialEstimatedTime = ticket.initialEstimatedTime
-        if (updateTicket.initialEstimatedTime != null || updateTicket.initialEstimatedTimeNull) {
-            newInitialEstimatedTime = updateTicket.initialEstimatedTime
-        }
-        var newCurrentEstimatedTime = ticket.currentEstimatedTime
-        if (updateTicket.currentEstimatedTime != null || updateTicket.currentEstimatedTimeNull) {
-            newCurrentEstimatedTime = updateTicket.currentEstimatedTime
-        }
+        val newInitialEstimatedTime = updateTicket.initialEstimatedTime?.value ?: ticket.initialEstimatedTime
+        val newCurrentEstimatedTime = updateTicket.currentEstimatedTime?.value ?: ticket.currentEstimatedTime
         setEstimationsWithEvents(ticket, newInitialEstimatedTime, newCurrentEstimatedTime, user)
 
-        if (updateTicket.dueDate != null || updateTicket.dueDateNull) {
-            if (ticket.dueDate != updateTicket.dueDate)
-                ticketEvents.insert(TicketEventDueDateChanged.create(ticket, user, ticket.dueDate, updateTicket.dueDate))
-            ticket.dueDate = updateTicket.dueDate
+        if (updateTicket.dueDate != null) {
+            if (ticket.dueDate != updateTicket.dueDate.value)
+                ticketEvents.insert(TicketEventDueDateChanged.create(ticket, user, ticket.dueDate, updateTicket.dueDate.value))
+            ticket.dueDate = updateTicket.dueDate.value
         }
 
-        if (updateTicket.parentTicket != null || updateTicket.parentTicketNull) {
-            val parentTicket = if (updateTicket.parentTicket != null) {
-                val parentTicket = tickets.findOne(updateTicket.parentTicket) ?: throw NotFoundException()
+        if (updateTicket.parentTicket != null) {
+            val parentTicket = if (updateTicket.parentTicket.value != null) {
+                val parentTicket = tickets.findOne(updateTicket.parentTicket.value) ?: throw NotFoundException()
 
                 if (parentTicket.parentTicket != null) {
                     throw TicktagValidationException(listOf(ValidationError("updateTicket", ValidationErrorDetail.Other("nonestedsubtickets"))))
@@ -239,9 +233,9 @@ open class TicketServiceImpl @Inject constructor(
         }
         //Comment
         if (updateTicket.description != null) {
-            if (ticket.descriptionComment.text != updateTicket.description)
-                ticketEvents.insert(TicketEventCommentTextChanged.create(ticket, user, ticket.descriptionComment, ticket.descriptionComment.text, updateTicket.description))
-            ticket.descriptionComment.text = updateTicket.description
+            if (ticket.descriptionComment.text != updateTicket.description.value)
+                ticketEvents.insert(TicketEventCommentTextChanged.create(ticket, user, ticket.descriptionComment, ticket.descriptionComment.text, updateTicket.description.value))
+            ticket.descriptionComment.text = updateTicket.description.value
         }
 
         return toResultDto(ticket)

@@ -19,18 +19,13 @@ data class UpdateTicketRequestJson(
 ) {
     fun toUpdateTicket() =
             UpdateTicket(
-                    title = title?.value,
-                    open = open?.value,
-                    storyPoints = storyPoints?.value,
-                    storyPointsNull = storyPoints != null && storyPoints.value == null,
-                    currentEstimatedTime = currentEstimatedTime?.value,
-                    currentEstimatedTimeNull = currentEstimatedTime != null && currentEstimatedTime.value == null,
-                    initialEstimatedTime = initialEstimatedTime?.value,
-                    initialEstimatedTimeNull = initialEstimatedTime != null && initialEstimatedTime.value == null,
-                    dueDate = dueDate?.value,
-                    dueDateNull = dueDate != null && dueDate.value == null,
-                    description = description?.value,
-                    parentTicket = parentTicketId?.value,
-                    parentTicketNull = parentTicketId != null && parentTicketId.value == null
+                    title = title?.toUpdateValue(),
+                    open = open?.toUpdateValue(),
+                    storyPoints = storyPoints?.toUpdateValue(),
+                    currentEstimatedTime = currentEstimatedTime?.toUpdateValue(),
+                    initialEstimatedTime = initialEstimatedTime?.toUpdateValue(),
+                    dueDate = dueDate?.toUpdateValue(),
+                    description = description?.toUpdateValue(),
+                    parentTicket = parentTicketId?.toUpdateValue()
             )
 }

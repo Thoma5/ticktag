@@ -1,6 +1,8 @@
 package io.ticktag.service.ticket.dto
 
+import io.ticktag.service.UpdateValue
 import io.ticktag.util.PositiveDuration
+import org.hibernate.validator.valuehandling.UnwrapValidatedValue
 import java.time.Duration
 import java.time.Instant
 import java.util.*
@@ -8,24 +10,32 @@ import javax.validation.constraints.DecimalMin
 import javax.validation.constraints.Size
 
 data class UpdateTicket(
-        @field:Size(min = 1, max = 100) val title: String?,
+        @field:Size(min = 1, max = 100)
+        @field:UnwrapValidatedValue
+        val title: UpdateValue<String>?,
 
-        val open: Boolean?,
+        @field:UnwrapValidatedValue
+        val open: UpdateValue<Boolean>?,
 
-        @field:DecimalMin("0") val storyPoints: Int?,
-        val storyPointsNull: Boolean,
+        @field:DecimalMin("0")
+        @field:UnwrapValidatedValue
+        val storyPoints: UpdateValue<Int?>?,
 
-        @field:PositiveDuration val initialEstimatedTime: Duration?,
-        val initialEstimatedTimeNull: Boolean,
+        @field:PositiveDuration
+        @field:UnwrapValidatedValue
+        val initialEstimatedTime: UpdateValue<Duration?>?,
 
-        @field:PositiveDuration val currentEstimatedTime: Duration?,
-        val currentEstimatedTimeNull: Boolean,
+        @field:PositiveDuration
+        @field:UnwrapValidatedValue
+        val currentEstimatedTime: UpdateValue<Duration?>?,
 
-        val dueDate: Instant?,
-        val dueDateNull: Boolean,
+        @field:UnwrapValidatedValue
+        val dueDate: UpdateValue<Instant?>?,
 
-        @field:Size(min = 0, max = 5000) val description: String?,
+        @field:Size(min = 0, max = 50000)
+        @field:UnwrapValidatedValue
+        val description: UpdateValue<String>?,
 
-        val parentTicket: UUID?,
-        val parentTicketNull: Boolean
+        @field:UnwrapValidatedValue
+        val parentTicket: UpdateValue<UUID?>?
 )
