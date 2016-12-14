@@ -133,8 +133,8 @@ open class TicketServiceImpl @Inject constructor(
         val title = createTicket.title
         val open: Boolean = createTicket.open
         val storyPoints = createTicket.storyPoints
-        val initialEstimatedTime = createTicket.initialEstimatedTime
-        val currentEstimatedTime = createTicket.currentEstimatedTime
+        val initialEstimatedTime = createTicket.initialEstimatedTime ?: createTicket.currentEstimatedTime
+        val currentEstimatedTime = createTicket.currentEstimatedTime ?: createTicket.initialEstimatedTime
         val dueDate = createTicket.dueDate
         val project = projects.findOne(createTicket.projectID) ?: throw NotFoundException()
         val user = users.findOne(principal.id) ?: throw NotFoundException()

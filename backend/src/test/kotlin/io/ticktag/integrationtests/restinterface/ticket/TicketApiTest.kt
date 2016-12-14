@@ -223,17 +223,17 @@ class TicketApiTest : ApiBaseTest() {
     }
 
     @Test
-    fun `update with initial not set yet should set it to current`() {
+    fun `update with initial not set should clear estimated and initial`() {
         withUser(ADMIN_ID) { p ->
             val create = CreateTicketRequestJson("title", true, null, null, null, null, "description",
                     PROJECT_AOU_AUO_ID, emptyList(), emptyList(), emptyList(), null, emptyList())
             val ticket = ticketController.createTicket(create, p).body!!
 
-            val req = UpdateTicketRequestJson(null, null, null, null, Duration.ofDays(2), null, null, null)
+            val req = UpdateTicketRequestJson(null, null, null, null, UpdateTicketRequestNullableValueJson(Duration.ofDays(2)), null, null, null)
             val result = ticketController.updateTicket(req, ticket.id, p)
 
-            assertEquals(result.initialEstimatedTime, req.currentEstimatedTime)
-            assertEquals(result.currentEstimatedTime, req.currentEstimatedTime)
+            assertNull(result.initialEstimatedTime)
+            assertNull(result.currentEstimatedTime)
         }
     }
 
@@ -244,11 +244,11 @@ class TicketApiTest : ApiBaseTest() {
                     PROJECT_AOU_AUO_ID, emptyList(), emptyList(), emptyList(), null, emptyList())
             val ticket = ticketController.createTicket(create, p).body!!
 
-            val req = UpdateTicketRequestJson(null, null, null, Duration.ofDays(2), null, null, null, null)
+            val req = UpdateTicketRequestJson(null, null, null, UpdateTicketRequestNullableValueJson(Duration.ofDays(2)), null, null, null, null)
             val result = ticketController.updateTicket(req, ticket.id, p)
 
-            assertEquals(result.initialEstimatedTime, req.initialEstimatedTime)
-            assertEquals(result.currentEstimatedTime, req.initialEstimatedTime)
+            assertEquals(result.initialEstimatedTime, req.initialEstimatedTime!!.value)
+            assertEquals(result.currentEstimatedTime, req.initialEstimatedTime!!.value)
         }
     }
 
@@ -259,11 +259,11 @@ class TicketApiTest : ApiBaseTest() {
                     PROJECT_AOU_AUO_ID, emptyList(), emptyList(), emptyList(), null, emptyList())
             val ticket = ticketController.createTicket(create, p).body!!
 
-            val req = UpdateTicketRequestJson(null, null, null, null, Duration.ofDays(2), null, null, null)
+            val req = UpdateTicketRequestJson(null, null, null, null, UpdateTicketRequestNullableValueJson(Duration.ofDays(2)), null, null, null)
             val result = ticketController.updateTicket(req, ticket.id, p)
 
             assertEquals(result.initialEstimatedTime, create.initialEstimatedTime)
-            assertEquals(result.currentEstimatedTime, req.currentEstimatedTime)
+            assertEquals(result.currentEstimatedTime, req.currentEstimatedTime!!.value)
         }
     }
 
