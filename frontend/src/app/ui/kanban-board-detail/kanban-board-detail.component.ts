@@ -20,9 +20,9 @@ import {DragulaService} from 'ng2-dragula';
 import {UpdateKanbanColumnJson} from '../../api/model/UpdateKanbanColumnJson';
 import {TaskQueue} from '../../util/task-queue';
 import {TickettagrelationApi} from '../../api/api/TickettagrelationApi';
-import {TicketOverviewTag, TicketOverviewUser, TicketOverviewAssTag} from "../ticket-overview/ticket-overview";
-import {ProjectApi} from "../../api/api/ProjectApi";
-import {TicketFilter} from "../ticket-overview/ticket-filter/ticket-filter";
+import {TicketOverviewTag, TicketOverviewUser} from '../ticket-overview/ticket-overview';
+import {ProjectApi} from '../../api/api/ProjectApi';
+import {TicketFilter} from '../ticket-overview/ticket-filter/ticket-filter';
 
 @Component({
   selector: 'tt-kanban-board-detail',
@@ -127,7 +127,8 @@ export class KanbanBoardDetailComponent implements OnInit {
       .callNoError<KanbanBoardReslutJson>(p => this.kanbanBoardApi.getKanbanBoardUsingGETWithHttpInfo(boardId, p));
 
     let kanbanColumnObs = this.apiCallService
-      .callNoError<KanbanColumnResultJson[]>(p => this.kanbanBoardApi.listKanbanColumnsUsingGETWithHttpInfo(boardId, this.ticketFilter.ticketNumber, this.ticketFilter.title, this.ticketFilter.tags, this.ticketFilter.users,
+      .callNoError<KanbanColumnResultJson[]>(p => this.kanbanBoardApi.listKanbanColumnsUsingGETWithHttpInfo(boardId,
+        this.ticketFilter.ticketNumber, this.ticketFilter.title, this.ticketFilter.tags, this.ticketFilter.users,
         this.ticketFilter.progressOne, this.ticketFilter.progressTwo, this.ticketFilter.progressGreater,
         this.ticketFilter.dueDateOne, this.ticketFilter.dueDateTwo, this.ticketFilter.dueDateGreater,
         this.ticketFilter.storyPointsOne, this.ticketFilter.storyPointsTwo, this.ticketFilter.storyPointsGreater,
@@ -145,7 +146,7 @@ export class KanbanBoardDetailComponent implements OnInit {
     return Observable
       .zip(kanbanColumnObs, ticketTagsObs, kanbanBoardObs, projectUsersObs)
       .flatMap(tuple => {
-        this.allProjectUsers = tuple[3]
+        this.allProjectUsers = tuple[3];
         let columnResults = tuple[0];
         let wantedTicketIds: string[] = [];
         columnResults.forEach(c => {
@@ -193,7 +194,7 @@ export class KanbanBoardDetailComponent implements OnInit {
   updateFilter(event: TicketFilter) {
     // TODO  filter our data
     this.ticketFilter = event;
-    console.log(this.ticketFilter)
+    console.log(this.ticketFilter);
     this.refresh(this.kanbanBoard.projectId, this.kanbanBoard.id).subscribe();
   }
 }
