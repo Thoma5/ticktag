@@ -56,7 +56,7 @@ class ValidateServiceAspect(private val validator: Validator) {
             for ((property, violations) in results) {
                 for (violation in violations) {
                     val ann = violation.constraintDescriptor.annotation
-                    val detail = when(ann) {
+                    val detail = when (ann) {
                         is Size -> ValidationErrorDetail.Size(ann.min, ann.max)
                         is Length -> ValidationErrorDetail.Size(ann.min, ann.max)
                         is Pattern -> ValidationErrorDetail.Pattern(ann.regexp)
