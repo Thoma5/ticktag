@@ -2,15 +2,11 @@ import {
     Component, Input, ElementRef, AfterViewInit, OnChanges, SimpleChanges,
     OnDestroy, EventEmitter, Output
 } from '@angular/core';
-import { UserResultJson, UserApi, TicketApi, TicketResultJson } from '../../../api';
-import { ApiCallService } from '../../../service';
-import { using } from '../../../util/using';
-import * as grammar from '../../../service/command/grammar';
+import { UserResultJson, UserApi, TicketApi, TicketResultJson } from '../../api';
+import { ApiCallService } from '../../service';
+import { using } from '../using';
+import * as grammar from '../../service/command/grammar';
 import * as imm from 'immutable';
-import {
-    TicketDetailAssTag, TicketDetailTimeCategory, TicketDetailTag,
-    TicketDetailTransient, TicketDetailUser, TicketDetailAssignment
-} from '../ticket-detail';
 import { Observable, Subscription } from 'rxjs';
 
 const codemirror = require('codemirror');
@@ -24,9 +20,31 @@ const COMMAND_COMPLETIONS = grammar.COMMAND_STRINGS.map(c => {
     }
 }).sort(using<string>(c => c.replace('-', '')));
 
-export type CommentTextviewSaveEvent = {
+export type CommandTextviewSaveEvent = {
     commands: imm.List<grammar.Cmd>,
     text: string,
+}
+
+export type CommandTextviewTicketTag = {
+  normalizedName: string,
+}
+
+export type CommandTextviewUser = {
+  username: string,
+  name: string,
+  mail: string,
+}
+
+export type CommandTextViewUserAssignment = {
+  tag: CommandTextviewAssignmentTag,
+}
+
+export type CommandTextviewTimeCategory = {
+  normalizedName: string,
+}
+
+export type CommandTextviewAssignmentTag = {
+  normalizedName: string,
 }
 
 @Component({
@@ -37,15 +55,15 @@ export type CommentTextviewSaveEvent = {
 export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDestroy {
     @Input() initialContent: string;
     @Input() projectId: string;
-    @Input() activeTags: imm.List<TicketDetailTransient<TicketDetailTag>>;
-    @Input() assignedUsers: imm.Map<TicketDetailUser, imm.List<TicketDetailAssignment>>;
-    @Input() allTicketTags: imm.Map<string, TicketDetailTag>;
-    @Input() allTimeCategories: imm.Map<string, TicketDetailTimeCategory>;
-    @Input() allAssignmentTags: imm.Map<string, TicketDetailAssTag>;
+    @Input() activeTags: imm.List<CommandTextviewTicketTag>;
+    @Input() assignedUsers: imm.Map<CommandTextviewUser, imm.List<CommandTextViewUserAssignment>>;
+    @Input() allTicketTags: imm.Map<string, CommandTextviewTicketTag>;
+    @Input() allTimeCategories: imm.Map<string, CommandTextviewTimeCategory>;
+    @Input() allAssignmentTags: imm.Map<string, CommandTextviewAssignmentTag>;
     @Input() resetEventObservable: Observable<string> | null = null;
     @Input() noCommands: boolean = false;
 
-    @Output() readonly contentChange = new EventEmitter<CommentTextviewSaveEvent>();
+    @Output() readonly contentChange = new EventEmitter<CommandTextviewSaveEvent>();
     @Output() readonly save = new EventEmitter<void>();
 
     private content = '';
@@ -182,13 +200,13 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
 
         let isAddRemoveTag = new RegExp(String.raw`${grammar.SEPERATOR_FRONT_REGEX}!(-?)tag:(${grammar.TAG_LETTER}*)$`, 'ui').exec(text);
         if (!this.noCommands && isAddRemoveTag) {
-            let tags = (isAddRemoveTag[1] ? this.activeTags.map(tag => tag.value) : this.allTicketTags)
+            let tags = (isAddRemoveTag[1] ? this.activeTags.valueSeq() : this.allTicketTags)
                 .valueSeq()
-                .sort(using<TicketDetailTag>(tag => tag.normalizedName))
+                .sort(using<CommandTextviewTicketTag>(tag => tag.normalizedName))
                 .toArray();
             if (tags.length === 0) { return; }
             tags = tags.slice();
-            tags.sort(using<TicketDetailTag>(tag => tag.normalizedName));
+            tags.sort(using<CommandTextviewTicketTag>(tag => tag.normalizedName));
             this.instance.showHint({
                 hint: () => ({
                     list: tags.map(tt => tt.normalizedName + ' '),
@@ -207,7 +225,7 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
         if (!this.noCommands && isTimeTag) {
             let cats = this.allTimeCategories
                 .valueSeq()
-                .sort(using<TicketDetailTimeCategory>(cat => cat.normalizedName))
+                .sort(using<CommandTextviewTimeCategory>(cat => cat.normalizedName))
                 .toArray();
             if (cats.length === 0) { return; }
             this.instance.showHint({
@@ -256,7 +274,7 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
         if (!this.noCommands && isAssignTag) {
             let tags = this.allAssignmentTags
                 .valueSeq()
-                .sort(using<TicketDetailAssTag>(tag => tag.normalizedName))
+                .sort(using<CommandTextviewAssignmentTag>(tag => tag.normalizedName))
                 .toArray();
             if (tags.length === 0) { return; }
             this.instance.showHint({

@@ -59,6 +59,10 @@ open class TicketController @Inject constructor(
         return TicketResultJson(ticketService.getTicket(id))
     }
 
+    @GetMapping(value = "/{projectId}/{ticketNumber}")
+    open fun getTicketByNumber(@PathVariable("projectId") projectId: UUID, @PathVariable("ticketNumber") ticketNumber: Int): TicketResultJson {
+        return TicketResultJson(ticketService.getTicket(projectId, ticketNumber))
+    }
 
     @PostMapping
     open fun createTicket(@RequestBody req: CreateTicketRequestJson,

@@ -1,6 +1,6 @@
 <div class='subticket-container' [ngClass]='{"closed": !open}'>
     <div class="number-col">
-      <a *ngIf="showNumber" [routerLink]="['/project', projectId, 'ticket', ticketId]" class='number'>#{{number}}</a>
+      <a *ngIf="showNumber" [routerLink]="['/project', projectId, 'ticket', number]" class='number'>#{{number}}</a>
       <div *ngIf="loading" class="loading">
         <tt-spinner class="loading"></tt-spinner>
       </div>
@@ -8,7 +8,7 @@
         <i class="fa fa-exclamation-triangle"></i>
       </a>
     </div>
-    <a *ngIf="!transient" [routerLink]="['/project', projectId, 'ticket', ticketId]" class='title'>{{title}}</a>
+    <a *ngIf="!transient" [routerLink]="['/project', projectId, 'ticket', number]" class='title'>{{title}}</a>
     <span *ngIf="transient" class='title'>{{title}}</span>
     <div class="progress-bar-container">
       <tt-progressbar *ngIf="!transient && showProgress" [showNumbers]="false" [fraction]="loggedTime" [totalValue]="estimatedTime"></tt-progressbar>

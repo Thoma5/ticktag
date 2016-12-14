@@ -1,5 +1,6 @@
 package io.ticktag.service.ticket.dto
 
+import io.ticktag.util.PositiveDuration
 import java.time.Duration
 import java.time.Instant
 import java.util.*
@@ -14,10 +15,10 @@ data class UpdateTicket(
         @field:DecimalMin("0") val storyPoints: Int?,
         val storyPointsNull: Boolean,
 
-        val initialEstimatedTime: Duration?,
+        @field:PositiveDuration val initialEstimatedTime: Duration?,
         val initialEstimatedTimeNull: Boolean,
 
-        val currentEstimatedTime: Duration?,
+        @field:PositiveDuration val currentEstimatedTime: Duration?,
         val currentEstimatedTimeNull: Boolean,
 
         val dueDate: Instant?,

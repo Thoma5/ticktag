@@ -20,6 +20,7 @@ import io.ticktag.service.tickettagrelation.services.TicketTagRelationService
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.access.prepost.PreAuthorize
 import javax.inject.Inject
+import javax.validation.Valid
 
 @TicktagService
 open class CommandServiceImpl(
@@ -37,7 +38,7 @@ open class CommandServiceImpl(
     private lateinit var ticketService: TicketService
 
     @PreAuthorize(AuthExpr.USER)
-    override fun applyCommands(comment: Comment, commands: List<Command>, principal: Principal) {
+    override fun applyCommands(comment: Comment, @Valid commands: List<Command>, principal: Principal) {
         val errors = mutableListOf<ValidationError>()
 
         if (!(principal.hasRole(AuthExpr.ROLE_GLOBAL_ADMIN) || principal.hasProjectRoleForComment(comment.id, AuthExpr.ROLE_PROJECT_USER))) {

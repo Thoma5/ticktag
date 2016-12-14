@@ -16,6 +16,8 @@ export class TicketEventsComponent {
   private _events: imm.List<TicketEvent>;
   get events(): imm.List<TicketEvent> { return this._events; }
 
+  @Input() projectId: string;
+
   @Input('events')
   set events(events: imm.List<TicketEvent>) {
     this._events = events;

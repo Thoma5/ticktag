@@ -13,7 +13,7 @@ interface ProjectService {
     fun listUserProjects(userId: UUID, name: String, pageable: Pageable): Page<ProjectResult>
     fun createProject(project: CreateProject): ProjectResult
     fun deleteProject(id: UUID)
-    fun updateProject(id: UUID, project: UpdateProject) : ProjectResult
+    fun updateProject(id: UUID, project: UpdateProject): ProjectResult
     fun getProjectCount(): Int
     fun getUserProjectCount(userId: UUID): Int
 }
