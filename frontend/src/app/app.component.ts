@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewContainerRef, OnDestroy, NgZone } from '@angular/core';
+import { Location } from '@angular/common';
 import '../style/app.scss';
 import { AuthService, ApiCallService, User, ErrorHandler } from './service';
 import { Router } from '@angular/router';
@@ -25,6 +26,7 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
     private overlay: Overlay,
     private vcRef: ViewContainerRef,
     private router: Router,
+    private location: Location,
     private zone: NgZone,
     private apiCallService: ApiCallService) {
 
@@ -140,9 +142,10 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
       .size('sm')
       .title('Not found')
       .body('Sorry. Whatever you are looking for...it\'s not here')
+      .okBtn('Take me back')
       .open()
       .then(promise => {
-        promise.result.then(result => this.gotoHome());
+        promise.result.then(result => this.goBack());
       });
   }
 
@@ -193,6 +196,10 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
 
   private gotoHome() {
     this.router.navigate(['/']);
+  }
+
+  private goBack() {
+    this.location.back();
   }
 
   private clearUser() {
