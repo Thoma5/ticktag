@@ -62,7 +62,7 @@ export class ApiCallService {
   constructor(private authService: AuthService) {
   }
 
-  initErrorHandler(errorHandler: ErrorHandler) {
+  initErrorHandler(errorHandler: ErrorHandler): void {
     if (this.errorHandler != null) {
       throw new Error('Error handler is already registered');
     }
@@ -72,12 +72,12 @@ export class ApiCallService {
   callNoError<T>(apiCall: ApiCallFn, extraHeaders?: {[name: string]: string}): Observable<T> {
     return this
       .call<T>(apiCall, extraHeaders)
-      .map(res => {
+      .flatMap(res => {
         if (res.isValid) {
-          return res.result;
+          return Observable.of(res.result);
         } else {
           this.handleError(res);
-          throw res;
+          return Observable.throw(res);
         }
       });
   }
@@ -112,11 +112,11 @@ export class ApiCallService {
             return Observable.of(new ApiCallResult<T>(apiCall, extraHeaders || null, false, resp.json()));
           } else {
             this.handleError(resp);
-            throw resp;
+            return Observable.throw(resp);
           }
         } else {
           this.handleError(resp);
-          throw resp;
+          return Observable.throw(resp);
         }
       });
   }

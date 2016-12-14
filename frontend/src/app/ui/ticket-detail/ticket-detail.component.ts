@@ -26,7 +26,7 @@ import { SubticketCreateEvent } from './subticket-add/subticket-add.component';
 import { idListToMap } from '../../util/listmaputils';
 import * as imm from 'immutable';
 import { CommandTextviewSaveEvent } from '../../util/command-textview/command-textview.component';
-import { showError } from '../../util/error';
+import { showValidationError } from '../../util/error';
 
 @Component({
   selector: 'tt-ticket-detail',
@@ -371,7 +371,7 @@ export class TicketDetailComponent implements OnInit {
   }
 
   private error(result: ApiCallResult<void|{}>): void {
-    showError(this.modal, result);
+    showValidationError(this.modal, result);
   }
 
   private reset(): Observable<void> {
@@ -539,6 +539,7 @@ export class TicketDetailComponent implements OnInit {
           }).toList();
         this.newTicketDetail();
       })
-      .map(it => undefined);
+      .map(it => undefined)
+      .catch(err => Observable.empty<void>());
   }
 }
