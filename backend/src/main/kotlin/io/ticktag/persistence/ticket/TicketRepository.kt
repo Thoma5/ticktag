@@ -3,6 +3,7 @@ package io.ticktag.persistence.ticket
 import io.ticktag.TicktagRepository
 import io.ticktag.persistence.TicktagCrudRepository
 import io.ticktag.persistence.escapeHqlLike
+import io.ticktag.persistence.nullIfEmpty
 import io.ticktag.persistence.orderByClause
 import io.ticktag.persistence.ticket.entity.Progress
 import io.ticktag.persistence.ticket.entity.Ticket
@@ -24,9 +25,6 @@ interface TicketRepository : TicktagCrudRepository<Ticket, UUID>, TicketReposito
     @Query("Select max(t.number) from Ticket t where project.id = :projectId ")
     fun findHighestTicketNumberInProject(@Param("projectId") projectId: UUID): Int?
 
-    @Query("select t from Ticket t where t.id in :ids")
-    fun findByIds(@Param("ids") ids: Collection<UUID>): List<Ticket>
-
     fun findByNumber(number: Int): Ticket?
 }
 
@@ -36,6 +34,8 @@ interface TicketRepositoryCustom {
             number: String,
             title: String,
             pageable: Pageable): List<Ticket>
+
+    fun findByIds(@Param("ids") ids: Collection<UUID>): List<Ticket>
 
     fun findMentionedTickets(@Param("ids") ids: Collection<UUID>): Map<UUID, List<Ticket>>
 
@@ -51,47 +51,53 @@ interface TicketRepositoryCustom {
 }
 
 open class TicketRepositoryImpl @Inject constructor(private val em: EntityManager) : TicketRepositoryCustom {
+    override fun findByIds(ids: Collection<UUID>): List<Ticket> {
+        return em.createQuery("select t from Ticket t where t.id in :ids", Ticket::class.java)
+                .setParameter("ids", ids.nullIfEmpty())
+                .resultList
+    }
+
     override fun findTagsByTicketIds(ids: Collection<UUID>): Map<UUID, List<TicketTag>> {
         return em.createQuery("""
             select ti.id, ta from Ticket ti
             join ti.tags ta
             where ti.id in :ids""", Array<Any>::class.java)
-                .setParameter("ids", ids)
+                .setParameter("ids", ids.nullIfEmpty())
                 .resultList
                 .groupBy( { it[0] as UUID}, { it[1] as TicketTag })
     }
 
     override fun findMentionedTickets(ids: Collection<UUID>): Map<UUID, List<Ticket>> {
         return em.createQuery("select m.id, t from Ticket t join t.mentioningComments c join c.ticket m where m.id in :ids", Array<Any>::class.java)
-                .setParameter("ids", ids)
+                .setParameter("ids", ids.nullIfEmpty())
                 .resultList
                 .groupBy( { it[0] as UUID}, { it[1] as Ticket })
     }
 
     override fun findMentioningTickets(ids: Collection<UUID>): Map<UUID, List<Ticket>> {
         return em.createQuery("select t.id, m from Ticket t join t.mentioningComments c join c.ticket m where t.id in :ids", Array<Any>::class.java)
-                .setParameter("ids", ids)
+                .setParameter("ids", ids.nullIfEmpty())
                 .resultList
                 .groupBy( { it[0] as UUID}, { it[1] as Ticket })
     }
 
     override fun findProgressesByTicketIds(ids: Collection<UUID>): Map<UUID, Progress> {
         return em.createQuery("select p.id, p from Progress p where p.id in :ids", Array<Any>::class.java)
-                .setParameter("ids", ids)
+                .setParameter("ids", ids.nullIfEmpty())
                 .resultList
                 .associateBy( { it[0] as UUID}, { it[1] as Progress })
     }
 
     override fun findSubticketsByTicketIds(ids: Collection<UUID>): Map<UUID, List<Ticket>> {
         return em.createQuery("select p.id, t from Ticket t join t.parentTicket p where p.id in :ids", Array<Any>::class.java)
-                .setParameter("ids", ids)
+                .setParameter("ids", ids.nullIfEmpty())
                 .resultList
                 .groupBy( { it[0] as UUID}, { it[1] as Ticket })
     }
 
     override fun findParentTicketsByTicketIds(ids: Collection<UUID>): Map<UUID, Ticket> {
         return em.createQuery("select s.id, p from Ticket p join p.subTickets s where s.id in :ids", Array<Any>::class.java)
-                .setParameter("ids", ids)
+                .setParameter("ids", ids.nullIfEmpty())
                 .resultList
                 .associateBy( { it[0] as UUID}, { it[1] as Ticket })
     }
