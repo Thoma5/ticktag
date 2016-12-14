@@ -130,10 +130,10 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
       .size('sm')
       .title('Unauthorized')
       .body('You are not permitted to access this page')
-      .okBtn('Okay ☹')
+      .okBtn('Take me back')
       .open()
       .then(promise => {
-        promise.result.then(result => this.gotoHome());
+        promise.result.then(result => this.goBack());
       });
   }
 
