@@ -5,6 +5,8 @@ import io.ticktag.PROJECT_AOU_AUO_ID
 import io.ticktag.PROJECT_NO_MEMBERS_ID
 import io.ticktag.USER_ID
 import io.ticktag.integrationtests.restinterface.ApiBaseTest
+import io.ticktag.restinterface.UpdateNotnullValueJson
+import io.ticktag.restinterface.UpdateNullableValueJson
 import io.ticktag.restinterface.ticket.controllers.TicketController
 import io.ticktag.restinterface.ticket.schema.*
 import io.ticktag.restinterface.ticketuserrelation.schema.CreateTicketUserRelationRequestJson
@@ -180,7 +182,7 @@ class TicketApiTest : ApiBaseTest() {
                     PROJECT_NO_MEMBERS_ID, emptyList(), emptyList(), emptyList(), null, emptyList())
             val subSubBody = ticketController.createTicket(reqSubSub, principal).body!!
 
-            val updateSubSub = UpdateTicketRequestJson(null, null, null, null, null, null, null, UpdateTicketRequestNullableValueJson(subId))
+            val updateSubSub = UpdateTicketRequestJson(null, null, null, null, null, null, null, UpdateNullableValueJson(subId))
             val ex = assertFailsWith(TicktagValidationException::class, { ticketController.updateTicket(updateSubSub, subSubBody.id, principal) })
 
             assertThat(ex.errors.size, `is`(1))
@@ -207,7 +209,7 @@ class TicketApiTest : ApiBaseTest() {
             val parentBody = ticketController.createTicket(reqParent, principal).body!!
             val subBody = ticketController.createTicket(reqSub, principal).body!!
 
-            val updateSub = UpdateTicketRequestJson(null, null, null, null, null, null, null, UpdateTicketRequestNullableValueJson(parentBody.id))
+            val updateSub = UpdateTicketRequestJson(null, null, null, null, null, null, null, UpdateNullableValueJson(parentBody.id))
             val ex = assertFailsWith(TicktagValidationException::class, { ticketController.updateTicket(updateSub, subBody.id, principal) })
 
             assertThat(ex.errors.size, `is`(1))
@@ -229,7 +231,7 @@ class TicketApiTest : ApiBaseTest() {
                     PROJECT_AOU_AUO_ID, emptyList(), emptyList(), emptyList(), null, emptyList())
             val ticket = ticketController.createTicket(create, p).body!!
 
-            val req = UpdateTicketRequestJson(null, null, null, null, UpdateTicketRequestNullableValueJson(Duration.ofDays(2)), null, null, null)
+            val req = UpdateTicketRequestJson(null, null, null, null, UpdateNullableValueJson(Duration.ofDays(2)), null, null, null)
             val result = ticketController.updateTicket(req, ticket.id, p)
 
             assertNull(result.initialEstimatedTime)
@@ -244,7 +246,7 @@ class TicketApiTest : ApiBaseTest() {
                     PROJECT_AOU_AUO_ID, emptyList(), emptyList(), emptyList(), null, emptyList())
             val ticket = ticketController.createTicket(create, p).body!!
 
-            val req = UpdateTicketRequestJson(null, null, null, UpdateTicketRequestNullableValueJson(Duration.ofDays(2)), null, null, null, null)
+            val req = UpdateTicketRequestJson(null, null, null, UpdateNullableValueJson(Duration.ofDays(2)), null, null, null, null)
             val result = ticketController.updateTicket(req, ticket.id, p)
 
             assertEquals(result.initialEstimatedTime, req.initialEstimatedTime!!.value)
@@ -259,7 +261,7 @@ class TicketApiTest : ApiBaseTest() {
                     PROJECT_AOU_AUO_ID, emptyList(), emptyList(), emptyList(), null, emptyList())
             val ticket = ticketController.createTicket(create, p).body!!
 
-            val req = UpdateTicketRequestJson(null, null, null, null, UpdateTicketRequestNullableValueJson(Duration.ofDays(2)), null, null, null)
+            val req = UpdateTicketRequestJson(null, null, null, null, UpdateNullableValueJson(Duration.ofDays(2)), null, null, null)
             val result = ticketController.updateTicket(req, ticket.id, p)
 
             assertEquals(result.initialEstimatedTime, create.initialEstimatedTime)
@@ -326,13 +328,13 @@ class TicketApiTest : ApiBaseTest() {
         withUser(ADMIN_ID) { principal ->
             val now = Instant.now()
             val req = UpdateTicketRequestJson(
-                    UpdateTicketRequestNotnullValueJson("ticket"),
-                    UpdateTicketRequestNotnullValueJson(true),
-                    UpdateTicketRequestNullableValueJson(4),
-                    UpdateTicketRequestNullableValueJson(Duration.ofDays(1)),
-                    UpdateTicketRequestNullableValueJson(Duration.ofDays(2)),
-                    UpdateTicketRequestNullableValueJson(now),
-                    UpdateTicketRequestNotnullValueJson("description"),
+                    UpdateNotnullValueJson("ticket"),
+                    UpdateNotnullValueJson(true),
+                    UpdateNullableValueJson(4),
+                    UpdateNullableValueJson(Duration.ofDays(1)),
+                    UpdateNullableValueJson(Duration.ofDays(2)),
+                    UpdateNullableValueJson(now),
+                    UpdateNotnullValueJson("description"),
                     null)
             val result = ticketController.updateTicket(req, UUID.fromString("00000000-0003-0000-0000-000000000001"), principal)
             assertEquals(result.title, "ticket")

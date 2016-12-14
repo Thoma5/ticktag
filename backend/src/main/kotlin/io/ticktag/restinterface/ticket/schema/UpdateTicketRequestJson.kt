@@ -1,23 +1,21 @@
 package io.ticktag.restinterface.ticket.schema
 
+import io.ticktag.restinterface.UpdateNotnullValueJson
+import io.ticktag.restinterface.UpdateNullableValueJson
 import io.ticktag.service.ticket.dto.UpdateTicket
 import java.time.Duration
 import java.time.Instant
 import java.util.*
 
-// This distinction is made for Jackson and the TypeScript code generator
-data class UpdateTicketRequestNullableValueJson<out T>(val value: T?)
-data class UpdateTicketRequestNotnullValueJson<out T>(val value: T)
-
 data class UpdateTicketRequestJson(
-        val title: UpdateTicketRequestNotnullValueJson<String>?,
-        val open: UpdateTicketRequestNotnullValueJson<Boolean>?,
-        val storyPoints: UpdateTicketRequestNullableValueJson<Int>?,
-        val initialEstimatedTime: UpdateTicketRequestNullableValueJson<Duration>?,
-        val currentEstimatedTime: UpdateTicketRequestNullableValueJson<Duration>?,
-        val dueDate: UpdateTicketRequestNullableValueJson<Instant>?,
-        val description: UpdateTicketRequestNotnullValueJson<String>?,
-        val parentTicketId: UpdateTicketRequestNullableValueJson<UUID>?
+        val title: UpdateNotnullValueJson<String>?,
+        val open: UpdateNotnullValueJson<Boolean>?,
+        val storyPoints: UpdateNullableValueJson<Int>?,
+        val initialEstimatedTime: UpdateNullableValueJson<Duration>?,
+        val currentEstimatedTime: UpdateNullableValueJson<Duration>?,
+        val dueDate: UpdateNullableValueJson<Instant>?,
+        val description: UpdateNotnullValueJson<String>?,
+        val parentTicketId: UpdateNullableValueJson<UUID>?
 ) {
     fun toUpdateTicket() =
             UpdateTicket(
