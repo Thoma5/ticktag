@@ -134,7 +134,9 @@ Object.freeze(TicketDetailAssignment.prototype);
 export class TicketEventTagRemoved extends TicketEvent {
   readonly tag: TicketDetailTag;
 
-  constructor(event: TicketEventResultJson, users: imm.Map<string, TicketDetailUser>, tags: imm.Map<string, TicketDetailTag>) {
+  constructor(event: TicketEventResultJson,
+              users: imm.Map<string, TicketDetailUser>,
+              tags: imm.Map<string, TicketDetailTag>) {
     super(event, users);
     let eventTag: any = event;
     this.tag = tags.get(eventTag.tagId);
@@ -146,7 +148,9 @@ Object.freeze(TicketEventTagRemoved.prototype);
 export class TicketEventTagAdded extends TicketEvent {
   readonly tag: TicketDetailTag;
 
-  constructor(event: TicketEventResultJson, users: imm.Map<string, TicketDetailUser>, tags: imm.Map<string, TicketDetailTag>) {
+  constructor(event: TicketEventResultJson,
+              users: imm.Map<string, TicketDetailUser>,
+              tags: imm.Map<string, TicketDetailTag>) {
     super(event, users);
     let eventTag: any = event;
     this.tag = tags.get(eventTag.tagId);
@@ -154,6 +158,34 @@ export class TicketEventTagAdded extends TicketEvent {
   }
 }
 Object.freeze(TicketEventTagRemoved.prototype);
+
+export class TicketEventMentionAdded extends TicketEvent {
+  readonly mentionedTicket: TicketDetailRelated;
+
+  constructor(event: TicketEventResultJson,
+              users: imm.Map<string, TicketDetailUser>,
+              relatedTickets: imm.Map<string, TicketDetailRelated>) {
+    super(event, users);
+    let eventMention: any = event;
+    this.mentionedTicket = relatedTickets.get(eventMention.mentionedTicketId);
+    Object.freeze(this);
+  }
+}
+Object.freeze(TicketEventMentionAdded.prototype);
+
+export class TicketEventMentionRemoved extends TicketEvent {
+  readonly mentionedTicket: TicketDetailRelated;
+
+  constructor(event: TicketEventResultJson,
+              users: imm.Map<string, TicketDetailUser>,
+              relatedTickets: imm.Map<string, TicketDetailRelated>) {
+    super(event, users);
+    let eventMention: any = event;
+    this.mentionedTicket = relatedTickets.get(eventMention.mentionedTicketId);
+    Object.freeze(this);
+  }
+}
+Object.freeze(TicketEventMentionRemoved.prototype);
 
 // TODO remove
 export class TicketDetailTransient<T> {

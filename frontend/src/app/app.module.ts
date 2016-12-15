@@ -85,6 +85,7 @@ import {TicketEventTagComponent} from './ui/ticket-detail/ticket-events/ticket-e
 import {TicketEventOldNewMarkupComponent}
   from './ui/ticket-detail/ticket-events/ticket-event-old-new-markup/ticket-event-old-new-markup.component';
 import { TicketCreateComponent } from './ui/ticket-detail/ticket-create/ticket-create.component';
+import {TicketEventMentionComponent} from './ui/ticket-detail/ticket-events/ticket-event-mention/ticket-event-mention.component';
 
 @NgModule({
   imports: [
@@ -143,6 +144,7 @@ import { TicketCreateComponent } from './ui/ticket-detail/ticket-create/ticket-c
     TicketEventUserComponent,
     TicketEventParentChangedComponent,
     TicketEventTagComponent,
+    TicketEventMentionComponent,
     TicketCommentInputComponent,
     EditButtonComponent,
     CommandTextviewComponent,
