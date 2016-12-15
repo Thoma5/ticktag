@@ -33,6 +33,7 @@ export class TicketOverviewComponent implements OnInit {
   offset = 0;
   limit = 30;
   totalElements = 0;
+  query: string = '';
   rows: TicketOverview[] = [];
   iconsCss = {
     sortAscending: 'glyphicon glyphicon-chevron-down',
@@ -152,7 +153,11 @@ export class TicketOverviewComponent implements OnInit {
   }
 
   onTagClicked(event: TicketOverviewTag) {
-    console.log(event); // TODO add to filter
+    this.query = '!tag:' + event.normalizedName;
+  }
+
+  onUserClicked(event: TicketOverviewUser) {
+    this.query = '!user:' + event.username;
   }
   activate(event: any) {
     if (event.type === 'keydown' && event.event.code === 'Enter') {

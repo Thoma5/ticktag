@@ -5,7 +5,7 @@
   <div *ngIf="!loading">
     <div class="search row">
       <div class="col-md-12">
-        <tt-ticket-filter [allTicketTags]="allTicketTags" [allUsers]="allProjectUsers"  [defaultOpenOnly]="true" [defaultFilterOpen]="true" (ticketFilter)="updateFilter($event)">
+        <tt-ticket-filter [allTicketTags]="allTicketTags" [addToQuery]="query" [allUsers]="allProjectUsers"  [defaultOpenOnly]="true" [defaultFilterOpen]="true" (ticketFilter)="updateFilter($event)">
         </tt-ticket-filter>
       </div>
     </div>
@@ -35,7 +35,7 @@
       <swui-datatable-column name="Asignees" prop="users" minWidth="128" width="128" maxWidth="128">
         <template let-row="row" let-value="value" swui-datatable-cell-template>
           <div float="left">
-            <tt-assigned-user-overview [users]="value"></tt-assigned-user-overview>
+            <tt-assigned-user-overview [users]="value" (clickedUser)="onUserClicked($event)"></tt-assigned-user-overview>
           </div>
         </template>
       </swui-datatable-column>

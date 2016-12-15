@@ -32,7 +32,7 @@ data class TicketFilter(val project: UUID, val number: Int?, val title: String?,
             predicates.add(cb.equal(root.get<Int>("number"), number))
         }
         if (title != null) {
-            predicates.add(cb.like(cb.lower(root.get<String>("title")), "%" + title.toLowerCase() + "%"))
+            predicates.add(cb.like(cb.lower(root.get<String>("title")), title.toLowerCase().split(' ').joinToString("%","%","%")))
         }
         if (tags != null) {
             val join = root.join<Ticket, TicketTag>("tags")

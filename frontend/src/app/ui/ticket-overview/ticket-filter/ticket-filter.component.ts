@@ -1,5 +1,5 @@
 import {
-    Component, Input, Output, ElementRef, OnInit, EventEmitter, ViewContainerRef
+    Component, Input, Output, ElementRef, OnInit, OnChanges, SimpleChanges, EventEmitter, ViewContainerRef
 } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import '../../../util/rxjs-extensions';
@@ -25,32 +25,50 @@ export type CommentTextviewSaveEvent = {
     templateUrl: './ticket-filter.component.html',
     styleUrls: ['./ticket-filter.component.scss']
 })
-export class TicketFilterComponent implements OnInit {
+export class TicketFilterComponent implements OnInit, OnChanges {
     @Input() allUsers: imm.Map<string, TicketOverviewUser>;
     @Input() allTicketTags: imm.Map<string, TicketOverviewTag>;
     @Input() defaultOpenOnly: boolean = false;
     @Input() defaultFilterOpen: boolean = false;
+    @Input() disabledFilterHelper: string = '';
+    @Input() addToQuery: string = '';
     @Output() ticketFilter = new EventEmitter<TicketFilter>();
-
-    public elementRef: ElementRef;
     public query: string = '';
+    public elementRef: ElementRef;
     public filterHelper = false;
     public error = false;
     public errorMsg = '';
     private searchTerms = new Subject<string>();
     public assignees: imm.List<TicketOverviewUser>;
     public tags: imm.List<TicketOverviewTag>;
-
-    public datePickOne: string = '';
-    public datePickTwo: string = '';
+    public datePickOneActive: boolean = false;
+    public datePickTwoActive: boolean = false;
+    public datePickOne: string;
+    public datePickTwo: string;
+    public datePickOneDate: Date;
+    public datePickTwoDate: Date;
     public progressPickOne: number;
     public progressPickTwo: number;
     public spPickOne: number;
     public spPickTwo: number;
+    public dateMode: string = '< Smaller Than';
 
     constructor(myElement: ElementRef, overlay: Overlay, vcRef: ViewContainerRef, public modal: Modal) {
         this.elementRef = myElement;
         overlay.defaultViewContainer = vcRef;
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        for (let propName in changes) {
+            if (propName === 'addToQuery') {
+                let chng = changes[propName];
+                let cur = chng.currentValue;
+                if (cur !== '') {
+                    this.query = this.query + ' ' + cur;
+                    this.filter(this.query);
+                }
+            }
+        }
     }
 
     ngOnInit(): void {
@@ -205,8 +223,8 @@ export class TicketFilterComponent implements OnInit {
                             const m1 = moment(date[0], 'YYYY-MM-DD');
                             const m2 = moment(date[1], 'YYYY-MM-DD');
                             if (regexp.test(date[0]) && m1.isValid() && regexp.test(date[1]) && m2.isValid()) {
-                                dueDateOne = m1.valueOf();
-                                dueDateTwo = m2.valueOf();
+                                dueDateOne = m1.valueOf() + 3600000; // Todo:clean fix
+                                dueDateTwo = m2.valueOf() + 3600000;
                                 return;
                             } else {
                                 this.generateErrorAndMessage('invalid ', command[0], command[1]);
@@ -222,7 +240,7 @@ export class TicketFilterComponent implements OnInit {
                             }
                             const m1 = moment(date[0], 'YYYY-MM-DD');
                             if (regexp.test(date[0]) && m1.isValid()) {
-                                dueDateOne = m1.valueOf();
+                                dueDateOne = m1.valueOf() + 3600000; // Todo: clean fix 
                                 return;
                             } else {
                                 this.generateErrorAndMessage('invalid ', command[0], command[1]);
@@ -316,7 +334,8 @@ export class TicketFilterComponent implements OnInit {
     }
     pickDate(op: string) {
         this.query = this.query.split(' ').filter(e => e.indexOf('!dueDate') < 0).join(' ')
-            + ' !dueDate:' + ((op === '-' || op === '=') ? '' : op) + this.datePickOne + (op === '-' ? op + this.datePickTwo : '');
+            + ' !dueDate:' + ((op === '-' || op === '=') ? '' : op) + this.datePickOne +
+            (op === '-' ? op + this.datePickTwo : '');
         this.filter(this.query);
     }
     pickProgress(op: string) {
@@ -325,9 +344,18 @@ export class TicketFilterComponent implements OnInit {
             + (op === '-' ? op + this.progressPickTwo + '%' : '');
         this.filter(this.query);
     }
-     pickStatus(open: boolean) {
+    pickStatus(open: boolean) {
         this.query = this.query.split(' ').filter(e => e.indexOf('!open') < 0).join(' ') + (open === undefined ? '' : ' !open:' + open);
         this.filter(this.query);
+    }
+
+    datePickerOneSelection() { // TODO: fix Localtime/UTC
+        let m = moment(this.datePickOneDate);
+        this.datePickOne = m.local().format('YYYY-MM-DD');
+    }
+    datePickerTwoSelection() {
+        let m = moment(this.datePickTwoDate);
+        this.datePickTwo = m.local().format('YYYY-MM-DD');
     }
 
 }
