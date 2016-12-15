@@ -105,11 +105,8 @@ import { TicketCreateComponent } from './ui/ticket-detail/ticket-create/ticket-c
     MaterialModule.forRoot(),
     ModalModule.forRoot(),
     BootstrapModalModule,
-<<<<<<< HEAD
     DragulaModule,
-    NKDatetimeModule,
-=======
->>>>>>> develop
+    NKDatetimeModule
   ],
   declarations: [
     AppComponent,
@@ -178,7 +175,6 @@ import { TicketCreateComponent } from './ui/ticket-detail/ticket-create/ticket-c
     KanbanBoardsComponent,
     KanbanBoardDetailComponent,
     KanbanCellComponent,
-    KanbanCellUserComponent,
     UserImageComponent
   ],
   providers: [
