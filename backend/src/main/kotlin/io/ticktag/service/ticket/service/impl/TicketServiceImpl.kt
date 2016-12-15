@@ -93,7 +93,7 @@ open class TicketServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
-    override fun listTicketsStoryPoints(project: UUID,
+    override fun listTicketsStoryPoints(@P("authProjectId") project: UUID,
                                         number: Int?,
                                         title: String?,
                                         tags: List<String>?,
