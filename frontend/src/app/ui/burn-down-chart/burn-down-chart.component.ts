@@ -79,17 +79,17 @@ export class BurnDownChartComponent implements OnInit {
             backgroundColor: 'rgba(0,0,0,0)',
             borderColor: 'rgba(229, 107, 107, 1)',
             pointBackgroundColor: 'rgba(229, 107, 107, 1)',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: 'rgba(77,83,96,1)'
+            pointBorderColor: 'rgba(229, 107, 107, 1)',
+            pointHoverBackgroundColor: 'rgba(229, 107, 107, 1)',
+            pointHoverBorderColor: 'rgba(229, 107, 107, 1)'
         },
         { //  green
             backgroundColor: 'rgba(0,0,0,0)',
             borderColor: 'rgba(159, 221, 150, 1)',
             pointBackgroundColor: 'rgba(159, 221, 150, 1)',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+            pointBorderColor: 'rgba(159, 221, 150, 1)',
+            pointHoverBackgroundColor: 'rgba(159, 221, 150, 1)',
+            pointHoverBorderColor: 'rgba(159, 221, 150, 1)'
         },
     ];
     public lineChartLegend: boolean = true;
@@ -122,8 +122,8 @@ export class BurnDownChartComponent implements OnInit {
             .do(() => { this.loading = true; })
             .switchMap(params => {
                 this.projectId = params['projectId'];
-                this.loadData(this.projectId);
-                return this.refresh();
+                this.refresh();
+                return this.loadData(this.projectId);
             })
             .subscribe(() => {
                 this.loading = false;
@@ -145,9 +145,7 @@ export class BurnDownChartComponent implements OnInit {
     }
 
     public handleUpdateFilter(event: TicketFilter) {
-        // TODO  filter our data
         this.ticketFilter = event;
-        console.log(this.ticketFilter);
         this.refresh();
     }
 
@@ -176,7 +174,7 @@ export class BurnDownChartComponent implements OnInit {
     }
 
     private getStoryPointPerTicket(uuid: string): number {
-        return 10;
+        return this.tickets.get(uuid).storyPoints;
     }
 
     private loadData(projectId: string) {
@@ -186,10 +184,13 @@ export class BurnDownChartComponent implements OnInit {
         let projectUsersObs = this.apiCallService
             .callNoError<UserResultJson[]>(p => this.projectApi.listProjectUsersUsingGETWithHttpInfo(projectId, p))
             .map(users => idListToMap(users).map(user => new TicketOverviewUser(user)).toMap());
-        Observable.zip(ticketTagsObs, projectUsersObs).subscribe(tuple => {
+        let o = Observable.zip(ticketTagsObs, projectUsersObs);
+        o.subscribe(tuple => {
             this.allTicketTagsForFilter = tuple[0];
             this.allProjectUsers = tuple[1];
         });
+        return o.map(it => undefined);
+
     }
 
     private refresh(): Observable<any> {
@@ -200,28 +201,30 @@ export class BurnDownChartComponent implements OnInit {
                 this.ticketFilter.progressOne, this.ticketFilter.progressTwo, this.ticketFilter.progressGreater,
                 this.ticketFilter.dueDateOne, this.ticketFilter.dueDateTwo, this.ticketFilter.dueDateGreater,
                 this.ticketFilter.storyPointsOne, this.ticketFilter.storyPointsTwo, this.ticketFilter.storyPointsGreater, p));
+
         rawTicketStoryPointObs.subscribe(
             result => {
-                console.log(result);
                 this.startData = 0;
                 this.tickets.clear();
-                result.forEach(
-                    next => {
-                        if (next.open) {
-                            this.startData += next.storyPoints;
-                        }
-                        this.tickets.set(next.id, next);
-                    });
+                if (result !== undefined) {
+                    result.forEach(
+                        next => {
+                            if (next.open) {
+                                this.startData += next.storyPoints;
+                            }
+                            this.tickets.set(next.id, next);
+                        });
+                }
             },
             error => { },
             //Subscription Completed
             () => {
                 const rawTicketEventsObs = this.apiCallService.callNoError<TicketEventResultJson[]>(p =>
                     this.ticketEventApi.listTicketStateChangedEventsUsingGETWithHttpInfo(Array.from(this.tickets.keys()), p));
-                const o = Observable.zip(rawTicketEventsObs);
-                o.subscribe(
+
+                rawTicketEventsObs.subscribe(
                     tuple => {
-                        this.refeshAsync(tuple[0]);
+                        this.refeshAsync(tuple);
                     });
 
             });
@@ -229,8 +232,9 @@ export class BurnDownChartComponent implements OnInit {
     }
 
     private refeshAsync(result: TicketEventResultJson[]) {
-console.log(result);
-
+        if (result === undefined) {
+            return;
+        }
         const ticketEvents = new Map<Number, TicketEventResultJson[]>();
         const now = moment().valueOf();
         const fromMoment = moment(this.fromDate).startOf('day');
@@ -247,11 +251,9 @@ console.log(result);
                 if ((<TicketEventStateChanged>element).dstState) {
                     // Ticket was openend: Subtract it's Story Points, because we want to go back in time
                     startLines -= storyPoints;
-                    console.log("Minus wegen" + element.ticketId);
                 } else {
                     // Ticket was closed
                     startLines += storyPoints;
-                    console.log("Plus wegen" + element.ticketId);
                 }
             }
             let list = ticketEvents.get(dateUtc);
@@ -275,13 +277,14 @@ console.log(result);
                     if ((<TicketEventStateChanged>ticketEvent).dstState) {
                         // Ticket was openend: Add it's Story Points, because we want to go forward in time
                         actualData += storyPoints;
-                        console.log("!!Plus wegen" + ticketEvent.ticketId);
                     } else {
                         // Ticket was closed
                         actualData -= storyPoints;
-                        console.log("!!Minus wegen" + ticketEvent.ticketId);
                     }
                 });
+            }
+            if (fromMoment.valueOf() > now) {
+                actualData = undefined;
             }
             this.addDay(actualData, Math.round(idealData * 10) / 10, fromMoment.format('YYYY-MM-DD'));
             idealData -= idealDecreasePerDay;
