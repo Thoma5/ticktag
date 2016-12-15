@@ -52,8 +52,11 @@
     "markdown-it": "8.1.0",
     "moment": "2.16.0",
     "ng2-bootstrap": "1.1.16",
+<<<<<<< HEAD
     "ng2-datetime": "1.2.2",
     "ng2-dragula": "1.2.2-0",
+=======
+>>>>>>> develop
     "ng2-webstorage": "1.4.1",
     "reflect-metadata": "0.1.8",
     "rxjs": "5.0.0-beta.12",

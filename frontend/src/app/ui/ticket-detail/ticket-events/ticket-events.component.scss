@@ -73,3 +73,16 @@
 .clickable {
   cursor: pointer;
 }
+
+.more {
+  @extend %card;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 4em;
+  margin-bottom: 2rem;
+}
+
+.more-text {
+  max-width: 50%;
+}

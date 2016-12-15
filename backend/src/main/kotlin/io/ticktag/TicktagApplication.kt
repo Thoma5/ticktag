@@ -4,12 +4,15 @@ import io.ticktag.library.LibraryConfig
 import io.ticktag.persistence.PersistenceConfig
 import io.ticktag.restinterface.RestConfig
 import io.ticktag.service.ServiceConfig
+import io.ticktag.service.UpdateValue
 import io.ticktag.service.fallbackadmin.services.FallbackAdminService
 import io.ticktag.swaggerinterface.SwaggerConfig
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.FilterHolder
 import org.eclipse.jetty.servlet.ServletContextHandler
 import org.eclipse.jetty.servlet.ServletHolder
+import org.hibernate.validator.HibernateValidator
+import org.hibernate.validator.spi.valuehandling.ValidatedValueUnwrapper
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.EnableAspectJAutoProxy
@@ -19,6 +22,8 @@ import org.springframework.web.context.ContextLoaderListener
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext
 import org.springframework.web.filter.DelegatingFilterProxy
 import org.springframework.web.servlet.DispatcherServlet
+import java.lang.reflect.ParameterizedType
+import java.lang.reflect.Type
 import java.time.Clock
 import java.util.*
 import javax.servlet.DispatcherType
@@ -37,7 +42,16 @@ open class TicktagBaseApplication {
     }
 
     @Bean
-    open fun validatorFactory(): ValidatorFactory = Validation.buildDefaultValidatorFactory()
+    open fun validatorFactory(): ValidatorFactory {
+        return Validation
+                .byProvider(HibernateValidator::class.java)
+                .configure()
+                .addValidatedValueHandler(object : ValidatedValueUnwrapper<UpdateValue<Any?>>() {
+                    override fun handleValidatedValue(value: UpdateValue<Any?>?): Any? = value?.value
+                    override fun getValidatedValueType(valueType: Type): Type = (valueType as ParameterizedType).actualTypeArguments[0]
+                })
+                .buildValidatorFactory()
+    }
 
     @Bean
     open fun validator(validatorFactory: ValidatorFactory): Validator = validatorFactory.validator

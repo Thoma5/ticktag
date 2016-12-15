@@ -29,9 +29,11 @@
 }
 
 .title {
-  width: 20%;
+  width: 40%;
   overflow: hidden;
   margin-left: $internal-gap;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .progress-bar-container {

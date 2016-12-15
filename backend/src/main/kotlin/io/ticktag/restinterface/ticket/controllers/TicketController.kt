@@ -8,7 +8,6 @@ import io.ticktag.restinterface.ticket.schema.TicketSort
 import io.ticktag.restinterface.ticket.schema.UpdateTicketRequestJson
 import io.ticktag.service.Principal
 import io.ticktag.service.ticket.dto.CreateTicket
-import io.ticktag.service.ticket.dto.UpdateTicket
 import io.ticktag.service.ticket.service.TicketService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -60,6 +59,10 @@ open class TicketController @Inject constructor(
         return TicketResultJson(ticketService.getTicket(id))
     }
 
+    @GetMapping(value = "/{projectId}/{ticketNumber}")
+    open fun getTicketByNumber(@PathVariable("projectId") projectId: UUID, @PathVariable("ticketNumber") ticketNumber: Int): TicketResultJson {
+        return TicketResultJson(ticketService.getTicket(projectId, ticketNumber))
+    }
 
     @PostMapping
     open fun createTicket(@RequestBody req: CreateTicketRequestJson,
@@ -73,7 +76,7 @@ open class TicketController @Inject constructor(
     open fun updateTicket(@RequestBody req: UpdateTicketRequestJson,
                           @PathVariable(name = "id") id: UUID,
                           @AuthenticationPrincipal principal: Principal): TicketResultJson {
-        val ticket = ticketService.updateTicket(UpdateTicket(req), id, principal)
+        val ticket = ticketService.updateTicket(req.toUpdateTicket(), id, principal)
         return TicketResultJson(ticket)
     }
 

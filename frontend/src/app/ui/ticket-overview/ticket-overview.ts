@@ -1,6 +1,6 @@
 import {
   TicketResultJson, UserResultJson, TicketTagResultJson,
-  AssignmentTagResultJson
+  AssignmentTagResultJson, TimeCategoryJson
 } from '../../api';
 import * as imm from 'immutable';
 import { Tag } from '../../util/taginput/taginput.component';
@@ -68,6 +68,20 @@ export class TicketOverviewAssTag implements Tag {
     Object.freeze(this);
   }
 }
+
+export class TicketOverviewTimeCategory {
+  readonly id: string;
+  readonly normalizedName: string;
+  readonly name: string;
+
+  constructor(category: TimeCategoryJson) {
+    this.id = category.id;
+    this.normalizedName = category.normalizedName;
+    this.name = category.name;
+    Object.freeze(this);
+  }
+}
+Object.freeze(TicketOverviewTimeCategory.prototype);
 
 
 export class TicketOverview {
