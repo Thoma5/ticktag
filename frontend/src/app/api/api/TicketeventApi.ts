@@ -89,8 +89,8 @@ export class TicketeventApi {
      * 
      * @param ticketIds ticketIds
      */
-    public listTicketStateChangedEventsUsingGET(ticketIds: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.TicketEventResultJson>> {
-        return this.listTicketStateChangedEventsUsingGETWithHttpInfo(ticketIds, extraHttpRequestParams)
+    public listTicketStateChangedEventsUsingPOST(ticketIds: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.TicketEventResultJson>> {
+        return this.listTicketStateChangedEventsUsingPOSTWithHttpInfo(ticketIds, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -153,17 +153,14 @@ export class TicketeventApi {
      * 
      * @param ticketIds ticketIds
      */
-    public listTicketStateChangedEventsUsingGETWithHttpInfo(ticketIds: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
+    public listTicketStateChangedEventsUsingPOSTWithHttpInfo(ticketIds: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/ticketevent/statechangedevent`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         // verify required parameter 'ticketIds' is not null or undefined
         if (ticketIds === null || ticketIds === undefined) {
-            throw new Error('Required parameter ticketIds was null or undefined when calling listTicketStateChangedEventsUsingGET.');
-        }
-        if (ticketIds !== undefined) {
-            queryParameters.set('ticketIds', <any>ticketIds);
+            throw new Error('Required parameter ticketIds was null or undefined when calling listTicketStateChangedEventsUsingPOST.');
         }
 
 
@@ -179,11 +176,13 @@ export class TicketeventApi {
         
             
 
+        headers.set('Content-Type', 'application/json');
 
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Get,
+            method: RequestMethod.Post,
             headers: headers,
+            body: ticketIds == null ? '' : JSON.stringify(ticketIds), // https://github.com/angular/angular/issues/10612
             search: queryParameters
         });
         

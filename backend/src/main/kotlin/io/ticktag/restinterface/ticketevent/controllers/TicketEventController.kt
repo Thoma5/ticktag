@@ -5,9 +5,7 @@ import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.ticketevent.schema.*
 import io.ticktag.service.ticketevent.dto.*
 import io.ticktag.service.ticketevent.services.TicketEventService
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.*
 import java.util.*
 import javax.inject.Inject
 
@@ -18,8 +16,8 @@ open class TicketEventController @Inject constructor(
         private val ticketEventService: TicketEventService
 ) {
 
-    @GetMapping(value = "/statechangedevent")
-    open fun listTicketStateChangedEvents(@RequestParam(name = "ticketIds") ticketIds: List<UUID>):List<TicketEventResultJson> {
+    @PostMapping(value = "/statechangedevent")
+    open fun listTicketStateChangedEvents(@RequestBody ticketIds: List<UUID>):List<TicketEventResultJson> {
         return ticketEventService.findAllStateChangedEvents(ticketIds).map { e ->
             when (e) {
                 is TicketEventStateChangedResult -> TicketEventStateChangedResultJson(e)

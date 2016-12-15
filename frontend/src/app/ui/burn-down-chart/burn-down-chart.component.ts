@@ -221,7 +221,7 @@ export class BurnDownChartComponent implements OnInit {
             // Subscription Completed
             () => {
                 const rawTicketEventsObs = this.apiCallService.callNoError<TicketEventResultJson[]>(p =>
-                    this.ticketEventApi.listTicketStateChangedEventsUsingGETWithHttpInfo(Array.from(this.tickets.keys()), p));
+                    this.ticketEventApi.listTicketStateChangedEventsUsingPOSTWithHttpInfo(Array.from(this.tickets.keys()), p));
 
                 rawTicketEventsObs.subscribe(
                     tuple => {
