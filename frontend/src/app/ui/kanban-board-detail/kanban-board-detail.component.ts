@@ -225,21 +225,6 @@ export class KanbanDetailColumn implements Tag {
 }
 Object.freeze(KanbanDetailColumn.prototype);
 
-export class KanbanDetailUser {
-  readonly id: string;
-  readonly mail: string;
-  readonly name: string;
-  readonly username: string;
-
-  constructor(user: UserResultJson) {
-    this.id = user.id;
-    this.mail = user.mail;
-    this.name = user.name;
-    this.username = user.username;
-    Object.freeze(this);
-  }
-}
-Object.freeze(KanbanDetailUser.prototype);
 
 export class KanbanDetailTag implements Tag {
   readonly id: string;
@@ -271,12 +256,12 @@ export class KanbanDetailTicket {
   readonly storyPoints: number|undefined;
   readonly tags: imm.List<KanbanDetailTag>;
   readonly title: string;
-  readonly users: imm.List<KanbanDetailTag>;
+  readonly users: imm.List<TicketDetailUser>;
   readonly projectId: string;
   readonly progress: TicketDetailProgress|undefined;
 
   constructor(ticket: TicketResultJson,
-              users: imm.Map<string, KanbanDetailUser>,
+              users: imm.Map<string, TicketDetailUser>,
               ticketTags: imm.Map<string, KanbanDetailTag>,
               relatedProgresses: imm.Map<string, TicketDetailProgress>) {
     this.createTime = ticket.createTime;
