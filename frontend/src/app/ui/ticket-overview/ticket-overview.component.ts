@@ -28,7 +28,7 @@ export class TicketOverviewComponent implements OnInit {
   private allProjectUsers: imm.Map<string, TicketOverviewUser>;
   private projectId: string | null = null;
   private ticketFilter: TicketFilter = new TicketFilter(undefined, undefined, undefined, undefined, undefined,
-  undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, true);
+  undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
   sortprop = ['NUMBER_ASC'];
   offset = 0;
   limit = 30;
@@ -146,7 +146,6 @@ export class TicketOverviewComponent implements OnInit {
   }
 
   updateFilter(event: TicketFilter) {
-    // TODO  filter our data
     this.offset = 0;
     this.ticketFilter = event;
     this.refresh(this.projectId).subscribe();

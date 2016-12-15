@@ -86,7 +86,6 @@ import {TicketEventTagComponent} from './ui/ticket-detail/ticket-events/ticket-e
 import {TicketEventOldNewMarkupComponent}
   from './ui/ticket-detail/ticket-events/ticket-event-old-new-markup/ticket-event-old-new-markup.component';
 import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
-
 @NgModule({
   imports: [
     BrowserModule,
