@@ -5,7 +5,6 @@ import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.ticket.schema.*
 import io.ticktag.service.Principal
 import io.ticktag.service.ticket.dto.CreateTicket
-import io.ticktag.service.ticket.dto.UpdateTicket
 import io.ticktag.service.ticket.service.TicketService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -74,7 +73,7 @@ open class TicketController @Inject constructor(
     open fun updateTicket(@RequestBody req: UpdateTicketRequestJson,
                           @PathVariable(name = "id") id: UUID,
                           @AuthenticationPrincipal principal: Principal): TicketResultJson {
-        val ticket = ticketService.updateTicket(UpdateTicket(req), id, principal)
+        val ticket = ticketService.updateTicket(req.toUpdateTicket(), id, principal)
         return TicketResultJson(ticket)
     }
 

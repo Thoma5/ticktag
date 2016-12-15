@@ -83,12 +83,12 @@ open class CommandServiceImpl(
                 }
                 is Command.Close -> {
                     tryCommand(errors, index) {
-                        ticketService.updateTicket(UpdateTicket(null, false, null, null, null, null, null, null), ticket.id, principal)
+                        ticketService.updateTicket(UpdateTicket(null, UpdateValue(false), null, null, null, null, null, null), ticket.id, principal)
                     }
                 }
                 is Command.Reopen -> {
                     tryCommand(errors, index) {
-                        ticketService.updateTicket(UpdateTicket(null, true, null, null, null, null, null, null), ticket.id, principal)
+                        ticketService.updateTicket(UpdateTicket(null, UpdateValue(true), null, null, null, null, null, null), ticket.id, principal)
                     }
                 }
                 is Command.Tag -> {
@@ -113,7 +113,7 @@ open class CommandServiceImpl(
                 }
                 is Command.Est -> {
                     tryCommand(errors, index) {
-                        ticketService.updateTicket(UpdateTicket(null, null, null, null, command.duration, null, null, null), ticket.id, principal)
+                        ticketService.updateTicket(UpdateTicket(null, null, null, null, UpdateValue(command.duration), null, null, null), ticket.id, principal)
                     }
                 }
                 is Command.Time -> {

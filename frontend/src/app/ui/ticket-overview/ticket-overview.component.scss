@@ -1,5 +1,18 @@
  @import '../../../style/constants.scss';
 
+ .ticket-overview-container {
+   width: 100%;
+   height: 100%;
+ }
+
+.loading {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content:center;
+  align-items:center;
+}
+
  .row {
   margin-top: $small-gap;
   position: relative;

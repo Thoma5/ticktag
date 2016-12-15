@@ -164,8 +164,8 @@ open class TicketServiceImpl @Inject constructor(
         val title = createTicket.title
         val open: Boolean = createTicket.open
         val storyPoints = createTicket.storyPoints
-        val initialEstimatedTime = createTicket.initialEstimatedTime
-        val currentEstimatedTime = createTicket.currentEstimatedTime
+        val initialEstimatedTime = createTicket.initialEstimatedTime ?: createTicket.currentEstimatedTime
+        val currentEstimatedTime = createTicket.currentEstimatedTime ?: createTicket.initialEstimatedTime
         val dueDate = createTicket.dueDate
         val project = projects.findOne(createTicket.projectID) ?: throw NotFoundException()
         val user = users.findOne(principal.id) ?: throw NotFoundException()
@@ -217,37 +217,45 @@ open class TicketServiceImpl @Inject constructor(
 
 
         if (updateTicket.title != null) {
-            if (ticket.title != updateTicket.title)
-                ticketEvents.insert(TicketEventTitleChanged.create(ticket, user, ticket.title, updateTicket.title))
-            ticket.title = updateTicket.title
+            if (ticket.title != updateTicket.title.value)
+                ticketEvents.insert(TicketEventTitleChanged.create(ticket, user, ticket.title, updateTicket.title.value))
+            ticket.title = updateTicket.title.value
         }
         if (updateTicket.open != null) {
-            if (ticket.open != updateTicket.open)
-                ticketEvents.insert(TicketEventStateChanged.create(ticket, user, ticket.open, updateTicket.open))
-            ticket.open = updateTicket.open
+            if (ticket.open != updateTicket.open.value)
+                ticketEvents.insert(TicketEventStateChanged.create(ticket, user, ticket.open, updateTicket.open.value))
+            ticket.open = updateTicket.open.value
         }
         if (updateTicket.storyPoints != null) {
-            if (ticket.storyPoints != updateTicket.storyPoints)
-                ticketEvents.insert(TicketEventStoryPointsChanged.create(ticket, user, ticket.storyPoints, updateTicket.storyPoints))
-            ticket.storyPoints = updateTicket.storyPoints
+            if (ticket.storyPoints != updateTicket.storyPoints.value)
+                ticketEvents.insert(TicketEventStoryPointsChanged.create(ticket, user, ticket.storyPoints, updateTicket.storyPoints.value))
+            ticket.storyPoints = updateTicket.storyPoints.value
         }
 
-        setEstimationsWithEvents(ticket, updateTicket.initialEstimatedTime, updateTicket.currentEstimatedTime, user)
+        val newInitialEstimatedTime = updateTicket.initialEstimatedTime?.value ?: ticket.initialEstimatedTime
+        val newCurrentEstimatedTime = updateTicket.currentEstimatedTime?.value ?: ticket.currentEstimatedTime
+        setEstimationsWithEvents(ticket, newInitialEstimatedTime, newCurrentEstimatedTime, user)
 
         if (updateTicket.dueDate != null) {
-            if (ticket.dueDate != updateTicket.dueDate)
-                ticketEvents.insert(TicketEventDueDateChanged.create(ticket, user, ticket.dueDate, updateTicket.dueDate))
-            ticket.dueDate = updateTicket.dueDate
+            if (ticket.dueDate != updateTicket.dueDate.value)
+                ticketEvents.insert(TicketEventDueDateChanged.create(ticket, user, ticket.dueDate, updateTicket.dueDate.value))
+            ticket.dueDate = updateTicket.dueDate.value
         }
 
         if (updateTicket.parentTicket != null) {
-            val parentTicket = tickets.findOne(updateTicket.parentTicket) ?: throw NotFoundException()
+            val parentTicket = if (updateTicket.parentTicket.value != null) {
+                val parentTicket = tickets.findOne(updateTicket.parentTicket.value) ?: throw NotFoundException()
 
-            if (parentTicket.parentTicket != null) {
-                throw TicktagValidationException(listOf(ValidationError("updateTicket", ValidationErrorDetail.Other("nonestedsubtickets"))))
-            }
-            if (ticket.subTickets.isNotEmpty()) {
-                throw TicktagValidationException(listOf(ValidationError("updateTicket", ValidationErrorDetail.Other("nonestedsubtickets"))))
+                if (parentTicket.parentTicket != null) {
+                    throw TicktagValidationException(listOf(ValidationError("updateTicket", ValidationErrorDetail.Other("nonestedsubtickets"))))
+                }
+                if (ticket.subTickets.isNotEmpty()) {
+                    throw TicktagValidationException(listOf(ValidationError("updateTicket", ValidationErrorDetail.Other("nonestedsubtickets"))))
+                }
+
+                parentTicket
+            } else {
+                null
             }
 
             if (ticket.parentTicket != parentTicket)
@@ -256,9 +264,9 @@ open class TicketServiceImpl @Inject constructor(
         }
         //Comment
         if (updateTicket.description != null) {
-            if (ticket.descriptionComment.text != updateTicket.description)
-                ticketEvents.insert(TicketEventCommentTextChanged.create(ticket, user, ticket.descriptionComment, ticket.descriptionComment.text, updateTicket.description))
-            ticket.descriptionComment.text = updateTicket.description
+            if (ticket.descriptionComment.text != updateTicket.description.value)
+                ticketEvents.insert(TicketEventCommentTextChanged.create(ticket, user, ticket.descriptionComment, ticket.descriptionComment.text, updateTicket.description.value))
+            ticket.descriptionComment.text = updateTicket.description.value
         }
 
         return toResultDto(ticket)
@@ -284,23 +292,18 @@ open class TicketServiceImpl @Inject constructor(
     }
 
     private fun setEstimations(ticket: Ticket, initial: Duration?, current: Duration?) {
-        // TODO needs distinction of "clear field" vs "missing field"
-        val estimation = current ?: initial
-
-        if (initial != null) {
+        if (initial == null && current == null) {
+            ticket.initialEstimatedTime = null
+            ticket.currentEstimatedTime = null
+        } else if (initial == null && current != null) {
+            ticket.initialEstimatedTime = null
+            ticket.currentEstimatedTime = null
+        } else if (initial != null && current == null) {
             ticket.initialEstimatedTime = initial
-        }
-        if (current != null) {
+            ticket.currentEstimatedTime = initial
+        } else if (initial != null && current != null) {
+            ticket.initialEstimatedTime = initial
             ticket.currentEstimatedTime = current
-        }
-
-        if (estimation != null) {
-            if (ticket.initialEstimatedTime == null) {
-                ticket.initialEstimatedTime = estimation
-            }
-            if (ticket.currentEstimatedTime == null) {
-                ticket.currentEstimatedTime = estimation
-            }
         }
     }
 

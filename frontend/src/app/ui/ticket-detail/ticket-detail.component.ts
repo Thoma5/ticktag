@@ -26,7 +26,7 @@ import { SubticketCreateEvent } from './subticket-add/subticket-add.component';
 import { idListToMap } from '../../util/listmaputils';
 import * as imm from 'immutable';
 import { CommandTextviewSaveEvent } from '../../util/command-textview/command-textview.component';
-import { showError } from '../../util/error';
+import { showValidationError } from '../../util/error';
 
 @Component({
   selector: 'tt-ticket-detail',
@@ -100,7 +100,7 @@ export class TicketDetailComponent implements OnInit {
   onTitleChange(val: string): void {
     this.transientTicket.title = val;
     this.newTicketDetail();
-    this.updateTicket({ title: val }, () => {
+    this.updateTicket({ title: { value: val } }, () => {
       this.transientTicket.title = undefined;
       this.newTicketDetail();
     });
@@ -109,7 +109,7 @@ export class TicketDetailComponent implements OnInit {
   onDescriptionChange(val: string): void {
     this.transientTicket.description = val;
     this.newTicketDetail();
-    this.updateTicket({ description: val }, () => {
+    this.updateTicket({ description: { value: val } }, () => {
       this.transientTicket.description = undefined;
       this.newTicketDetail();
     });
@@ -118,7 +118,7 @@ export class TicketDetailComponent implements OnInit {
   onStorypointsChange(val: number): void {
     this.transientTicket.storyPoints = val;
     this.newTicketDetail();
-    this.updateTicket({ storyPoints: val }, () => {
+    this.updateTicket({ storyPoints: { value: val } }, () => {
       this.transientTicket.storyPoints = undefined;
       this.newTicketDetail();
     });
@@ -127,7 +127,7 @@ export class TicketDetailComponent implements OnInit {
   onCurrentEstimatedTimeChange(val: number) {
     this.transientTicket.currentEstimatedTime = val;
     this.newTicketDetail();
-    this.updateTicket({ currentEstimatedTime: val }, () => {
+    this.updateTicket({ currentEstimatedTime: { value: val } }, () => {
       this.transientTicket.currentEstimatedTime = undefined;
       this.newTicketDetail();
     });
@@ -136,7 +136,7 @@ export class TicketDetailComponent implements OnInit {
   onInitialEstimatedTimeChange(val: number) {
     this.transientTicket.initialEstimatedTime = val;
     this.newTicketDetail();
-    this.updateTicket({ initialEstimatedTime: val }, () => {
+    this.updateTicket({ initialEstimatedTime: { value: val } }, () => {
       this.transientTicket.initialEstimatedTime = undefined;
       this.newTicketDetail();
     });
@@ -145,7 +145,7 @@ export class TicketDetailComponent implements OnInit {
   onDueDateChange(val: number) {
     this.transientTicket.dueDate = val;
     this.newTicketDetail();
-    this.updateTicket({ dueDate: val }, () => {
+    this.updateTicket({ dueDate: { value: val } }, () => {
       this.transientTicket.dueDate = undefined;
       this.newTicketDetail();
     });
@@ -371,7 +371,7 @@ export class TicketDetailComponent implements OnInit {
   }
 
   private error(result: ApiCallResult<void|{}>): void {
-    showError(this.modal, result);
+    showValidationError(this.modal, result);
   }
 
   private reset(): Observable<void> {
@@ -539,6 +539,7 @@ export class TicketDetailComponent implements OnInit {
           }).toList();
         this.newTicketDetail();
       })
-      .map(it => undefined);
+      .map(it => undefined)
+      .catch(err => Observable.empty<void>());
   }
 }

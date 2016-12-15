@@ -1,7 +1,7 @@
 import { Modal } from 'angular2-modal/plugins/bootstrap';
 import { ApiCallResult } from '../service';
 
-export function showError(modal: Modal, result: ApiCallResult<void|{}>): void {
+export function showValidationError(modal: Modal, result: ApiCallResult<void|{}>): void {
   console.dir(result);
   let validationErrors = result.error;
 
