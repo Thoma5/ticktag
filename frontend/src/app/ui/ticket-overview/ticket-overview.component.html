@@ -5,7 +5,7 @@
   <div *ngIf="!loading">
     <div class="search row">
       <div class="col-md-12">
-        <tt-ticket-filter [allTicketTags]="allTicketTags" [addToQuery]="query" [allUsers]="allProjectUsers"  [defaultOpenOnly]="true" [defaultFilterOpen]="true" (ticketFilter)="updateFilter($event)">
+        <tt-ticket-filter [allTicketTags]="allTicketTags" [addToQuery]="query" [allUsers]="allProjectUsers" [defaultFilterOpen]="true" (ticketFilter)="updateFilter($event)">
         </tt-ticket-filter>
       </div>
     </div>

@@ -28,7 +28,6 @@ export type CommentTextviewSaveEvent = {
 export class TicketFilterComponent implements OnInit, OnChanges {
     @Input() allUsers: imm.Map<string, TicketOverviewUser>;
     @Input() allTicketTags: imm.Map<string, TicketOverviewTag>;
-    @Input() defaultOpenOnly: boolean = false;
     @Input() defaultFilterOpen: boolean = false;
     @Input() disabledFilterHelper: string = '';
     @Input() addToQuery: string = '';
@@ -74,17 +73,11 @@ export class TicketFilterComponent implements OnInit, OnChanges {
     ngOnInit(): void {
         this.tags = this.allTicketTags.toList();
         this.assignees = this.allUsers.toList();
-        if (this.defaultOpenOnly) {
-            this.query = '!open:true';
-        }
         this.filterHelper = this.defaultFilterOpen;
-
-
         this.searchTerms
             .debounceTime(800)
             .distinctUntilChanged()
             .subscribe(term => this.filter(term));
-
     }
 
     onManualClick() {
