@@ -25,8 +25,8 @@
 
 import * as models from './models';
 
-export interface UpdateTicketRequestNotnullValueJsonboolean {
-    value: boolean;
+export interface UpdateNullableValueJsonInstant {
+    value?: number;
 
 }
 
