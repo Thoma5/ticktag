@@ -15,7 +15,7 @@ import {TickettagApi} from '../../api/api/TickettagApi';
 import {idListToMap} from '../../util/listmaputils';
 import {KanbanBoard} from '../kanban-boards/kanban-boards.component';
 import {KanbanBoardReslutJson} from '../../api/model/KanbanBoardReslutJson';
-import {TicketDetailProgress} from '../ticket-detail/ticket-detail';
+import {TicketDetailProgress, TicketDetailUser} from '../ticket-detail/ticket-detail';
 import {DragulaService} from 'ng2-dragula';
 import {UpdateKanbanColumnJson} from '../../api/model/UpdateKanbanColumnJson';
 import {TaskQueue} from '../../util/task-queue';
@@ -36,7 +36,7 @@ export class KanbanBoardDetailComponent implements OnInit {
   private kanbanColumns: imm.List<KanbanDetailColumn>;
   private allTicketTags: imm.Map<string, KanbanDetailTag>;
   private interestingTickets: imm.Map<string, KanbanDetailTicket>;
-  private interestingUsers: imm.Map<string, KanbanDetailUser>;
+  private interestingUsers: imm.Map<string, TicketDetailUser>;
   private relatedProgresses: imm.Map<string, TicketDetailProgress>;
   private allTicketTagsForFilter: imm.Map<string, TicketOverviewTag>;
   private allProjectUsers: imm.Map<string, TicketOverviewUser>;
@@ -183,7 +183,7 @@ export class KanbanBoardDetailComponent implements OnInit {
         this.allTicketTags = tuple[0][1];
         this.allTicketTagsForFilter = tuple[0][1];
         this.kanbanBoard = new KanbanBoard(tuple[0][2]);
-        this.interestingUsers = imm.Map(tuple[2].users).map(u => new KanbanDetailUser(u)).toMap();
+        this.interestingUsers = imm.Map(tuple[2].users).map(u => new TicketDetailUser(u)).toMap();
         this.relatedProgresses = imm.Map(tuple[1].ticketStatistics).map((p, tid) => new TicketDetailProgress(tid, p)).toMap();
         this.interestingTickets = imm.Map(tuple[1].tickets)
           .map(t => new KanbanDetailTicket(t, this.interestingUsers, this.allTicketTags, this.relatedProgresses)).toMap();
@@ -271,7 +271,7 @@ export class KanbanDetailTicket {
   readonly storyPoints: number|undefined;
   readonly tags: imm.List<KanbanDetailTag>;
   readonly title: string;
-  readonly users: imm.List<KanbanDetailUser>;
+  readonly users: imm.List<KanbanDetailTag>;
   readonly projectId: string;
   readonly progress: TicketDetailProgress|undefined;
 

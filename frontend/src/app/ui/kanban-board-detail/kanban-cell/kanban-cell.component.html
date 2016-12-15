@@ -11,9 +11,9 @@
   </div>
   <div class='users'>
     <span *ngFor="let user of ticket.users">
-      <tt-kanban-cell-user
-        [user]="user"
-      ></tt-kanban-cell-user>
+      <div class="user-icon">
+        <tt-user-image [imageId]="user.imageId"></tt-user-image>
+      </div>
     </span>
   </div>
   <div class='status-progress'>

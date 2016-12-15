@@ -40,7 +40,14 @@
   text-align: center;
   vertical-align: top;
 }
-
+.user-icon {
+  @extend %user-icon;
+}
+.user-icon {
+  height: 2.5em;
+  width: 2.5em;
+  display: inline-block;
+}
 .users {
   margin-top: $internal-gap;
 }

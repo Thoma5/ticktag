@@ -1,7 +1,0 @@
-@import '../../../../style/constants.scss';
-
-.user-icon {
-  @extend %user-icon;
-  margin-right: $internal-gap;
-  display: inline-block;
-}
