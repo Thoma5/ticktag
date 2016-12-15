@@ -8,7 +8,7 @@ import { ApiCallService } from '../../service/api-call/api-call.service';
 import { TicketApi } from '../../api/api/TicketApi';
 import { TickettagApi } from '../../api/api/TickettagApi';
 import { TicketeventApi } from '../../api/api/TicketeventApi';
-import { ProjectApi } from "../../api/api/ProjectApi";
+import { ProjectApi } from '../../api/api/ProjectApi';
 import { TicketEventResultJson } from '../../api/model/TicketEventResultJson';
 import { TicketStoryPointResultJson } from '../../api/model/TicketStoryPointResultJson';
 import { TicketTagResultJson } from '../../api/model/TicketTagResultJson';
