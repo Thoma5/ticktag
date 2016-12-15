@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { LocalStorageService } from 'ng2-webstorage';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
-import * as imm from 'immutable'
+import * as imm from 'immutable';
 import { ApiCallService } from '../../service/api-call/api-call.service';
 import { TicketApi } from '../../api/api/TicketApi';
 import { TickettagApi } from '../../api/api/TickettagApi';
@@ -13,8 +13,8 @@ import { TicketEventResultJson } from '../../api/model/TicketEventResultJson';
 import { TicketStoryPointResultJson } from '../../api/model/TicketStoryPointResultJson';
 import { TicketTagResultJson } from '../../api/model/TicketTagResultJson';
 import { UserResultJson } from '../../api/model/UserResultJson';
-import { TicketOverviewTag, TicketOverviewUser, TicketOverviewAssTag } from "../ticket-overview/ticket-overview";
-import { TicketFilter } from "../ticket-overview/ticket-filter/ticket-filter";
+import { TicketOverviewTag, TicketOverviewUser } from '../ticket-overview/ticket-overview';
+import { TicketFilter } from '../ticket-overview/ticket-filter/ticket-filter';
 import { idListToMap } from '../../util/listmaputils';
 
 @Component({
@@ -25,7 +25,8 @@ import { idListToMap } from '../../util/listmaputils';
 export class BurnDownChartComponent implements OnInit {
     private allTicketTagsForFilter: imm.Map<string, TicketOverviewTag>;
     private allProjectUsers: imm.Map<string, TicketOverviewUser>;
-    private ticketFilter: TicketFilter = new TicketFilter(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, true);
+    private ticketFilter: TicketFilter = new TicketFilter(undefined, undefined, undefined, undefined, undefined,
+        undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, true);
     private tickets = new Map<string, TicketStoryPointResultJson>();
     private projectId: string;
     private FROM_KEY = 'BURNDOWN_FROM';
@@ -217,7 +218,7 @@ export class BurnDownChartComponent implements OnInit {
                 }
             },
             error => { },
-            //Subscription Completed
+            // Subscription Completed
             () => {
                 const rawTicketEventsObs = this.apiCallService.callNoError<TicketEventResultJson[]>(p =>
                     this.ticketEventApi.listTicketStateChangedEventsUsingGETWithHttpInfo(Array.from(this.tickets.keys()), p));
