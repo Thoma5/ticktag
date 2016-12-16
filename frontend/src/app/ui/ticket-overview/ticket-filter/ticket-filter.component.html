@@ -1,8 +1,179 @@
 <div class="row">
-  <div class="col-md-5">
-    <div class="input-group">
-    <span class="input-group-btn" ><button class="btn btn-secondary" (click)="onManualClick()"> <span class="glyphicon glyphicon-filter" ></span></button></span>
-    <input id="filterInput" type="text" class="form-control" [(ngModel)]=query (input)=filter() aria-describedby="filterInfo">
+  <div class="col-md-5 filter">
+    <div class="form-group" [ngClass]="{'has-error has-feedback': error===true}">
+      <div class="input-group">
+        <span class="input-group-btn">
+          <button class="btn btn-default" [ngClass]="{'btn-danger': error===true}" (click)="filterHelper=!filterHelper">
+            <i class="glyphicon glyphicon-filter" ></i></button>
+        </span>
+        <input #filterInput type="text" class="form-control" [(ngModel)]=query (input)="inputChanged(filterInput.value)">
+      </div>
+      <i [ngClass]="{'glyphicon glyphicon-remove form-control-feedback filter-error': error===true}"></i>
+    </div>
   </div>
-  </div>
+  <md-card *ngIf="error" class="col-md-5 filter-error-card">
+    <label tooltip="{{errorMsg}}" tooltipPlacement="bottom" tooltipTrigger="mouseenter" class="control-label filter-error-label"
+      for="filterInput"><i class="glyphicon glyphicon-warning-sign"></i><b> Errors: </b>{{errorMsg}}</label>
+  </md-card>
 </div>
+<div *ngIf="filterHelper" class="row">
+  <div class="col-md-7 filterHelper">
+    <div *ngIf="disabledFilterHelper.indexOf('status') < 0" class="btn-group" dropdown keyboardNav="true">
+      <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default btn-sm" dropdownToggle>
+        <i class="glyphicon glyphicon-ok" ></i> Status <span class="caret"></span>
+    </button>
+      <ul dropdownMenu role="menu" aria-labelledby="single-button">
+        <li role="menuitem">
+          <a (click)="pickStatus(true)" class="dropdown-item"> <i class="glyphicon glyphicon-unchecked"></i> Open</a>
+        </li>
+        <li role="menuitem">
+          <a (click)="pickStatus(false)" class="dropdown-item"> <i class="glyphicon glyphicon-check"></i> Closed</a>
+        </li>
+        <li role="menuitem"><a (click)="pickStatus(undefined)" class="dropdown-item"><i class="glyphicon glyphicon-collapse-down" ></i> All</a></li>
+      </ul>
+    </div>
+    <div *ngIf="disabledFilterHelper.indexOf('tag') < 0" class="btn-group" dropdown keyboardNav="true">
+      <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default  btn-sm" dropdownToggle>
+        <i class="glyphicon glyphicon-tag" ></i> Tags <span class="caret"></span>
+    </button>
+      <ul class="dropdown-menu" dropdownMenu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+        <li role="menuitem" *ngFor="let tag of tags">
+          <a (click)="pickTag(tag.normalizedName)" class="dropdown-item">
+            <div class="tag" [style.backgroundColor]="'#' + tag.color">
+              <span class="name">{{ tag.name }}</span>
+            </div>
+            ({{tag.normalizedName}})
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div *ngIf="disabledFilterHelper.indexOf('user') < 0" class="btn-group" dropdown keyboardNav="true">
+      <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default btn-sm" dropdownToggle>
+        <i class="glyphicon glyphicon-user"></i> Assignees <span class="caret"></span>
+    </button>
+      <ul class="dropdown-menu" dropdownMenu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+        <li role="menuitem" *ngFor="let user of assignees"><a (click)="pickUser(user.username)" class="dropdown-item">{{user.name}} ({{user.username}})</a></li>
+      </ul>
+    </div>
+    <div *ngIf="disabledFilterHelper.indexOf('sp') < 0"class="btn-group" dropdown keyboardNav="true" autoClose="outsideClick">
+      <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default  btn-sm" dropdownToggle>
+        <i class="glyphicon glyphicon-scale" ></i> Story Points <span class="caret"></span>
+    </button>
+      <div class="dropdown-menu" dropdownMenu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+        <form>
+          <div class="form-group">
+            <label *ngIf="spMode.value !== '- Between'">Story Points:</label>
+            <label *ngIf="spMode.value === '- Between'">Story Points From:</label>
+            <div class="form-group">
+              <input [(ngModel)]=spPickOne name="spPickOne" type="number" class="form-control" placeholder="0" required>
+            </div>
+          </div>
+          <div class="form-group" *ngIf="spMode.value === '- Between'">
+            <label>Story Points To:</label>
+            <div class="form-group">
+              <input [(ngModel)]=spPickTwo name="spPickTwo" type="number" class="form-control" placeholder="0" required>
+            </div>
+          </div>
+          <div class="divider dropdown-divider"></div>
+          <select #spMode class="form-control" id="sel1">
+            <option>< Smaller Than</option>
+            <option>= Equals</option>
+            <option>> Greater Than</option>
+            <option>- Between</option>
+          </select>
+          <div class="divider dropdown-divider"></div>
+          <button type="submit" class="btn btn-success" (click)="pickSP(spMode.value.charAt(0))" [disabled]="checkSPFormInvalid(spMode.value)">Select</button>
+        </form>
+      </div>
+    </div>
+    <div *ngIf="disabledFilterHelper.indexOf('dueDate') < 0" class="btn-group" dropdown keyboardNav="true" autoClose="outsideClick">
+      <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default  btn-sm" dropdownToggle>
+        <i class="glyphicon glyphicon-calendar" ></i> Due Date <span class="caret"></span>
+    </button>
+      <div class="dropdown-menu dd-datepicker" dropdownMenu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+        <form>
+          <div *ngIf="!datePickOneActive && !datePickTwoActive" class="form-group">
+            <label *ngIf="dateMode !== '- Between'">Date:</label>
+            <label *ngIf="dateMode === '- Between'">Date From:</label>
+            <div class="form-group">
+              <div class="input-group">
+                <input [(ngModel)]="datePickOne" name="datePickOne" type="text" class="form-control" placeholder="YYYY-MM-DD">
+                <span class="input-group-btn">
+                  <button class="btn btn-default" (click)="datePickOneActive = !datePickOneActive">
+                  <i class="glyphicon glyphicon-calendar" ></i></button>                    
+                </span>
+              </div>
+            </div>
+          </div>
+          <datepicker *ngIf="datePickOneActive" name="dateFrom" [(ngModel)]="datePickOneDate" [showWeeks]="false" (ngModelChange)="datePickerOneSelection()"
+            (selectionDone)="datePickOneActive = false"></datepicker>
+          <div class="form-group" *ngIf="dateMode === '- Between' && !datePickOneActive && !datePickTwoActive">
+            <label>Date To:</label>
+            <div class="form-group">
+              <div class="input-group">
+                <input [(ngModel)]="datePickTwo" name="datePickTwo" type="text" class="form-control" placeholder="YYYY-MM-DD">
+                <span class="input-group-btn">
+                  <button class="btn btn-default"  (click)="datePickTwoActive = !datePickTwoActive">
+                  <i class="glyphicon glyphicon-calendar" ></i></button>                    
+                </span>
+              </div>
+            </div>
+          </div>
+          <datepicker *ngIf="datePickTwoActive" name="dateFrom" [(ngModel)]="datePickTwoDate" [showWeeks]="false" (ngModelChange)="datePickerTwoSelection()"
+            (selectionDone)="datePickTwoActive = false"></datepicker>
+          <div *ngIf="!datePickOneActive && !datePickTwoActive">
+            <div class="divider dropdown-divider"></div>
+            <select [(ngModel)]="dateMode" name="datemodesel" class="form-control">
+              <option>< Smaller Than</option>
+              <option>= Equals</option>
+              <option>> Greater Than</option>
+              <option>- Between</option>
+            </select>
+            <div class="divider dropdown-divider"></div>
+            <button type="submit" class="btn btn-success" (click)="pickDate(dateMode.charAt(0))" [disabled]="checkDateFormInvalid()">Select</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div *ngIf="disabledFilterHelper.indexOf('progress') < 0" class="btn-group" dropdown keyboardNav="true" autoClose="outsideClick">
+      <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default btn-sm" dropdownToggle>
+        <b>%</b> Progress <span class="caret"></span>
+    </button>
+      <div class="dropdown-menu" dropdownMenu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+        <form>
+          <div class="form-group">
+            <label *ngIf="progressMode.value !== '- Between'">Progress:</label>
+            <label *ngIf="progressMode.value === '- Between'">Progress From:</label>
+            <div class="form-group">
+              <div class="input-group">
+                <input [(ngModel)]=progressPickOne name="progressPickOne" type="number" class="form-control" placeholder="0" required>
+                <span class="input-group-addon">
+                  %                 
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group" *ngIf="progressMode.value === '- Between'">
+            <label>Progress To:</label>
+            <div class="form-group">
+              <div class="input-group">
+                <input [(ngModel)]=progressPickTwo name="progressPickTwo" type="number" class="form-control" placeholder="0" required>
+                <span class="input-group-addon">
+                  %            
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="divider dropdown-divider"></div>
+          <select #progressMode class="form-control" id="sel1">
+            <option>< Smaller Than</option>
+            <option>= Equals</option>
+            <option>> Greater Than</option>
+            <option>- Between</option>
+          </select>
+          <div class="divider dropdown-divider"></div>
+          <button type="submit" class="btn btn-success" (click)="pickProgress(progressMode.value.charAt(0))" [disabled]="checkProgressFormInvalid(progressMode.value)">Select</button>
+        </form>
+      </div>
+    </div>
+  </div>
