@@ -286,8 +286,8 @@ export class BurnDownChartComponent implements OnInit {
             if (fromMoment.valueOf() > now) {
                 actualData = undefined;
             }
-            if (i == 0) {
-                idealData = actualData; 
+            if (i === 0) {
+                idealData = actualData;
                 idealDecreasePerDay = idealData / (daysBetween - 1);
             }
             this.addDay(actualData, Math.round(idealData * 10) / 10, fromMoment.format('YYYY-MM-DD'));
