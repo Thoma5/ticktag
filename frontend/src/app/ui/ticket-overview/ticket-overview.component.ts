@@ -20,7 +20,6 @@ import { idListToMap } from '../../util/listmaputils';
 import * as imm from 'immutable';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
-import '../../util/rxjs-extensions';
 import { showValidationError } from '../../util/error';
 
 @Component({
@@ -101,13 +100,13 @@ export class TicketOverviewComponent implements OnInit {
             p['open'] || undefined);
           this.offset = p['page'] || 0;
           this.query = this.ticketFilter.toTicketFilterString();
-        });
+        }, error => {});
         return this.refresh(this.ticketFilter);
-      })
-      .subscribe(() => {
+      }, error => {})
+      .subscribe(result => {
         this.loading = false;
       });
-    this.filterTerms.debounceTime(300).switchMap(term => this.refresh(term)).subscribe();
+    this.filterTerms.debounceTime(300).switchMap(term => this.refresh(term)).subscribe(result => {}, error => {});
   }
 
   private refresh(ticketFilter?: TicketFilter): Observable<void> {
@@ -168,7 +167,7 @@ export class TicketOverviewComponent implements OnInit {
   onPage(event: any) {
     this.limit = event.limit;
     this.offset = event.offset;
-    this.refresh().subscribe();
+    this.refresh().subscribe(result => {}, error => {});
   }
 
   onSort(event: any) {
@@ -183,7 +182,7 @@ export class TicketOverviewComponent implements OnInit {
     } else if (event.sorts[0].prop === 'progress') {
       this.sortprop = ['PROGRESS_' + event.sorts[0].dir.toUpperCase()];
     }
-    this.refresh().subscribe();
+    this.refresh().subscribe(result => {}, error => {});
   }
 
   updateFilter(event: TicketFilter) {
@@ -240,6 +239,6 @@ export class TicketOverviewComponent implements OnInit {
         this.creating = false;
         this.refresh().subscribe();
       }
-    });
+    }, error => {});
   }
 }

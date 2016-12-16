@@ -6,7 +6,7 @@
           <button class="btn btn-default" [ngClass]="{'btn-danger': error===true}" (click)="filterHelper=!filterHelper">
             <i class="glyphicon glyphicon-filter" ></i></button>
         </span>
-        <input #filterInput type="text" class="form-control" [(ngModel)]=query (input)=debounce(filterInput.value)>
+        <input #filterInput type="text" class="form-control" [(ngModel)]=query (input)="inputChanged(filterInput.value)">
       </div>
       <i [ngClass]="{'glyphicon glyphicon-remove form-control-feedback filter-error': error===true}"></i>
     </div>
@@ -82,7 +82,7 @@
             <option>- Between</option>
           </select>
           <div class="divider dropdown-divider"></div>
-          <button type="submit" class="btn btn-success" (click)="pickSP(spMode.value.charAt(0))" [disabled]="(spPickOne === undefined || spPickOne === '') || spMode.value === '- Between' && (spPickTwo === undefined || spPickTwo === '')">Select</button>
+          <button type="submit" class="btn btn-success" (click)="pickSP(spMode.value.charAt(0))" [disabled]="checkSPFormInvalid(spMode.value)">Select</button>
         </form>
       </div>
     </div>
@@ -130,7 +130,7 @@
               <option>- Between</option>
             </select>
             <div class="divider dropdown-divider"></div>
-            <button type="submit" class="btn btn-success" (click)="pickDate(dateMode.charAt(0))" [disabled]="(datePickOne === undefined || datePickOne === '') || dateMode === '- Between' && (datePickTwo === undefined || datePickTwo === '')">Select</button>
+            <button type="submit" class="btn btn-success" (click)="pickDate(dateMode.charAt(0))" [disabled]="checkDateFormInvalid()">Select</button>
           </div>
         </form>
       </div>
@@ -172,7 +172,7 @@
             <option>- Between</option>
           </select>
           <div class="divider dropdown-divider"></div>
-          <button type="submit" class="btn btn-success" (click)="pickProgress(progressMode.value.charAt(0))" [disabled]="(progressPickOne === undefined || progressPickOne === '') || progressMode.value === '- Between' && (progressPickTwo === undefined || progressPickTwo === '')">Select</button>
+          <button type="submit" class="btn btn-success" (click)="pickProgress(progressMode.value.charAt(0))" [disabled]="checkProgressFormInvalid(progressMode.value)">Select</button>
         </form>
       </div>
     </div>

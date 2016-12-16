@@ -2,7 +2,6 @@ import {
     Component, Input, Output, ElementRef, OnInit, OnChanges, SimpleChanges, EventEmitter, ViewContainerRef
 } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
-import '../../../util/rxjs-extensions';
 import * as grammar from '../../../service/command/grammar';
 import * as imm from 'immutable';
 import { Overlay } from 'angular2-modal';
@@ -77,7 +76,7 @@ export class TicketFilterComponent implements OnInit, OnChanges {
         this.searchTerms
             .debounceTime(800)
             .distinctUntilChanged()
-            .subscribe(term => this.filter(term));
+            .subscribe(term => this.filter(term), error => { });
     }
 
     onManualClick() {
@@ -120,7 +119,7 @@ export class TicketFilterComponent implements OnInit, OnChanges {
         `)
             .open();
     }
-    debounce(query: string): void {
+    inputChanged(query: string): void {
         this.searchTerms.next(query);
     }
 
@@ -321,23 +320,31 @@ export class TicketFilterComponent implements OnInit, OnChanges {
     }
     pickSP(op: string) {
         console.log();
+        // Split query at ' ', remove all elements in this array containing !sp and rejoin the array with ' ' to a string. 
+        // Then add the new !sp command  
         this.query = this.query.split(' ').filter(e => e.indexOf('!sp') < 0).join(' ') + ' !sp:' + ((op === '-' || op === '=') ? '' : op)
             + this.spPickOne + (op === '-' ? op + this.spPickTwo : '');
         this.filter(this.query);
     }
     pickDate(op: string) {
+        // Split query at ' ', remove all elements in this array containing !dueDate and rejoin the array with ' ' to a string. 
+        // Then add the new !dueDate command  
         this.query = this.query.split(' ').filter(e => e.indexOf('!dueDate') < 0).join(' ')
             + ' !dueDate:' + ((op === '-' || op === '=') ? '' : op) + this.datePickOne +
             (op === '-' ? op + this.datePickTwo : '');
         this.filter(this.query);
     }
     pickProgress(op: string) {
+        // Split query at ' ', remove all elements in this array containing !progress and rejoin the array with ' ' to a string. 
+        // Then add the new !progress command  
         this.query = this.query.split(' ').filter(e => e.indexOf('!progress') < 0).join(' ')
             + ' !progress:' + ((op === '-' || op === '=') ? '' : op) + this.progressPickOne + '%'
             + (op === '-' ? op + this.progressPickTwo + '%' : '');
         this.filter(this.query);
     }
     pickStatus(open: boolean) {
+        // Split query at ' ', remove all elements in this array containing !open and rejoin the array with ' ' to a string. 
+        // Then add the new !open command  
         this.query = this.query.split(' ').filter(e => e.indexOf('!open') < 0).join(' ') + (open === undefined ? '' : ' !open:' + open);
         this.filter(this.query);
     }
@@ -349,6 +356,18 @@ export class TicketFilterComponent implements OnInit, OnChanges {
     datePickerTwoSelection() {
         let m = moment(this.datePickTwoDate);
         this.datePickTwo = m.local().format('YYYY-MM-DD');
+    }
+    checkProgressFormInvalid(progressMode: string): boolean {
+        return (this.progressPickOne === undefined || this.progressPickOne === null)
+            || progressMode === '- Between' && (this.progressPickTwo === undefined || this.progressPickTwo === null);
+    }
+    checkDateFormInvalid(): boolean {
+        return (this.datePickOne === undefined || this.datePickOne === '') ||
+            this.dateMode === '- Between' && (this.datePickTwo === undefined || this.datePickTwo === '');
+    }
+    checkSPFormInvalid(spMode: string): boolean {
+        return (this.spPickOne === undefined || this.spPickOne === null) ||
+            spMode === '- Between' && (this.spPickTwo === undefined || this.spPickTwo === null);
     }
 
 }
