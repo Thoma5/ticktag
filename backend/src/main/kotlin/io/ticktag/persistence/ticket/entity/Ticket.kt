@@ -83,7 +83,7 @@ open class Ticket protected constructor() {
         protected set
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "projectId", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "project_id", referencedColumnName = "id", nullable = false)
     lateinit open var project: Project
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
