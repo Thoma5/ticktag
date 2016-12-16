@@ -1,4 +1,4 @@
-import { Component, Input , Output, OnInit, EventEmitter} from '@angular/core';
+import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 import { TicketOverviewUser, TicketOverviewAssignment } from '../ticket-overview';
 import * as imm from 'immutable';
 
@@ -20,6 +20,6 @@ export class AssignedUserOverviewComponent implements OnInit {
   }
 
   userClicked(tag: TicketOverviewUser) {
-  this.clickedUser.emit(tag);
-}
+    this.clickedUser.emit(tag);
+  }
 }

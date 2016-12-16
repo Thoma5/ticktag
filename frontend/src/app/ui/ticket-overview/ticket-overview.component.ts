@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiCallService } from '../../service';
 import {
@@ -30,13 +31,13 @@ export class TicketOverviewComponent implements OnInit {
   private allProjectUsers: imm.Map<string, TicketOverviewUser>;
   private projectId: string | null = null;
   private filterTerms = new Subject<TicketFilter>();
-  private ticketFilter: TicketFilter =  new TicketFilter(undefined, undefined, undefined, undefined, undefined,
-        undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+  private ticketFilter: TicketFilter = new TicketFilter(undefined, undefined, undefined, undefined, undefined,
+    undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
   sortprop = ['NUMBER_ASC'];
   offset = 0;
   limit = 30;
   totalElements = 0;
-  query: string = '!open:true';
+  query: string;
   rows: TicketOverview[] = [];
   iconsCss = {
     sortAscending: 'glyphicon glyphicon-chevron-down',
@@ -50,6 +51,7 @@ export class TicketOverviewComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private location: Location,
     private apiCallService: ApiCallService,
     private ticketApi: TicketApi,
     private assigmentTagsApi: AssignmenttagApi,
@@ -78,7 +80,17 @@ export class TicketOverviewComponent implements OnInit {
       .switchMap(params => {
         let projectId = params['projectId'];
         this.projectId = projectId;
-        return this.refresh();
+        this.route.queryParams.subscribe(p => {
+          this.ticketFilter = new TicketFilter(p['title'] || undefined,
+            p['ticketNumber'] || undefined, p['tag'] || undefined, p['user'] || undefined,
+            p['progressOne'] || undefined, p['progressTwo'] || undefined, p['progressGreater'] || undefined,
+            p['dueDateOne'] || undefined, p['dueDateTwo'] || undefined, p['dueDateGreater'] || undefined,
+            p['spOne'] || undefined, p['spTwo'] || undefined, p['spGreater'] || undefined,
+            p['open'] || undefined);
+          this.offset = p['page'] || 0;
+          this.query = this.ticketFilter.toTicketFilterString();
+        });
+        return this.refresh(this.ticketFilter);
       })
       .subscribe(() => {
         this.loading = false;
@@ -93,6 +105,8 @@ export class TicketOverviewComponent implements OnInit {
     } else {
       this.ticketFilter = ticketFilter;
     }
+    this.location.replaceState('/project/' + this.projectId + '/tickets?page=' + this.offset
+      + '&' + ticketFilter.toTicketFilterURLString());
     let rawTicketObs = this.apiCallService
       .callNoError<PageTicketResultJson>(p => this.ticketApi
         .listTicketsUsingGETWithHttpInfo(this.projectId, this.sortprop,
