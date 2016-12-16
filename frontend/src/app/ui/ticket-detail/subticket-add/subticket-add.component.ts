@@ -3,7 +3,7 @@ import {
   TicketDetailAssTag, TicketDetail, TicketDetailTimeCategory, TicketDetailTag
 } from '../ticket-detail';
 import * as imm from 'immutable';
-import { CommentTextviewSaveEvent } from '../command-textview/command-textview.component';
+import { CommandTextviewSaveEvent } from '../../../util/command-textview/command-textview.component';
 import * as grammar from '../../../service/command/grammar';
 import { Subject, ReplaySubject, Observable, Subscription } from 'rxjs';
 
@@ -43,7 +43,7 @@ export class SubticketAddComponent implements AfterViewInit, OnChanges, OnDestro
 
   editing: boolean = false;
   title: string = '';
-  description: CommentTextviewSaveEvent = this.getEmptyDescription();
+  description: CommandTextviewSaveEvent = this.getEmptyDescription();
 
   ngAfterViewInit(): void {
     this.titleFocusEventSubject.next(undefined);
@@ -113,7 +113,7 @@ export class SubticketAddComponent implements AfterViewInit, OnChanges, OnDestro
     }
   }
 
-  private getEmptyDescription(): CommentTextviewSaveEvent {
+  private getEmptyDescription(): CommandTextviewSaveEvent {
     return { commands: imm.List.of<grammar.Cmd>(), text: '' };
   }
 }

@@ -25,7 +25,8 @@ import {
 import { SubticketCreateEvent } from './subticket-add/subticket-add.component';
 import { idListToMap } from '../../util/listmaputils';
 import * as imm from 'immutable';
-import { CommentTextviewSaveEvent } from './command-textview/command-textview.component';
+import { CommandTextviewSaveEvent } from '../../util/command-textview/command-textview.component';
+import { showValidationError } from '../../util/error';
 
 @Component({
   selector: 'tt-ticket-detail',
@@ -99,7 +100,7 @@ export class TicketDetailComponent implements OnInit {
   onTitleChange(val: string): void {
     this.transientTicket.title = val;
     this.newTicketDetail();
-    this.updateTicket({ title: val }, () => {
+    this.updateTicket({ title: { value: val } }, () => {
       this.transientTicket.title = undefined;
       this.newTicketDetail();
     });
@@ -108,7 +109,7 @@ export class TicketDetailComponent implements OnInit {
   onDescriptionChange(val: string): void {
     this.transientTicket.description = val;
     this.newTicketDetail();
-    this.updateTicket({ description: val }, () => {
+    this.updateTicket({ description: { value: val } }, () => {
       this.transientTicket.description = undefined;
       this.newTicketDetail();
     });
@@ -117,7 +118,7 @@ export class TicketDetailComponent implements OnInit {
   onStorypointsChange(val: number): void {
     this.transientTicket.storyPoints = val;
     this.newTicketDetail();
-    this.updateTicket({ storyPoints: val }, () => {
+    this.updateTicket({ storyPoints: { value: val } }, () => {
       this.transientTicket.storyPoints = undefined;
       this.newTicketDetail();
     });
@@ -126,7 +127,7 @@ export class TicketDetailComponent implements OnInit {
   onCurrentEstimatedTimeChange(val: number) {
     this.transientTicket.currentEstimatedTime = val;
     this.newTicketDetail();
-    this.updateTicket({ currentEstimatedTime: val }, () => {
+    this.updateTicket({ currentEstimatedTime: { value: val } }, () => {
       this.transientTicket.currentEstimatedTime = undefined;
       this.newTicketDetail();
     });
@@ -135,7 +136,7 @@ export class TicketDetailComponent implements OnInit {
   onInitialEstimatedTimeChange(val: number) {
     this.transientTicket.initialEstimatedTime = val;
     this.newTicketDetail();
-    this.updateTicket({ initialEstimatedTime: val }, () => {
+    this.updateTicket({ initialEstimatedTime: { value: val } }, () => {
       this.transientTicket.initialEstimatedTime = undefined;
       this.newTicketDetail();
     });
@@ -144,7 +145,7 @@ export class TicketDetailComponent implements OnInit {
   onDueDateChange(val: number) {
     this.transientTicket.dueDate = val;
     this.newTicketDetail();
-    this.updateTicket({ dueDate: val }, () => {
+    this.updateTicket({ dueDate: { value: val } }, () => {
       this.transientTicket.dueDate = undefined;
       this.newTicketDetail();
     });
@@ -239,7 +240,7 @@ export class TicketDetailComponent implements OnInit {
     this.newTicketDetail();
   }
 
-  onCommentCreate(event: CommentTextviewSaveEvent): void {
+  onCommentCreate(event: CommandTextviewSaveEvent): void {
     this.creatingComment = true;
     let obs = this.apiCallService
       .call<void>(p => this.commentsApi.createCommentUsingPOSTWithHttpInfo({
@@ -370,32 +371,7 @@ export class TicketDetailComponent implements OnInit {
   }
 
   private error(result: ApiCallResult<void|{}>): void {
-    console.dir(result);
-    let validationErrors = result.error;
-
-    let errorBody = '<ul>';
-    validationErrors.map(e => {
-      let baseStr = e.field + ': ';
-      let errorStr = 'unknown';
-      if (e.type === 'size') {
-        errorStr = 'size (' + e.sizeInfo.min + ', ' + e.sizeInfo.max + ')';
-      } else if (e.type === 'pattern') {
-        errorStr = 'pattern ' + e.patternInfo.pattern;
-      } else if (e.type === 'other') {
-        errorStr = 'other ' + e.otherInfo.name;
-      }
-      return baseStr + errorStr;
-    }).forEach(s => {
-      errorBody = errorBody + '<li>' + s + '</li>';
-    });
-    errorBody = errorBody + '</ul>';
-
-    this.modal.alert()
-        .size('sm')
-        .showClose(true)
-        .title('Error')
-        .body(errorBody)
-        .open();
+    showValidationError(this.modal, result);
   }
 
   private reset(): Observable<void> {
@@ -563,6 +539,7 @@ export class TicketDetailComponent implements OnInit {
           }).toList();
         this.newTicketDetail();
       })
-      .map(it => undefined);
+      .map(it => undefined)
+      .catch(err => Observable.empty<void>());
   }
 }

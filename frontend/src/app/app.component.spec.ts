@@ -2,7 +2,7 @@ import {TestBed} from '@angular/core/testing';
 import {provideRoutes} from '@angular/router';
 import {RouterTestingModule} from '@angular/router/testing';
 import {AppComponent} from './app.component';
-import {AuthService} from './service/auth/auth.service';
+import {AuthService, ApiCallService} from './service';
 import {User} from './service/auth/user';
 import {Observable} from 'rxjs/Rx';
 import {Injectable} from '@angular/core';
@@ -30,7 +30,7 @@ describe('App', () => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, MaterialModule],
       declarations: [AppComponent],
-      providers: [provideRoutes([]), {provide: AuthService, useClass: MockAuthService}, Overlay, Modal, OverlayRenderer],
+      providers: [provideRoutes([]), {provide: AuthService, useClass: MockAuthService}, ApiCallService, Overlay, Modal, OverlayRenderer],
     });
   });
 

@@ -24,8 +24,8 @@ class TicketProgressTest : ApiBaseTest() {
 
             assertEquals(20, progress.loggedTime.seconds)
             assertEquals(25, progress.currentEstimatedTime.seconds)
-            assertEquals(50, progress.totalLoggedTime.seconds)
-            assertEquals(60, progress.totalCurrentEstimatedTime.seconds)
+            assertEquals(71, progress.totalLoggedTime.seconds)
+            assertEquals(35, progress.totalCurrentEstimatedTime.seconds)
         }
     }
 }

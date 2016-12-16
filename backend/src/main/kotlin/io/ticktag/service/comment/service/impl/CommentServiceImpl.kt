@@ -36,7 +36,7 @@ open class CommentServiceImpl @Inject constructor(
     @PreAuthorize(AuthExpr.READ_TICKET)
     override fun listCommentsForTicket(@P("authTicketId") ticketId: UUID): List<CommentResult> {
         val ticket = tickets.findOne(ticketId) ?: throw NotFoundException()
-        return ticket.comments.filter { c -> c.describedTicket == null }.map(::CommentResult)
+        return ticket.comments.filter { c -> !c.isDescription }.map(::CommentResult)
     }
 
     // TODO change events?
@@ -57,7 +57,7 @@ open class CommentServiceImpl @Inject constructor(
     @PreAuthorize(AuthExpr.READ_COMMENT)
     override fun getComment(@P("authCommentId") commentId: UUID): CommentResult? {
         val comment = comments.findOne(commentId) ?: throw NotFoundException()
-        if (comment.describedTicket != null) {
+        if (comment.isDescription) {
             throw NotFoundException()
         }
         return CommentResult(comment)
@@ -67,7 +67,7 @@ open class CommentServiceImpl @Inject constructor(
     override fun updateComment(@P("authCommentId") commentId: UUID, @Valid updateComment: UpdateComment): CommentResult? {
 
         val comment = comments.findOne(commentId) ?: throw NotFoundException()
-        if (comment.describedTicket != null) {
+        if (comment.isDescription) {
             throw NotFoundException()
         }
         if (updateComment.text != null) {
@@ -98,7 +98,7 @@ open class CommentServiceImpl @Inject constructor(
     @PreAuthorize(AuthExpr.EDIT_COMMENT)
     override fun deleteComment(@P("authCommentId") commentId: UUID) {
         val comment = comments.findOne(commentId) ?: throw NotFoundException()
-        if (comment.describedTicket != null) {
+        if (comment.isDescription) {
             throw NotFoundException()
         }
         comments.delete(comment)
