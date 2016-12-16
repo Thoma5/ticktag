@@ -268,7 +268,6 @@ export class BurnDownChartComponent implements OnInit {
 
         // Max 10.000 days back - otherwise I am sure something is wrong with the dates
         daysBetween = Math.min(moment(this.toDate).diff(fromMoment, 'days') + 1, 10000);
-        idealDecreasePerDay = startLines / (daysBetween - 1);
         this.resetData();
         for (let i = 0; i < daysBetween; i++) {
             const ticketEventThatDay = ticketEvents.get(this.utcRemoveTime(fromMoment.valueOf()));
@@ -286,6 +285,10 @@ export class BurnDownChartComponent implements OnInit {
             }
             if (fromMoment.valueOf() > now) {
                 actualData = undefined;
+            }
+            if (i == 0) {
+                idealData = actualData; 
+                idealDecreasePerDay = idealData / (daysBetween - 1);
             }
             this.addDay(actualData, Math.round(idealData * 10) / 10, fromMoment.format('YYYY-MM-DD'));
             idealData -= idealDecreasePerDay;
