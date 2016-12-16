@@ -74,7 +74,6 @@ export class TicketFilterComponent implements OnInit, OnChanges {
         this.assignees = this.allUsers.toList();
         this.filterHelper = this.defaultFilterOpen;
         this.searchTerms
-            .debounceTime(800)
             .distinctUntilChanged()
             .subscribe(term => this.filter(term), error => { });
     }

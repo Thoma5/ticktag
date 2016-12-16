@@ -106,7 +106,7 @@ export class TicketOverviewComponent implements OnInit {
       .subscribe(result => {
         this.loading = false;
       });
-    this.filterTerms.debounceTime(300).switchMap(term => this.refresh(term)).subscribe(result => {}, error => {});
+    this.filterTerms.debounceTime(900).switchMap(term => this.refresh(term)).subscribe(result => {}, error => {});
   }
 
   private refresh(ticketFilter?: TicketFilter): Observable<void> {
