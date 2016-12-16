@@ -47,7 +47,7 @@ data class TicketFilter(val project: UUID, val number: Int?, val title: String?,
             val join = root.join<Ticket, AssignedTicketUser>("assignedTicketUsers")
             val userPath = root.get<User>("assignedTicketUsers")
             query.multiselect(userPath)
-            query.groupBy(root.get<UUID>("id"), join.get<Ticket>("ticket").get<UUID>("id"), root.get<Progress>("totalProgress").get<Float>("totalProgress"))
+            query.groupBy(root.get<UUID>("id"), join.get<Ticket>("ticket").get<UUID>("id"), root.get<Progress>("progress").get<Float>("totalProgress"))
             val tusers = join.get<User>("user").get<String>("username")
             predicates.add(cb.isTrue(tusers.`in`(users)))
         }
