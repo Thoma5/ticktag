@@ -1,9 +1,25 @@
-<div class='subticket-container' [ngClass]='{"closed": !ticket.open}'>
-    <a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.id]" class='number'>#{{ticket.number}}</a>
-    <a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.id]" class='title'>{{ticket.title}}</a>
-    <div class="progress-bar-container">
-      <tt-progressbar [showNumbers]="false" [fraction]="ticket.progress.totalLoggedTime" [totalValue]="ticket.progress.currentEstimatedTime"></tt-progressbar>
+<div class='subticket-container' [ngClass]='{"closed": !open}'>
+    <div class="number-col">
+      <a *ngIf="showNumber" [routerLink]="['/project', projectId, 'ticket', number]" class='number'>#{{number}}</a>
+      <div *ngIf="loading" class="loading">
+        <tt-spinner class="loading"></tt-spinner>
+      </div>
+      <a *ngIf="error" class="error" href="javascript:void(0);" (click)='onRestore()'>
+        <i class="fa fa-exclamation-triangle"></i>
+      </a>
     </div>
-    <div class='progress-numbers'>{{ ticket.progress.totalLoggedTime | ttHumanizeDuration }}/{{ ticket.progress.currentEstimatedTime | ttHumanizeDuration }}
+    <a *ngIf="!transient" [routerLink]="['/project', projectId, 'ticket', number]" class='title'>{{title}}</a>
+    <span *ngIf="transient" class='title'>{{title}}</span>
+    <div class="progress-bar-container">
+      <tt-progressbar *ngIf="!transient && showProgress" [showNumbers]="false" [fraction]="loggedTime" [totalValue]="estimatedTime"></tt-progressbar>
+    </div>
+    <div class='progress-numbers-logged tooltip-container'>
+      <span *ngIf="!transient" [tooltip]="'Logged time'">{{ loggedTime | ttHumanizeDuration }}</span>
+    </div>
+    <div class='progress-numbers-estimated'>
+      <span *ngIf="!transient" [tooltip]="'Current estimation'">{{ estimatedTime | ttHumanizeDuration }}</span>
+    </div>
+    <div class='progress-numbers-initial'>
+      <span *ngIf="!transient" [tooltip]="'Initial estimation'">({{ initialEstimatedTime | ttHumanizeDuration }})</span>
     </div>
 </div>

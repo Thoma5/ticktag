@@ -1,4 +1,7 @@
 #!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
 RES_DIR=src/main/resources/
 PROP_FILE=$RES_DIR/dev-application.properties
 DROP_SQL=$RES_DIR/drop.sql
@@ -13,9 +16,21 @@ CONN="postgres://"$DB_USER":"$DB_PASSWORD"@"$DB_URL
 
 echo $CONN
 
-psql $CONN -f $DROP_SQL
-psql $CONN -f $SCHEMA_SQL
-psql $CONN -f $SAMPLES_SQL
+RECREATE_DB=false
+while test $# != 0
+do
+    case "$1" in
+    -r) RECREATE_DB=true ;;
+    --) shift; break;;
+    esac
+    shift
+done
 
-./mvnw compile
+if $RECREATE_DB; then
+    psql $CONN -f $DROP_SQL
+    psql $CONN -f $SCHEMA_SQL
+    psql $CONN -f $SAMPLES_SQL
+fi
+
+./mvnw clean compile
 ./mvnw -DTICKTAG_CONFIG=$PROP_FILE exec:java -Dexec.mainClass=io.ticktag.TicktagApplicationKt

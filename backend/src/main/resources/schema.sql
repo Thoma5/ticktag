@@ -7,10 +7,14 @@ CREATE TABLE IF NOT EXISTS "user" (
   "name"          TEXT NOT NULL,
   "password_hash" TEXT NOT NULL,
   "role"          TEXT NOT NULL,
-  "current_token" UUID NOT NULL,
-  "profile_pic"   BYTEA
+  "current_token" UUID NOT NULL
 );
 CREATE INDEX ON "user" (upper("mail"));
+
+CREATE TABLE IF NOT EXISTS "user_image" (
+  "user_id" UUID PRIMARY KEY REFERENCES "user",
+  "image"   BYTEA NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS "project" (
   "id"            UUID PRIMARY KEY,
@@ -258,4 +262,34 @@ CREATE TABLE IF NOT EXISTS "ticket_event_logged_time_removed" (
 CREATE INDEX ON "ticket_event_logged_time_removed" ("comment_id");
 CREATE INDEX ON "ticket_event_logged_time_removed" ("time_category_id");
 
+CREATE VIEW view_progress AS
+  SELECT
+    t.*,
+    CASE WHEN t.total_initial_estimated_time = 0
+      THEN NULL
+    ELSE t.total_logged_time :: REAL / t.total_initial_estimated_time :: REAL END AS total_initial_progress,
+    CASE WHEN t.total_current_estimated_time = 0
+      THEN NULL
+    ELSE t.total_logged_time :: REAL / t.total_current_estimated_time :: REAL END AS total_progress
+  FROM (
+         SELECT
+           t.id                                                         AS ticket_id,
+           (SELECT coalesce(sum(tt.initial_estimated_time), 0)
+            FROM ticket tt
+            WHERE tt.id = t.id OR tt.parent_ticket_id = t.id) :: BIGINT AS total_initial_estimated_time,
+           (SELECT coalesce(sum(tt.current_estimated_time), 0)
+            FROM ticket tt
+            WHERE tt.id = t.id OR tt.parent_ticket_id = t.id) :: BIGINT AS total_current_estimated_time,
+           (SELECT coalesce(sum(lt.time), 0)
+            FROM ticket tt
+              JOIN comment cc ON cc.ticket_id = tt.id
+              JOIN logged_time lt ON lt.comment_id = cc.id
+            WHERE tt.id = t.id OR tt.parent_ticket_id = t.id) :: BIGINT AS total_logged_time,
+           (SELECT coalesce(sum(lt.time), 0)
+            FROM ticket tt
+              JOIN comment cc ON cc.ticket_id = tt.id
+              JOIN logged_time lt ON lt.comment_id = cc.id
+            WHERE tt.id = t.id) :: BIGINT AS logged_time
+         FROM ticket t
+       ) t;
 COMMIT;

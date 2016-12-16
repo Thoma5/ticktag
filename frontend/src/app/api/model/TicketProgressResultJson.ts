@@ -28,6 +28,10 @@ import * as models from './models';
 export interface TicketProgressResultJson {
     currentEstimatedTime: number;
 
+    loggedTime: number;
+
+    totalCurrentEstimatedTime: number;
+
     totalLoggedTime: number;
 
 }

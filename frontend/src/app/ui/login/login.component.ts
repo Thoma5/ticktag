@@ -45,7 +45,7 @@ export class LoginComponent {
           window.alert('Wrong username or password!');
         } else {
           this.authService.user = result;
-          this.router.navigate(['/whoami']);
+          this.router.navigate(['/']);
         }
       });
   }

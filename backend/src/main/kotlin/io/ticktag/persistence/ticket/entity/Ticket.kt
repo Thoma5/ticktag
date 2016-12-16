@@ -21,16 +21,16 @@ open class Ticket protected constructor() {
             o.title = title
             o.open = open
             o.storyPoints = storyPoints
-            o.initialEstimatedTime = initialEstimatedTime?:currentEstimatedTime
-            o.currentEstimatedTime = currentEstimatedTime?:initialEstimatedTime
+            o.initialEstimatedTime = initialEstimatedTime ?: currentEstimatedTime
+            o.currentEstimatedTime = currentEstimatedTime ?: initialEstimatedTime
             o.dueDate = dueDate
             o.parentTicket = parentTicket
             o.subTickets = mutableListOf()
             o.project = project
             o.createdBy = createdBy
             o.tags = mutableListOf()
-            o.mentioningComments = mutableListOf()
-            o.comments = mutableListOf()
+            o.mentioningComments = mutableSetOf()
+            o.comments = mutableSetOf()
             o.assignedTicketUsers = mutableListOf()
             o.events = mutableListOf()
             o.parentChangedEventsDst = mutableListOf()
@@ -67,6 +67,10 @@ open class Ticket protected constructor() {
     @Column(name = "current_estimated_time", nullable = true)
     open var currentEstimatedTime: Duration? = null
 
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "id", referencedColumnName = "ticket_id", nullable = false)
+    open var progress: Progress? = null
+
     @Column(name = "due_date", nullable = true)
     open var dueDate: Instant? = null
 
@@ -99,11 +103,11 @@ open class Ticket protected constructor() {
     lateinit open var tags: MutableList<TicketTag>
 
     @ManyToMany(mappedBy = "mentionedTickets")
-    lateinit open var mentioningComments: MutableList<Comment>
+    lateinit open var mentioningComments: MutableSet<Comment>
         protected set
 
     @OneToMany(mappedBy = "ticket", cascade = arrayOf(CascadeType.REMOVE))
-    lateinit open var comments: MutableList<Comment>
+    lateinit open var comments: MutableSet<Comment>
         protected set
 
     @OneToMany(mappedBy = "ticket", cascade = arrayOf(CascadeType.REMOVE))

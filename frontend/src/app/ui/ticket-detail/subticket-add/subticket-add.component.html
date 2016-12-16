@@ -13,15 +13,24 @@
             [allTicketTags]="allTicketTags"
             [allTimeCategories]="allTimeCategories"
             [allAssignmentTags]="allAssignmentTags"
-            [resetEventObservable]="resetEventSubject"
+            [resetEventObservable]="textViewResetEventSubject"
             (contentChange)="this.description = $event"
             (save)="onSubmit()"
         >
         </tt-command-textview>
     </div>
-    <div class="buttons">
-      <input type='button' class='btn btn-primary button-submit' value='Add' (click)="onSubmit()">
-      <a href='javascript:void(0)' class='button-abort' value='Abort' (click)="onAbort()">Abort</a>
+    <div class="below">
+      <div class="help">
+        <tt-command-description
+            [commands]="description.commands"
+        >
+        </tt-command-description>
+        <tt-command-help></tt-command-help>
+      </div>
+      <div class="buttons">
+        <input type='button' class='btn btn-primary button-submit' value='Add' (click)="onSubmit()">
+        <a href='javascript:void(0)' class='button-abort' value='Abort' (click)="onAbort()">Abort</a>
+      </div>
     </div>
   </div>
 </div>

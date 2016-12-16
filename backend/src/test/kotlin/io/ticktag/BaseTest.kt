@@ -1,4 +1,4 @@
-package io.ticktag.integrationtests
+package io.ticktag
 
 import com.google.common.io.Resources
 import io.ticktag.persistence.comment.CommentRepository
@@ -8,6 +8,7 @@ import io.ticktag.persistence.ticket.AssignmentTagRepository
 import io.ticktag.persistence.timecategory.TimeCategoryRepository
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.Principal
+import io.ticktag.service.Scope
 import io.ticktag.util.tryw
 import org.junit.Before
 import org.junit.runner.RunWith
@@ -62,6 +63,7 @@ abstract class BaseTest {
     fun setUp() {
         datasource.connection.tryw({
             initDb(it)
+            execResource(it, "sql/testCleanup.sql")
             for (sql in loadTestData())
                 execResource(it, sql)
         })
@@ -80,7 +82,7 @@ abstract class BaseTest {
             throw RuntimeException("Called withUser even though the security context is already set")
 
         val user = users.findOne(userId) ?: throw RuntimeException("Called withUser with an unknown user UUID")
-        val principal = Principal(user.id, user.role, members, comments, assignmenttags, timeCategories, loggedTimes)
+        val principal = Principal(user.id, user.role, Scope.REGULAR, members, comments, assignmenttags, timeCategories, loggedTimes)
 
         SecurityContextHolder.getContext().authentication = PreAuthenticatedAuthenticationToken(principal, null, emptySet())
         try {
@@ -94,7 +96,7 @@ abstract class BaseTest {
         if (SecurityContextHolder.getContext().authentication != null)
             throw RuntimeException("Called withoutUser even though the security context is already set")
 
-        SecurityContextHolder.getContext().authentication = PreAuthenticatedAuthenticationToken(Principal.INTERNAL, null, emptySet())
+        SecurityContextHolder.getContext().authentication = PreAuthenticatedAuthenticationToken(Principal.Companion.INTERNAL, null, emptySet())
         try {
             return proc()
         } finally {

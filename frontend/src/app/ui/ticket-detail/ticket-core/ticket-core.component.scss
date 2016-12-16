@@ -6,13 +6,14 @@
     position: relative;
 }
 
-.card-content * {
-    z-index: 1;
+.card-content {
+  z-index: 1;
+  position: relative;
 }
 
 .closed {
-    width: 16rem;
-    height: 16rem;
+    width: 15rem;
+    height: 15rem;
     position: absolute;
     top: -5rem;
     right: -5rem;
@@ -64,7 +65,12 @@
     }
 }
 
-.status {
+.storypoints {
+  width: 100%;
+  margin-bottom: $internal-gap;
+}
+
+.status-time {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
@@ -105,6 +111,11 @@
 }
 
 .description-edit-wrapper {
+  .command-textview {
+    background-color: $background-secondary;
+    border-radius: ($px * 6rem);
+  }
+
   .under {
     display: flex;
     flex-direction: row;
@@ -133,4 +144,9 @@
   }
 }
 
-
+.subticket-add {
+  margin-top: $small-gap;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}

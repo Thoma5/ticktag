@@ -2,6 +2,8 @@ package io.ticktag.persistence.user.entity
 
 import io.ticktag.persistence.member.entity.Member
 import io.ticktag.persistence.ticket.entity.*
+import org.hibernate.annotations.LazyToOne
+import org.hibernate.annotations.LazyToOneOption
 import java.util.*
 import javax.persistence.*
 
@@ -9,12 +11,12 @@ import javax.persistence.*
 @Table(name = "user")
 open class User protected constructor() {
     companion object {
-        fun create(mail: String, passwordHash: String, name: String, username: String, role: Role, currentToken: UUID, profilePic: ByteArray?): User {
-            return createWithId(UUID.randomUUID(), mail, passwordHash, name, username, role, currentToken, profilePic)
+        fun create(mail: String, passwordHash: String, name: String, username: String, role: Role, currentToken: UUID): User {
+            return createWithId(UUID.randomUUID(), mail, passwordHash, name, username, role, currentToken)
         }
 
         fun createWithId(uuid: UUID, mail: String, passwordHash: String, name: String, username: String, role: Role,
-                         currentToken: UUID, profilePic: ByteArray?): User {
+                         currentToken: UUID): User {
             val u = User()
             u.id = uuid
             u.mail = mail
@@ -23,7 +25,6 @@ open class User protected constructor() {
             u.username = username
             u.role = role
             u.currentToken = currentToken
-            u.profilePic = profilePic
             u.memberships = mutableListOf()
             u.createdTickets = mutableListOf()
             u.comments = mutableListOf()
@@ -61,8 +62,8 @@ open class User protected constructor() {
     @Column(name = "current_token", nullable = false)
     lateinit open var currentToken: UUID
 
-    @Column(name = "profile_pic", nullable = true)
-    open var profilePic: ByteArray? = null
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, optional = true)
+    open var image: UserImage? = null
 
     @OneToMany(mappedBy = "user")
     lateinit open var memberships: MutableList<Member>

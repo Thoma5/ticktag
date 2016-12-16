@@ -13,4 +13,4 @@ sealed class ValidationErrorDetail {
     object Unknown : ValidationErrorDetail()
 }
 
-class TicktagValidationException(val errros: List<ValidationError>) : RuntimeException("Service layer validation failed")
+class TicktagValidationException(val errors: List<ValidationError>) : RuntimeException("Service layer validation failed")

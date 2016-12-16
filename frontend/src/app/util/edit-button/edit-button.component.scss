@@ -1,6 +1,6 @@
 @import '../../../style/constants.scss';
 
 .edit-button {
-    @extend %reset-button;
-    @extend %edit-a;
+  @extend %reset-button;
+  @extend %edit-a;
 }

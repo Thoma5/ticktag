@@ -20,6 +20,7 @@ import io.ticktag.service.tickettagrelation.services.TicketTagRelationService
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.access.prepost.PreAuthorize
 import javax.inject.Inject
+import javax.validation.Valid
 
 @TicktagService
 open class CommandServiceImpl(
@@ -37,7 +38,7 @@ open class CommandServiceImpl(
     private lateinit var ticketService: TicketService
 
     @PreAuthorize(AuthExpr.USER)
-    override fun applyCommands(comment: Comment, commands: List<Command>, principal: Principal) {
+    override fun applyCommands(comment: Comment, @Valid commands: List<Command>, principal: Principal) {
         val errors = mutableListOf<ValidationError>()
 
         if (!(principal.hasRole(AuthExpr.ROLE_GLOBAL_ADMIN) || principal.hasProjectRoleForComment(comment.id, AuthExpr.ROLE_PROJECT_USER))) {
@@ -82,12 +83,12 @@ open class CommandServiceImpl(
                 }
                 is Command.Close -> {
                     tryCommand(errors, index) {
-                        ticketService.updateTicket(UpdateTicket(null, false, null, null, null, null, null, null), ticket.id, principal)
+                        ticketService.updateTicket(UpdateTicket(null, UpdateValue(false), null, null, null, null, null, null), ticket.id, principal)
                     }
                 }
                 is Command.Reopen -> {
                     tryCommand(errors, index) {
-                        ticketService.updateTicket(UpdateTicket(null, true, null, null, null, null, null, null), ticket.id, principal)
+                        ticketService.updateTicket(UpdateTicket(null, UpdateValue(true), null, null, null, null, null, null), ticket.id, principal)
                     }
                 }
                 is Command.Tag -> {
@@ -112,15 +113,14 @@ open class CommandServiceImpl(
                 }
                 is Command.Est -> {
                     tryCommand(errors, index) {
-                        ticketService.updateTicket(UpdateTicket(null, null, null, null, command.duration, null, null, null), ticket.id, principal)
+                        ticketService.updateTicket(UpdateTicket(null, null, null, null, UpdateValue(command.duration), null, null, null), ticket.id, principal)
                     }
                 }
                 is Command.Time -> {
                     val cat = timeCategories.findByNormalizedNameAndProjectId(nn.normalize(command.category), ticket.project.id)
                     if (cat != null) {
                         tryCommand(errors, index) {
-                            // TODO why needs createLoggedTime the comment id twice???
-                            loggedTimeService.createLoggedTime(CreateLoggedTime(command.duration, comment.id, cat.id), comment.id)
+                            loggedTimeService.createLoggedTime(CreateLoggedTime(command.duration, cat.id), comment.id)
                         }
                     } else {
                         failedCommand(errors, index)

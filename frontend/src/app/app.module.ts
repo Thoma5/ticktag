@@ -10,7 +10,7 @@ import { ModalModule } from 'angular2-modal';
 import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
 
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
-import { AuthService, ApiCallService, MarkdownService } from './service';
+import { AuthService, ApiCallService, MarkdownService, ImagesService } from './service';
 import { LoginComponent } from './ui/login/login.component';
 import { WhoamiComponent } from './ui/whoami/whoami.component';
 import { HomeComponent } from './ui/home/home.component';
@@ -44,7 +44,7 @@ import { OpenClosedButtonComponent } from './ui/ticket-detail/open-closed-button
 import { TicketCommentsComponent } from './ui/ticket-detail/ticket-comments/ticket-comments.component';
 import { TicketCommentComponent } from './ui/ticket-detail/ticket-comment/ticket-comment.component';
 import { TicketCommentInputComponent } from './ui/ticket-detail/ticket-comment-input/ticket-comment-input.component';
-import { TicketStorypointsComponent } from './ui/ticket-detail/ticket-storypoints/ticket-storypoints.component';
+import { TicketFilterComponent } from './ui/ticket-overview/ticket-filter/ticket-filter.component';
 import { AssignedUserComponent } from './ui/ticket-detail/assigned-user/assigned-user.component';
 import { SubticketsComponent } from './ui/ticket-detail/subtickets/subtickets.component';
 import { SubticketComponent } from './ui/ticket-detail/subticket/subticket.component';
@@ -68,22 +68,23 @@ import { LoadingComponent } from './util/loading/loading.component';
 import { TicketOverviewComponent } from'./ui/ticket-overview/ticket-overview.component';
 import { AssignedUserOverviewComponent } from'./ui/ticket-overview/assigned-user/assigned-user-overview.component';
 import { SpinnerComponent } from './util/spinner/spinner.component';
-import { CommandTextviewComponent } from './ui/ticket-detail/command-textview/command-textview.component';
-import { CommandDescriptionComponent } from './ui/ticket-detail/command-description/command-description.component';
-import { CommandHelpComponent } from './ui/ticket-detail/command-help/command-help.component';
+import { CommandTextviewComponent } from './util/command-textview/command-textview.component';
+import { CommandDescriptionComponent } from './util/command-description/command-description.component';
+import { CommandHelpComponent } from './util/command-help/command-help.component';
 import { ProgressBarComponent } from './util/progressbar/progressbar.component';
+import { UserImageComponent } from './util/user-image/user-image.component';
 
 import {TicketEventsComponent} from './ui/ticket-detail/ticket-events/ticket-events.component';
 import {TicketEventOldNewComponent} from './ui/ticket-detail/ticket-events/ticket-event-old-new/ticket-event-old-new.component';
 import {TicketeventApi} from './api/api/TicketeventApi';
-import {TicketEventComponent} from './ui/ticket-detail/ticket-events/ticket-event/ticker-event.component';
+import {GroupedTicketEventComponent} from './ui/ticket-detail/ticket-events/grouped-ticket-event/grouped-ticket-event.component';
 import {TicketEventUserComponent} from './ui/ticket-detail/ticket-events/ticket-event-user/ticket-event-user.component';
 import {TicketEventParentChangedComponent}
   from './ui/ticket-detail/ticket-events/ticket-event-parent-ticket-changed/ticket-event-parent-ticket-changed.component';
 import {TicketEventTagComponent} from './ui/ticket-detail/ticket-events/ticket-event-tag/ticket-event-tag.component';
 import {TicketEventOldNewMarkupComponent}
   from './ui/ticket-detail/ticket-events/ticket-event-old-new-markup/ticket-event-old-new-markup.component';
-
+import { TicketCreateComponent } from './ui/ticket-detail/ticket-create/ticket-create.component';
 
 @NgModule({
   imports: [
@@ -111,6 +112,7 @@ import {TicketEventOldNewMarkupComponent}
     TicketDetailComponent,
     TicketSidebarComponent,
     TicketCoreComponent,
+    TicketFilterComponent,
     EditableTextviewComponent,
     EditTextviewStringComponent,
     EditTextviewStringEditComponent,
@@ -125,7 +127,6 @@ import {TicketEventOldNewMarkupComponent}
     EditTextviewTimeEditComponent,
     EditTextviewTimeReadComponent,
     OpenClosedButtonComponent,
-    TicketStorypointsComponent,
     AssignedUserComponent,
     AssignedUserOverviewComponent,
     SubticketsComponent,
@@ -136,7 +137,7 @@ import {TicketEventOldNewMarkupComponent}
     TicketCommentsComponent,
     TicketCommentComponent,
     TicketEventsComponent,
-    TicketEventComponent,
+    GroupedTicketEventComponent,
     TicketEventOldNewComponent,
     TicketEventOldNewMarkupComponent,
     TicketEventUserComponent,
@@ -149,6 +150,7 @@ import {TicketEventOldNewMarkupComponent}
     CommandHelpComponent,
     MarkdownTextviewReadComponent,
     ProgressBarComponent,
+    TicketCreateComponent,
 
     HumanizeDurationPipe,
     FormatMomentPipe,
@@ -160,6 +162,7 @@ import {TicketEventOldNewMarkupComponent}
     SelectAllDirective,
     LoadingComponent,
     SpinnerComponent,
+    UserImageComponent,
   ],
   providers: [
     ProjectApi,
@@ -180,6 +183,7 @@ import {TicketEventOldNewMarkupComponent}
     ApiCallService,
     AuthService,
     MarkdownService,
+    ImagesService,
   ],
   bootstrap: [AppComponent]
 })

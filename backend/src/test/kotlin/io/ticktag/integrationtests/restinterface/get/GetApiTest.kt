@@ -95,7 +95,7 @@ class GetApiTest : ApiBaseTest() {
             assertTrue(result.ticketStatistics.containsKey(secondId))
 
             val stat = result.ticketStatistics[secondId]!!
-            assertEquals(Duration.ofNanos(25), stat.currentEstimatedTime)
+            assertEquals(Duration.ofNanos(25), stat.totalCurrentEstimatedTime)
             assertEquals(Duration.ZERO, stat.totalLoggedTime)
         }
     }

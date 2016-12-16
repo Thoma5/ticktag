@@ -4,12 +4,13 @@ import io.ticktag.TicktagService
 import io.ticktag.persistence.member.MemberRepository
 import io.ticktag.persistence.member.entity.ProjectRole
 import io.ticktag.persistence.ticket.AssignmentTagRepository
-import io.ticktag.persistence.ticket.entity.AssignedTicketUser
-import io.ticktag.persistence.ticket.entity.AssignedTicketUserKey
-import io.ticktag.persistence.ticketassignment.TicketAssignmentRepository
 import io.ticktag.persistence.ticket.TicketEventRepository
 import io.ticktag.persistence.ticket.TicketRepository
-import io.ticktag.persistence.ticket.entity.*
+import io.ticktag.persistence.ticket.entity.AssignedTicketUser
+import io.ticktag.persistence.ticket.entity.AssignedTicketUserKey
+import io.ticktag.persistence.ticket.entity.TicketEventUserAdded
+import io.ticktag.persistence.ticket.entity.TicketEventUserRemoved
+import io.ticktag.persistence.ticketassignment.TicketAssignmentRepository
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.*
 import io.ticktag.service.ticketassignment.dto.TicketAssignmentResult

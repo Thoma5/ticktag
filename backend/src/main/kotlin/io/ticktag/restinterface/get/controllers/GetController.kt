@@ -5,11 +5,11 @@ import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.get.schema.GetRequestJson
 import io.ticktag.restinterface.get.schema.GetResultJson
 import io.ticktag.restinterface.loggedtime.schema.LoggedTimeResultJson
+import io.ticktag.restinterface.statistic.schema.TicketProgressResultJson
 import io.ticktag.restinterface.ticket.schema.TicketResultJson
 import io.ticktag.restinterface.user.schema.UserResultJson
 import io.ticktag.service.Principal
 import io.ticktag.service.loggedtime.service.LoggedTimeService
-import io.ticktag.restinterface.statistic.schema.TicketProgressResultJson
 import io.ticktag.service.statistic.service.StatisticService
 import io.ticktag.service.ticket.service.TicketService
 import io.ticktag.service.user.services.UserService
@@ -39,7 +39,7 @@ open class GetController @Inject constructor(
         val ticketIds = request.ticketIds
         val loggedTimeIds = request.loggedTimeIds
         val ticketIdsForStatistic = request.ticketIdsForStatistic
-        val users = if (userIds == null) emptyMap() else userService.getUsers(userIds).mapValues { UserResultJson(it.value) }
+        val users = if (userIds == null) emptyMap() else userService.getUsers(userIds, principal).mapValues { UserResultJson(it.value) }
         val tickets = if (ticketIds == null) emptyMap() else ticketService.getTickets(ticketIds, principal).mapValues { TicketResultJson(it.value) }
         val loggedTimes = if (loggedTimeIds == null) emptyMap() else loggedTimeService.getLoggedTimes(loggedTimeIds, principal).mapValues { LoggedTimeResultJson(it.value) }
         val ticketStatistics = if (ticketIdsForStatistic == null) emptyMap() else statisticService.getTicketProgresses(ticketIdsForStatistic, principal).mapValues { TicketProgressResultJson(it.value) }

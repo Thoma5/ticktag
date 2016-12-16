@@ -7,8 +7,10 @@ import {
 import { SubticketCreateEvent } from '../subticket-add/subticket-add.component';
 import * as imm from 'immutable';
 import { Subject } from 'rxjs';
-import { CommentTextviewSaveEvent } from '../command-textview/command-textview.component';
+import { CommandTextviewSaveEvent } from '../../../util/command-textview/command-textview.component';
 import { Cmd } from '../../../service/command/grammar';
+import { ResetEvent } from '../subticket-add/subticket-add.component';
+import { TicketRestoreEvent } from '../subticket/subticket.component';
 
 @Component({
   selector: 'tt-ticket-core',
@@ -65,6 +67,8 @@ export class TicketCoreComponent implements OnChanges {
   private currentDescripton = '';
   private currentCommands = imm.List<Cmd>();
 
+  private readonly subticketAddResetSubject = new Subject<ResetEvent>();
+
   ngOnChanges(changes: SimpleChanges): void {
     if ('tags' in changes) {
       this.tagIds = this.tags.map(tag => ({ id: tag.value.id, transient: tag.transient })).toList();
@@ -79,7 +83,7 @@ export class TicketCoreComponent implements OnChanges {
     }, 0);
   }
 
-  onDescriptionChange(val: CommentTextviewSaveEvent) {
+  onDescriptionChange(val: CommandTextviewSaveEvent) {
     this.currentDescripton = val.text;
     this.currentCommands = val.commands;
   }
@@ -91,5 +95,9 @@ export class TicketCoreComponent implements OnChanges {
 
   onAbortDescription() {
     this.editingDescription = false;
+  }
+
+  onSubticketRestore(event: TicketRestoreEvent) {
+    this.subticketAddResetSubject.next(event);
   }
 }

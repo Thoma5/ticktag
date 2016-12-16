@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, } from '@angular/core';
 import { TicketDetailComment, TicketDetailAssTag } from '../ticket-detail';
 import * as imm from 'immutable';
 
@@ -8,6 +8,7 @@ import * as imm from 'immutable';
   styleUrls: ['./ticket-comment.component.scss']
 })
 export class TicketCommentComponent {
-    @Input() comment: TicketDetailComment;
-    @Input() userTags: imm.List<TicketDetailAssTag>;
+  @Input() comment: TicketDetailComment;
+  @Input() userTags: imm.List<TicketDetailAssTag>;
+  @Input() projectId: string;
 }
