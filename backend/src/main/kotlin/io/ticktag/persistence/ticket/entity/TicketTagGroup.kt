@@ -33,7 +33,7 @@ open class TicketTagGroup protected constructor() {
     open var exclusive: Boolean = false
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "projectId", referencedColumnName = "id", nullable = false)
     lateinit open var project: Project
 
     @OneToOne(optional = true, fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.REMOVE))

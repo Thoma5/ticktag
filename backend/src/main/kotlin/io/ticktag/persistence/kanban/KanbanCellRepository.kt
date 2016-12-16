@@ -16,5 +16,5 @@ interface KanbanCellRepository : TicktagCrudRepository<KanbanCell, UUID> {
             "ORDER BY k.order")
     fun findByTicketTagId(@Param("tagId") tagId: UUID): List<Ticket>
 
-    fun deleteByTagId( tagId: UUID)
+    fun deleteByTagId(tagId: UUID)
 }

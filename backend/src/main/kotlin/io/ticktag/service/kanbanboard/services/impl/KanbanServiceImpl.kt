@@ -1,4 +1,4 @@
-package io.ticktag.service.kanbanBoard.services.impl
+package io.ticktag.service.kanbanboard.services.impl
 
 import io.ticktag.TicktagService
 import io.ticktag.persistence.kanban.KanbanCellRepository
@@ -9,10 +9,10 @@ import io.ticktag.persistence.ticket.entity.Ticket
 import io.ticktag.persistence.tickettag.TicketTagRepository
 import io.ticktag.persistence.tickettaggroup.TicketTagGroupRepository
 import io.ticktag.service.*
-import io.ticktag.service.kanbanBoard.dto.KanbanBoardResult
-import io.ticktag.service.kanbanBoard.dto.KanbanColumnResult
-import io.ticktag.service.kanbanBoard.dto.UpdateKanbanColumn
-import io.ticktag.service.kanbanBoard.services.KanbanService
+import io.ticktag.service.kanbanboard.dto.KanbanBoardResult
+import io.ticktag.service.kanbanboard.dto.KanbanColumnResult
+import io.ticktag.service.kanbanboard.dto.UpdateKanbanColumn
+import io.ticktag.service.kanbanboard.services.KanbanService
 import io.ticktag.service.tickettagrelation.services.TicketTagRelationService
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
@@ -45,26 +45,12 @@ open class KanbanServiceImpl @Inject constructor(
                              storyPointsTwo: Int?,
                              storyPointsGreater: Boolean?,
                              open: Boolean?): List<KanbanColumnResult> {
-        if ( progressOne?.isNaN()?:false || progressOne?.isInfinite()?:false ) {
-            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueProgressOne"))))
-        }
-        if ( progressTwo?.isNaN()?:false || progressTwo?.isInfinite()?:false ) {
-            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueProgressTwo"))))
-        }
-        if ( tags?.contains("")?:false ) {
-            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueInTags"))))
-        }
-        if ( users?.contains("")?:false ) {
-            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueInTags"))))
-        }
 
         val columns = ticketTagRepository.findByTicketTagGroupIdOrderByOrderAsc(kanbanBoardId)
         var result = emptyList<KanbanColumnResult>().toMutableList()
-        val filter = TicketFilter(columns.first().ticketTagGroup.project.id, number, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater,  storyPointsOne, storyPointsTwo, storyPointsGreater, open)
+        val filter = TicketFilter(columns.first().ticketTagGroup.project.id, number, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open)
         val filteredTickets = ticketRepository.findAll(filter)
         for (column in columns) {
-
-
             var tickets: MutableList<Ticket> = mutableListOf()
             val aktTickets = column.tickets
             val lastSort = kanbanCellRepository.findByTicketTagId(column.id)
@@ -75,7 +61,7 @@ open class KanbanServiceImpl @Inject constructor(
             var i = 0
             tickets.forEach {
                 val kanbanCell = KanbanCell.create(it, column, i)
-                kanbanCellRepository.insert(kanbanCell)
+                // kanbanCellRepository.insert(kanbanCell)
                 i++
             }
             tickets = tickets.filter { t -> filteredTickets.contains(t) }.toMutableList()
@@ -86,8 +72,8 @@ open class KanbanServiceImpl @Inject constructor(
         return result
     }
 
-    @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
-    override fun getBoard(boardId: UUID): KanbanBoardResult = KanbanBoardResult(ticketTagGroups.findOne(boardId)?:throw NotFoundException())
+    @PreAuthorize(AuthExpr.READ_TICKET_TAG_GROUP)
+    override fun getBoard(@P("authTicketTagGroupId") boardId: UUID): KanbanBoardResult = KanbanBoardResult(ticketTagGroups.findOne(boardId) ?: throw NotFoundException())
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listBoards(@P("authProjectId") projectId: UUID): List<KanbanBoardResult> = ticketTagGroups.findExclusiveTicketTagGroupsByProjectId(projectId).map(::KanbanBoardResult)

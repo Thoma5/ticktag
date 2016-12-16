@@ -1,5 +1,4 @@
 BEGIN;
-DELETE FROM "kanban_cell";
 DELETE FROM "ticket_event_comment_text_changed";
 DELETE FROM "ticket_event_current_estimated_time_changed";
 DELETE FROM "ticket_event_due_date_changed";

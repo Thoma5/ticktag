@@ -1,10 +1,10 @@
-package io.ticktag.service.kanbanBoard.dto
+package io.ticktag.service.kanbanboard.dto
 
 import io.ticktag.persistence.ticket.entity.TicketTag
 import java.util.*
 
 
-data class KanbanColumnResult (
+data class KanbanColumnResult(
         val id: UUID,
         val name: String,
         val normalizedName: String,

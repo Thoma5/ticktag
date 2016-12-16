@@ -1,6 +1,6 @@
 package io.ticktag.restinterface.kanbanboard.schema
 
-import io.ticktag.service.kanbanBoard.dto.KanbanColumnResult
+import io.ticktag.service.kanbanboard.dto.KanbanColumnResult
 import java.util.*
 
 data class KanbanColumnResultJson (

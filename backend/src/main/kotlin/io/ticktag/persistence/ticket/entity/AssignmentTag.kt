@@ -37,7 +37,7 @@ open class AssignmentTag protected constructor() {
     lateinit open var color: String
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "projectId", referencedColumnName = "id", nullable = false)
     lateinit open var project: Project
 
     @OneToMany(mappedBy = "tag")

@@ -2,16 +2,16 @@ package io.ticktag.restinterface.kanbanboard.controllers
 
 import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
-import io.ticktag.restinterface.kanbanboard.schema.KanbanBoardReslutJson
+import io.ticktag.restinterface.kanbanboard.schema.KanbanBoardResultJson
 import io.ticktag.restinterface.kanbanboard.schema.KanbanColumnResultJson
 import io.ticktag.restinterface.kanbanboard.schema.UpdateKanbanColumnJson
 import io.ticktag.service.Principal
-import io.ticktag.service.kanbanBoard.services.KanbanService
+import io.ticktag.service.kanbanboard.services.KanbanService
 import io.ticktag.service.tickettaggroup.service.TicketTagGroupService
 import org.springframework.web.bind.annotation.*
 import java.util.*
 import javax.inject.Inject
-import  io.ticktag.service.kanbanBoard.dto.UpdateKanbanColumn
+import  io.ticktag.service.kanbanboard.dto.UpdateKanbanColumn
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import java.time.Instant
 
@@ -23,8 +23,8 @@ open class KanbanBoardController @Inject constructor(
 ) {
 
     @GetMapping(value = "/")
-    open fun listKanbanBoards(@RequestParam(name = "projectId", required = true) projectId: UUID): List<KanbanBoardReslutJson> {
-        return kanbanService.listBoards(projectId).map(::KanbanBoardReslutJson)
+    open fun listKanbanBoards(@RequestParam(name = "projectId", required = true) projectId: UUID): List<KanbanBoardResultJson> {
+        return kanbanService.listBoards(projectId).map(::KanbanBoardResultJson)
     }
 
     @GetMapping(value = "/{id}/columns")
@@ -47,8 +47,8 @@ open class KanbanBoardController @Inject constructor(
     }
 
     @GetMapping(value = "/{id}")
-    open fun getKanbanBoard(@PathVariable id:UUID): KanbanBoardReslutJson{
-        return KanbanBoardReslutJson(kanbanService.getBoard(id))
+    open fun getKanbanBoard(@PathVariable id:UUID): KanbanBoardResultJson {
+        return KanbanBoardResultJson(kanbanService.getBoard(id))
     }
 
     @PutMapping(value = "/{id}")

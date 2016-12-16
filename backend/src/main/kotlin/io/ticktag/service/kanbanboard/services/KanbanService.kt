@@ -1,10 +1,10 @@
-package io.ticktag.service.kanbanBoard.services
+package io.ticktag.service.kanbanboard.services
 
 
 import io.ticktag.service.Principal
-import io.ticktag.service.kanbanBoard.dto.KanbanBoardResult
-import io.ticktag.service.kanbanBoard.dto.KanbanColumnResult
-import io.ticktag.service.kanbanBoard.dto.UpdateKanbanColumn
+import io.ticktag.service.kanbanboard.dto.KanbanBoardResult
+import io.ticktag.service.kanbanboard.dto.KanbanColumnResult
+import io.ticktag.service.kanbanboard.dto.UpdateKanbanColumn
 import java.time.Instant
 import java.util.*
 
@@ -25,6 +25,7 @@ interface KanbanService {
                     storyPointsTwo: Int?,
                     storyPointsGreater: Boolean?,
                     open: Boolean?): List<KanbanColumnResult>
+
     fun listBoards(projectId: UUID): List<KanbanBoardResult>
     fun updateKanbanBoard(columns: List<UpdateKanbanColumn>, principal: Principal)
     fun getBoard(boardId: UUID): KanbanBoardResult
