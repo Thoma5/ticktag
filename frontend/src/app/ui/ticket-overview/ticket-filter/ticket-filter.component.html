@@ -32,6 +32,23 @@
         <li role="menuitem"><a (click)="pickStatus(undefined)" class="dropdown-item"><i class="glyphicon glyphicon-collapse-down" ></i> All</a></li>
       </ul>
     </div>
+    <div *ngIf="disabledFilterHelper.indexOf('#') < 0" class="btn-group" dropdown keyboardNav="true" autoClose="outsideClick">
+      <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default btn-sm" dropdownToggle>
+        <b># </b><span class="caret"></span>
+    </button>
+      <div class="dropdown-menu" dropdownMenu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+        <form #f="ngForm">
+          <div class="form-group">
+            <label>Ticket Numbers:</label>
+            <div class="form-group">
+              <input [(ngModel)]=ticketNumber name="ticketNumberInput" type="text" pattern="^[0-9]+(,[0-9]+)*$" class="form-control" placeholder="0,1,2"
+                required>
+            </div>
+          </div>
+          <button type="submit" [disabled]="!f.form.valid" class="btn btn-success" (click)="pickNumbers(ticketNumber)">Select</button>
+        </form>
+      </div>
+    </div>
     <div *ngIf="disabledFilterHelper.indexOf('tag') < 0" class="btn-group" dropdown keyboardNav="true">
       <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default  btn-sm" dropdownToggle>
         <i class="glyphicon glyphicon-tag" ></i> Tags <span class="caret"></span>
@@ -46,7 +63,7 @@
           </a>
         </li>
       </ul>
-    </div>
+    </div>    
     <div *ngIf="disabledFilterHelper.indexOf('user') < 0" class="btn-group" dropdown keyboardNav="true">
       <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default btn-sm" dropdownToggle>
         <i class="glyphicon glyphicon-user"></i> Assignees <span class="caret"></span>
@@ -55,7 +72,7 @@
         <li role="menuitem" *ngFor="let user of assignees"><a (click)="pickUser(user.username)" class="dropdown-item">{{user.name}} ({{user.username}})</a></li>
       </ul>
     </div>
-    <div *ngIf="disabledFilterHelper.indexOf('sp') < 0"class="btn-group" dropdown keyboardNav="true" autoClose="outsideClick">
+    <div *ngIf="disabledFilterHelper.indexOf('sp') < 0" class="btn-group" dropdown keyboardNav="true" autoClose="outsideClick">
       <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default  btn-sm" dropdownToggle>
         <i class="glyphicon glyphicon-scale" ></i> Story Points <span class="caret"></span>
     </button>

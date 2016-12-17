@@ -1,6 +1,6 @@
 export class TicketFilter {
     readonly title = '';
-    readonly ticketNumber: number;
+    readonly ticketNumbers: number[];
     readonly tags: string[];
     readonly users: string[];
     readonly progressOne: number;
@@ -15,12 +15,12 @@ export class TicketFilter {
     readonly open: boolean;
 
 
-    constructor(title: string, ticketNumber: number, tags: string[], users: string[],
+    constructor(title: string, ticketNumbers: number[], tags: string[], users: string[],
         progressOne: number, progressTwo: number, progressGreater: boolean,
         dueDateOne: number, dueDateTwo: number, dueDateGreater: boolean, storyPointsOne: number,
         storyPointsTwo: number, storyPointsGreater: boolean, open: boolean) {
         this.title = title === '' ? undefined : title;
-        this.ticketNumber = ticketNumber !== ticketNumber ? undefined : ticketNumber;
+        this.ticketNumbers = ticketNumbers !== ticketNumbers ? undefined : ticketNumbers;
         this.tags = (tags ? tags : []).length > 0 ? tags : undefined;
         this.users = (users ? users : []).length > 0 ? users : undefined;
         this.progressOne = progressOne !== progressOne ? undefined : progressOne;
@@ -38,7 +38,7 @@ export class TicketFilter {
     toTicketFilterString(): string {
         let list: string[] = [];
         if (this.title) { list.push(this.title); }
-        if (this.ticketNumber) { list.push('!#:' + this.ticketNumber); }
+        if (this.ticketNumbers) { list.push('!#:' + this.ticketNumbers); }
         if (this.tags) { list.push('!tag:' + this.tags); }
         if (this.users) { list.push('!user:' + this.users); }
         if (this.progressOne && this.progressTwo) {
@@ -68,7 +68,7 @@ export class TicketFilter {
     toTicketFilterURLString(): string {
         let list: string[] = [];
         if (this.title) { list.push('title=' + this.title); }
-        if (this.ticketNumber) { list.push('ticketNumber=' + this.ticketNumber); }
+        if (this.ticketNumbers) { list.push('ticketNumber=' + this.ticketNumbers); }
         if (this.tags) { list.push('tag=' + this.tags); }
         if (this.users) { list.push('user=' + this.users); }
         if (this.progressOne && this.progressTwo) {

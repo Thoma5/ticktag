@@ -29,7 +29,7 @@ open class TicketController @Inject constructor(
 
     @GetMapping
     open fun listTickets(@RequestParam(name = "projectId") projectId: UUID,
-                         @RequestParam(name = "number", required = false) number: Int?,
+                         @RequestParam(name = "numbers", required = false) numbers: List<Int>?,
                          @RequestParam(name = "title", required = false) title: String?,
                          @RequestParam(name = "tags", required = false) tags: List<String>?,
                          @RequestParam(name = "users",  required = false) user: List<String>?,
@@ -48,7 +48,7 @@ open class TicketController @Inject constructor(
                          @RequestParam(name = "order", required = true) order: List<TicketSort>): Page<TicketResultJson> {
 
         val pageRequest = PageRequest(pageNumber, size, Sort(order.map { it.order }))
-        val page = ticketService.listTickets(projectId, number, title, tags, user, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open, pageRequest)
+        val page = ticketService.listTickets(projectId, numbers, title, tags, user, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open, pageRequest)
         val content = page.content.map(::TicketResultJson)
         return PageImpl(content, pageRequest, page.totalElements)
     }
