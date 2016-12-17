@@ -13,6 +13,8 @@
           <div *ngFor="let ticket of column.tickets" id="{{ticket.id}}">
             <tt-kanban-cell
               [ticket]="ticket"
+              [tagId]="column.id"
+              (collect)="onCollet($event)"
             ></tt-kanban-cell>
           </div>
         </div>

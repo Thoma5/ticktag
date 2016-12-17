@@ -25,8 +25,12 @@
 
 import * as models from './models';
 
-export interface UpdateTicketRequestNullableValueJsonstring {
-    value?: string;
+export interface KanbanBoardResultJson {
+    id: string;
+
+    name: string;
+
+    projectId: string;
 
 }
 

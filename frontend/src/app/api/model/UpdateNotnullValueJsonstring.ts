@@ -25,12 +25,8 @@
 
 import * as models from './models';
 
-export interface KanbanBoardReslutJson {
-    id: string;
-
-    name: string;
-
-    projectId: string;
+export interface UpdateNotnullValueJsonstring {
+    value: string;
 
 }
 

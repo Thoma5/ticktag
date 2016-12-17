@@ -55,4 +55,10 @@ open class KanbanBoardController @Inject constructor(
     open fun updateKanbanBoards(@PathVariable id: UUID,@RequestBody(required = true) columns: List<UpdateKanbanColumnJson>, @AuthenticationPrincipal principal: Principal) {
         kanbanService.updateKanbanBoard(columns.map(::UpdateKanbanColumn),principal)
     }
+
+    @PutMapping(value = "/{id}/collect")
+    open fun collectSubTickets(@PathVariable id: UUID,@AuthenticationPrincipal principal: Principal, @RequestBody tagId:UUID) {
+        kanbanService.collecSubticket(id,tagId,principal)
+    }
+
 }

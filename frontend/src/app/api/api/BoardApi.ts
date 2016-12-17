@@ -69,11 +69,28 @@ export class BoardApi {
     }
 
     /**
+     * collectSubTickets
+     * 
+     * @param id id
+     * @param tagId tagId
+     */
+    public collectSubTicketsUsingPUT(id: string, tagId: string, extraHttpRequestParams?: any): Observable<{}> {
+        return this.collectSubTicketsUsingPUTWithHttpInfo(id, tagId, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
      * getKanbanBoard
      * 
      * @param id id
      */
-    public getKanbanBoardUsingGET(id: string, extraHttpRequestParams?: any): Observable<models.KanbanBoardReslutJson> {
+    public getKanbanBoardUsingGET(id: string, extraHttpRequestParams?: any): Observable<models.KanbanBoardResultJson> {
         return this.getKanbanBoardUsingGETWithHttpInfo(id, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -89,7 +106,7 @@ export class BoardApi {
      * 
      * @param projectId projectId
      */
-    public listKanbanBoardsUsingGET(projectId: string, extraHttpRequestParams?: any): Observable<Array<models.KanbanBoardReslutJson>> {
+    public listKanbanBoardsUsingGET(projectId: string, extraHttpRequestParams?: any): Observable<Array<models.KanbanBoardResultJson>> {
         return this.listKanbanBoardsUsingGETWithHttpInfo(projectId, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -147,6 +164,57 @@ export class BoardApi {
             });
     }
 
+
+    /**
+     * collectSubTickets
+     * 
+     * @param id id
+     * @param tagId tagId
+     */
+    public collectSubTicketsUsingPUTWithHttpInfo(id: string, tagId: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/board/${id}/collect`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'id' is not null or undefined
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling collectSubTicketsUsingPUT.');
+        }
+        // verify required parameter 'tagId' is not null or undefined
+        if (tagId === null || tagId === undefined) {
+            throw new Error('Required parameter tagId was null or undefined when calling collectSubTicketsUsingPUT.');
+        }
+
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json'
+        ];
+        
+            
+
+        headers.set('Content-Type', 'application/json');
+
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Put,
+            headers: headers,
+            body: tagId == null ? '' : JSON.stringify(tagId), // https://github.com/angular/angular/issues/10612
+            search: queryParameters
+        });
+        
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
 
     /**
      * getKanbanBoard

@@ -25,7 +25,7 @@
 
 import * as models from './models';
 
-export interface UpdateTicketRequestNullableValueJsonint {
+export interface UpdateNullableValueJsonDuration {
     value?: number;
 
 }

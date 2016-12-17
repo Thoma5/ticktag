@@ -23,6 +23,7 @@ import {TickettagrelationApi} from '../../api/api/TickettagrelationApi';
 import {TicketOverviewTag, TicketOverviewUser} from '../ticket-overview/ticket-overview';
 import {ProjectApi} from '../../api/api/ProjectApi';
 import {TicketFilter} from '../ticket-overview/ticket-filter/ticket-filter';
+import {CollectEvent} from "./kanban-cell/kanban-cell.component";
 
 @Component({
   selector: 'tt-kanban-board-detail',
@@ -67,7 +68,14 @@ export class KanbanBoardDetailComponent implements OnInit {
     let el: HTMLDivElement = args[0];
     this.updateModel(el.getAttribute('id'), target.getAttribute('id'));
   }
-
+  private onCollet(collectEvent: CollectEvent){
+    let obs = this.apiCallService
+      .callNoError<void>(p => this.kanbanBoardApi.collectSubTicketsUsingPUTWithHttpInfo(collectEvent.ticketId,collectEvent.tagId, p));
+    obs.subscribe(result => {
+        this.refresh(this.kanbanBoard.projectId, this.kanbanBoard.id).subscribe();
+      }
+    );
+  }
   private updateModel(ticketId: string, targetTagId: string) {
     let columns: UpdateKanbanColumnJson[] = [];
     this.kanbanColumns.forEach(c => {
@@ -83,10 +91,7 @@ export class KanbanBoardDetailComponent implements OnInit {
     let tagIdsOfElement: string[] = [];
     this.interestingTickets.get(ticketId).tags.forEach(tag => {
       tagIdsOfElement.push(tag.id);
-      console.log('push: ' + tag.id);
     });
-    console.log('ele Tags: ' + tagIdsOfElement);
-    console.log('targetId:' + targetTagId);
     if (tagIdsOfElement.includes(targetTagId)) {
       let updateObs = this.apiCallService
         .callNoError<void>(p => this.kanbanBoardApi.updateKanbanBoardsUsingPUTWithHttpInfo(this.kanbanBoard.id, columns, p));

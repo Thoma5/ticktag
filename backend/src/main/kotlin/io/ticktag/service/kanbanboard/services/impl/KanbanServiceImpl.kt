@@ -14,6 +14,8 @@ import io.ticktag.service.kanbanboard.dto.KanbanColumnResult
 import io.ticktag.service.kanbanboard.dto.UpdateKanbanColumn
 import io.ticktag.service.kanbanboard.services.KanbanService
 import io.ticktag.service.tickettagrelation.services.TicketTagRelationService
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
 import java.time.Instant
@@ -50,26 +52,43 @@ open class KanbanServiceImpl @Inject constructor(
         var result = emptyList<KanbanColumnResult>().toMutableList()
         val filter = TicketFilter(columns.first().ticketTagGroup.project.id, number, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open)
         val filteredTickets = ticketRepository.findAll(filter)
+        val ascOrder = Sort.Direction.ASC
+        val sortOrder = Sort.Order(ascOrder, "order")
+        val pageRequest = PageRequest(0, 50, Sort(sortOrder))
         for (column in columns) {
             var tickets: MutableList<Ticket> = mutableListOf()
             val aktTickets = column.tickets
-            val lastSort = kanbanCellRepository.findByTicketTagId(column.id)
+            val lastSort = kanbanCellRepository.findByTicketTagId(column.id, pageRequest)
             tickets.addAll(lastSort.filter { aktTickets.contains(it) })
             tickets.addAll(aktTickets.filter { !lastSort.contains(it) })
-            kanbanCellRepository.deleteByTagId(column.id)
-
-            var i = 0
-            tickets.forEach {
-                val kanbanCell = KanbanCell.create(it, column, i)
-                // kanbanCellRepository.insert(kanbanCell)
-                i++
-            }
             tickets = tickets.filter { t -> filteredTickets.contains(t) }.toMutableList()
 
             result.add(KanbanColumnResult(column, tickets.map { it.id }))
         }
 
         return result
+    }
+    @PreAuthorize(AuthExpr.READ_TICKET_TAG)
+    override fun collecSubticket(ticketId: UUID,@P("authTicketTagId") tagId: UUID, principal: Principal) {
+        val ticket = ticketRepository.findOne(ticketId) ?:throw NotFoundException()
+        val tag = ticketTagRepository.findOne(tagId) ?:throw NotFoundException()
+        if (!ticket.tags.map { it.id }.contains(tagId)) throw NotFoundException()
+        for (subticket in ticket.subTickets){
+            ticketTagRelationService.createOrGetIfExistsTicketTagRelation(subticket.id,tagId,principal)
+        }
+        val ascOrder = Sort.Direction.ASC
+        val sortOrder = Sort.Order(ascOrder, "order")
+        val pageRequest = PageRequest(0, 50, Sort(sortOrder))
+        val lastSort = kanbanCellRepository.findByTicketTagId(tagId,pageRequest)
+        val newSort = lastSort.filter {  !ticket.subTickets.contains(it) }.toMutableList()
+        newSort.addAll(newSort.indexOf(ticket),ticket.subTickets)
+        var i =0
+        kanbanCellRepository.deleteByTagId(tagId)
+        newSort.forEach {
+            val kanbanCell = KanbanCell.create(ticket,tag,i)
+            i++
+        }
+
     }
 
     @PreAuthorize(AuthExpr.READ_TICKET_TAG_GROUP)
