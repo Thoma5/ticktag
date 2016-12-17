@@ -162,7 +162,7 @@ export class TicketFilterComponent implements OnInit, OnChanges {
                             return;
                         }
                         ticketNumbers = [];
-                        command[1].split(',').forEach( n =>{
+                        command[1].split(',').forEach( n => {
                             let tempNr = parseInt(n, 10);
                         if (tempNr === tempNr && tempNr) {
                             ticketNumbers.push(tempNr);
