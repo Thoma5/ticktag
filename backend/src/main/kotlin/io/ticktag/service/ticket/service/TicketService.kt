@@ -37,7 +37,7 @@ interface TicketService {
     fun updateTicket(updateTicket: UpdateTicket, ticketId: UUID, principal: Principal): TicketResult
     fun deleteTicket(id: UUID)
     fun listTicketsFuzzy(project: UUID, query: String, pageable: Pageable): List<TicketResult>
-    fun listTicketsStoryPoints(project: UUID, number: Int?, title: String?, tags: List<String>?, users: List<String>?, progressOne: Float?, progressTwo: Float?, progressGreater: Boolean?, dueDateOne: Instant?, dueDateTwo: Instant?, dueDateGreater: Boolean?, storyPointsOne: Int?, storyPointsTwo: Int?, storyPointsGreater: Boolean?, b: Boolean): List<TicketStoryPointResult>
+    fun listTicketsStoryPoints(project: UUID, number: Int?, title: String?, tags: List<String>?, users: List<String>?, progressOne: Float?, progressTwo: Float?, progressGreater: Boolean?, dueDateOne: Instant?, dueDateTwo: Instant?, dueDateGreater: Boolean?, storyPointsOne: Int?, storyPointsTwo: Int?, storyPointsGreater: Boolean?, ticketOpen: Boolean): List<TicketStoryPointResult>
 }
 
 

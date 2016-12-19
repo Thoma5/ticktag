@@ -8,15 +8,15 @@
                 <h1 class='title'>Burn Down Chart</h1>
             </div>
             <div class='sub-header-row row'>
-                <div class='col-md-6'>
+                <div class='col-md-8'>
                 <label for='ticketFilter'>Filter Tickets</label>
-                <tt-ticket-filter id='ticketFilter' [allTicketTags]="allTicketTagsForFilter" [allUsers]="allProjectUsers" (ticketFilter)="handleUpdateFilter($event)"></tt-ticket-filter>
+                <tt-ticket-filter id='ticketFilter' [allTicketTags]="allTicketTagsForFilter" [allUsers]="allProjectUsers" [addToQuery]="query" (ticketFilter)="handleUpdateFilter($event)" [disabledFilterHelper]="disabledFilterHelper" [defaultFilterOpen]="true" [hideErrorBox] = "true" ></tt-ticket-filter>
                 </div>
-                <div class='col-md-3'>
+                 <div class='col-md-2'>
                     <label for='fromDate'>From</label>
                     <datetime id='fromDate' [(ngModel)]="fromDate" (ngModelChange)="handleFromDateChange($event)" [datepicker]="datePickerOpts" [timepicker]="false"></datetime>
                 </div>
-                <div class='col-md-3'>
+                <div class='col-md-2'>
                     <label for='toDate'>to</label>
                     <datetime id='toDate' [(ngModel)]="toDate" (ngModelChange)="handleToDateChange($event)" [datepicker]="datePickerToOpts" [timepicker]="false"></datetime>
                 </div>

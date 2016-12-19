@@ -30,6 +30,7 @@ export class TicketFilterComponent implements OnInit, OnChanges {
     @Input() defaultFilterOpen: boolean = false;
     @Input() disabledFilterHelper: string = '';
     @Input() addToQuery: string = '';
+    @Input() hideErrorBox = false;
     @Output() ticketFilter = new EventEmitter<TicketFilter>();
     public query: string = '';
     public elementRef: ElementRef;

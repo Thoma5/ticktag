@@ -31,11 +31,15 @@ export class BurnDownChartComponent implements OnInit {
     private projectId: string;
     private FROM_KEY = 'BURNDOWN_FROM';
     private TO_KEY = 'BURNDOWN_TO';
+    private FILTER_KEY = 'BURNDOWN_FILTER';
     public toDate = new Date();
     public fromDate = new Date();
+    public query = '';
     private idealData: number[] = [];
     private actualData: number[] = [];
     private startData = 0;
+    private cachedResult: TicketEventResultJson[] = [];
+    public disabledFilterHelper: string = 'status sp dueDate progress';
     public datePickerOpts = {
         autoclose: true,
         todayBtn: 'linked',
@@ -119,6 +123,9 @@ export class BurnDownChartComponent implements OnInit {
         if (this.localStorageService.retrieve(this.TO_KEY) !== undefined) {
             this.toDate = new Date(this.localStorageService.retrieve(this.TO_KEY));
         }
+        if (this.localStorageService.retrieve(this.FILTER_KEY) !== undefined) {
+            this.query = this.localStorageService.retrieve(this.FILTER_KEY);
+        }
         this.route.params
             .do(() => { this.loading = true; })
             .switchMap(params => {
@@ -135,19 +142,26 @@ export class BurnDownChartComponent implements OnInit {
         this.fromDate = dateFrom;
         //  Change object in a way that angular detect the changes
         this.datePickerToOpts = $.extend({ startDate: dateFrom }, this.datePickerOpts);
-        this.refresh();
+        if (this.cachedResult === undefined)
+            this.refresh();
+        else
+            this.refreshAsync(this.cachedResult);
         this.localStorageService.store(this.FROM_KEY, dateFrom);
     }
 
     public handleToDateChange(dateTo: Date) {
         this.toDate = dateTo;
-        this.refresh();
+        if (this.cachedResult === undefined)
+            this.refresh();
+        else
+            this.refreshAsync(this.cachedResult);
         this.localStorageService.store(this.TO_KEY, dateTo);
     }
 
     public handleUpdateFilter(event: TicketFilter) {
         this.ticketFilter = event;
         this.refresh();
+        this.localStorageService.store(this.FILTER_KEY, this.ticketFilter.toTicketFilterString());
     }
 
 
@@ -225,17 +239,17 @@ export class BurnDownChartComponent implements OnInit {
 
                 rawTicketEventsObs.subscribe(
                     tuple => {
-                        this.refeshAsync(tuple);
+                        this.refreshAsync(tuple);
                     });
 
             });
         return rawTicketStoryPointObs.map(it => undefined);
     }
-
-    private refeshAsync(result: TicketEventResultJson[]) {
+    private refreshAsync(result: TicketEventResultJson[]) {
         if (result === undefined) {
             return;
         }
+        this.cachedResult = $.extend(true, [], result);
         const ticketEvents = new Map<Number, TicketEventResultJson[]>();
         const now = moment().valueOf();
         const fromMoment = moment(this.fromDate).startOf('day');
@@ -244,7 +258,7 @@ export class BurnDownChartComponent implements OnInit {
         let actualData: number;
         let idealDecreasePerDay: number;
         let startLines = this.startData.valueOf();
-
+        console.log(result);
         result.forEach(element => {
             const dateUtc = this.utcRemoveTime(element.time);
             if (dateUtc > fromMoment.valueOf() && dateUtc < now) {

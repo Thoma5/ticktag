@@ -105,8 +105,7 @@ open class TicketServiceImpl @Inject constructor(
                                         dueDateGreater: Boolean?,
                                         storyPointsOne: Int?,
                                         storyPointsTwo: Int?,
-                                        storyPointsGreater: Boolean?,
-                                        b: Boolean): List<TicketStoryPointResult> {
+                                        storyPointsGreater: Boolean?, ticketOpen: Boolean): List<TicketStoryPointResult> {
         if (progressOne?.isNaN() ?: false || progressOne?.isInfinite() ?: false) {
             throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueProgressOne"))))
         }

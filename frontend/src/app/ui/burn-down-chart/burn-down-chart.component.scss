@@ -5,9 +5,13 @@
     width: 100%;
 }
 
+.form-control {
+    border-radius: 0px !important;
+}
+
+
 .core {
     @extend %card;
-    overflow: hidden;
     position: relative;
     max-width: 1024px;
     margin-left: auto;
