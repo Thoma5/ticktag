@@ -2,6 +2,7 @@ package io.ticktag.service.ticketevent.services.impl
 
 import io.ticktag.TicktagService
 import io.ticktag.persistence.ticket.TicketEventRepository
+import io.ticktag.persistence.ticket.TicketEventStateChangedRepository
 import io.ticktag.persistence.ticket.entity.*
 import io.ticktag.service.AuthExpr
 import io.ticktag.service.Principal
@@ -15,23 +16,19 @@ import javax.inject.Inject
 
 @TicktagService
 open class TicketEventServiceImpl @Inject constructor(
-        private val ticketEvents: TicketEventRepository
+        private val ticketEvents: TicketEventRepository,
+        private val ticketEventStateChangedRepository: TicketEventStateChangedRepository
 ) : TicketEventService {
 
     @PreAuthorize(AuthExpr.USER)
     override fun findAllStateChangedEvents(ticketIds: List<UUID>, principal: Principal): List<TicketEventResult> {
-   /*     val permittedIds = ticketIds.filter {
+        val permittedIds = ticketIds.filter {
             principal.hasProjectRoleForTicket(it, AuthExpr.ROLE_PROJECT_OBSERVER) || principal.hasRole(AuthExpr.ROLE_GLOBAL_OBSERVER)
         }
-        if(permittedIds.isEmpty()){
+        if (permittedIds.isEmpty()) {
             return ArrayList<TicketEventResult>()
-        }*/
-        return ticketEvents.findByTicketIdIn(ticketIds).filter { e -> e is TicketEventStateChanged } .map { e ->
-            when (e) {
-                is TicketEventStateChanged -> TicketEventStateChangedResult(e)
-                else -> throw RuntimeException()
-            }
         }
+        return ticketEventStateChangedRepository.findByTicketIdIn(ticketIds).map(::TicketEventStateChangedResult)
     }
 
     @PreAuthorize(AuthExpr.READ_TICKET)
