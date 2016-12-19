@@ -20,7 +20,7 @@ export class TicketFilter {
         dueDateOne: number, dueDateTwo: number, dueDateGreater: boolean, storyPointsOne: number,
         storyPointsTwo: number, storyPointsGreater: boolean, open: boolean) {
         this.title = title === '' ? undefined : title;
-        this.ticketNumbers = ticketNumbers.filter(e => isFinite(e));
+        this.ticketNumbers = ticketNumbers ? ticketNumbers.filter(e => isFinite(e)) : undefined;
         this.tags = (tags ? tags : []).length > 0 ? tags : undefined;
         this.users = (users ? users : []).length > 0 ? users : undefined;
         this.progressOne = progressOne !== progressOne ? undefined : progressOne;
