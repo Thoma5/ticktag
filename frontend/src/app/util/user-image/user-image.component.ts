@@ -8,7 +8,7 @@ import { UserApi } from '../../api';
 })
 export class UserImageComponent {
   @Input() imageId: string;
-  readonly imagePath = '';
+  readonly imagePath: string = '';
 
   constructor(private userApi: UserApi) {
     // This is a terrible, terrible hack to bypass the visibility modifier

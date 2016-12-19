@@ -121,7 +121,7 @@ export class TicketOverviewComponent implements OnInit {
     let rawTicketObs = this.apiCallService
       .callNoError<PageTicketResultJson>(p => this.ticketApi
         .listTicketsUsingGETWithHttpInfo(this.projectId, this.sortprop,
-        ticketFilter.ticketNumber, ticketFilter.title, ticketFilter.tags, ticketFilter.users,
+        ticketFilter.ticketNumbers, ticketFilter.title, ticketFilter.tags, ticketFilter.users,
         ticketFilter.progressOne, ticketFilter.progressTwo, ticketFilter.progressGreater,
         ticketFilter.dueDateOne, ticketFilter.dueDateTwo, ticketFilter.dueDateGreater,
         ticketFilter.storyPointsOne, ticketFilter.storyPointsTwo, ticketFilter.storyPointsGreater,
