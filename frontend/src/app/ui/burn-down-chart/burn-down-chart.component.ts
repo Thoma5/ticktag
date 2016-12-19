@@ -39,7 +39,7 @@ export class BurnDownChartComponent implements OnInit {
     private actualData: number[] = [];
     private startData = 0;
     private cachedResult: TicketEventResultJson[] = [];
-    public disabledFilterHelper: string = 'status sp dueDate progress';
+    public disabledFilterHelper: string = '# status sp dueDate progress';
     public datePickerOpts = {
         autoclose: true,
         todayBtn: 'linked',
