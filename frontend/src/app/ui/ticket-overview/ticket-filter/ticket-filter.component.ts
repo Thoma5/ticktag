@@ -17,7 +17,7 @@ import * as moment from 'moment';
 export type CommentTextviewSaveEvent = {
     commands: imm.List<grammar.Cmd>,
     text: string,
-}
+};
 
 @Component({
     selector: 'tt-ticket-filter',
@@ -38,6 +38,7 @@ export class TicketFilterComponent implements OnInit, OnChanges {
     public error = false;
     public errorMsg = '';
     private searchTerms = new Subject<string>();
+    public ticketNumbers: string;
     public assignees: imm.List<TicketOverviewUser>;
     public tags: imm.List<TicketOverviewTag>;
     public datePickOneActive: boolean = false;
@@ -130,7 +131,7 @@ export class TicketFilterComponent implements OnInit, OnChanges {
         this.errorMsg = '';
         let queryArray = query.split(' ');
         let title = '';
-        let ticketNumber: number;
+        let ticketNumbers: number[];
         let tags: string[] = [];
         let users: string[] = [];
         let progressOne: number;
@@ -157,18 +158,21 @@ export class TicketFilterComponent implements OnInit, OnChanges {
                 let command = e.split(':');
                 if (command[1] && command[1].length > 0) {
                     if (command[0].indexOf('!#') === 0) {
-                        if (ticketNumber !== undefined) {
+                        if (ticketNumbers !== undefined) {
                             this.generateErrorAndMessage('only one !# allowed', command[0], undefined);
                             return;
                         }
-                        let tempNr = parseInt(command[1], 10);
-                        if (tempNr === tempNr) {
-                            ticketNumber = tempNr;
-                            return;
-                        } else {
-                            this.generateErrorAndMessage('invalid number', command[0], command[1]);
-                            return;
-                        }
+                        ticketNumbers = [];
+                        command[1].split(',').forEach(n => {
+                            let tempNr = parseInt(n, 10);
+                            if (tempNr === tempNr && tempNr) {
+                                ticketNumbers.push(tempNr);
+                                return;
+                            } else {
+                                this.generateErrorAndMessage('invalid number', command[0], command[1]);
+                                return;
+                            }
+                        });
 
                     } else if (command[0].indexOf('!tag') === 0) {
                         command[1].split(',').forEach(t => {
@@ -293,7 +297,7 @@ export class TicketFilterComponent implements OnInit, OnChanges {
 
             }
         });
-        let finalFilter = new TicketFilter(title, ticketNumber, tags, users, progressOne, progressTwo,
+        let finalFilter = new TicketFilter(title, ticketNumbers, tags, users, progressOne, progressTwo,
             progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo,
             storyPointsGreater, open);
         this.ticketFilter.emit(finalFilter);
@@ -309,6 +313,10 @@ export class TicketFilterComponent implements OnInit, OnChanges {
             this.errorMsg += ' and ' + msg + (value === undefined ? '' : ' ' + cmd + ':' + value);
         }
         return;
+    }
+    pickNumbers(numbers: string) {
+        this.query = this.query.split(' ').filter(e => e.indexOf('!#') < 0).join(' ') + ' !#:' + numbers;
+        this.filter(this.query);
     }
     pickTag(tagname: string) {
         this.query = this.query + ' !tag:' + tagname;
@@ -369,6 +377,5 @@ export class TicketFilterComponent implements OnInit, OnChanges {
         return (this.spPickOne === undefined || this.spPickOne === null) ||
             spMode === '- Between' && (this.spPickTwo === undefined || this.spPickTwo === null);
     }
-
 }
 

@@ -15,7 +15,7 @@ import javax.persistence.criteria.Predicate
 import javax.persistence.criteria.Root
 
 
-data class TicketFilter(val project: UUID, val number: Int?, val title: String?, val tags: List<String>?,
+data class TicketFilter(val project: UUID, val numbers: List<Int>?, val title: String?, val tags: List<String>?,
                         val users: List<String>?, val progressOne: Float?, val progressTwo: Float?,
                         val progressGreater: Boolean?, val dueDateOne: Instant?, val dueDateTwo: Instant?,
                         val dueDateGreater: Boolean?, val storyPointsOne: Int?, val storyPointsTwo: Int?,
@@ -28,8 +28,8 @@ data class TicketFilter(val project: UUID, val number: Int?, val title: String?,
 
         predicates.add(cb.equal(root.get<Project>("project").get<UUID>("id"), project))
 
-        if (number != null) {
-            predicates.add(cb.equal(root.get<Int>("number"), number))
+        if (numbers != null) {
+            predicates.add(cb.isTrue(root.get<Int>("number").`in`(numbers)))
         }
         if (title != null) {
             predicates.add(cb.like(cb.lower(root.get<String>("title")), title.toLowerCase().split(' ').joinToString("%","%","%")))

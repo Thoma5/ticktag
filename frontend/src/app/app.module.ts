@@ -50,7 +50,7 @@ import { SubticketsComponent } from './ui/ticket-detail/subtickets/subtickets.co
 import { SubticketComponent } from './ui/ticket-detail/subticket/subticket.component';
 import { SubticketAddComponent } from './ui/ticket-detail/subticket-add/subticket-add.component';
 import { Ng2BootstrapModule } from 'ng2-bootstrap/ng2-bootstrap';
-import { Angular2DataTableModule } from 'angular2-data-table';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { MaterialModule } from '@angular/material';
 import { HumanizeDurationPipe } from './util/humanize-duration.pipe';
 import { FormatMomentPipe } from './util/format-moment.pipe';
@@ -96,7 +96,7 @@ import { TicketCreateComponent } from './ui/ticket-detail/ticket-create/ticket-c
     FormsModule,
     Ng2Webstorage,
     routing,
-    Angular2DataTableModule,
+    NgxDatatableModule,
     Ng2BootstrapModule,
     MaterialModule.forRoot(),
     ModalModule.forRoot(),

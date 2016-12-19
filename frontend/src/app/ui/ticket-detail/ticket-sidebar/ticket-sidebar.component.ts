@@ -9,7 +9,7 @@ import { TicketDetail, TicketDetailAssTag, TicketDetailUser } from '../ticket-de
 type Assignment = {
   user: TicketDetailUser,
   tags: imm.List<{ id: string, transient: boolean }>
-}
+};
 
 @Component({
   selector: 'tt-ticket-sidebar',
