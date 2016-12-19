@@ -1,4 +1,4 @@
-#! python3
+#!/usr/bin/env python3
 import random, re, bcrypt
 from datetime import datetime, timedelta
 from uuid import UUID
