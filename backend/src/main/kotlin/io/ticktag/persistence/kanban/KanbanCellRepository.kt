@@ -12,10 +12,12 @@ import java.util.*
 @TicktagRepository
 interface KanbanCellRepository : TicktagCrudRepository<KanbanCell, UUID> {
     @Query("SELECT t " +
-            "FROM KanbanCell k join k.ticket t " +
-            "WHERE k.tag.id = :tagId " +
+            "FROM TicketTag tag join tag.tickets t left outer join t.kanbanCells as k " +
+            "WHERE tag.id = :tagId and (k is null OR  k.tag.id = :tagId) "+
             "ORDER BY k.order")
     fun findByTicketTagId(@Param("tagId") tagId: UUID,pageable: Pageable): List<Ticket>
+
+
 
     fun deleteByTagId(tagId: UUID)
 }

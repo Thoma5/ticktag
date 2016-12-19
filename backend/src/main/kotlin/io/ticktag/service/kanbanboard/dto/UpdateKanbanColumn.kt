@@ -5,7 +5,8 @@ import java.util.*
 
 data class UpdateKanbanColumn(
         val id: UUID,
-        val ticketIds: List<UUID>
+        val ticketIds: List<UUID>,
+        val ticketIdToUpdate: UUID
 ) {
-    constructor(g: UpdateKanbanColumnJson) : this(id = g.id, ticketIds = g.ticketIds)
+    constructor(g: UpdateKanbanColumnJson) : this(id = g.id, ticketIds = g.ticketIds,ticketIdToUpdate = g.ticketIdToUpdate)
 }

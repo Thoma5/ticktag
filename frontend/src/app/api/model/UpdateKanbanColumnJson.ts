@@ -30,5 +30,7 @@ export interface UpdateKanbanColumnJson {
 
     ticketIds: Array<string>;
 
+    ticketIdToUpdate: string;
+
 }
 

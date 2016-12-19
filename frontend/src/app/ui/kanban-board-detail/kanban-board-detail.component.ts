@@ -84,7 +84,7 @@ export class KanbanBoardDetailComponent implements OnInit {
         for (let t of c.tickets) {
           newArray.push(t.id);
         }
-        let u = {id: c.id, ticketIds: newArray};
+        let u = {id: c.id, ticketIds: newArray, ticketIdToUpdate: ticketId};
         columns.push(u);
       }
     });

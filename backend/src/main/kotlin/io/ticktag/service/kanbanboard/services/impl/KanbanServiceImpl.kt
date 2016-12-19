@@ -56,14 +56,10 @@ open class KanbanServiceImpl @Inject constructor(
         val sortOrder = Sort.Order(ascOrder, "order")
         val pageRequest = PageRequest(0, 50, Sort(sortOrder))
         for (column in columns) {
-            var tickets: MutableList<Ticket> = mutableListOf()
-            val aktTickets = column.tickets
-            val lastSort = kanbanCellRepository.findByTicketTagId(column.id, pageRequest)
-            tickets.addAll(lastSort.filter { aktTickets.contains(it) })
-            tickets.addAll(aktTickets.filter { !lastSort.contains(it) })
-            tickets = tickets.filter { t -> filteredTickets.contains(t) }.toMutableList()
+            var lastSort = kanbanCellRepository.findByTicketTagId(column.id, pageRequest).toMutableList()
+            lastSort = lastSort.filter { t -> filteredTickets.contains(t) }.toMutableList()
 
-            result.add(KanbanColumnResult(column, tickets.map { it.id }))
+            result.add(KanbanColumnResult(column, lastSort.map { it.id }))
         }
 
         return result
@@ -81,7 +77,7 @@ open class KanbanServiceImpl @Inject constructor(
         val pageRequest = PageRequest(0, 50, Sort(sortOrder))
         val lastSort = kanbanCellRepository.findByTicketTagId(tagId,pageRequest)
         val newSort = lastSort.filter {  !ticket.subTickets.contains(it) }.toMutableList()
-        newSort.addAll(newSort.indexOf(ticket),ticket.subTickets)
+        newSort.addAll(newSort.indexOf(ticket)+1,ticket.subTickets)
         var i =0
         kanbanCellRepository.deleteByTagId(tagId)
         newSort.forEach {
@@ -99,21 +95,32 @@ open class KanbanServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun updateKanbanBoard(columns: List<UpdateKanbanColumn>, principal: Principal) {
+        val ascOrder = Sort.Direction.ASC
+        val pageRequest = PageRequest(0, 50)
         for (column in columns) {
-            kanbanCellRepository.deleteByTagId(column.id)
+            val lastSort = kanbanCellRepository.findByTicketTagId(column.id,pageRequest).toMutableList()
+            val ticket = ticketRepository.findOne(column.ticketIdToUpdate) ?: throw NotFoundException()
+            lastSort.remove(ticket)
+            val indexOfTicket = column.ticketIds.indexOf(column.ticketIdToUpdate)
+            if (indexOfTicket ==0){
+                lastSort.add(0,ticket)
+            }else if (indexOfTicket >0){
+                val ticketBeforeTicketToUpdate = ticketRepository.findOne(column.ticketIds.get(indexOfTicket-1)) ?: throw NotFoundException()
+                lastSort.add(lastSort.indexOf(ticketBeforeTicketToUpdate)+1,ticket)
+            }
             var tag = ticketTagRepository.findOne(column.id) ?: throw NotFoundException()
-            if (column.ticketIds.size != 0) {
+            kanbanCellRepository.deleteByTagId(column.id)
+            if (lastSort.size != 0) {
                 var i = 0
-                column.ticketIds.forEach {
-                    val ticket = ticketRepository.findOne(it) ?: throw NotFoundException()
-                    if (tag.tickets.contains(ticket)) {
-                        val kanbanCell = KanbanCell.create(ticket, tag, i)
+                lastSort.forEach {
+                    if (tag.tickets.contains(it)) {
+                        val kanbanCell = KanbanCell.create(it, tag, i)
                         kanbanCellRepository.insert(kanbanCell)
                         i++
                     }
                 }
             }
-
         }
+
     }
 }
