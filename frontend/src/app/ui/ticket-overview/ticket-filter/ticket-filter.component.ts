@@ -162,15 +162,15 @@ export class TicketFilterComponent implements OnInit, OnChanges {
                             return;
                         }
                         ticketNumbers = [];
-                        command[1].split(',').forEach( n => {
+                        command[1].split(',').forEach(n => {
                             let tempNr = parseInt(n, 10);
-                        if (tempNr === tempNr && tempNr) {
-                            ticketNumbers.push(tempNr);
-                            return;
-                        } else {
-                            this.generateErrorAndMessage('invalid number', command[0], command[1]);
-                            return;
-                        }
+                            if (tempNr === tempNr && tempNr) {
+                                ticketNumbers.push(tempNr);
+                                return;
+                            } else {
+                                this.generateErrorAndMessage('invalid number', command[0], command[1]);
+                                return;
+                            }
                         });
 
                     } else if (command[0].indexOf('!tag') === 0) {
