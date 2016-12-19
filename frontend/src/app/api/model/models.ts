@@ -28,6 +28,7 @@ export * from './Sort';
 export * from './TicketEventResultJson';
 export * from './TicketProgressResultJson';
 export * from './TicketResultJson';
+export * from './TicketStoryPointResultJson';
 export * from './TicketTagGroupResultJson';
 export * from './TicketTagRelationResultJson';
 export * from './TicketTagResultJson';

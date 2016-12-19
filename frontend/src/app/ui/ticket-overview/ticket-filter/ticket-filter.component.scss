@@ -29,6 +29,10 @@ select {
   border-radius: 0 !important;
 }
 
+.btn {
+  height: 34px;
+}
+
 .tag {
   @extend %tag;
   font-size: 0.9em;
@@ -43,6 +47,12 @@ select {
 
 .dropdown-menu form {
   margin: 0.5em 0.5em 0.5em 0.5em;
+}
+
+.dropdown-menu {
+   overflow: auto;
+   max-height: 600px;
+   z-index: 9999;
 }
 
 .dropdown-menu select {

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#! python3
 import random, re, bcrypt
 from datetime import datetime, timedelta
 from uuid import UUID
@@ -37,7 +37,7 @@ def random_title():
     return " ".join((faker.word() for i in range(random.randint(2, 5))))
 
 def comment_count():
-    return random.randint(0, 200)
+    return random.randint(0, 20)
 
 def subticket_count():
     if random.random() < 0.5:
@@ -46,7 +46,7 @@ def subticket_count():
         return random.randint(1, 10)
 
 def event_count():
-    return random.randint(0, 200)
+    return random.randint(0, 20)
 
 def reference_count():
     return random.randint(0, 10)
@@ -61,7 +61,7 @@ def random_sp():
     if random.random() < 0.1:
         return None
     else:
-        return random.randint(1, 128)
+        return random.randint(1, 64)
 
 def random_status():
     return random.random() < 0.8
@@ -104,10 +104,7 @@ class User:
         self.current_token = random_uuid()
 
     def insert(self):
-        return """
-            insert into public.user
-            values ({}, {}, {}, {}, {}, {}, {})
-            ;""".format(
+        return """insert into public.user values ({}, {}, {}, {}, {}, {}, {});""".format(
                 sql(self.id),
                 sql(self.username),
                 sql(self.mail),
@@ -183,10 +180,7 @@ class TimeCat:
         self.normalized_name = re.sub(r"[^a-z0-9_]", "", self.name.lower())
     
     def insert(self):
-        return """
-            insert into time_category
-            values ({}, {}, {}, {})
-        ;""".format(
+        return """insert into time_category values ({}, {}, {}, {});\n\r""".format(
             sql(self.id),
             sql(self.project.id),
             sql(self.name),
@@ -203,10 +197,7 @@ class TicketTagGroup:
         self.chance = group[1]
 
     def insert(self):
-        s = """
-            insert into ticket_tag_group
-            values ({}, {}, {}, {}, {})
-        ;\n""".format(
+        s = """insert into ticket_tag_group values ({}, {}, {}, {}, {});\n\r""".format(
             sql(self.id),
             sql(self.project.id),
             sql(None),
@@ -226,10 +217,7 @@ class Comment:
         self.text = random_comment()
 
     def insert(self):
-        return """
-            insert into comment
-            values ({}, {}, {}, {}, {})
-        ;""".format(
+        return """ insert into comment values ({}, {}, {}, {}, {});\n\r""".format(
             sql(self.id),
             sql(self.user.id),
             sql(self.ticket.id),
@@ -377,7 +365,7 @@ def create_event(users, tickets, tag_groups, assignment_tags, time_cats, ticket)
             sql(random.choice(tickets).id),
             sql(random.choice(tickets).id)))
     def state_changed():
-        new_state = bool(random.randint(0, 1))
+        new_state = False;
         print("insert into ticket_event_state_changed values({}, {}, {});".format(
             sql(id),
             sql(not new_state),
@@ -414,7 +402,7 @@ def create_event(users, tickets, tag_groups, assignment_tags, time_cats, ticket)
     random.choice([
         comment_text_changed, current_est_time_changed, due_date_changed,
         initial_est_time_changed, logged_time_added, logged_time_removed,
-        mention_added, mention_removed, parent_changed, state_changed,
+        mention_added, mention_removed, parent_changed, state_changed,state_changed,state_changed,state_changed,state_changed,state_changed,
         story_points_changed, tag_added, tag_removed, title_changed,
         user_added, user_removed,
     ])()

@@ -1,0 +1,36 @@
+@import '../../../style/constants.scss';
+
+.burn-down-chart-container {
+    height: 100%;
+    width: 100%;
+}
+
+.form-control {
+    border-radius: 0px !important;
+}
+
+
+.core {
+    @extend %card;
+    position: relative;
+    max-width: 1024px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.loading {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.title {
+    @extend %title;
+    margin-bottom: $medium-gap;
+}
+
+.sub-header-row {
+    margin-bottom: $medium-gap;
+}

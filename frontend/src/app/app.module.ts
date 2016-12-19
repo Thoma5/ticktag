@@ -84,6 +84,9 @@ import {TicketEventParentChangedComponent}
 import {TicketEventTagComponent} from './ui/ticket-detail/ticket-events/ticket-event-tag/ticket-event-tag.component';
 import {TicketEventOldNewMarkupComponent}
   from './ui/ticket-detail/ticket-events/ticket-event-old-new-markup/ticket-event-old-new-markup.component';
+import { BurnDownChartComponent } from './ui/burn-down-chart/burn-down-chart.component';
+import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
+import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { TicketCreateComponent } from './ui/ticket-detail/ticket-create/ticket-create.component';
 
 @NgModule({
@@ -98,6 +101,8 @@ import { TicketCreateComponent } from './ui/ticket-detail/ticket-create/ticket-c
     MaterialModule.forRoot(),
     ModalModule.forRoot(),
     BootstrapModalModule,
+    NKDatetimeModule,
+    ChartsModule
   ],
   declarations: [
     AppComponent,
@@ -150,6 +155,7 @@ import { TicketCreateComponent } from './ui/ticket-detail/ticket-create/ticket-c
     CommandHelpComponent,
     MarkdownTextviewReadComponent,
     ProgressBarComponent,
+    BurnDownChartComponent,
     TicketCreateComponent,
 
     HumanizeDurationPipe,

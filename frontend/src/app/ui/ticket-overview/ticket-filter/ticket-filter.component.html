@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-md-5 filter">
+  <div [class.col-md-5]="!hideErrorBox" [class.col-md-12]="hideErrorBox" class="filter">
     <div class="form-group" [ngClass]="{'has-error has-feedback': error===true}">
       <div class="input-group">
         <span class="input-group-btn">
@@ -11,7 +11,7 @@
       <i [ngClass]="{'glyphicon glyphicon-remove form-control-feedback filter-error': error===true}"></i>
     </div>
   </div>
-  <md-card *ngIf="error" class="col-md-5 filter-error-card">
+  <md-card *ngIf="error &&!hideErrorBox" class="col-md-5 filter-error-card">
     <label tooltip="{{errorMsg}}" tooltipPlacement="bottom" tooltipTrigger="mouseenter" class="control-label filter-error-label"
       for="filterInput"><i class="glyphicon glyphicon-warning-sign"></i><b> Errors: </b>{{errorMsg}}</label>
   </md-card>
