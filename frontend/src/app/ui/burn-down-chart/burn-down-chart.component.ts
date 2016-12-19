@@ -260,7 +260,6 @@ export class BurnDownChartComponent implements OnInit {
         let actualData: number;
         let idealDecreasePerDay: number;
         let startLines = this.startData.valueOf();
-        console.log(result);
         result.forEach(element => {
             const dateUtc = this.utcRemoveTime(element.time);
             if (dateUtc > fromMoment.valueOf() && dateUtc < now) {
