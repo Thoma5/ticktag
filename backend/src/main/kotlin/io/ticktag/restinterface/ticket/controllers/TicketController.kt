@@ -93,7 +93,7 @@ open class TicketController @Inject constructor(
 
     @GetMapping("/storypoints")
     open fun listTicketsStoryPoints(@RequestParam(name = "projectId") projectId: UUID,
-                                    @RequestParam(name = "number", required = false) number: Int?,
+                                    @RequestParam(name = "numbers", required = false) numbers: List<Int>?,
                                     @RequestParam(name = "title", required = false) title: String?,
                                     @RequestParam(name = "tags", required = false) tags: List<String>?,
                                     @RequestParam(name = "users", required = false) user: List<String>?,
@@ -106,7 +106,7 @@ open class TicketController @Inject constructor(
                                     @RequestParam(name = "storyPointsOne", required = false) storyPointsOne: Int?,
                                     @RequestParam(name = "storyPointsTwo", required = false) storyPointsTwo: Int?,
                                     @RequestParam(name = "storyPointsGreater", required = false) storyPointsGreater: Boolean?): List<TicketStoryPointResultJson> {
-        val tickets = ticketService.listTicketsStoryPoints(projectId, number, title, tags, user, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, true)
+        val tickets = ticketService.listTicketsStoryPoints(projectId, numbers, title, tags, user, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, true)
         return tickets.map(::TicketStoryPointResultJson)
     }
 

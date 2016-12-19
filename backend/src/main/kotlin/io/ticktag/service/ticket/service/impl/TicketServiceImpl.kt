@@ -94,7 +94,7 @@ open class TicketServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listTicketsStoryPoints(@P("authProjectId") project: UUID,
-                                        number: Int?,
+                                        numbers: List<Int>?,
                                         title: String?,
                                         tags: List<String>?,
                                         users: List<String>?,
@@ -118,7 +118,7 @@ open class TicketServiceImpl @Inject constructor(
         if (users?.contains("") ?: false) {
             throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueInTags"))))
         }
-        val filter = TicketFilter(project, number, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater,null)
+        val filter = TicketFilter(project, numbers, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater,null)
         val ticketResult = tickets.findAll(filter)
         return ticketResult.map { t -> TicketStoryPointResult(t.id, t.open, t.storyPoints) }
     }

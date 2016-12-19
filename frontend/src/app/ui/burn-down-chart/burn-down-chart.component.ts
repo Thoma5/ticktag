@@ -214,7 +214,7 @@ export class BurnDownChartComponent implements OnInit {
         let rawTicketStoryPointObs = this.apiCallService
             .callNoError<TicketStoryPointResultJson[]>(p => this.ticketApi
                 .listTicketsStoryPointsUsingGETWithHttpInfo(this.projectId,
-                this.ticketFilter.ticketNumber, this.ticketFilter.title, this.ticketFilter.tags, this.ticketFilter.users,
+                this.ticketFilter.ticketNumbers, this.ticketFilter.title, this.ticketFilter.tags, this.ticketFilter.users,
                 this.ticketFilter.progressOne, this.ticketFilter.progressTwo, this.ticketFilter.progressGreater,
                 this.ticketFilter.dueDateOne, this.ticketFilter.dueDateTwo, this.ticketFilter.dueDateGreater,
                 this.ticketFilter.storyPointsOne, this.ticketFilter.storyPointsTwo, this.ticketFilter.storyPointsGreater, p));
