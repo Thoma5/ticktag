@@ -142,19 +142,21 @@ export class BurnDownChartComponent implements OnInit {
         this.fromDate = dateFrom;
         //  Change object in a way that angular detect the changes
         this.datePickerToOpts = $.extend({ startDate: dateFrom }, this.datePickerOpts);
-        if (this.cachedResult === undefined)
+        if (this.cachedResult === undefined){
             this.refresh();
-        else
+        } else {
             this.refreshAsync(this.cachedResult);
+        }
         this.localStorageService.store(this.FROM_KEY, dateFrom);
     }
 
     public handleToDateChange(dateTo: Date) {
         this.toDate = dateTo;
-        if (this.cachedResult === undefined)
+         if (this.cachedResult === undefined){
             this.refresh();
-        else
+        } else {
             this.refreshAsync(this.cachedResult);
+        }
         this.localStorageService.store(this.TO_KEY, dateTo);
     }
 
