@@ -17,7 +17,7 @@ import * as moment from 'moment';
 export type CommentTextviewSaveEvent = {
     commands: imm.List<grammar.Cmd>,
     text: string,
-}
+};
 
 @Component({
     selector: 'tt-ticket-filter',

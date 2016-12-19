@@ -1,5 +1,5 @@
 export class TicketFilter {
-    readonly title = '';
+    readonly title: string = '';
     readonly ticketNumbers: number[];
     readonly tags: string[];
     readonly users: string[];

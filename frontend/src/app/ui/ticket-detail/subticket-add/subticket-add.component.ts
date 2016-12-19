@@ -13,12 +13,12 @@ export type SubticketCreateEvent = {
   title: string,
   description: string,
   commands: imm.List<grammar.Cmd>,
-}
+};
 
 export type ResetEvent = {
   title: string,
   description: string,
-}
+};
 
 @Component({
   selector: 'tt-subticket-add',

@@ -23,29 +23,29 @@ const COMMAND_COMPLETIONS = grammar.COMMAND_STRINGS.map(c => {
 export type CommandTextviewSaveEvent = {
     commands: imm.List<grammar.Cmd>,
     text: string,
-}
+};
 
 export type CommandTextviewTicketTag = {
   normalizedName: string,
-}
+};
 
 export type CommandTextviewUser = {
   username: string,
   name: string,
   mail: string,
-}
+};
 
 export type CommandTextViewUserAssignment = {
   tag: CommandTextviewAssignmentTag,
-}
+};
 
 export type CommandTextviewTimeCategory = {
   normalizedName: string,
-}
+};
 
 export type CommandTextviewAssignmentTag = {
   normalizedName: string,
-}
+};
 
 @Component({
     selector: 'tt-command-textview',
