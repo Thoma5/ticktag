@@ -55,4 +55,15 @@
 .status-progress {
   margin-top: $internal-gap;
   margin-left: -$internal-gap;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.btn{
+  margin-left: $small-gap;
+}
+
+.custom-progress-bar{
+  flex-grow: 1;
 }

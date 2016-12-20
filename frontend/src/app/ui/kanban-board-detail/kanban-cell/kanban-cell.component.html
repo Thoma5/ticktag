@@ -1,9 +1,8 @@
 <div class='ticket'>
   <span class='storypoints'>{{ticket.storyPoints}}</span>
-  <input type="button" class="btn btn-primary button-submit" value="collect" (click)="onSubmit()">
   <span class="ticket-ref">
-    <span class="number"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.id]">#{{ ticket.number }} </a></span>
-    <span class="title"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.id]">{{ ticket.title }}</a></span>
+    <span class="number"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.number]">#{{ ticket.number }} </a></span>
+    <span class="title"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.number]">{{ ticket.title }}</a></span>
   </span>
   <div class='tags'>
     <div *ngFor="let tag of ticket.tags" class="tag" [style.backgroundColor]="'#' + tag.color">
@@ -19,9 +18,11 @@
   </div>
   <div class='status-progress'>
     <tt-progressbar
+      class="custom-progress-bar"
       [showNumbers]="true"
       [fraction]="ticket.progress.totalLoggedTime"
       [totalValue]="ticket.progress.currentEstimatedTime">
     </tt-progressbar>
+    <input *ngIf="hasSubtickets()" type="button" class="btn btn-primary btn-sm" value="collect" (click)="onSubmit()">
   </div>
 </div>

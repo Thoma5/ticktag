@@ -5,10 +5,11 @@ import io.ticktag.persistence.kanban.KanbanCellRepository
 import io.ticktag.persistence.kanban.entity.KanbanCell
 import io.ticktag.persistence.ticket.TicketRepository
 import io.ticktag.persistence.ticket.dto.TicketFilter
-import io.ticktag.persistence.ticket.entity.Ticket
 import io.ticktag.persistence.tickettag.TicketTagRepository
 import io.ticktag.persistence.tickettaggroup.TicketTagGroupRepository
-import io.ticktag.service.*
+import io.ticktag.service.AuthExpr
+import io.ticktag.service.NotFoundException
+import io.ticktag.service.Principal
 import io.ticktag.service.kanbanboard.dto.KanbanBoardResult
 import io.ticktag.service.kanbanboard.dto.KanbanColumnResult
 import io.ticktag.service.kanbanboard.dto.UpdateKanbanColumn
@@ -64,24 +65,25 @@ open class KanbanServiceImpl @Inject constructor(
 
         return result
     }
+
     @PreAuthorize(AuthExpr.READ_TICKET_TAG)
-    override fun collecSubticket(ticketId: UUID,@P("authTicketTagId") tagId: UUID, principal: Principal) {
-        val ticket = ticketRepository.findOne(ticketId) ?:throw NotFoundException()
-        val tag = ticketTagRepository.findOne(tagId) ?:throw NotFoundException()
+    override fun collecSubticket(ticketId: UUID, @P("authTicketTagId") tagId: UUID, principal: Principal) {
+        val ticket = ticketRepository.findOne(ticketId) ?: throw NotFoundException()
+        val tag = ticketTagRepository.findOne(tagId) ?: throw NotFoundException()
         if (!ticket.tags.map { it.id }.contains(tagId)) throw NotFoundException()
-        for (subticket in ticket.subTickets){
-            ticketTagRelationService.createOrGetIfExistsTicketTagRelation(subticket.id,tagId,principal)
+        for (subticket in ticket.subTickets) {
+            ticketTagRelationService.createOrGetIfExistsTicketTagRelation(subticket.id, tagId, principal)
         }
         val ascOrder = Sort.Direction.ASC
         val sortOrder = Sort.Order(ascOrder, "order")
         val pageRequest = PageRequest(0, 50, Sort(sortOrder))
-        val lastSort = kanbanCellRepository.findByTicketTagId(tagId,pageRequest)
-        val newSort = lastSort.filter {  !ticket.subTickets.contains(it) }.toMutableList()
-        newSort.addAll(newSort.indexOf(ticket)+1,ticket.subTickets)
-        var i =0
+        val lastSort = kanbanCellRepository.findByTicketTagId(tagId, pageRequest)
+        val newSort = lastSort.filter { !ticket.subTickets.contains(it) }.toMutableList()
+        newSort.addAll(newSort.indexOf(ticket) + 1, ticket.subTickets)
+        var i = 0
         kanbanCellRepository.deleteByTagId(tagId)
         newSort.forEach {
-            val kanbanCell = KanbanCell.create(ticket,tag,i)
+            val kanbanCell = KanbanCell.create(ticket, tag, i)
             i++
         }
 
@@ -98,15 +100,15 @@ open class KanbanServiceImpl @Inject constructor(
         val ascOrder = Sort.Direction.ASC
         val pageRequest = PageRequest(0, 50)
         for (column in columns) {
-            val lastSort = kanbanCellRepository.findByTicketTagId(column.id,pageRequest).toMutableList()
+            val lastSort = kanbanCellRepository.findByTicketTagId(column.id, pageRequest).toMutableList()
             val ticket = ticketRepository.findOne(column.ticketIdToUpdate) ?: throw NotFoundException()
             lastSort.remove(ticket)
             val indexOfTicket = column.ticketIds.indexOf(column.ticketIdToUpdate)
-            if (indexOfTicket ==0){
-                lastSort.add(0,ticket)
-            }else if (indexOfTicket >0){
-                val ticketBeforeTicketToUpdate = ticketRepository.findOne(column.ticketIds.get(indexOfTicket-1)) ?: throw NotFoundException()
-                lastSort.add(lastSort.indexOf(ticketBeforeTicketToUpdate)+1,ticket)
+            if (indexOfTicket == 0) {
+                lastSort.add(0, ticket)
+            } else if (indexOfTicket > 0) {
+                val ticketBeforeTicketToUpdate = ticketRepository.findOne(column.ticketIds.get(indexOfTicket - 1)) ?: throw NotFoundException()
+                lastSort.add(lastSort.indexOf(ticketBeforeTicketToUpdate) + 1, ticket)
             }
             var tag = ticketTagRepository.findOne(column.id) ?: throw NotFoundException()
             kanbanCellRepository.deleteByTagId(column.id)

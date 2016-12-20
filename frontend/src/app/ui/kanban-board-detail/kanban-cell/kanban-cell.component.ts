@@ -21,6 +21,10 @@ export class KanbanCellComponent {
       }
     );
   }
+
+  hasSubtickets():boolean{
+    return !this.ticket.subtickets.isEmpty();
+  }
 }
 
 

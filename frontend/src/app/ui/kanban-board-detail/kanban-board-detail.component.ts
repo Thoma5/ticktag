@@ -15,7 +15,7 @@ import {TickettagApi} from '../../api/api/TickettagApi';
 import {idListToMap} from '../../util/listmaputils';
 import {KanbanBoard} from '../kanban-boards/kanban-boards.component';
 import {KanbanBoardReslutJson} from '../../api/model/KanbanBoardReslutJson';
-import {TicketDetailProgress, TicketDetailUser} from '../ticket-detail/ticket-detail';
+import {TicketDetailProgress, TicketDetailUser, TicketDetailRelated} from '../ticket-detail/ticket-detail';
 import {DragulaService} from 'ng2-dragula';
 import {UpdateKanbanColumnJson} from '../../api/model/UpdateKanbanColumnJson';
 import {TaskQueue} from '../../util/task-queue';
@@ -172,15 +172,17 @@ export class KanbanBoardDetailComponent implements OnInit {
       .flatMap(tuple => {
         let ticketsResult = tuple[1];
         let wantedUserIds: string[] = [];
+        let wantedSubticketsIds: string[] = [];
         for (let key in ticketsResult.tickets) {
           if (ticketsResult.tickets.hasOwnProperty(key)) {
             let t = ticketsResult.tickets[key];
             t.ticketUserRelations.map(ta => wantedUserIds.push(ta.userId));
+            wantedSubticketsIds.push(...t.subTicketIds);
           }
         }
 
         let getObs = this.apiCallService
-          .callNoError<GetResultJson>(p => this.getApi.getUsingPOSTWithHttpInfo({userIds: wantedUserIds}, p));
+          .callNoError<GetResultJson>(p => this.getApi.getUsingPOSTWithHttpInfo({userIds: wantedUserIds, ticketIds: wantedSubticketsIds}, p));
 
         return Observable.zip(Observable.of(tuple[0]), Observable.of(tuple[1]), getObs);
       })
@@ -190,8 +192,9 @@ export class KanbanBoardDetailComponent implements OnInit {
         this.kanbanBoard = new KanbanBoard(tuple[0][2]);
         this.interestingUsers = imm.Map(tuple[2].users).map(u => new TicketDetailUser(u)).toMap();
         this.relatedProgresses = imm.Map(tuple[1].ticketStatistics).map((p, tid) => new TicketDetailProgress(tid, p)).toMap();
+        let relatedSubTickets = imm.Map(tuple[2].tickets).map(t => new TicketDetailRelated(t)).toMap();
         this.interestingTickets = imm.Map(tuple[1].tickets)
-          .map(t => new KanbanDetailTicket(t, this.interestingUsers, this.allTicketTags, this.relatedProgresses)).toMap();
+          .map(t => new KanbanDetailTicket(t, this.interestingUsers, this.allTicketTags, this.relatedProgresses, relatedSubTickets)).toMap();
         this.kanbanColumns = imm.List(tuple[0][0]).map(c => new KanbanDetailColumn(c, this.interestingTickets)).toList();
       })
       .map(it => undefined);
@@ -264,11 +267,14 @@ export class KanbanDetailTicket {
   readonly users: imm.List<TicketDetailUser>;
   readonly projectId: string;
   readonly progress: TicketDetailProgress|undefined;
+  readonly subtickets: imm.List<TicketDetailRelated>;
 
   constructor(ticket: TicketResultJson,
               users: imm.Map<string, TicketDetailUser>,
               ticketTags: imm.Map<string, KanbanDetailTag>,
-              relatedProgresses: imm.Map<string, TicketDetailProgress>) {
+              relatedProgresses: imm.Map<string, TicketDetailProgress>,
+              relatedTicktes: imm.List<TicketDetailRelated>
+  ) {
     this.createTime = ticket.createTime;
     this.currentEstimatedTime = ticket.currentEstimatedTime;
     this.dueDate = ticket.dueDate;
@@ -278,6 +284,7 @@ export class KanbanDetailTicket {
     this.number = ticket.number;
     this.open = ticket.open;
     this.storyPoints = ticket.storyPoints;
+
     this.tags = imm.List(ticket.tagIds)
       .map(tid => ticketTags.get(tid))
       .sort((a, b) => (a.order < b.order) ? -1 : (a.order === b.order ? 0 : 1))
@@ -294,6 +301,10 @@ export class KanbanDetailTicket {
       .toList();
     this.projectId = ticket.projectId;
     this.progress = relatedProgresses.get(ticket.id);
+    this.subtickets = imm.Seq(ticket.subTicketIds)
+      .map(id => relatedTicktes.get(id))
+      .filter(t => !!t)
+      .toList();
   }
 }
 Object.freeze(KanbanDetailTicket.prototype);
