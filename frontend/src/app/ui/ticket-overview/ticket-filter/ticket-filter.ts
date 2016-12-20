@@ -13,12 +13,13 @@ export class TicketFilter {
     readonly storyPointsTwo: number;
     readonly storyPointsGreater: boolean;
     readonly open: boolean;
+    readonly subTicket: boolean;
 
 
     constructor(title: string, ticketNumbers: number[], tags: string[], users: string[],
         progressOne: number, progressTwo: number, progressGreater: boolean,
         dueDateOne: number, dueDateTwo: number, dueDateGreater: boolean, storyPointsOne: number,
-        storyPointsTwo: number, storyPointsGreater: boolean, open: boolean) {
+        storyPointsTwo: number, storyPointsGreater: boolean, open: boolean, subTicket: boolean) {
         this.title = title === '' ? undefined : title;
         this.ticketNumbers = ticketNumbers ? ticketNumbers.filter(e => isFinite(e)) : undefined;
         this.tags = (tags ? tags : []).length > 0 ? tags : undefined;
@@ -33,6 +34,7 @@ export class TicketFilter {
         this.storyPointsTwo = storyPointsTwo;
         this.storyPointsGreater = storyPointsGreater;
         this.open = open;
+        this.subTicket = subTicket;
     }
 
     toTicketFilterString(): string {
@@ -63,6 +65,7 @@ export class TicketFilter {
             list.push('!sp:' + this.storyPointsOne);
         }
         if (this.open !== undefined) { list.push('!open:' + this.open); }
+        if (this.subTicket !== undefined) { list.push('!subTicket:' + this.subTicket); }
         return list.join(' ');
     }
     toTicketFilterURLString(): string {
@@ -78,14 +81,14 @@ export class TicketFilter {
             list.push('progressOne=' + this.progressOne);
             list.push('progressGreater=' + this.progressGreater);
         }
-            if (this.dueDateOne && this.dueDateTwo) {
+        if (this.dueDateOne && this.dueDateTwo) {
             list.push('dueDateOne=' + this.dueDateOne);
             list.push('dueDateTwo=' + this.dueDateTwo);
         } else if (this.dueDateOne && this.dueDateGreater !== undefined) {
             list.push('dueDateOne=' + this.dueDateOne);
             list.push('dueDateGreater=' + this.dueDateGreater);
         }
-            if (this.storyPointsOne && this.storyPointsTwo) {
+        if (this.storyPointsOne && this.storyPointsTwo) {
             list.push('spOne=' + this.storyPointsOne);
             list.push('spTwo=' + this.storyPointsTwo);
         } else if (this.storyPointsOne && this.storyPointsGreater !== undefined) {
@@ -93,6 +96,7 @@ export class TicketFilter {
             list.push('spGreater=' + this.storyPointsGreater);
         }
         if (this.open !== undefined) { list.push('open=' + this.open); }
+        if (this.subTicket !== undefined) { list.push('subTicket=' + this.subTicket); }
         return list.join('&');
     }
 }

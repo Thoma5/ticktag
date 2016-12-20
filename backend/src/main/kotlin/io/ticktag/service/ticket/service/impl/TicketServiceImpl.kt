@@ -57,7 +57,7 @@ open class TicketServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
-    override fun listTickets(@P("authProjectId") project: UUID,
+    override fun listTicketsOverview(@P("authProjectId") project: UUID,
                              numbers: List<Int>?,
                              title: String?,
                              tags: List<String>?,
@@ -72,7 +72,8 @@ open class TicketServiceImpl @Inject constructor(
                              storyPointsTwo: Int?,
                              storyPointsGreater: Boolean?,
                              open: Boolean?,
-                             pageable: Pageable): Page<TicketResult> {
+                             subTicket: Boolean?,
+                             pageable: Pageable): Page<TicketOverviewResult> {
 
         if (progressOne?.isNaN() ?: false || progressOne?.isInfinite() ?: false) {
             throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueProgressOne"))))
@@ -86,9 +87,9 @@ open class TicketServiceImpl @Inject constructor(
         if (users?.contains("") ?: false) {
             throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueInTags"))))
         }
-        val filter = TicketFilter(project, numbers, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open)
+        val filter = TicketFilter(project, if (numbers?.size == 0) null else  numbers, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open, subTicket)
         val page = tickets.findAll(filter, pageable)
-        val content = toResultDtos(page.content)
+        val content = page.content.map(::TicketOverviewResult)
         return PageImpl(content, pageable, page.totalElements)
     }
 
@@ -105,7 +106,9 @@ open class TicketServiceImpl @Inject constructor(
                                         dueDateGreater: Boolean?,
                                         storyPointsOne: Int?,
                                         storyPointsTwo: Int?,
-                                        storyPointsGreater: Boolean?, ticketOpen: Boolean): List<TicketStoryPointResult> {
+                                        storyPointsGreater: Boolean?,
+                                        ticketOpen: Boolean?,
+                                        subTicket: Boolean?): List<TicketStoryPointResult> {
         if (progressOne?.isNaN() ?: false || progressOne?.isInfinite() ?: false) {
             throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueProgressOne"))))
         }
@@ -116,9 +119,9 @@ open class TicketServiceImpl @Inject constructor(
             throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueInTags"))))
         }
         if (users?.contains("") ?: false) {
-            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueInTags"))))
+            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueInUsers"))))
         }
-        val filter = TicketFilter(project, numbers, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater,null)
+        val filter = TicketFilter(project, if (numbers?.size == 0) null else  numbers, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater,null, subTicket)
         val ticketResult = tickets.findAll(filter)
         return ticketResult.map { t -> TicketStoryPointResult(t.id, t.open, t.storyPoints) }
     }
@@ -126,7 +129,9 @@ open class TicketServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listTickets(@P("authProjectId") project: UUID, pageable: Pageable): Page<TicketResult> {
-        return listTickets(project, null, null, null, null, null, null, null, null, null, null, null, null, null, null, pageable)
+        val page = tickets.findByProjectId(project, pageable)
+        val content = toResultDtos(page.content)
+        return PageImpl(content, pageable, page.totalElements)
     }
 
     @PreAuthorize(AuthExpr.READ_TICKET)

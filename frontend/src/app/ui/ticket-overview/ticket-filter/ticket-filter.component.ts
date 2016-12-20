@@ -144,6 +144,7 @@ export class TicketFilterComponent implements OnInit, OnChanges {
         let storyPointsTwo: number;
         let storyPointsGreater: boolean;
         let open: boolean;
+        let subTicket: boolean;
 
         queryArray.forEach(e => {
             if (e.charAt(0) !== '!') {
@@ -285,10 +286,23 @@ export class TicketFilterComponent implements OnInit, OnChanges {
                             open = true;
                         } else if (command[1] === 'false') {
                             open = false;
+                        } else {
+                            this.generateErrorAndMessage('invalid command', command[0], command[1]);
+                            return;
                         }
-                    } else {
-                        this.generateErrorAndMessage('invalid command', command[0], command[1]);
-                        return;
+                    } else if (command[0].indexOf('!subTicket') === 0) {
+                        if (subTicket !== undefined) {
+                            this.generateErrorAndMessage('only one !subTicket allowed', command[0], undefined);
+                            return;
+                        }
+                        if (command[1] === 'true') {
+                            subTicket = true;
+                        } else if (command[1] === 'false') {
+                            subTicket = false;
+                        } else {
+                            this.generateErrorAndMessage('invalid command', command[0], command[1]);
+                            return;
+                        }
                     }
                 } else {
                     this.generateErrorAndMessage('invalid command', command[0], '');
@@ -299,7 +313,7 @@ export class TicketFilterComponent implements OnInit, OnChanges {
         });
         let finalFilter = new TicketFilter(title, ticketNumbers, tags, users, progressOne, progressTwo,
             progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo,
-            storyPointsGreater, open);
+            storyPointsGreater, open, subTicket);
         this.ticketFilter.emit(finalFilter);
     }
 
@@ -354,6 +368,13 @@ export class TicketFilterComponent implements OnInit, OnChanges {
         // Split query at ' ', remove all elements in this array containing !open and rejoin the array with ' ' to a string. 
         // Then add the new !open command  
         this.query = this.query.split(' ').filter(e => e.indexOf('!open') < 0).join(' ') + (open === undefined ? '' : ' !open:' + open);
+        this.filter(this.query);
+    }
+    pickSubtickets(subTicket: boolean) {
+        // Split query at ' ', remove all elements in this array containing !sub and rejoin the array with ' ' to a string. 
+        // Then add the new !subTicket command  
+        this.query = this.query.split(' ').filter(e => e.indexOf('!subTicket') < 0).join(' ')
+            + (subTicket === undefined ? '' : ' !subTicket:' + subTicket);
         this.filter(this.query);
     }
 

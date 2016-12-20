@@ -32,6 +32,20 @@
         <li role="menuitem"><a (click)="pickStatus(undefined)" class="dropdown-item"><i class="glyphicon glyphicon-collapse-down" ></i> All</a></li>
       </ul>
     </div>
+     <div *ngIf="disabledFilterHelper.indexOf('parent') < 0" class="btn-group" dropdown keyboardNav="true">
+      <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default btn-sm" dropdownToggle>
+        <i class="glyphicon glyphicon-align-left" ></i> Subtickets <span class="caret"></span>
+    </button>
+      <ul dropdownMenu role="menu" aria-labelledby="single-button">
+        <li role="menuitem">
+          <a (click)="pickSubtickets(true)" class="dropdown-item"> <i class="glyphicon glyphicon-pawn"></i> Subtickets</a>
+        </li>
+        <li role="menuitem">
+          <a (click)="pickSubtickets(false)" class="dropdown-item"> <i class="glyphicon glyphicon-king"></i> Parents</a>
+        </li>
+        <li role="menuitem"><a (click)="pickSubtickets(undefined)" class="dropdown-item"> All</a></li>
+      </ul>
+    </div>
     <div *ngIf="disabledFilterHelper.indexOf('#') < 0" class="btn-group" dropdown keyboardNav="true" autoClose="outsideClick">
       <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default btn-sm" dropdownToggle>
         <b># </b>Number<span class="caret"></span>
