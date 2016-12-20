@@ -1,6 +1,7 @@
 package io.ticktag.service.tickettagrelation.services.impl
 
 import io.ticktag.TicktagService
+import io.ticktag.persistence.kanban.KanbanCellRepository
 import io.ticktag.persistence.ticket.TicketEventRepository
 import io.ticktag.persistence.ticket.TicketRepository
 import io.ticktag.persistence.ticket.entity.TicketEventTagAdded
@@ -21,7 +22,8 @@ open class TicketTagRelationServiceImpl(
         private val tickets: TicketRepository,
         private val tags: TicketTagRepository,
         private val ticketEvents: TicketEventRepository,
-        private val users: UserRepository
+        private val users: UserRepository,
+        private val kanbanCellRepository: KanbanCellRepository
 ) : TicketTagRelationService {
 
     @PreAuthorize(AuthExpr.READ_TICKET_TAG_RELATION)
@@ -47,6 +49,7 @@ open class TicketTagRelationServiceImpl(
             if (tag.ticketTagGroup.exclusive) {
                 // Remove all tags from the same group
                 val deletedTags = ticket.tags.filter { it in tag.ticketTagGroup.ticketTags }.toMutableList()
+                ticket.kanbanCells.filter { it.tag in deletedTags }.forEach { kanbanCellRepository.delete(it) }
                 deletedTags.forEach {
                     ticketEvents.insert(TicketEventTagRemoved.create(ticket, user, it))
                 }
@@ -65,7 +68,9 @@ open class TicketTagRelationServiceImpl(
         val user = users.findOne(principal.id) ?: throw NotFoundException()
 
         val assignedTag = ticket.tags.find { it.id == tagId } ?: throw NotFoundException()
+        val kanbanCell = ticket.kanbanCells.find { it.tag.id == tagId } ?: throw NotFoundException()
         ticketEvents.insert(TicketEventTagRemoved.create(ticket, user, assignedTag))
         ticket.tags.remove(assignedTag)
+        kanbanCellRepository.delete(kanbanCell)
     }
 }

@@ -67,7 +67,7 @@ open class KanbanServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.READ_TICKET_TAG)
-    override fun collecSubticket(ticketId: UUID, @P("authTicketTagId") tagId: UUID, principal: Principal) {
+    override fun collectSubticket(ticketId: UUID, @P("authTicketTagId") tagId: UUID, principal: Principal) {
         val ticket = ticketRepository.findOne(ticketId) ?: throw NotFoundException()
         val tag = ticketTagRepository.findOne(tagId) ?: throw NotFoundException()
         if (!ticket.tags.map { it.id }.contains(tagId)) throw NotFoundException()
@@ -77,13 +77,15 @@ open class KanbanServiceImpl @Inject constructor(
         val ascOrder = Sort.Direction.ASC
         val sortOrder = Sort.Order(ascOrder, "order")
         val pageRequest = PageRequest(0, 50, Sort(sortOrder))
+
         val lastSort = kanbanCellRepository.findByTicketTagId(tagId, pageRequest)
         val newSort = lastSort.filter { !ticket.subTickets.contains(it) }.toMutableList()
         newSort.addAll(newSort.indexOf(ticket) + 1, ticket.subTickets)
         var i = 0
         kanbanCellRepository.deleteByTagId(tagId)
         newSort.forEach {
-            val kanbanCell = KanbanCell.create(ticket, tag, i)
+            val kanbanCell = KanbanCell.create(it, tag, i)
+            kanbanCellRepository.insert(kanbanCell)
             i++
         }
 

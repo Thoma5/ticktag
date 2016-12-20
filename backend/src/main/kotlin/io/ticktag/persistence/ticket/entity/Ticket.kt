@@ -136,5 +136,5 @@ open class Ticket protected constructor() {
 
     @OneToMany(mappedBy = "ticket", cascade = arrayOf(CascadeType.REMOVE))
     lateinit open var kanbanCells: MutableSet<KanbanCell>
-        protected set
+
 }

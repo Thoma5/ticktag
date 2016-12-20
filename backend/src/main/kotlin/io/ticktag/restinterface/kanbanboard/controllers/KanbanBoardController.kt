@@ -58,7 +58,7 @@ open class KanbanBoardController @Inject constructor(
 
     @PutMapping(value = "/{id}/collect")
     open fun collectSubTickets(@PathVariable id: UUID,@AuthenticationPrincipal principal: Principal, @RequestBody tagId:UUID) {
-        kanbanService.collecSubticket(id,tagId,principal)
+        kanbanService.collectSubticket(id,tagId,principal)
     }
 
 }
