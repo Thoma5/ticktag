@@ -50,7 +50,7 @@ open class KanbanServiceImpl @Inject constructor(
                              open: Boolean?): List<KanbanColumnResult> {
 
         val columns = ticketTagRepository.findByTicketTagGroupIdOrderByOrderAsc(kanbanBoardId)
-        var result = emptyList<KanbanColumnResult>().toMutableList()
+        val result = emptyList<KanbanColumnResult>().toMutableList()
         val filter = TicketFilter(columns.first().ticketTagGroup.project.id, numbers, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open)
         val filteredTickets = ticketRepository.findAll(filter)
         val ascOrder = Sort.Direction.ASC
@@ -97,34 +97,34 @@ open class KanbanServiceImpl @Inject constructor(
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listBoards(@P("authProjectId") projectId: UUID): List<KanbanBoardResult> = ticketTagGroups.findExclusiveTicketTagGroupsByProjectId(projectId).map(::KanbanBoardResult)
 
-    @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
-    override fun updateKanbanBoard(columns: List<UpdateKanbanColumn>, principal: Principal) {
+    @PreAuthorize(AuthExpr.READ_TICKET_TAG)
+    override fun updateKanbanBoard(column: UpdateKanbanColumn, principal: Principal,@P("authTicketTagId") id: UUID) {
         val ascOrder = Sort.Direction.ASC
         val pageRequest = PageRequest(0, 50)
-        for (column in columns) {
-            val lastSort = kanbanCellRepository.findByTicketTagId(column.id, pageRequest).toMutableList()
-            val ticket = ticketRepository.findOne(column.ticketIdToUpdate) ?: throw NotFoundException()
-            lastSort.remove(ticket)
-            val indexOfTicket = column.ticketIds.indexOf(column.ticketIdToUpdate)
-            if (indexOfTicket == 0) {
-                lastSort.add(0, ticket)
-            } else if (indexOfTicket > 0) {
-                val ticketBeforeTicketToUpdate = ticketRepository.findOne(column.ticketIds.get(indexOfTicket - 1)) ?: throw NotFoundException()
-                lastSort.add(lastSort.indexOf(ticketBeforeTicketToUpdate) + 1, ticket)
-            }
-            var tag = ticketTagRepository.findOne(column.id) ?: throw NotFoundException()
-            kanbanCellRepository.deleteByTagId(column.id)
-            if (lastSort.size != 0) {
-                var i = 0
-                lastSort.forEach {
-                    if (tag.tickets.contains(it)) {
-                        val kanbanCell = KanbanCell.create(it, tag, i)
-                        kanbanCellRepository.insert(kanbanCell)
-                        i++
-                    }
+
+        val lastSort = kanbanCellRepository.findByTicketTagId(column.id, pageRequest).toMutableList()
+        val ticket = ticketRepository.findOne(column.ticketIdToUpdate) ?: throw NotFoundException()
+        lastSort.remove(ticket)
+        val indexOfTicket = column.ticketIds.indexOf(column.ticketIdToUpdate)
+        if (indexOfTicket == 0) {
+            lastSort.add(0, ticket)
+        } else if (indexOfTicket > 0) {
+            val ticketBeforeTicketToUpdate = ticketRepository.findOne(column.ticketIds.get(indexOfTicket - 1)) ?: throw NotFoundException()
+            lastSort.add(lastSort.indexOf(ticketBeforeTicketToUpdate) + 1, ticket)
+        }
+        val tag = ticketTagRepository.findOne(column.id) ?: throw NotFoundException()
+        kanbanCellRepository.deleteByTagId(column.id)
+        if (lastSort.size != 0) {
+            var i = 0
+            lastSort.forEach {
+                if (tag.tickets.contains(it)) {
+                    val kanbanCell = KanbanCell.create(it, tag, i)
+                    kanbanCellRepository.insert(kanbanCell)
+                    i++
                 }
             }
         }
+
 
     }
 }

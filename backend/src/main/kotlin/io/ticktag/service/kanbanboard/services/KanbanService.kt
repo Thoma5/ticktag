@@ -27,7 +27,7 @@ interface KanbanService {
                     open: Boolean?): List<KanbanColumnResult>
 
     fun listBoards(projectId: UUID): List<KanbanBoardResult>
-    fun updateKanbanBoard(columns: List<UpdateKanbanColumn>, principal: Principal)
+    fun updateKanbanBoard(columns: UpdateKanbanColumn, principal: Principal, id: UUID)
     fun getBoard(boardId: UUID): KanbanBoardResult
     fun collectSubticket(ticketId: UUID, tagId: UUID, principal: Principal)
 }

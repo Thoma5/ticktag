@@ -23,6 +23,7 @@
       [fraction]="ticket.progress.totalLoggedTime"
       [totalValue]="ticket.progress.currentEstimatedTime">
     </tt-progressbar>
-    <input *ngIf="hasSubtickets()" type="button" class="btn btn-primary btn-sm" value="collect" (click)="onSubmit()">
+    <input *ngIf="hasSubtickets()" type="button" class="btn btn-primary btn-sm" value="Collect" (click)="onSubmit()">
+    <input *ngIf="hasSubtickets()" type="button" class="btn btn-primary btn-sm" value="Filter" (click)="onFindSubtickets()">
   </div>
 </div>

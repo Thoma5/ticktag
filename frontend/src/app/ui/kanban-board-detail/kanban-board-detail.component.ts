@@ -3,7 +3,7 @@ import * as imm from 'immutable';
 import {ApiCallService} from '../../service/api-call/api-call.service';
 import {BoardApi} from '../../api/api/BoardApi';
 import {Router, ActivatedRoute} from '@angular/router';
-import {Observable} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {UserResultJson} from '../../api/model/UserResultJson';
 import {Tag} from '../../util/taginput/taginput.component';
 import {TicketTagResultJson} from '../../api/model/TicketTagResultJson';
@@ -25,9 +25,9 @@ import {TickettagrelationApi} from '../../api/api/TickettagrelationApi';
 import {TicketOverviewTag, TicketOverviewUser} from '../ticket-overview/ticket-overview';
 import {ProjectApi} from '../../api/api/ProjectApi';
 import {TicketFilter} from '../ticket-overview/ticket-filter/ticket-filter';
-import {CollectEvent} from "./kanban-cell/kanban-cell.component";
-import {KanbanBoardResultJson} from "../../api/model/KanbanBoardResultJson";
-
+import {CollectEvent, FindSubTicketEvent} from './kanban-cell/kanban-cell.component';
+import {KanbanBoardResultJson} from '../../api/model/KanbanBoardResultJson';
+import {Location} from '@angular/common';
 @Component({
   selector: 'tt-kanban-board-detail',
   templateUrl: './kanban-board-detail.component.html',
@@ -47,6 +47,8 @@ export class KanbanBoardDetailComponent implements OnInit {
   private ticketFilter: TicketFilter = new TicketFilter(undefined, undefined, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
   private loading = true;
+  private filterTerms = new Subject<TicketFilter>();
+  query: string;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -56,7 +58,8 @@ export class KanbanBoardDetailComponent implements OnInit {
               private kanbanBoardApi: BoardApi,
               private dragulaService: DragulaService,
               private projectApi: ProjectApi,
-              private ticketTagRelationApi: TickettagrelationApi) {
+              private ticketTagRelationApi: TickettagrelationApi,
+              private location: Location) {
     dragulaService.dropModel.subscribe((value: any) => {
       this.onDropModel(value.slice(1));
     });
@@ -71,16 +74,18 @@ export class KanbanBoardDetailComponent implements OnInit {
     let el: HTMLDivElement = args[0];
     this.updateModel(el.getAttribute('id'), target.getAttribute('id'));
   }
-  private onCollet(collectEvent: CollectEvent){
+
+  onCollet(collectEvent: CollectEvent) {
     let obs = this.apiCallService
-      .callNoError<void>(p => this.kanbanBoardApi.collectSubTicketsUsingPUTWithHttpInfo(collectEvent.ticketId,collectEvent.tagId, p));
+      .callNoError<void>(p => this.kanbanBoardApi.collectSubTicketsUsingPUTWithHttpInfo(collectEvent.ticketId, collectEvent.tagId, p));
     obs.subscribe(result => {
         this.refresh(this.kanbanBoard.projectId, this.kanbanBoard.id).subscribe();
       }
     );
   }
+
   private updateModel(ticketId: string, targetTagId: string) {
-    let columns: UpdateKanbanColumnJson[] = [];
+    let column: UpdateKanbanColumnJson;
     this.kanbanColumns.forEach(c => {
       if (c.id === targetTagId) {
         let newArray: string[] = [];
@@ -88,7 +93,7 @@ export class KanbanBoardDetailComponent implements OnInit {
           newArray.push(t.id);
         }
         let u = {id: c.id, ticketIds: newArray, ticketIdToUpdate: ticketId};
-        columns.push(u);
+        column = u
       }
     });
     let tagIdsOfElement: string[] = [];
@@ -97,13 +102,13 @@ export class KanbanBoardDetailComponent implements OnInit {
     });
     if (tagIdsOfElement.includes(targetTagId)) {
       let updateObs = this.apiCallService
-        .callNoError<void>(p => this.kanbanBoardApi.updateKanbanBoardsUsingPUTWithHttpInfo(this.kanbanBoard.id, columns, p));
+        .callNoError<void>(p => this.kanbanBoardApi.updateKanbanBoardsUsingPUTWithHttpInfo(this.kanbanBoard.id, column, p));
       this.queue.push(updateObs).subscribe(result => {
         this.refresh(this.kanbanBoard.projectId, this.kanbanBoard.id).subscribe();
       });
     } else {
       let updateObs = this.apiCallService
-        .callNoError<void>(p => this.kanbanBoardApi.updateKanbanBoardsUsingPUTWithHttpInfo(this.kanbanBoard.id, columns, p));
+        .callNoError<void>(p => this.kanbanBoardApi.updateKanbanBoardsUsingPUTWithHttpInfo(this.kanbanBoard.id, column, p));
       let obs = this.apiCallService
         .call<void>(p => this.ticketTagRelationApi.setTicketTagRelationUsingPUTWithHttpInfo(ticketId, targetTagId, p))
         .flatMap(result => {
@@ -120,19 +125,36 @@ export class KanbanBoardDetailComponent implements OnInit {
       .do(() => {
         this.loading = true;
       })
-      .switchMap(params => {
-        let projectId = params['projectId'];
-        let boardId = params['boardId'];
+      .switchMap(param => {
+        this.route.queryParams.subscribe(p => {
+          this.ticketFilter = new TicketFilter(p['title'] || undefined,
+            p['ticketNumber'] || undefined, p['tag'] || undefined, p['user'] || undefined,
+            p['progressOne'] || undefined, p['progressTwo'] || undefined, p['progressGreater'] || undefined,
+            p['dueDateOne'] || undefined, p['dueDateTwo'] || undefined, p['dueDateGreater'] || undefined,
+            p['spOne'] || undefined, p['spTwo'] || undefined, p['spGreater'] || undefined,
+            p['open'] || undefined);
+          this.query = this.ticketFilter.toTicketFilterString();
+        }, error => {
+        });
+
+        let projectId = param['projectId'];
+        let boardId = param['boardId'];
         return this.refresh(projectId, boardId);
       })
       .subscribe(() => {
         this.loading = false;
       });
+    this.filterTerms.debounceTime(900)
+      .switchMap(term => this.refresh(this.kanbanBoard.projectId, this.kanbanBoard.id)).subscribe(result => {
+    }, error => {
+    });
   }
 
   private refresh(projectId: string, boardId: string): Observable<void> {
+    this.location.replaceState('/project/' + projectId + '/board/' + boardId + '?' + this.ticketFilter.toTicketFilterURLString());
     let kanbanBoardObs = this.apiCallService
       .callNoError<KanbanBoardResultJson>(p => this.kanbanBoardApi.getKanbanBoardUsingGETWithHttpInfo(boardId, p));
+
 
     let kanbanColumnObs = this.apiCallService
       .callNoError<KanbanColumnResultJson[]>(p => this.kanbanBoardApi.listKanbanColumnsUsingGETWithHttpInfo(boardId,
@@ -185,7 +207,10 @@ export class KanbanBoardDetailComponent implements OnInit {
         }
 
         let getObs = this.apiCallService
-          .callNoError<GetResultJson>(p => this.getApi.getUsingPOSTWithHttpInfo({userIds: wantedUserIds, ticketIds: wantedSubticketsIds}, p));
+          .callNoError<GetResultJson>(p => this.getApi.getUsingPOSTWithHttpInfo({
+            userIds: wantedUserIds,
+            ticketIds: wantedSubticketsIds
+          }, p));
 
         return Observable.zip(Observable.of(tuple[0]), Observable.of(tuple[1]), getObs);
       })
@@ -197,17 +222,25 @@ export class KanbanBoardDetailComponent implements OnInit {
         this.relatedProgresses = imm.Map(tuple[1].ticketStatistics).map((p, tid) => new TicketDetailProgress(tid, p)).toMap();
         let relatedSubTickets = imm.Map(tuple[2].tickets).map(t => newTicketDetailRelated(t, this.relatedProgresses)).toMap();
         this.interestingTickets = imm.Map(tuple[1].tickets)
-          .map(t => new KanbanDetailTicket(t, this.interestingUsers, this.allTicketTags, this.relatedProgresses, relatedSubTickets)).toMap();
+          .map(t => new KanbanDetailTicket(t, this.interestingUsers,
+            this.allTicketTags, this.relatedProgresses, relatedSubTickets)).toMap();
         this.kanbanColumns = imm.List(tuple[0][0]).map(c => new KanbanDetailColumn(c, this.interestingTickets)).toList();
       })
-      .map(it => undefined);
+      .map(it => undefined)
+      .catch(err => Observable.empty<void>());
 
   }
+
   updateFilter(event: TicketFilter) {
-    // TODO  filter our data
     this.ticketFilter = event;
-    console.log(this.ticketFilter);
-    this.refresh(this.kanbanBoard.projectId, this.kanbanBoard.id).subscribe();
+    this.filterTerms.next(event);
+
+  }
+
+  onFindSubTickets(event: FindSubTicketEvent) {
+    this.ticketFilter = new TicketFilter(undefined, event.subTicketIds, undefined, undefined, undefined,
+      undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+    this.query = this.ticketFilter.toTicketFilterString();
   }
 }
 
@@ -277,8 +310,7 @@ export class KanbanDetailTicket {
               users: imm.Map<string, TicketDetailUser>,
               ticketTags: imm.Map<string, KanbanDetailTag>,
               relatedProgresses: imm.Map<string, TicketDetailProgress>,
-               relatedTickets: imm.Map<string, TicketDetailRelated>
-  ) {
+              relatedTickets: imm.Map<string, TicketDetailRelated>) {
     this.createTime = ticket.createTime;
     this.currentEstimatedTime = ticket.currentEstimatedTime;
     this.dueDate = ticket.dueDate;

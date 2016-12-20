@@ -151,10 +151,10 @@ export class BoardApi {
      * updateKanbanBoards
      * 
      * @param id id
-     * @param columns columns
+     * @param column column
      */
-    public updateKanbanBoardsUsingPUT(id: string, columns: Array<models.UpdateKanbanColumnJson>, extraHttpRequestParams?: any): Observable<{}> {
-        return this.updateKanbanBoardsUsingPUTWithHttpInfo(id, columns, extraHttpRequestParams)
+    public updateKanbanBoardsUsingPUT(id: string, column: models.UpdateKanbanColumnJson, extraHttpRequestParams?: any): Observable<{}> {
+        return this.updateKanbanBoardsUsingPUTWithHttpInfo(id, column, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -411,9 +411,9 @@ export class BoardApi {
      * updateKanbanBoards
      * 
      * @param id id
-     * @param columns columns
+     * @param column column
      */
-    public updateKanbanBoardsUsingPUTWithHttpInfo(id: string, columns: Array<models.UpdateKanbanColumnJson>, extraHttpRequestParams?: any): Observable<Response> {
+    public updateKanbanBoardsUsingPUTWithHttpInfo(id: string, column: models.UpdateKanbanColumnJson, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/board/${id}`;
 
         let queryParameters = new URLSearchParams();
@@ -422,9 +422,9 @@ export class BoardApi {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling updateKanbanBoardsUsingPUT.');
         }
-        // verify required parameter 'columns' is not null or undefined
-        if (columns === null || columns === undefined) {
-            throw new Error('Required parameter columns was null or undefined when calling updateKanbanBoardsUsingPUT.');
+        // verify required parameter 'column' is not null or undefined
+        if (column === null || column === undefined) {
+            throw new Error('Required parameter column was null or undefined when calling updateKanbanBoardsUsingPUT.');
         }
 
 
@@ -446,7 +446,7 @@ export class BoardApi {
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Put,
             headers: headers,
-            body: columns == null ? '' : JSON.stringify(columns), // https://github.com/angular/angular/issues/10612
+            body: column == null ? '' : JSON.stringify(column), // https://github.com/angular/angular/issues/10612
             search: queryParameters
         });
         

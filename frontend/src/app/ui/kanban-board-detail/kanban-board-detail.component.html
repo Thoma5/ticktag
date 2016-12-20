@@ -4,7 +4,7 @@
   </div>
   <div *ngIf="!loading">
     <h1 class='title'>{{kanbanBoard.name}}</h1>
-    <tt-ticket-filter [allTicketTags]="allTicketTagsForFilter" [allUsers]="allProjectUsers" (ticketFilter)="updateFilter($event)">
+    <tt-ticket-filter [allTicketTags]="allTicketTagsForFilter" [addToQuery]="query" [allUsers]="allProjectUsers" (ticketFilter)="updateFilter($event)">
     </tt-ticket-filter>
     <div class='container'>
       <div *ngFor="let column of kanbanColumns" class='column-container'>
@@ -15,6 +15,7 @@
               [ticket]="ticket"
               [tagId]="column.id"
               (collect)="onCollet($event)"
+              (findSubTickets)="onFindSubTickets($event)"
             ></tt-kanban-cell>
           </div>
         </div>

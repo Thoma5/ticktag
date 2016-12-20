@@ -40,7 +40,8 @@ export class KanbanBoardsComponent implements OnInit {
       .do(tuple => {
         this.kanbanBoards = imm.List(tuple[0]).map((b: KanbanBoardResultJson) => new KanbanBoard(b)).toList();
       })
-      .map(it => undefined);
+      .map(it => undefined)
+      .catch(err => Observable.empty<void>());
   }
 }
 
