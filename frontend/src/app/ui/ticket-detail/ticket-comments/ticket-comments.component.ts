@@ -5,7 +5,7 @@ import * as imm from 'immutable';
 type Comment = {
   comment: TicketDetailComment
   userTags: imm.List<TicketDetailAssTag>
-}
+};
 
 @Component({
   selector: 'tt-ticket-comments',

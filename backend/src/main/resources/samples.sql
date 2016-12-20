@@ -25,6 +25,7 @@ DELETE FROM "ticket_event_initial_estimated_time_changed" CASCADE;
 DELETE FROM "ticket_event_logged_time_added" CASCADE;
 DELETE FROM "ticket_event_logged_time_removed" CASCADE;
 DELETE FROM "ticket_event_mention_added" CASCADE;
+DELETE FROM "ticket_event_mention_removed" CASCDE;
 DELETE FROM "ticket_event_parent_changed" CASCADE;
 DELETE FROM "ticket_event_state_changed" CASCADE;
 DELETE FROM "ticket_event_story_points_changed" CASCADE;

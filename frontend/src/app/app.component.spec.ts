@@ -12,6 +12,10 @@ import {Modal} from 'angular2-modal/plugins/bootstrap';
 
 @Injectable()
 class MockAuthService extends AuthService {
+  constructor() {
+    super(null);
+  }
+
   get user(): User|null {
     return null;
   }
@@ -28,7 +32,7 @@ describe('App', () => {
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, MaterialModule],
+      imports: [RouterTestingModule, MaterialModule.forRoot()],
       declarations: [AppComponent],
       providers: [provideRoutes([]), {provide: AuthService, useClass: MockAuthService}, ApiCallService, Overlay, Modal, OverlayRenderer],
     });

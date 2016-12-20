@@ -3,6 +3,7 @@ package io.ticktag.service.ticket.service
 import io.ticktag.service.Principal
 import io.ticktag.service.ticket.dto.CreateTicket
 import io.ticktag.service.ticket.dto.TicketResult
+import io.ticktag.service.ticket.dto.TicketStoryPointResult
 import io.ticktag.service.ticket.dto.UpdateTicket
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -12,7 +13,7 @@ import java.util.*
 
 interface TicketService {
     fun listTickets(project: UUID,
-                    number: Int?,
+                    numbers: List<Int>?,
                     title: String?,
                     tags: List<String>?,
                     users: List<String>?,
@@ -37,4 +38,8 @@ interface TicketService {
     fun deleteTicket(id: UUID)
     fun listTicketsFuzzy(project: UUID, query: String, pageable: Pageable): List<TicketResult>
 
+    fun listTicketsStoryPoints(project: UUID, numbers: List<Int>?, title: String?, tags: List<String>?, users: List<String>?, progressOne: Float?, progressTwo: Float?, progressGreater: Boolean?, dueDateOne: Instant?, dueDateTwo: Instant?, dueDateGreater: Boolean?, storyPointsOne: Int?, storyPointsTwo: Int?, storyPointsGreater: Boolean?, ticketOpen: Boolean): List<TicketStoryPointResult>
+
 }
+
+

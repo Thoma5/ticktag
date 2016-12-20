@@ -10,48 +10,48 @@
       </div>
     </div>
 
-    <swui-datatable class="material" [rows]="rows" [columns]="columns" [columnMode]="'force'" [headerHeight]="32" [footerHeight]="32"
+    <ngx-datatable class="material" [rows]="rows" [columns]="columns" [columnMode]="'force'" [headerHeight]="32" [footerHeight]="32"
       [rowHeight]="32" [externalPaging]="true" [count]="totalElements" [offset]="offset" [limit]="limit" [scrollbarH]="true"
       [scrollbarV]="false" [loadingIndicator]="refresh" [externalSorting]="true" (sort)="onSort($event)" (page)='onPage($event)'
       [cssClasses]="iconsCss" [selectionType]="'row'" (activate)="activate($event)">
-      <swui-datatable-column name="Icon" minWidth="48" width="48" maxWidth="48">
-        <template let-column="column" swui-datatable-header-template>
+      <ngx-datatable-column name="Icon" minWidth="48" width="48" maxWidth="48">
+        <template let-column="column" ngx-datatable-header-template>
           {{""}}
         </template>
-        <template let-value="value" swui-datatable-cell-template>
+        <template let-value="value" ngx-datatable-cell-template>
           <img class="img-circle" width="24" src="http://lorempixel.com/32/32/cats" />
         </template>
-      </swui-datatable-column>
-      <swui-datatable-column name="Name" minWidth="256" width="256" maxWidth="256">
-        <template  let-row="row" let-value="value" swui-datatable-cell-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Name" minWidth="256" width="256" maxWidth="256">
+        <template  let-row="row" let-value="value" ngx-datatable-cell-template>
           <a routerLink="/project/{{row.id}}/tickets">{{value}}</a>
         </template>
-      </swui-datatable-column>
-      <swui-datatable-column name="Created" prop="creationDate" minWidth="128" width="128" maxWidth="128">
-        <template let-row="row" let-value="value" swui-datatable-cell-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Created" prop="creationDate" minWidth="128" width="128" maxWidth="128">
+        <template let-row="row" let-value="value" ngx-datatable-cell-template>
           {{value | date: 'yyyy-MM-dd'}}
         </template>
-      </swui-datatable-column>
-      <swui-datatable-column name="Description" minWidth="256" width="256" maxWidth="1024">
-        <template let-column="column" swui-datatable-header-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Description" minWidth="256" width="256" maxWidth="1024">
+        <template let-column="column" ngx-datatable-header-template>
           {{"Description"}}
         </template>
-        <template let-row="row" let-value="value" swui-datatable-cell-template>
+        <template let-row="row" let-value="value" ngx-datatable-cell-template>
           <div class="form-group">
             {{value}}
           </div>
         </template>
-      </swui-datatable-column>
-      <swui-datatable-column name="Actions" minWidth="128" width="128" maxWidth="128">
-        <template id="test" let-column="column" swui-datatable-header-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Actions" minWidth="128" width="128" maxWidth="128">
+        <template id="test" let-column="column" ngx-datatable-header-template>
           Actions
         </template>
-        <template let-row="row" swui-datatable-cell-template>
+        <template let-row="row" ngx-datatable-cell-template>
           <button class="btn btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
           <button (click)="onDeleteClicked(row.id)" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
         </template>
-      </swui-datatable-column>
+      </ngx-datatable-column>
 
-    </swui-datatable>
+    </ngx-datatable>
   </div>
 </div>

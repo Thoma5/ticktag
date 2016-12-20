@@ -19,6 +19,7 @@ import javax.persistence.EntityManager
 
 @TicktagRepository
 interface TicketRepository : TicktagCrudRepository<Ticket, UUID>, TicketRepositoryCustom {
+    fun findAll(spec: Specification<Ticket>?): List<Ticket>
     fun findAll(spec: Specification<Ticket>?, pageable: Pageable?): Page<Ticket>
 
     fun findAll(spec: Specification<Ticket>?): List<Ticket>

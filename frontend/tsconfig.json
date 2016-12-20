@@ -9,6 +9,9 @@
     "noImplicitThis": true,
     "noImplicitReturns": true,
     "noImplicitAny": true
+    // TODO add parameters when swagger produces code which passes this checks
+    //"noUnusedLocals": true,
+    //"noUnusedParameters": true
     // TODO "strictNullChecks": true
   },
   "compileOnSave": false,

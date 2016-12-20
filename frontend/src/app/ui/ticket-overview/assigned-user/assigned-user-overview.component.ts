@@ -1,4 +1,4 @@
-import { Component, Input , OnInit} from '@angular/core';
+import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 import { TicketOverviewUser, TicketOverviewAssignment } from '../ticket-overview';
 import * as imm from 'immutable';
 
@@ -9,13 +9,17 @@ import * as imm from 'immutable';
 })
 export class AssignedUserOverviewComponent implements OnInit {
   @Input() users: imm.Map<TicketOverviewUser, imm.List<TicketOverviewAssignment>>;
+  @Output() clickedUser = new EventEmitter<TicketOverviewUser>();
+
   usersList: imm.List<TicketOverviewUser>;
   ready: boolean = false;
 
   ngOnInit(): void {
     this.usersList = this.users.keySeq().toList();
     this.ready = true;
+  }
 
-
+  userClicked(tag: TicketOverviewUser) {
+    this.clickedUser.emit(tag);
   }
 }
