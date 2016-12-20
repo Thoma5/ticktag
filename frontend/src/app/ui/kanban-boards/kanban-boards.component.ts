@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import * as imm from 'immutable';
-import {KanbanBoardReslutJson} from '../../api/model/KanbanBoardReslutJson';
+import {KanbanBoardResultJson} from '../../api/model/KanbanBoardResultJson';
 import {ApiCallService} from '../../service/api-call/api-call.service';
 import {BoardApi} from '../../api/api/BoardApi';
 import {Router, ActivatedRoute} from '@angular/router';
@@ -34,11 +34,11 @@ export class KanbanBoardsComponent implements OnInit {
 
   private refresh(projectId: string): Observable<void> {
     let kanbanBoardsObs = this.apiCallService
-      .callNoError<KanbanBoardReslutJson>(p => this.kanbanBoardApi.listKanbanBoardsUsingGETWithHttpInfo(projectId, p));
+      .callNoError<KanbanBoardResultJson>(p => this.kanbanBoardApi.listKanbanBoardsUsingGETWithHttpInfo(projectId, p));
     return Observable
       .zip(kanbanBoardsObs)
       .do(tuple => {
-        this.kanbanBoards = imm.List(tuple[0]).map((b: KanbanBoardReslutJson) => new KanbanBoard(b)).toList();
+        this.kanbanBoards = imm.List(tuple[0]).map((b: KanbanBoardResultJson) => new KanbanBoard(b)).toList();
       })
       .map(it => undefined);
   }
@@ -49,7 +49,7 @@ export class KanbanBoard {
   readonly name: string;
   readonly projectId: string;
 
-  constructor(b: KanbanBoardReslutJson) {
+  constructor(b: KanbanBoardResultJson) {
     this.id = b.id;
     this.name = b.name;
     this.projectId = b.projectId;

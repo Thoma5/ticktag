@@ -14,8 +14,10 @@ import {GetApi} from '../../api/api/GetApi';
 import {TickettagApi} from '../../api/api/TickettagApi';
 import {idListToMap} from '../../util/listmaputils';
 import {KanbanBoard} from '../kanban-boards/kanban-boards.component';
-import {KanbanBoardReslutJson} from '../../api/model/KanbanBoardReslutJson';
-import {TicketDetailProgress, TicketDetailUser, TicketDetailRelated} from '../ticket-detail/ticket-detail';
+import {
+  TicketDetailProgress, TicketDetailUser, TicketDetailRelated,
+  newTicketDetailRelated
+} from '../ticket-detail/ticket-detail';
 import {DragulaService} from 'ng2-dragula';
 import {UpdateKanbanColumnJson} from '../../api/model/UpdateKanbanColumnJson';
 import {TaskQueue} from '../../util/task-queue';
@@ -24,6 +26,7 @@ import {TicketOverviewTag, TicketOverviewUser} from '../ticket-overview/ticket-o
 import {ProjectApi} from '../../api/api/ProjectApi';
 import {TicketFilter} from '../ticket-overview/ticket-filter/ticket-filter';
 import {CollectEvent} from "./kanban-cell/kanban-cell.component";
+import {KanbanBoardResultJson} from "../../api/model/KanbanBoardResultJson";
 
 @Component({
   selector: 'tt-kanban-board-detail',
@@ -42,7 +45,7 @@ export class KanbanBoardDetailComponent implements OnInit {
   private allTicketTagsForFilter: imm.Map<string, TicketOverviewTag>;
   private allProjectUsers: imm.Map<string, TicketOverviewUser>;
   private ticketFilter: TicketFilter = new TicketFilter(undefined, undefined, undefined, undefined, undefined,
-    undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, true);
+    undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
   private loading = true;
 
   constructor(private route: ActivatedRoute,
@@ -129,11 +132,11 @@ export class KanbanBoardDetailComponent implements OnInit {
 
   private refresh(projectId: string, boardId: string): Observable<void> {
     let kanbanBoardObs = this.apiCallService
-      .callNoError<KanbanBoardReslutJson>(p => this.kanbanBoardApi.getKanbanBoardUsingGETWithHttpInfo(boardId, p));
+      .callNoError<KanbanBoardResultJson>(p => this.kanbanBoardApi.getKanbanBoardUsingGETWithHttpInfo(boardId, p));
 
     let kanbanColumnObs = this.apiCallService
       .callNoError<KanbanColumnResultJson[]>(p => this.kanbanBoardApi.listKanbanColumnsUsingGETWithHttpInfo(boardId,
-        this.ticketFilter.ticketNumber, this.ticketFilter.title, this.ticketFilter.tags, this.ticketFilter.users,
+        this.ticketFilter.ticketNumbers, this.ticketFilter.title, this.ticketFilter.tags, this.ticketFilter.users,
         this.ticketFilter.progressOne, this.ticketFilter.progressTwo, this.ticketFilter.progressGreater,
         this.ticketFilter.dueDateOne, this.ticketFilter.dueDateTwo, this.ticketFilter.dueDateGreater,
         this.ticketFilter.storyPointsOne, this.ticketFilter.storyPointsTwo, this.ticketFilter.storyPointsGreater,
@@ -192,12 +195,13 @@ export class KanbanBoardDetailComponent implements OnInit {
         this.kanbanBoard = new KanbanBoard(tuple[0][2]);
         this.interestingUsers = imm.Map(tuple[2].users).map(u => new TicketDetailUser(u)).toMap();
         this.relatedProgresses = imm.Map(tuple[1].ticketStatistics).map((p, tid) => new TicketDetailProgress(tid, p)).toMap();
-        let relatedSubTickets = imm.Map(tuple[2].tickets).map(t => new TicketDetailRelated(t)).toMap();
+        let relatedSubTickets = imm.Map(tuple[2].tickets).map(t => newTicketDetailRelated(t, this.relatedProgresses)).toMap();
         this.interestingTickets = imm.Map(tuple[1].tickets)
           .map(t => new KanbanDetailTicket(t, this.interestingUsers, this.allTicketTags, this.relatedProgresses, relatedSubTickets)).toMap();
         this.kanbanColumns = imm.List(tuple[0][0]).map(c => new KanbanDetailColumn(c, this.interestingTickets)).toList();
       })
       .map(it => undefined);
+
   }
   updateFilter(event: TicketFilter) {
     // TODO  filter our data
@@ -273,7 +277,7 @@ export class KanbanDetailTicket {
               users: imm.Map<string, TicketDetailUser>,
               ticketTags: imm.Map<string, KanbanDetailTag>,
               relatedProgresses: imm.Map<string, TicketDetailProgress>,
-              relatedTicktes: imm.List<TicketDetailRelated>
+               relatedTickets: imm.Map<string, TicketDetailRelated>
   ) {
     this.createTime = ticket.createTime;
     this.currentEstimatedTime = ticket.currentEstimatedTime;
@@ -302,7 +306,7 @@ export class KanbanDetailTicket {
     this.projectId = ticket.projectId;
     this.progress = relatedProgresses.get(ticket.id);
     this.subtickets = imm.Seq(ticket.subTicketIds)
-      .map(id => relatedTicktes.get(id))
+      .map(id => relatedTickets.get(id))
       .filter(t => !!t)
       .toList();
   }
