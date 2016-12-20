@@ -68,9 +68,11 @@ open class TicketTagRelationServiceImpl(
         val user = users.findOne(principal.id) ?: throw NotFoundException()
 
         val assignedTag = ticket.tags.find { it.id == tagId } ?: throw NotFoundException()
-        val kanbanCell = ticket.kanbanCells.find { it.tag.id == tagId } ?: throw NotFoundException()
+        val kanbanCell = ticket.kanbanCells.find { it.tag.id == tagId }
         ticketEvents.insert(TicketEventTagRemoved.create(ticket, user, assignedTag))
         ticket.tags.remove(assignedTag)
-        kanbanCellRepository.delete(kanbanCell)
+        if (kanbanCell != null) {
+            kanbanCellRepository.delete(kanbanCell)
+        }
     }
 }
