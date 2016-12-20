@@ -22,7 +22,6 @@ interface TicketRepository : TicktagCrudRepository<Ticket, UUID>, TicketReposito
     fun findAll(spec: Specification<Ticket>?): List<Ticket>
     fun findAll(spec: Specification<Ticket>?, pageable: Pageable?): Page<Ticket>
 
-    fun findAll(spec: Specification<Ticket>?): List<Ticket>
     fun findByProjectIdAndNumber(projectId: UUID, number: Int): Ticket?
 
     @Query("Select max(t.number) from Ticket t where project.id = :projectId ")

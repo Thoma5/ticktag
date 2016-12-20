@@ -11,7 +11,7 @@ import java.util.*
 
 interface KanbanService {
     fun listColumns(kanbanBoardId: UUID,
-                    number: Int?,
+                    numbers: List<Int>?,
                     title: String?,
                     tags: List<String>?,
                     users: List<String>?,

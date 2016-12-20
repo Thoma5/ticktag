@@ -29,7 +29,7 @@ open class KanbanBoardController @Inject constructor(
 
     @GetMapping(value = "/{id}/columns")
     open fun listKanbanColumns(@PathVariable id: UUID,
-                               @RequestParam(name = "number", required = false) number: Int?,
+                               @RequestParam(name = "numbers", required = false) numbers: List<Int>?,
                                @RequestParam(name = "title", required = false) title: String?,
                                @RequestParam(name = "tags", required = false) tags: List<String>?,
                                @RequestParam(name = "users",  required = false) user: List<String>?,
@@ -43,7 +43,7 @@ open class KanbanBoardController @Inject constructor(
                                @RequestParam(name = "storyPointsTwo",  required = false) storyPointsTwo: Int?,
                                @RequestParam(name = "storyPointsGreater", required = false) storyPointsGreater: Boolean?,
                                @RequestParam(name = "open", required = false) open: Boolean?): List<KanbanColumnResultJson> {
-        return kanbanService.listColumns(id, number, title, tags, user, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open).map(::KanbanColumnResultJson)
+        return kanbanService.listColumns(id, numbers, title, tags, user, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open).map(::KanbanColumnResultJson)
     }
 
     @GetMapping(value = "/{id}")

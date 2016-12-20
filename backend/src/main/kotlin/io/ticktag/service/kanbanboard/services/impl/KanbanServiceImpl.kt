@@ -34,7 +34,7 @@ open class KanbanServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.READ_TICKET_TAG_FOR_GROUP)
     override fun listColumns(@P("authTicketTagGroupId") kanbanBoardId: UUID,
-                             number: Int?,
+                             numbers: List<Int>?,
                              title: String?,
                              tags: List<String>?,
                              users: List<String>?,
@@ -51,7 +51,7 @@ open class KanbanServiceImpl @Inject constructor(
 
         val columns = ticketTagRepository.findByTicketTagGroupIdOrderByOrderAsc(kanbanBoardId)
         var result = emptyList<KanbanColumnResult>().toMutableList()
-        val filter = TicketFilter(columns.first().ticketTagGroup.project.id, number, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open)
+        val filter = TicketFilter(columns.first().ticketTagGroup.project.id, numbers, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open)
         val filteredTickets = ticketRepository.findAll(filter)
         val ascOrder = Sort.Direction.ASC
         val sortOrder = Sort.Order(ascOrder, "order")
