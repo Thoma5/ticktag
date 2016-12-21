@@ -18,8 +18,8 @@
         <ngx-datatable-column name="#" prop="number" width="64" maxWidth="64" [draggable]="false" [resizeable]="false">
           <template let-row="row" let-value="value" ngx-datatable-cell-template>
             <span *ngIf="row.parentTicketNumber">
-            <a  *ngIf="row.parentTicketOpen" routerLink="/project/{{projectId}}/ticket/{{row.parentTicketNumber}}" tooltip="{{row.parentTicketTitle}}" tooltipPlacement="bottom" tooltipTrigger="mouseenter">#{{row.parentTicketNumber}}</a>    
-            <a  *ngIf="!row.parentTicketOpen"routerLink="/project/{{projectId}}/ticket/{{row.parentTicketNumber}}" tooltip="{{row.parentTicketTitle}}" tooltipPlacement="bottom" tooltipTrigger="mouseenter"><s style="color: grey;">#{{row.parentTicketNumber}}</s></a> /   
+            <a  *ngIf="row.parentTicketOpen" routerLink="/project/{{projectId}}/ticket/{{row.parentTicketNumber}}" tooltip="{{row.parentTicketTitle}}" tooltipPlacement="bottom" tooltipPopupDelay="500" tooltipPlacement="right" tooltipTrigger="mouseenter">#{{row.parentTicketNumber}}</a>    
+            <a  *ngIf="!row.parentTicketOpen"routerLink="/project/{{projectId}}/ticket/{{row.parentTicketNumber}}" tooltip="{{row.parentTicketTitle}}" tooltipPlacement="bottom" tooltipPopupDelay="500" tooltipPlacement="right" tooltipTrigger="mouseenter"><s style="color: grey;">#{{row.parentTicketNumber}}</s></a> /   
             </span>
           <s *ngIf="!row.open"><a routerLink="/project/{{projectId}}/ticket/{{row.number}}" style="color: grey;">#{{value}}</a></s>
           <span *ngIf="row.open"><a routerLink="/project/{{projectId}}/ticket/{{row.number}}">#{{value}}</a></span>
