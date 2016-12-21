@@ -17,16 +17,16 @@
         (page)='onPage($event)' [cssClasses]="iconsCss" [selectionType]="'row'" (activate)="activate($event)">
         <ngx-datatable-column name="#" prop="number" width="64" maxWidth="64" [draggable]="false" [resizeable]="false">
           <template let-row="row" let-value="value" ngx-datatable-cell-template>
-          <s *ngIf="!row.open" style="color: grey;">#{{value}}</s>
-          <span *ngIf="row.open">#{{value}}</span>
+            <span *ngIf="row.parentTicketNumber">
+            <a  *ngIf="row.parentTicketOpen" routerLink="/project/{{projectId}}/ticket/{{row.parentTicketNumber}}" tooltip="{{row.parentTicketTitle}}" tooltipPlacement="bottom" tooltipTrigger="mouseenter">#{{row.parentTicketNumber}}</a>    
+            <a  *ngIf="!row.parentTicketOpen"routerLink="/project/{{projectId}}/ticket/{{row.parentTicketNumber}}" tooltip="{{row.parentTicketTitle}}" tooltipPlacement="bottom" tooltipTrigger="mouseenter"><s style="color: grey;">#{{row.parentTicketNumber}}</s></a> /   
+            </span>
+          <s *ngIf="!row.open"><a routerLink="/project/{{projectId}}/ticket/{{row.number}}" style="color: grey;">#{{value}}</a></s>
+          <span *ngIf="row.open"><a routerLink="/project/{{projectId}}/ticket/{{row.number}}">#{{value}}</a></span>
           </template>
         </ngx-datatable-column>
         <ngx-datatable-column name="Title" minWidth="128" width="256" [draggable]="false">
           <template let-row="row" let-value="value" ngx-datatable-cell-template>
-            <span *ngIf="row.parentTicketNumber">SubTicket of 
-            <a  *ngIf="row.parentTicketOpen" routerLink="/project/{{projectId}}/ticket/{{row.parentTicketNumber}}" tooltip="{{row.parentTicketTitle}}" tooltipPlacement="bottom" tooltipTrigger="mouseenter">#{{row.parentTicketNumber}}</a>    
-            <a  *ngIf="!row.parentTicketOpen"routerLink="/project/{{projectId}}/ticket/{{row.parentTicketNumber}}" tooltip="{{row.parentTicketTitle}}" tooltipPlacement="bottom" tooltipTrigger="mouseenter"><s style="color: grey;">#{{row.parentTicketNumber}}</s></a>:    
-            </span>
             <a routerLink="/project/{{projectId}}/ticket/{{row.number}}">
               <s style="color: grey;" *ngIf="!row.open">{{value}}</s>
               <span *ngIf="row.open">{{value}}</span>

@@ -218,7 +218,7 @@ export class BurnDownChartComponent implements OnInit {
                 this.ticketFilter.progressOne, this.ticketFilter.progressTwo, this.ticketFilter.progressGreater,
                 this.ticketFilter.dueDateOne, this.ticketFilter.dueDateTwo, this.ticketFilter.dueDateGreater,
                 this.ticketFilter.storyPointsOne, this.ticketFilter.storyPointsTwo, this.ticketFilter.storyPointsGreater,
-                this.ticketFilter.subTicket, p));
+                this.ticketFilter.parentNumber, p));
 
         rawTicketStoryPointObs.subscribe(
             result => {

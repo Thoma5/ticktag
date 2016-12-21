@@ -24,7 +24,7 @@ interface TicketService {
                     storyPointsTwo: Int?,
                     storyPointsGreater: Boolean?,
                     open: Boolean?,
-                    subTicket: Boolean?,
+                    parent: Int?,
                     pageable: Pageable): Page<TicketOverviewResult>
 
     fun listTickets(project: UUID, pageable: Pageable): Page<TicketResult>
@@ -50,7 +50,7 @@ interface TicketService {
                                storyPointsTwo: Int?,
                                storyPointsGreater: Boolean?,
                                open: Boolean?,
-                               subTicket: Boolean?): List<TicketStoryPointResult>
+                               parent: Int?): List<TicketStoryPointResult>
 }
 
 

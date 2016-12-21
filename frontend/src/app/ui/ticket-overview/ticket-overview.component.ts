@@ -99,7 +99,7 @@ export class TicketOverviewComponent implements OnInit {
             p['progressOne'] || undefined, p['progressTwo'] || undefined, p['progressGreater'] || undefined,
             p['dueDateOne'] || undefined, p['dueDateTwo'] || undefined, p['dueDateGreater'] || undefined,
             p['spOne'] || undefined, p['spTwo'] || undefined, p['spGreater'] || undefined,
-            p['open'] || undefined, p['subTicket'] || undefined);
+            p['open'] || undefined, p['parent'] || undefined);
           this.offset = p['page'] || 0;
           this.query = this.ticketFilter.toTicketFilterString();
         }, error => {});
@@ -127,7 +127,7 @@ export class TicketOverviewComponent implements OnInit {
         ticketFilter.progressOne, ticketFilter.progressTwo, ticketFilter.progressGreater,
         ticketFilter.dueDateOne, ticketFilter.dueDateTwo, ticketFilter.dueDateGreater,
         ticketFilter.storyPointsOne, ticketFilter.storyPointsTwo, ticketFilter.storyPointsGreater,
-        ticketFilter.open, ticketFilter.subTicket, this.offset, this.limit, p));
+        ticketFilter.open, ticketFilter.parentNumber, this.offset, this.limit, p));
     let assignmentTagsObs = this.apiCallService
       .callNoError<AssignmentTagResultJson[]>(p => this.assigmentTagsApi.listAssignmentTagsUsingGETWithHttpInfo(this.projectId, p))
       .map(ats => idListToMap(ats).map(at => new TicketOverviewAssTag(at, 0)).toMap());

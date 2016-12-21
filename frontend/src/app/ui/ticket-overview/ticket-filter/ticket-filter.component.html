@@ -17,7 +17,7 @@
   </md-card>
 </div>
 <div *ngIf="filterHelper" class="row">
-  <div class="col-md-7 filterHelper">
+  <div class="col-md-12 filterHelper">
     <div *ngIf="disabledFilterHelper.indexOf('status') < 0" class="btn-group" dropdown keyboardNav="true">
       <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default btn-sm" dropdownToggle>
         <i class="glyphicon glyphicon-ok" ></i> Status <span class="caret"></span>
@@ -34,16 +34,19 @@
     </div>
      <div *ngIf="disabledFilterHelper.indexOf('parent') < 0" class="btn-group" dropdown keyboardNav="true">
       <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default btn-sm" dropdownToggle>
-        <i class="glyphicon glyphicon-align-left" ></i> Subtickets <span class="caret"></span>
+        <i class="glyphicon glyphicon-align-left" ></i> Subtickets of <span class="caret"></span>
     </button>
       <ul dropdownMenu role="menu" aria-labelledby="single-button">
-        <li role="menuitem">
-          <a (click)="pickSubtickets(true)" class="dropdown-item"> <i class="glyphicon glyphicon-pawn"></i> Subtickets</a>
-        </li>
-        <li role="menuitem">
-          <a (click)="pickSubtickets(false)" class="dropdown-item"> <i class="glyphicon glyphicon-king"></i> Parents</a>
-        </li>
-        <li role="menuitem"><a (click)="pickSubtickets(undefined)" class="dropdown-item"> All</a></li>
+        <form #f="ngForm">
+          <div class="form-group">
+            <label>Parent Ticket Number:</label>
+            <div class="form-group">
+              <input [(ngModel)]=parentNumber name="parentNumberInput" type="number" pattern="^[0-9]+$" class="form-control" placeholder="0"
+                required>
+            </div>
+          </div>
+          <button type="submit" [disabled]="!f.form.valid" class="btn btn-success" (click)="pickParent(parentNumber)">Select</button>
+        </form>
       </ul>
     </div>
     <div *ngIf="disabledFilterHelper.indexOf('#') < 0" class="btn-group" dropdown keyboardNav="true" autoClose="outsideClick">

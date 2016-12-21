@@ -13,13 +13,13 @@ export class TicketFilter {
     readonly storyPointsTwo: number;
     readonly storyPointsGreater: boolean;
     readonly open: boolean;
-    readonly subTicket: boolean;
+    readonly parentNumber: number;
 
 
     constructor(title: string, ticketNumbers: number[], tags: string[], users: string[],
         progressOne: number, progressTwo: number, progressGreater: boolean,
         dueDateOne: number, dueDateTwo: number, dueDateGreater: boolean, storyPointsOne: number,
-        storyPointsTwo: number, storyPointsGreater: boolean, open: boolean, subTicket: boolean) {
+        storyPointsTwo: number, storyPointsGreater: boolean, open: boolean, parentNumber: number) {
         this.title = title === '' ? undefined : title;
         this.ticketNumbers = ticketNumbers ? ticketNumbers.filter(e => isFinite(e)) : undefined;
         this.tags = (tags ? tags : []).length > 0 ? tags : undefined;
@@ -34,7 +34,7 @@ export class TicketFilter {
         this.storyPointsTwo = storyPointsTwo;
         this.storyPointsGreater = storyPointsGreater;
         this.open = open;
-        this.subTicket = subTicket;
+        this.parentNumber = parentNumber;
     }
 
     toTicketFilterString(): string {
@@ -65,7 +65,7 @@ export class TicketFilter {
             list.push('!sp:' + this.storyPointsOne);
         }
         if (this.open !== undefined) { list.push('!open:' + this.open); }
-        if (this.subTicket !== undefined) { list.push('!subTicket:' + this.subTicket); }
+        if (this.parentNumber !== undefined) { list.push('!parent:' + this.parentNumber); }
         return list.join(' ');
     }
     toTicketFilterURLString(): string {
@@ -96,7 +96,7 @@ export class TicketFilter {
             list.push('spGreater=' + this.storyPointsGreater);
         }
         if (this.open !== undefined) { list.push('open=' + this.open); }
-        if (this.subTicket !== undefined) { list.push('subTicket=' + this.subTicket); }
+        if (this.parentNumber !== undefined) { list.push('parent=' + this.parentNumber); }
         return list.join('&');
     }
 }
