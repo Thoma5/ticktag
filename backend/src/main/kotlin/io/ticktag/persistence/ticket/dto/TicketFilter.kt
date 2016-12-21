@@ -19,7 +19,7 @@ data class TicketFilter(val project: UUID, val numbers: List<Int>?, val title: S
                         val users: List<String>?, val progressOne: Float?, val progressTwo: Float?,
                         val progressGreater: Boolean?, val dueDateOne: Instant?, val dueDateTwo: Instant?,
                         val dueDateGreater: Boolean?, val storyPointsOne: Int?, val storyPointsTwo: Int?,
-                        val storyPointsGreater: Boolean?, val open: Boolean?) : Specification<Ticket> {
+                        val storyPointsGreater: Boolean?, val open: Boolean?, val parent: Int?) : Specification<Ticket> {
 
 
     val predicates = emptyList<Predicate>().toMutableList()
@@ -32,7 +32,7 @@ data class TicketFilter(val project: UUID, val numbers: List<Int>?, val title: S
             predicates.add(cb.isTrue(root.get<Int>("number").`in`(numbers)))
         }
         if (title != null) {
-            predicates.add(cb.like(cb.lower(root.get<String>("title")), title.toLowerCase().split(' ').joinToString("%","%","%")))
+            predicates.add(cb.like(cb.lower(root.get<String>("title")), title.toLowerCase().split(' ').joinToString("%", "%", "%")))
         }
         if (tags != null) {
             val join = root.join<Ticket, TicketTag>("tags")
@@ -92,6 +92,10 @@ data class TicketFilter(val project: UUID, val numbers: List<Int>?, val title: S
         }
         if (open != null) {
             predicates.add(cb.equal(root.get<Boolean>("open"), open))
+        }
+        if (parent != null) {
+            val isChildOf = cb.equal(root.get<Ticket>("parentTicket").get<Int>("number"), parent)
+            predicates.add(isChildOf)
         }
         return if (predicates.size <= 0) {
             null

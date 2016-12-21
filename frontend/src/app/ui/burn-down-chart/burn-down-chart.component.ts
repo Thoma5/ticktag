@@ -26,7 +26,7 @@ export class BurnDownChartComponent implements OnInit {
     private allTicketTagsForFilter: imm.Map<string, TicketOverviewTag>;
     private allProjectUsers: imm.Map<string, TicketOverviewUser>;
     private ticketFilter: TicketFilter = new TicketFilter(undefined, undefined, undefined, undefined, undefined,
-        undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, true);
+        undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, true, undefined);
     private tickets = new Map<string, TicketStoryPointResultJson>();
     private projectId: string;
     private FROM_KEY = 'BURNDOWN_FROM';
@@ -217,7 +217,8 @@ export class BurnDownChartComponent implements OnInit {
                 this.ticketFilter.ticketNumbers, this.ticketFilter.title, this.ticketFilter.tags, this.ticketFilter.users,
                 this.ticketFilter.progressOne, this.ticketFilter.progressTwo, this.ticketFilter.progressGreater,
                 this.ticketFilter.dueDateOne, this.ticketFilter.dueDateTwo, this.ticketFilter.dueDateGreater,
-                this.ticketFilter.storyPointsOne, this.ticketFilter.storyPointsTwo, this.ticketFilter.storyPointsGreater, p));
+                this.ticketFilter.storyPointsOne, this.ticketFilter.storyPointsTwo, this.ticketFilter.storyPointsGreater,
+                this.ticketFilter.parentNumber, p));
 
         rawTicketStoryPointObs.subscribe(
             result => {

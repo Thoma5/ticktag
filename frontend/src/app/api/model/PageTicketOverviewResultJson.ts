@@ -25,8 +25,8 @@
 
 import * as models from './models';
 
-export interface PageTicketResultJson {
-    content?: Array<models.TicketResultJson>;
+export interface PageTicketOverviewResultJson {
+    content?: Array<models.TicketOverviewResultJson>;
 
     first?: boolean;
 

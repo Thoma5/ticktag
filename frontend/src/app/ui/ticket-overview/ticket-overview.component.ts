@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Modal } from 'angular2-modal/plugins/bootstrap';
 import { ApiCallService } from '../../service';
 import {
-  TicketApi, TicketResultJson, PageTicketResultJson, AssignmenttagApi,
+  TicketApi, TicketOverviewResultJson, PageTicketOverviewResultJson, AssignmenttagApi,
   AssignmentTagResultJson, UserResultJson, TicketTagResultJson,
   TimeCategoryJson,
   TickettagApi, TicketuserrelationApi, TickettagrelationApi, ProjectApi,
@@ -38,7 +38,7 @@ export class TicketOverviewComponent implements OnInit {
   private projectId: string | null = null;
   private filterTerms = new Subject<TicketFilter>();
   private ticketFilter: TicketFilter = new TicketFilter(undefined, undefined, undefined, undefined, undefined,
-    undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+    undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
   sortprop = ['NUMBER_ASC'];
   offset = 0;
   limit = 30;
@@ -73,7 +73,7 @@ export class TicketOverviewComponent implements OnInit {
   }
 
   private newTicketOverview(
-    currentTicketJson: TicketResultJson,
+    currentTicketJson: TicketOverviewResultJson,
     interestingUsers: imm.Map<string, TicketOverviewUser>): TicketOverview {
     let to: TicketOverview = new TicketOverview(
       currentTicketJson,
@@ -93,11 +93,13 @@ export class TicketOverviewComponent implements OnInit {
         this.projectId = projectId;
         this.route.queryParams.subscribe(p => {
           this.ticketFilter = new TicketFilter(p['title'] || undefined,
-            p['ticketNumber'] || undefined, p['tag'] || undefined, p['user'] || undefined,
+            p['ticketNumber'] ? (p['ticketNumber']).split(',')  : undefined,
+            p['tag'] ? (p['tag']).split(',')  : undefined,
+            p['user'] ? (p['user']).split(',') : undefined,
             p['progressOne'] || undefined, p['progressTwo'] || undefined, p['progressGreater'] || undefined,
             p['dueDateOne'] || undefined, p['dueDateTwo'] || undefined, p['dueDateGreater'] || undefined,
             p['spOne'] || undefined, p['spTwo'] || undefined, p['spGreater'] || undefined,
-            p['open'] || undefined);
+            p['open'] || undefined, p['parent'] || undefined);
           this.offset = p['page'] || 0;
           this.query = this.ticketFilter.toTicketFilterString();
         }, error => {});
@@ -119,13 +121,13 @@ export class TicketOverviewComponent implements OnInit {
     this.location.replaceState('/project/' + this.projectId + '/tickets?page=' + this.offset
       + '&' + ticketFilter.toTicketFilterURLString());
     let rawTicketObs = this.apiCallService
-      .callNoError<PageTicketResultJson>(p => this.ticketApi
+      .callNoError<PageTicketOverviewResultJson>(p => this.ticketApi
         .listTicketsUsingGETWithHttpInfo(this.projectId, this.sortprop,
         ticketFilter.ticketNumbers, ticketFilter.title, ticketFilter.tags, ticketFilter.users,
         ticketFilter.progressOne, ticketFilter.progressTwo, ticketFilter.progressGreater,
         ticketFilter.dueDateOne, ticketFilter.dueDateTwo, ticketFilter.dueDateGreater,
         ticketFilter.storyPointsOne, ticketFilter.storyPointsTwo, ticketFilter.storyPointsGreater,
-        ticketFilter.open, this.offset, this.limit, p));
+        ticketFilter.open, ticketFilter.parentNumber, this.offset, this.limit, p));
     let assignmentTagsObs = this.apiCallService
       .callNoError<AssignmentTagResultJson[]>(p => this.assigmentTagsApi.listAssignmentTagsUsingGETWithHttpInfo(this.projectId, p))
       .map(ats => idListToMap(ats).map(at => new TicketOverviewAssTag(at, 0)).toMap());
