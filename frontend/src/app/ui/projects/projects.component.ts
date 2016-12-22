@@ -23,7 +23,7 @@ export class ProjectsComponent implements OnInit {
   asc = true;
   sortprop = 'NAME';
   offset = 0;
-  limit = 15;
+  limit = 25;
   rows: ProjectResultJson[] = [];
   totalElements = 0;
   filter: string = '';

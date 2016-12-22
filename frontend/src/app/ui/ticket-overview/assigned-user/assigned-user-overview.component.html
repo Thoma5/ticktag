@@ -1,6 +1,6 @@
 <div class="assignees">
   <div  *ngFor="let user of usersList"
-    tooltip="{{user.username}}" tooltipPlacement="bottom" tooltipTrigger="mouseenter" tooltipClass="user-tooltip"
+    tooltip="{{user.username}}" tooltipPlacement="bottom" tooltipTrigger="mouseenter" tooltipPlacement="left" tooltipClass="user-tooltip"
     class="user-image">
     <tt-user-image (click)="userClicked(user)" [imageId]="user.imageId"></tt-user-image>
   </div>

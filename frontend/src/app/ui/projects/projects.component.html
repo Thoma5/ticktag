@@ -14,38 +14,29 @@
       [rowHeight]="32" [externalPaging]="true" [count]="totalElements" [offset]="offset" [limit]="limit" [scrollbarH]="true"
       [scrollbarV]="false" [loadingIndicator]="refresh" [externalSorting]="true" (sort)="onSort($event)" (page)='onPage($event)'
       [cssClasses]="iconsCss" [selectionType]="'row'" (activate)="activate($event)">
-      <ngx-datatable-column name="Icon" minWidth="48" width="48" maxWidth="48">
-        <template let-column="column" ngx-datatable-header-template>
-          {{""}}
-        </template>
-        <template let-value="value" ngx-datatable-cell-template>
-          <img class="img-circle" width="24" src="http://lorempixel.com/32/32/cats" />
+      <ngx-datatable-column name="Icon" width="48" [resizeable]="false" [sortable]="false">
+        <template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <img *ngIf="row.icon !== null" width="24" src="{{value}}" />
         </template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="Name" minWidth="256" width="256" maxWidth="256">
+      <ngx-datatable-column name="Name" width="256" [resizeable]="false">
         <template  let-row="row" let-value="value" ngx-datatable-cell-template>
           <a routerLink="/project/{{row.id}}/tickets">{{value}}</a>
         </template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="Created" prop="creationDate" minWidth="128" width="128" maxWidth="128">
+      <ngx-datatable-column name="Created" prop="creationDate" width="128" [resizeable]="false">
         <template let-row="row" let-value="value" ngx-datatable-cell-template>
-          {{value | date: 'yyyy-MM-dd'}}
+          {{value | date: 'yyyy-MM-dd': 'UTC'}}
         </template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="Description" minWidth="256" width="256" maxWidth="1024">
-        <template let-column="column" ngx-datatable-header-template>
-          {{"Description"}}
-        </template>
+      <ngx-datatable-column name="Description" minWidth="256" width="256" maxWidth="1024" [sortable]="false">
         <template let-row="row" let-value="value" ngx-datatable-cell-template>
           <div class="form-group">
             {{value}}
           </div>
         </template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="Actions" minWidth="128" width="128" maxWidth="128">
-        <template id="test" let-column="column" ngx-datatable-header-template>
-          Actions
-        </template>
+      <ngx-datatable-column name="Actions" width="128" [resizeable]="false"  [sortable]="false">
         <template let-row="row" ngx-datatable-cell-template>
           <button class="btn btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
           <button (click)="onDeleteClicked(row.id)" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></button>

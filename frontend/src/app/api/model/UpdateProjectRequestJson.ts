@@ -30,7 +30,7 @@ export interface UpdateProjectRequestJson {
 
     description?: string;
 
-    icon?: Array<string>;
+    icon?: string;
 
 }
 

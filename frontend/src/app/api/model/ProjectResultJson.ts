@@ -30,7 +30,7 @@ export interface ProjectResultJson {
 
     description: string;
 
-    icon?: Array<string>;
+    icon?: string;
 
     id: string;
 

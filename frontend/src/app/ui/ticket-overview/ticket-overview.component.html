@@ -49,7 +49,7 @@
         </ngx-datatable-column>
         <ngx-datatable-column name="Due Date" prop="dueDate" minWidth="128" width="128" maxWidth="128" [draggable]="false" [resizeable]="false">
           <template let-row="row" let-value="value" ngx-datatable-cell-template>
-            {{value | date: 'yyyy-MM-dd'}}
+            {{value | date: 'yyyy-MM-dd': 'UTC'}}
           </template>
         </ngx-datatable-column>
         <ngx-datatable-column name="Progress" minWidth="128" width="128" [draggable]="false" [resizeable]="false">
@@ -62,7 +62,7 @@
               tooltipPlacement="bottom" tooltipTrigger="mouseenter">
               <div style="background:linear-gradient(to bottom, #ff3019 0%,#cf0404 100%);height:0.8em" [style.width]="100+'%'"></div>
             </div>
-            <div *ngIf="value === ''" style="margin-left: 3em" tooltip="No estimation!" tooltipPlacement="bottom" tooltipTrigger="mouseenter">
+            <div *ngIf="value === ''" style="margin-left: 3em" tooltip="No estimation!" tooltipPlacement="left" tooltipTrigger="mouseenter">
               -
             </div>
           </template>

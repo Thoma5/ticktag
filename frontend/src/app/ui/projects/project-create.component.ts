@@ -10,8 +10,9 @@ export class ProjectCreateComponent {
   request: CreateProjectRequestJson = {
     name: '',
     description: '',
-    icon: [],
+    icon: undefined
   };
+  upload = false;
   working = false;
   @Output() readonly created = new EventEmitter<ProjectResultJson>();
 
@@ -28,7 +29,6 @@ export class ProjectCreateComponent {
         if (result.isValid) {
           this.request.name = '';
           this.request.description = '';
-          this.request.icon = [];
           this.created.emit(result.result);
         } else {
           window.alert('Could not create project:\n\n' + JSON.stringify(result.error));
@@ -36,5 +36,26 @@ export class ProjectCreateComponent {
       },
       undefined,
       () => { this.working = false; });
+  }
+
+  encodeFile(fileInput: any) {
+    if (fileInput.target.files && fileInput.target.files[0]) {
+      let reader = new FileReader();
+      let self = this;
+
+      reader.onload = function (e: any) {
+        console.log(e.target.result)
+        self.request.icon = e.target.result;
+      };
+      reader.onloadstart = function (e: any) {
+        self.upload = true;
+      };
+      reader.onloadend = function (e: any) {
+        self.upload = false;
+      };
+
+      reader.readAsDataURL(fileInput.target.files[0]);
+    }
+
   }
 }

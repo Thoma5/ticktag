@@ -27,9 +27,10 @@ open class ProjectServiceImpl @Inject constructor(
     override fun createProject(@Valid project: CreateProject): ProjectResult {
         val name = project.name
         val description = project.description
+        val iconMimeInfo = project.iconMimeInfo
         val icon = project.icon
         val creationDate = Date()
-        val newProject = Project.create(name, description, creationDate, icon)
+        val newProject = Project.create(name, description, creationDate, iconMimeInfo, icon)
         projects.insert(newProject)
         return ProjectResult(newProject)
     }

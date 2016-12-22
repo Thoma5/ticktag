@@ -220,8 +220,8 @@ export class TicketFilterComponent implements OnInit, OnChanges {
                             const m1 = moment(date[0], 'YYYY-MM-DD');
                             const m2 = moment(date[1], 'YYYY-MM-DD');
                             if (regexp.test(date[0]) && m1.isValid() && regexp.test(date[1]) && m2.isValid()) {
-                                dueDateOne = m1.valueOf() + 3600000; // Todo:clean fix
-                                dueDateTwo = m2.valueOf() + 3600000;
+                                dueDateOne = m1.valueOf();
+                                dueDateTwo = m2.valueOf();
                                 return;
                             } else {
                                 this.generateErrorAndMessage('invalid ', command[0], command[1]);
@@ -237,7 +237,7 @@ export class TicketFilterComponent implements OnInit, OnChanges {
                             }
                             const m1 = moment(date[0], 'YYYY-MM-DD');
                             if (regexp.test(date[0]) && m1.isValid()) {
-                                dueDateOne = m1.valueOf() + 3600000; // Todo: clean fix 
+                                dueDateOne = m1.valueOf();
                                 return;
                             } else {
                                 this.generateErrorAndMessage('invalid ', command[0], command[1]);

@@ -8,7 +8,7 @@ class ProjectResultJson(
         val name: String,
         val description: String,
         val creationDate: Date,
-        val icon: ByteArray?
+        val icon: String?
 ) {
-    constructor(p: ProjectResult) : this(id = p.id, name = p.name, description = p.description, creationDate = p.creationDate, icon = p.icon)
+    constructor(p: ProjectResult) : this(id = p.id, name = p.name, description = p.description, creationDate = p.creationDate, icon = if(p.icon != null && p.iconMimeInfo!= null) p.iconMimeInfo + "," + p.icon else null)
 }
