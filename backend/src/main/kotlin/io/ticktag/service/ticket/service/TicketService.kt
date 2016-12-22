@@ -1,10 +1,7 @@
 package io.ticktag.service.ticket.service
 
 import io.ticktag.service.Principal
-import io.ticktag.service.ticket.dto.CreateTicket
-import io.ticktag.service.ticket.dto.TicketResult
-import io.ticktag.service.ticket.dto.TicketStoryPointResult
-import io.ticktag.service.ticket.dto.UpdateTicket
+import io.ticktag.service.ticket.dto.*
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import java.time.Instant
@@ -12,7 +9,7 @@ import java.util.*
 
 
 interface TicketService {
-    fun listTickets(project: UUID,
+    fun listTicketsOverview(project: UUID,
                     numbers: List<Int>?,
                     title: String?,
                     tags: List<String>?,
@@ -27,7 +24,8 @@ interface TicketService {
                     storyPointsTwo: Int?,
                     storyPointsGreater: Boolean?,
                     open: Boolean?,
-                    pageable: Pageable): Page<TicketResult>
+                    parent: Int?,
+                    pageable: Pageable): Page<TicketOverviewResult>
 
     fun listTickets(project: UUID, pageable: Pageable): Page<TicketResult>
     fun getTicket(id: UUID): TicketResult
@@ -37,9 +35,22 @@ interface TicketService {
     fun updateTicket(updateTicket: UpdateTicket, ticketId: UUID, principal: Principal): TicketResult
     fun deleteTicket(id: UUID)
     fun listTicketsFuzzy(project: UUID, query: String, pageable: Pageable): List<TicketResult>
-
-    fun listTicketsStoryPoints(project: UUID, numbers: List<Int>?, title: String?, tags: List<String>?, users: List<String>?, progressOne: Float?, progressTwo: Float?, progressGreater: Boolean?, dueDateOne: Instant?, dueDateTwo: Instant?, dueDateGreater: Boolean?, storyPointsOne: Int?, storyPointsTwo: Int?, storyPointsGreater: Boolean?, ticketOpen: Boolean): List<TicketStoryPointResult>
-
+    fun listTicketsStoryPoints(project: UUID,
+                               numbers: List<Int>?,
+                               title: String?,
+                               tags: List<String>?,
+                               users: List<String>?,
+                               progressOne: Float?,
+                               progressTwo: Float?,
+                               progressGreater: Boolean?,
+                               dueDateOne: Instant?,
+                               dueDateTwo: Instant?,
+                               dueDateGreater: Boolean?,
+                               storyPointsOne: Int?,
+                               storyPointsTwo: Int?,
+                               storyPointsGreater: Boolean?,
+                               open: Boolean?,
+                               parent: Int?): List<TicketStoryPointResult>
 }
 
 

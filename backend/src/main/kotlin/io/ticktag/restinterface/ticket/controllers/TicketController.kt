@@ -40,13 +40,14 @@ open class TicketController @Inject constructor(
                          @RequestParam(name = "storyPointsTwo", required = false) storyPointsTwo: Int?,
                          @RequestParam(name = "storyPointsGreater", required = false) storyPointsGreater: Boolean?,
                          @RequestParam(name = "open", required = false) open: Boolean?,
+                         @RequestParam(name = "parent", required = false) parent: Int?,
                          @RequestParam(name = "page", defaultValue = "0", required = false) pageNumber: Int,
                          @RequestParam(name = "size", defaultValue = "50", required = false) size: Int,
-                         @RequestParam(name = "order", required = true) order: List<TicketSort>): Page<TicketResultJson> {
+                         @RequestParam(name = "order", required = true) order: List<TicketSort>): Page<TicketOverviewResultJson> {
 
         val pageRequest = PageRequest(pageNumber, size, Sort(order.map { it.order }))
-        val page = ticketService.listTickets(projectId, numbers, title, tags, user, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open, pageRequest)
-        val content = page.content.map(::TicketResultJson)
+        val page = ticketService.listTicketsOverview(projectId, numbers, title, tags, user, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open, parent, pageRequest)
+        val content = page.content.map(::TicketOverviewResultJson)
         return PageImpl(content, pageRequest, page.totalElements)
     }
 
@@ -105,8 +106,9 @@ open class TicketController @Inject constructor(
                                     @RequestParam(name = "dueDateGreater", required = false) dueDateGreater: Boolean?,
                                     @RequestParam(name = "storyPointsOne", required = false) storyPointsOne: Int?,
                                     @RequestParam(name = "storyPointsTwo", required = false) storyPointsTwo: Int?,
-                                    @RequestParam(name = "storyPointsGreater", required = false) storyPointsGreater: Boolean?): List<TicketStoryPointResultJson> {
-        val tickets = ticketService.listTicketsStoryPoints(projectId, numbers, title, tags, user, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, true)
+                                    @RequestParam(name = "storyPointsGreater", required = false) storyPointsGreater: Boolean?,
+                                    @RequestParam(name = "parent", required = false) parent: Int?): List<TicketStoryPointResultJson> {
+        val tickets = ticketService.listTicketsStoryPoints(projectId, numbers, title, tags, user, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, true, parent)
         return tickets.map(::TicketStoryPointResultJson)
     }
 

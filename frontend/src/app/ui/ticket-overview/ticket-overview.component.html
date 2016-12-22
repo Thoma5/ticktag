@@ -15,17 +15,21 @@
         [footerHeight]="32" [externalPaging]="true" [count]="totalElements" [offset]="offset" [limit]="limit" [scrollbarH]="true"
         [scrollbarV]="false" [loadingIndicator]="reloading" reorderable="false" [externalSorting]="true" (sort)="onSort($event)"
         (page)='onPage($event)' [cssClasses]="iconsCss" [selectionType]="'row'" (activate)="activate($event)">
-        <ngx-datatable-column name="#" prop="number" width="48" maxWidth="48" [draggable]="false" [resizeable]="false">
+        <ngx-datatable-column name="#" prop="number" width="64" maxWidth="64" [draggable]="false" [resizeable]="false">
           <template let-row="row" let-value="value" ngx-datatable-cell-template>
-            <s *ngIf="!row.open" style="color: grey;">#{{value}}</s>
-            <p *ngIf="row.open">#{{value}}</p>
+            <span *ngIf="row.parentTicketNumber">
+            <a  *ngIf="row.parentTicketOpen" routerLink="/project/{{projectId}}/ticket/{{row.parentTicketNumber}}" tooltip="{{row.parentTicketTitle}}" tooltipPlacement="bottom" tooltipPopupDelay="500" tooltipPlacement="right" tooltipTrigger="mouseenter">#{{row.parentTicketNumber}}</a>    
+            <a  *ngIf="!row.parentTicketOpen"routerLink="/project/{{projectId}}/ticket/{{row.parentTicketNumber}}" tooltip="{{row.parentTicketTitle}}" tooltipPlacement="bottom" tooltipPopupDelay="500" tooltipPlacement="right" tooltipTrigger="mouseenter"><s style="color: grey;">#{{row.parentTicketNumber}}</s></a> /   
+            </span>
+          <s *ngIf="!row.open"><a routerLink="/project/{{projectId}}/ticket/{{row.number}}" style="color: grey;">#{{value}}</a></s>
+          <span *ngIf="row.open"><a routerLink="/project/{{projectId}}/ticket/{{row.number}}">#{{value}}</a></span>
           </template>
         </ngx-datatable-column>
         <ngx-datatable-column name="Title" minWidth="128" width="256" [draggable]="false">
           <template let-row="row" let-value="value" ngx-datatable-cell-template>
             <a routerLink="/project/{{projectId}}/ticket/{{row.number}}">
               <s style="color: grey;" *ngIf="!row.open">{{value}}</s>
-              <p *ngIf="row.open">{{value}}</p>
+              <span *ngIf="row.open">{{value}}</span>
             </a>
           </template>
         </ngx-datatable-column>
