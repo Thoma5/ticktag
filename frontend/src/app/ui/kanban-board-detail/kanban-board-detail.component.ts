@@ -45,7 +45,7 @@ export class KanbanBoardDetailComponent implements OnInit {
   private allTicketTagsForFilter: imm.Map<string, TicketOverviewTag>;
   private allProjectUsers: imm.Map<string, TicketOverviewUser>;
   private ticketFilter: TicketFilter = new TicketFilter(undefined, undefined, undefined, undefined, undefined,
-    undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+    undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
   private loading = true;
   private filterTerms = new Subject<TicketFilter>();
   query: string;
@@ -132,7 +132,7 @@ export class KanbanBoardDetailComponent implements OnInit {
             p['progressOne'] || undefined, p['progressTwo'] || undefined, p['progressGreater'] || undefined,
             p['dueDateOne'] || undefined, p['dueDateTwo'] || undefined, p['dueDateGreater'] || undefined,
             p['spOne'] || undefined, p['spTwo'] || undefined, p['spGreater'] || undefined,
-            p['open'] || undefined);
+            p['open'] || undefined, p['parent'] || undefined);
           this.query = this.ticketFilter.toTicketFilterString();
         }, error => {
         });
@@ -162,7 +162,7 @@ export class KanbanBoardDetailComponent implements OnInit {
         this.ticketFilter.progressOne, this.ticketFilter.progressTwo, this.ticketFilter.progressGreater,
         this.ticketFilter.dueDateOne, this.ticketFilter.dueDateTwo, this.ticketFilter.dueDateGreater,
         this.ticketFilter.storyPointsOne, this.ticketFilter.storyPointsTwo, this.ticketFilter.storyPointsGreater,
-        this.ticketFilter.open, p));
+        this.ticketFilter.open, this.ticketFilter.parentNumber, p));
 
     let ticketTagsObs = this.apiCallService
       .callNoError<TicketTagResultJson[]>(p => this.ticketTagsApi.listTicketTagsUsingGETWithHttpInfo(null, projectId, p))
@@ -239,7 +239,7 @@ export class KanbanBoardDetailComponent implements OnInit {
 
   onFindSubTickets(event: FindSubTicketEvent) {
     this.ticketFilter = new TicketFilter(undefined, event.subTicketIds, undefined, undefined, undefined,
-      undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+      undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     this.query = this.ticketFilter.toTicketFilterString();
   }
 }

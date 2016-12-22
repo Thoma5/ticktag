@@ -135,9 +135,10 @@ export class BoardApi {
      * @param storyPointsTwo storyPointsTwo
      * @param storyPointsGreater storyPointsGreater
      * @param open open
+     * @param parent parent
      */
-    public listKanbanColumnsUsingGET(id: string, numbers?: Array<number>, title?: string, tags?: Array<string>, users?: Array<string>, progressOne?: number, progressTwo?: number, progressGreater?: boolean, dueDateOne?: number, dueDateTwo?: number, dueDateGreater?: boolean, storyPointsOne?: number, storyPointsTwo?: number, storyPointsGreater?: boolean, open?: boolean, extraHttpRequestParams?: any): Observable<Array<models.KanbanColumnResultJson>> {
-        return this.listKanbanColumnsUsingGETWithHttpInfo(id, numbers, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open, extraHttpRequestParams)
+    public listKanbanColumnsUsingGET(id: string, numbers?: Array<number>, title?: string, tags?: Array<string>, users?: Array<string>, progressOne?: number, progressTwo?: number, progressGreater?: boolean, dueDateOne?: number, dueDateTwo?: number, dueDateGreater?: boolean, storyPointsOne?: number, storyPointsTwo?: number, storyPointsGreater?: boolean, open?: boolean, parent?: number, extraHttpRequestParams?: any): Observable<Array<models.KanbanColumnResultJson>> {
+        return this.listKanbanColumnsUsingGETWithHttpInfo(id, numbers, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open, parent, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -325,8 +326,9 @@ export class BoardApi {
      * @param storyPointsTwo storyPointsTwo
      * @param storyPointsGreater storyPointsGreater
      * @param open open
+     * @param parent parent
      */
-    public listKanbanColumnsUsingGETWithHttpInfo(id: string, numbers?: Array<number>, title?: string, tags?: Array<string>, users?: Array<string>, progressOne?: number, progressTwo?: number, progressGreater?: boolean, dueDateOne?: number, dueDateTwo?: number, dueDateGreater?: boolean, storyPointsOne?: number, storyPointsTwo?: number, storyPointsGreater?: boolean, open?: boolean, extraHttpRequestParams?: any): Observable<Response> {
+    public listKanbanColumnsUsingGETWithHttpInfo(id: string, numbers?: Array<number>, title?: string, tags?: Array<string>, users?: Array<string>, progressOne?: number, progressTwo?: number, progressGreater?: boolean, dueDateOne?: number, dueDateTwo?: number, dueDateGreater?: boolean, storyPointsOne?: number, storyPointsTwo?: number, storyPointsGreater?: boolean, open?: boolean, parent?: number, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/board/${id}/columns`;
 
         let queryParameters = new URLSearchParams();
@@ -376,6 +378,9 @@ export class BoardApi {
         }
         if (open !== undefined) {
             queryParameters.set('open', <any>open);
+        }
+        if (parent !== undefined) {
+            queryParameters.set('parent', <any>parent);
         }
 
 

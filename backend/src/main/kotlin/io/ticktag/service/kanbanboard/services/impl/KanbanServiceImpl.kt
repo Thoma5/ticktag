@@ -47,11 +47,12 @@ open class KanbanServiceImpl @Inject constructor(
                              storyPointsOne: Int?,
                              storyPointsTwo: Int?,
                              storyPointsGreater: Boolean?,
-                             open: Boolean?): List<KanbanColumnResult> {
+                             open: Boolean?,
+                             parent: Int?): List<KanbanColumnResult> {
 
         val columns = ticketTagRepository.findByTicketTagGroupIdOrderByOrderAsc(kanbanBoardId)
         val result = emptyList<KanbanColumnResult>().toMutableList()
-        val filter = TicketFilter(columns.first().ticketTagGroup.project.id, numbers, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open)
+        val filter = TicketFilter(columns.first().ticketTagGroup.project.id, numbers, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open, parent)
         val filteredTickets = ticketRepository.findAll(filter)
         val ascOrder = Sort.Direction.ASC
         val sortOrder = Sort.Order(ascOrder, "order")

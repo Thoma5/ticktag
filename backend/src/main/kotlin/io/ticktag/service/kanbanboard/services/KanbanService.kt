@@ -24,7 +24,8 @@ interface KanbanService {
                     storyPointsOne: Int?,
                     storyPointsTwo: Int?,
                     storyPointsGreater: Boolean?,
-                    open: Boolean?): List<KanbanColumnResult>
+                    open: Boolean?,
+                    parent: Int?): List<KanbanColumnResult>
 
     fun listBoards(projectId: UUID): List<KanbanBoardResult>
     fun updateKanbanBoard(columns: UpdateKanbanColumn, principal: Principal, id: UUID)

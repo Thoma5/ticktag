@@ -6,14 +6,13 @@ import io.ticktag.restinterface.kanbanboard.schema.KanbanBoardResultJson
 import io.ticktag.restinterface.kanbanboard.schema.KanbanColumnResultJson
 import io.ticktag.restinterface.kanbanboard.schema.UpdateKanbanColumnJson
 import io.ticktag.service.Principal
+import io.ticktag.service.kanbanboard.dto.UpdateKanbanColumn
 import io.ticktag.service.kanbanboard.services.KanbanService
-import io.ticktag.service.tickettaggroup.service.TicketTagGroupService
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
+import java.time.Instant
 import java.util.*
 import javax.inject.Inject
-import  io.ticktag.service.kanbanboard.dto.UpdateKanbanColumn
-import org.springframework.security.core.annotation.AuthenticationPrincipal
-import java.time.Instant
 
 @TicktagRestInterface
 @RequestMapping("/board")
@@ -42,8 +41,10 @@ open class KanbanBoardController @Inject constructor(
                                @RequestParam(name = "storyPointsOne",  required = false) storyPointsOne: Int?,
                                @RequestParam(name = "storyPointsTwo",  required = false) storyPointsTwo: Int?,
                                @RequestParam(name = "storyPointsGreater", required = false) storyPointsGreater: Boolean?,
-                               @RequestParam(name = "open", required = false) open: Boolean?): List<KanbanColumnResultJson> {
-        return kanbanService.listColumns(id, numbers, title, tags, user, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open).map(::KanbanColumnResultJson)
+                               @RequestParam(name = "open", required = false) open: Boolean?,
+                               @RequestParam(name = "parent", required = false) parent: Int?
+    ): List<KanbanColumnResultJson> {
+        return kanbanService.listColumns(id, numbers, title, tags, user, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open, parent).map(::KanbanColumnResultJson)
     }
 
     @GetMapping(value = "/{id}")
