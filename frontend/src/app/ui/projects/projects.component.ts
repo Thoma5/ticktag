@@ -20,6 +20,7 @@ export class ProjectsComponent implements OnInit {
   };
   loading = true;
   refresh = true;
+  creating = false;
   asc = true;
   sortprop = 'NAME';
   offset = 0;
@@ -46,7 +47,6 @@ export class ProjectsComponent implements OnInit {
     this.user = this.authService.user;
     this.authService.observeUser()
       .subscribe(user => {
-        console.log(user);
         this.user = user;
       });
   }
@@ -73,7 +73,6 @@ export class ProjectsComponent implements OnInit {
 
   onPage(event: any) {
     this.refresh = true;
-    console.log('Page Event', event);
     this.limit = event.limit;
     this.offset = event.offset;
     this.getProjects(event.offset, event.limit, this.sortprop, this.asc, undefined);
@@ -82,7 +81,6 @@ export class ProjectsComponent implements OnInit {
 
   onSort(event: any) {
     this.refresh = true;
-    console.log('Sort Event', event);
     this.asc = event.sorts[0].dir === 'asc' ? true : false;
     this.sortprop = event.sorts[0].prop === 'name' ? 'NAME' : 'CREATION_DATE';
     this.getProjects(this.offset, this.limit, this.sortprop, this.asc, undefined);
@@ -110,5 +108,12 @@ export class ProjectsComponent implements OnInit {
         this.getProjects(this.offset, this.limit, this.sortprop, this.asc, undefined);
       }
       );
+  }
+  onStartCreate() {
+    this.creating = true;
+  }
+
+  onStopCreate() {
+    this.creating = false;
   }
 }

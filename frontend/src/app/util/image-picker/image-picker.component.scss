@@ -1,0 +1,40 @@
+.btn-file {
+    position: relative;
+    border-radius: 0;
+    overflow: hidden;
+    width: 100%;
+}
+imagepicker {
+    height: 48px;
+}
+img {
+    border: 1px solid lightgray
+}
+.show-icon {
+    position: relative;
+}
+div.show-icon:hover label
+  {
+  display: block;
+  }
+
+div.show-icon label {
+    width: 48px;
+    height: 48px;
+    color: white;
+    font-size: 32px;
+    background-color:rgba(0,0,0,0.5);
+    position:absolute;
+    top:0;
+    bottom: 0;
+    left:0;
+    display:none;
+}
+div.show-icon label span{
+    left: 6px;
+    top: 6px;
+}
+div {
+    padding-left: 0;
+    padding-right: 0;
+}

@@ -1,8 +1,7 @@
 <div class="col-md-10 col-md-offset-1 form-box">
   <div *ngIf="!loading">
-    <div class="row">
-      <tt-project-create (created)="getProjects()"></tt-project-create>
-    </div>
+    <div [ngClass]="{'no-scroll': creating }">
+    <input type="button" class="btn btn-primary button-submit" value="Add" (click)="onStartCreate()">
     <div class="search row">
       <div class="col-md-4"><input class="form-control" type='text' placeholder='Type to filter name...' (keyup)='updateFilter($event)' /></div>
       <div class="col-md-4" *ngIf="user && ((user.authorities.indexOf('ADMIN') != -1) ||(user.authorities.indexOf('OBSERVER') != -1))">
@@ -20,7 +19,7 @@
         </template>
       </ngx-datatable-column>
       <ngx-datatable-column name="Name" width="256" [resizeable]="false">
-        <template  let-row="row" let-value="value" ngx-datatable-cell-template>
+        <template let-row="row" let-value="value" ngx-datatable-cell-template>
           <a routerLink="/project/{{row.id}}/tickets">{{value}}</a>
         </template>
       </ngx-datatable-column>
@@ -36,7 +35,7 @@
           </div>
         </template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="Actions" width="128" [resizeable]="false"  [sortable]="false">
+      <ngx-datatable-column name="Actions" width="128" [resizeable]="false" [sortable]="false">
         <template let-row="row" ngx-datatable-cell-template>
           <button class="btn btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
           <button (click)="onDeleteClicked(row.id)" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
@@ -44,5 +43,23 @@
       </ngx-datatable-column>
 
     </ngx-datatable>
+    </div>
+    <div *ngIf="creating" class="create-overlay" (click)="onStopCreate()">
+      <div class="create-popup" (click)="$event.stopPropagation()">
+        <button type="button" class="exit pull-right" (click)="onStopCreate()">
+            <i class='fa fa-times'></i>
+          </button>
+        <div class="popup-content">
+          <div class="head">
+            <h3 class="title">
+              Create Project
+            </h3>
+          </div>
+          <div class="body">
+            <tt-project-create (created)="getProjects()"></tt-project-create>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

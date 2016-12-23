@@ -88,7 +88,7 @@ import { BurnDownChartComponent } from './ui/burn-down-chart/burn-down-chart.com
 import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { TicketCreateComponent } from './ui/ticket-detail/ticket-create/ticket-create.component';
-
+import { ImagePickerComponent } from './util/image-picker/image-picker.component';
 @NgModule({
   imports: [
     BrowserModule,
@@ -169,6 +169,7 @@ import { TicketCreateComponent } from './ui/ticket-detail/ticket-create/ticket-c
     LoadingComponent,
     SpinnerComponent,
     UserImageComponent,
+    ImagePickerComponent,
   ],
   providers: [
     ProjectApi,

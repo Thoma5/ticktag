@@ -1,0 +1,12 @@
+<div class="image-picker">
+    <div class="col-md-3 show-icon">
+        <img *ngIf="!loadPreview" height="48px" width="48px" src="{{preview ? preview : '/img/imageplaceholder.png'}}" tabindex=0/>
+        <img *ngIf="loadPreview" height="48px" width="48px" src="/img/loading.gif" tabindex=0/>
+
+        <label *ngIf="preview" (click)="deleteIcon()" tabindex=0><span class="glyphicon glyphicon-trash"></span></label>
+    </div>
+    <div class="col-md-9"><label class="btn btn-primary btn-file" tabindex=0>
+        <span class="glyphicon glyphicon-picture"></span> Pick Icon ...<input class="fileInput" style="display: none;" type="file" id="file" name="file" accept="image/x-png,image/gif,image/jpeg" placeholder="Icon" (change)="encodeFile($event)"/>
+    </label>
+    </div>
+</div>

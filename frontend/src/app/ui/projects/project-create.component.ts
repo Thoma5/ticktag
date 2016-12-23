@@ -5,6 +5,7 @@ import { ProjectApi, CreateProjectRequestJson, ProjectResultJson } from '../../a
 @Component({
   selector: 'tt-project-create',
   templateUrl: './project-create.component.html',
+  styleUrls: ['./project-create.component.scss']
 })
 export class ProjectCreateComponent {
   request: CreateProjectRequestJson = {
@@ -36,26 +37,5 @@ export class ProjectCreateComponent {
       },
       undefined,
       () => { this.working = false; });
-  }
-
-  encodeFile(fileInput: any) {
-    if (fileInput.target.files && fileInput.target.files[0]) {
-      let reader = new FileReader();
-      let self = this;
-
-      reader.onload = function (e: any) {
-        console.log(e.target.result)
-        self.request.icon = e.target.result;
-      };
-      reader.onloadstart = function (e: any) {
-        self.upload = true;
-      };
-      reader.onloadend = function (e: any) {
-        self.upload = false;
-      };
-
-      reader.readAsDataURL(fileInput.target.files[0]);
-    }
-
   }
 }
