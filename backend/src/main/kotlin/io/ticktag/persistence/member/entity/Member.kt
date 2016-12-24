@@ -3,7 +3,7 @@ package io.ticktag.persistence.member.entity
 import io.ticktag.persistence.project.entity.Project
 import io.ticktag.persistence.user.entity.User
 import java.io.Serializable
-import java.util.*
+import java.time.Instant
 import javax.persistence.*
 
 @Embeddable
@@ -47,7 +47,7 @@ open class MemberKey protected constructor() : Serializable {
 @IdClass(MemberKey::class)
 open class Member protected constructor() {
     companion object {
-        fun create(user: User, project: Project, role: ProjectRole, joinDate: Date): Member {
+        fun create(user: User, project: Project, role: ProjectRole, joinDate: Instant): Member {
             val m = Member()
             m.user = user
             m.project = project
@@ -74,6 +74,6 @@ open class Member protected constructor() {
     lateinit open var role: ProjectRole
 
     @Column(name = "join_date", nullable = false)
-    lateinit open var joinDate: Date
+    lateinit open var joinDate: Instant
 
 }

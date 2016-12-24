@@ -26,7 +26,7 @@
 import * as models from './models';
 
 export interface MemberResultJson {
-    joinDate: Date;
+    joinDate: number;
 
     projectId: string;
 

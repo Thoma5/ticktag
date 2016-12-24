@@ -3,6 +3,7 @@ package io.ticktag.service.user.services.impl
 import io.ticktag.ApplicationProperties
 import io.ticktag.TicktagService
 import io.ticktag.library.hashing.HashingLibrary
+import io.ticktag.persistence.member.MemberRepository
 import io.ticktag.persistence.project.ProjectRepository
 import io.ticktag.persistence.project.entity.Project
 import io.ticktag.persistence.user.UserRepository
@@ -39,6 +40,7 @@ import javax.validation.Valid
 @TicktagService
 open class UserServiceImpl @Inject constructor(
         private val users: UserRepository,
+        private val members: MemberRepository,
         private val projects: ProjectRepository,
         private val hashing: HashingLibrary,
         private val props: ApplicationProperties,
@@ -132,6 +134,16 @@ open class UserServiceImpl @Inject constructor(
         projects.findOne(projectId) ?: throw NotFoundException()
         return usersToDto(users.findInProject(projectId), principal)
     }
+
+    @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
+    override fun listProjectUsers(@P("authProjectId") projectId: UUID, principal: Principal): List<ProjectUserResult> {
+        val project = projects.findOne(projectId) ?: throw NotFoundException()
+        val projectMemberships = members.findByProject(project) ?: throw NotFoundException()
+        val projectUserResult: MutableList<ProjectUserResult> = mutableListOf()
+        projectMemberships.map { e -> projectUserResult.add(ProjectUserResult(UserResult(e.user, encodeTempImageId(e.user.id)), e)) }
+        return projectUserResult
+    }
+
 
 
     @PreAuthorize(AuthExpr.ADMIN) // TODO should probably be more granular

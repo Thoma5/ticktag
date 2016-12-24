@@ -13,6 +13,7 @@ interface UserService {
     fun getUser(id: UUID, principal: Principal): UserResult
     fun listUsers(query: String, role: Role?, principal: Principal, pageable: Pageable): Page<UserResult>
     fun listUsersInProject(projectId: UUID, principal: Principal): List<UserResult>
+    fun listProjectUsers(projectId: UUID, principal: Principal): List<ProjectUserResult>
     fun listRoles(): List<RoleResult>
     fun updateUser(principal: Principal, id: UUID, updateUser: UpdateUser): UserResult
     fun getUserImage(imageId: TempImageId): ByteArray

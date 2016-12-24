@@ -60,7 +60,7 @@ export class ProjectUsersComponent implements OnInit {
 
   getProjects(order?: string, asc?: boolean, name?: string): void {
     this.apiCallService
-      .callNoError<UserResultJson[]>(h => this.projectApi.listProjectUsersUsingGETWithHttpInfo(this.projectId, h))
+      .callNoError<UserResultJson[]>(h => this.projectApi.listProjectMembersUsingGETWithHttpInfo(this.projectId, h))
       .subscribe(users => {
         this.refresh = true;
         this.users = users;

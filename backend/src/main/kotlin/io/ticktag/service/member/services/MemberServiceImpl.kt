@@ -13,6 +13,7 @@ import io.ticktag.service.member.dto.CreateMember
 import io.ticktag.service.member.dto.MemberResult
 import io.ticktag.service.member.dto.UpdateMember
 import org.springframework.security.access.prepost.PreAuthorize
+import java.time.Instant
 import java.util.*
 import javax.inject.Inject
 
@@ -34,7 +35,7 @@ open class MemberServiceImpl @Inject constructor(
     override fun createMember(userId: UUID, projectId: UUID, createMember: CreateMember): MemberResult {
         val user = users.findOne(userId) ?: throw NotFoundException()
         val project = projects.findOne(projectId) ?: throw NotFoundException()
-        val member = Member.create(user, project, createMember.role, Date())
+        val member = Member.create(user, project, createMember.role, Instant.now())
         members.insert(member)
         return MemberResult(member)
     }

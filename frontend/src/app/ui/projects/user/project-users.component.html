@@ -22,7 +22,7 @@
             {{value}}
           </template>
         </ngx-datatable-column>
-        <ngx-datatable-column name="Project Role" prop="role" minWidth="128" width="128" maxWidth="1024">
+        <ngx-datatable-column name="Project Role" prop="projectRole" minWidth="128" width="128" maxWidth="1024">
           <template let-row="row" let-value="value" ngx-datatable-cell-template>
               <span *ngIf="value === 'ADMIN'"><span class="glyphicon glyphicon-king"></span> Admin</span>
               <span *ngIf="value === 'OBSERVER'"><span class="glyphicon glyphicon-tower"></span> Observer</span>

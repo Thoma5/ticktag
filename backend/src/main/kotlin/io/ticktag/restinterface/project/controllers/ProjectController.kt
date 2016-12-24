@@ -7,6 +7,7 @@ import io.ticktag.restinterface.project.schema.CreateProjectRequestJson
 import io.ticktag.restinterface.project.schema.ProjectResultJson
 import io.ticktag.restinterface.project.schema.ProjectSort
 import io.ticktag.restinterface.project.schema.UpdateProjectRequestJson
+import io.ticktag.restinterface.user.schema.ProjectUserResultJson
 import io.ticktag.restinterface.user.schema.UserResultJson
 import io.ticktag.service.Principal
 import io.ticktag.service.project.dto.CreateProject
@@ -59,6 +60,13 @@ open class ProjectController @Inject constructor(
                               @AuthenticationPrincipal principal: Principal
     ): List<UserResultJson> {
         return userService.listUsersInProject(id, principal).map(::UserResultJson)
+    }
+
+    @GetMapping(value = "/{id}/members")
+    open fun listProjectMembers(@PathVariable(name = "id") id: UUID,
+                                @AuthenticationPrincipal principal: Principal
+    ): List<ProjectUserResultJson> {
+        return userService.listProjectUsers(id, principal).map(::ProjectUserResultJson)
     }
 
     @PostMapping

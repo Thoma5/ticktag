@@ -24,6 +24,7 @@ export * from './PageProjectResultJson';
 export * from './PageTicketOverviewResultJson';
 export * from './PageUserResultJson';
 export * from './ProjectResultJson';
+export * from './ProjectUserResultJson';
 export * from './RoleResultJson';
 export * from './Sort';
 export * from './TicketEventResultJson';
