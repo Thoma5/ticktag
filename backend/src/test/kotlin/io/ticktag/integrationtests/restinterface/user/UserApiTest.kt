@@ -49,7 +49,7 @@ class UserApiTest : ApiBaseTest() {
             val res = userController.createUser(req, p)
 
             val userId = res.id
-            val storedUser = userController.listUsers(p)
+            val storedUser = userController.listUsers(0,100, listOf(UserSort.NAME_ASC),"",null,p).content
                     .filter { it.id == userId }
                     .singleOrNull()
 

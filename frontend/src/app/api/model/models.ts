@@ -22,6 +22,7 @@ export * from './LoginResultJson';
 export * from './MemberResultJson';
 export * from './PageProjectResultJson';
 export * from './PageTicketOverviewResultJson';
+export * from './PageUserResultJson';
 export * from './ProjectResultJson';
 export * from './RoleResultJson';
 export * from './Sort';

@@ -168,9 +168,14 @@ export class UserApi {
     /**
      * listUsers
      * 
+     * @param page page
+     * @param size size
+     * @param order order
+     * @param query query
+     * @param role role
      */
-    public listUsersUsingGET(extraHttpRequestParams?: any): Observable<Array<models.UserResultJson>> {
-        return this.listUsersUsingGETWithHttpInfo(extraHttpRequestParams)
+    public listUsersUsingGET(page?: number, size?: number, order?: Array<string>, query?: string, role?: string, extraHttpRequestParams?: any): Observable<models.PageUserResultJson> {
+        return this.listUsersUsingGETWithHttpInfo(page, size, order, query, role, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -481,12 +486,32 @@ export class UserApi {
     /**
      * listUsers
      * 
+     * @param page page
+     * @param size size
+     * @param order order
+     * @param query query
+     * @param role role
      */
-    public listUsersUsingGETWithHttpInfo(extraHttpRequestParams?: any): Observable<Response> {
+    public listUsersUsingGETWithHttpInfo(page?: number, size?: number, order?: Array<string>, query?: string, role?: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/user`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        if (page !== undefined) {
+            queryParameters.set('page', <any>page);
+        }
+        if (size !== undefined) {
+            queryParameters.set('size', <any>size);
+        }
+        if (order !== undefined) {
+            queryParameters.set('order', <any>order);
+        }
+        if (query !== undefined) {
+            queryParameters.set('query', <any>query);
+        }
+        if (role !== undefined) {
+            queryParameters.set('role', <any>role);
+        }
 
 
         // to determine the Content-Type header

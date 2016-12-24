@@ -5,7 +5,9 @@ import io.ticktag.persistence.TicktagCrudRepository
 import io.ticktag.persistence.escapeHqlLike
 import io.ticktag.persistence.nullIfEmpty
 import io.ticktag.persistence.orderByClause
+import io.ticktag.persistence.user.entity.Role
 import io.ticktag.persistence.user.entity.User
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -23,6 +25,11 @@ interface UserRepository : TicktagCrudRepository<User, UUID>, UserRepositoryCust
 
     @Query("select u from User u join u.memberships m join m.project p left join fetch u.image where p.id = :projectId")
     fun findInProject(@Param("projectId") projectId: UUID): List<User>
+
+    fun findByNameContainingIgnoreCaseOrUsernameContainingIgnoreCaseOrMailContainingIgnoreCase(name: String, username: String, mail: String, pageable: Pageable): Page<User>
+
+    @Query("select u from User u where u.role = :role AND (LOWER(u.name) LIKE :query OR LOWER(u.username) LIKE :query OR LOWER(u.mail) LIKE :query )")
+    fun findAllByRole(@Param("query") query: String, @Param("role") role: Role, pageable: Pageable): Page<User>
 
 }
 

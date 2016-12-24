@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ApiCallService} from '../../service';
-import {UserApi, UserResultJson} from '../../api';
+import {UserApi, PageUserResultJson, UserResultJson} from '../../api';
 
 @Component({
   selector: 'tt-users',
@@ -20,7 +20,7 @@ export class UsersComponent implements OnInit {
 
   getUsers(): void {
     this.apiCallService
-      .callNoError<UserResultJson[]>(h => this.userApi.listUsersUsingGETWithHttpInfo(h))
-      .subscribe(users => { this.users = users; });
+      .callNoError<PageUserResultJson>(h => this.userApi.listUsersUsingGETWithHttpInfo(0, 50, undefined, undefined, undefined, h))
+      .subscribe(users => { this.users = users.content; });
   }
 }

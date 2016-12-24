@@ -12,6 +12,8 @@ import io.ticktag.service.*
 import io.ticktag.service.user.dto.*
 import io.ticktag.service.user.services.UserService
 import org.apache.commons.codec.binary.Hex
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.access.method.P
@@ -113,8 +115,16 @@ open class UserServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.ADMIN) // TODO should probably be more granular
-    override fun listUsers(principal: Principal): List<UserResult> {
-        return usersToDto(users.findAll(), principal)
+    override fun listUsers(query: String, role: Role?, principal: Principal, pageable: Pageable): Page<UserResult> {
+        val page: Page<User>
+        if (role == null) {
+            page = users.findByNameContainingIgnoreCaseOrUsernameContainingIgnoreCaseOrMailContainingIgnoreCase(query, query, query, pageable)
+        } else {
+            val q = "%$query%".toLowerCase()
+            page = users.findAllByRole(q, role, pageable)
+        }
+        val content = page.content.map { e -> userToDto(e, principal) }
+        return PageImpl(content, pageable, page.totalElements)
     }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
