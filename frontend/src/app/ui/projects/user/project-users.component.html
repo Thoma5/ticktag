@@ -1,0 +1,46 @@
+<div class="col-md-10 col-md-offset-1 form-box">
+  <div *ngIf="!loading">
+    <div>
+       <input
+        type='text' class="form-control" placeholder='Type to filter' (keyup)='updateFilter($event)'
+      />
+      <ngx-datatable *ngIf="rows" class="material" [rows]="rows" [columns]="columns" [columnMode]="'force'" [headerHeight]="32" [footerHeight]="32"
+        [rowHeight]="32" [scrollbarH]="true"
+        [scrollbarV]="false" [loadingIndicator]="refresh" [cssClasses]="iconsCss" [selectionType]="'row'">
+        <ngx-datatable-column name="Icon" prop="imageId" width="48" [resizeable]="false" [sortable]="false">
+          <template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <tt-user-image [imageId]="value"></tt-user-image>
+          </template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Name" width="256" [resizeable]="false">
+          <template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <a>{{value}}</a>
+          </template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Username" prop="username" width="128" [resizeable]="false">
+          <template let-row="row" let-value="value" ngx-datatable-cell-template>
+            {{value}}
+          </template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Project Role" prop="role" minWidth="128" width="128" maxWidth="1024">
+          <template let-row="row" let-value="value" ngx-datatable-cell-template>
+              <span *ngIf="value === 'ADMIN'"><span class="glyphicon glyphicon-king"></span> Admin</span>
+              <span *ngIf="value === 'OBSERVER'"><span class="glyphicon glyphicon-tower"></span> Observer</span>
+              <span *ngIf="value === 'USER'"><span class="glyphicon glyphicon-pawn"></span> User</span>
+          </template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="E-Mail" prop="mail" minWidth="256" width="256" maxWidth="1024">
+          <template let-row="row" let-value="value" ngx-datatable-cell-template>
+              {{value}}
+          </template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Actions" width="128" [resizeable]="false" [sortable]="false" *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0))">
+          <template let-row="row" ngx-datatable-cell-template>
+            <button (click)="onDeleteClicked(row.id)" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
+          </template>
+        </ngx-datatable-column>
+
+      </ngx-datatable>
+    </div>
+  </div>
+</div>

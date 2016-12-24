@@ -20,6 +20,7 @@ import { UserCreateComponent } from './ui/users/user-create.component';
 import { ProjectsComponent } from './ui/projects/projects.component';
 import { ProjectCreateComponent } from './ui/projects/create/project-create.component';
 import { ProjectUpdateComponent } from './ui/projects/update/project-update.component';
+import { ProjectUsersComponent } from './ui/projects/user/project-users.component';
 import {
   ProjectApi, AuthApi, UserApi, AssignmenttagApi, CommentsApi, MemberApi,
   TimecategoryApi, TicketApi, TickettagApi, TickettaggroupApi, GetApi,
@@ -115,6 +116,7 @@ import { ImagePickerComponent } from './util/image-picker/image-picker.component
     ProjectsComponent,
     ProjectCreateComponent,
     ProjectUpdateComponent,
+    ProjectUsersComponent,
     TicketOverviewComponent,
     TicketDetailComponent,
     TicketSidebarComponent,

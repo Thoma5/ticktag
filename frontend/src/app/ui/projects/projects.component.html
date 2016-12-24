@@ -3,7 +3,7 @@
     <div [ngClass]="{'no-scroll': creating }">
     <div class="search row">
       <div class="col-md-4"><input class="form-control" type='text' placeholder='Type to filter name...' (keyup)='updateFilter($event)' /></div>
-      <div class="col-md-4" *ngIf="user && ((user.authorities.indexOf('ADMIN') != -1) ||(user.authorities.indexOf('OBSERVER') != -1))">
+      <div class="col-md-4" *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0) ||(user.authorities.indexOf('OBSERVER') != -1))">
         <md-slide-toggle [(ngModel)]="allProjects" (change)="getProjects(offset, limit, sortprop, asc, undefined)">All Projects</md-slide-toggle>
       </div>
       <div class="col-md-4"><button type="button" class="btn btn-primary pull-right" (click)="onStartCreate()"><span class="glyphicon glyphicon-plus"></span> Add Project</button></div>
@@ -34,10 +34,10 @@
           </div>
         </template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="Actions" width="128" [resizeable]="false" [sortable]="false">
+      <ngx-datatable-column name="Actions" width="128" [resizeable]="false" [sortable]="false" *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0))">
         <template let-row="row" ngx-datatable-cell-template>
           <button (click)="onStartUpdate(row)" class="btn btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
-          <button (click)="onAddUsers(row)" class="btn btn-xs"><span class="glyphicon glyphicon-user"></span></button>
+          <button (click)="onAddUsers(row)" routerLink="/project/{{row.id}}/users" class="btn btn-xs"><span class="glyphicon glyphicon-user"></span></button>
           <button (click)="onDeleteClicked(row.id)" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
         </template>
       </ngx-datatable-column>
