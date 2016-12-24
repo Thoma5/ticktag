@@ -71,8 +71,10 @@ open class ProjectServiceImpl @Inject constructor(
         }
         if (project.icon != null) {
             if (project.icon.isEmpty()) {
+                projectToUpdate.iconMimeInfo = null
                 projectToUpdate.icon = null
             }
+            projectToUpdate.iconMimeInfo = project.iconMimeInfo
             projectToUpdate.icon = project.icon
         }
         return ProjectResult(projectToUpdate)
