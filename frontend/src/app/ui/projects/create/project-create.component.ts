@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { ApiCallService } from '../../service';
-import { ProjectApi, CreateProjectRequestJson, ProjectResultJson } from '../../api';
+import { ApiCallService } from '../../../service';
+import { ProjectApi, CreateProjectRequestJson, ProjectResultJson } from '../../../api';
 
 @Component({
   selector: 'tt-project-create',
@@ -30,6 +30,7 @@ export class ProjectCreateComponent {
         if (result.isValid) {
           this.request.name = '';
           this.request.description = '';
+          this.request.icon = '';
           this.created.emit(result.result);
         } else {
           window.alert('Could not create project:\n\n' + JSON.stringify(result.error));
@@ -37,5 +38,9 @@ export class ProjectCreateComponent {
       },
       undefined,
       () => { this.working = false; });
+  }
+
+  setImage(image: string) {
+    this.request.icon = image;
   }
 }

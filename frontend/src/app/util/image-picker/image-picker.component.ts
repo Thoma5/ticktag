@@ -1,27 +1,37 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angular/core';
 
 @Component({
     selector: 'tt-image-picker',
     templateUrl: 'image-picker.component.html',
     styleUrls: ['./image-picker.component.scss'],
 })
-export class ImagePickerComponent {
+export class ImagePickerComponent implements OnInit, OnChanges {
     preview: string;
     loadPreview: boolean;
-    @Input() size: number;
+    @Input() defaultImage: string = undefined;
+    @Input() size: number = 2048000;
     @Output() loading = new EventEmitter<boolean>(); // indicates loading                         
     @Output() image = new EventEmitter<string>(); // image with mime data and base64 encoded image as string
 
-    constructor() {
+    constructor() { }
+
+    ngOnInit() {
+        if (this.defaultImage !== undefined) {
+            this.preview = this.defaultImage;
+            this.loadPreview = false;
+        }
+    }
+    ngOnChanges() {
+        this.preview = this.defaultImage;
+        this.loadPreview = this.defaultImage === undefined;
     }
 
     encodeFile(fileInput: any) {
-        console.log(fileInput)
         if (fileInput.target.files && fileInput.target.files[0]) {
-            if (fileInput.target.files[0].size > 2048000 ||
-            ['image/jpeg', 'image/gif', 'image/png'].indexOf(fileInput.target.files[0].type) < 0) {
+            if (fileInput.target.files[0].size > this.size ||
+                ['image/jpeg', 'image/gif', 'image/png'].indexOf(fileInput.target.files[0].type) < 0) {
                 alert('File too big!');
-                this.preview = undefined;
+                this.preview = this.defaultImage;
                 this.image.emit(undefined);
             } else {
                 let reader = new FileReader();
@@ -46,7 +56,7 @@ export class ImagePickerComponent {
         }
 
     }
-    deleteIcon(){
+    deleteIcon() {
         this.image.emit(undefined);
         this.preview = undefined;
     }

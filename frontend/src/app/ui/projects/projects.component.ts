@@ -20,7 +20,9 @@ export class ProjectsComponent implements OnInit {
   };
   loading = true;
   refresh = true;
-  creating = false;
+  cu = false;
+  mode = '';
+  toUpdateProject: PageProjectResultJson = undefined;
   asc = true;
   sortprop = 'NAME';
   offset = 0;
@@ -110,10 +112,19 @@ export class ProjectsComponent implements OnInit {
       );
   }
   onStartCreate() {
-    this.creating = true;
+    this.mode = 'Create';
+    this.cu = true;
   }
-
+  onStartUpdate(project: ProjectResultJson) {
+    this.toUpdateProject = project;
+    this.cu = true;
+    this.mode = 'Update';
+  }
   onStopCreate() {
-    this.creating = false;
+    this.cu = false;
+  }
+  cuFinished() {
+    this.cu = false;
+    this.getProjects();
   }
 }

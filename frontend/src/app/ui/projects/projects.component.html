@@ -1,14 +1,13 @@
 <div class="col-md-10 col-md-offset-1 form-box">
   <div *ngIf="!loading">
     <div [ngClass]="{'no-scroll': creating }">
-    <input type="button" class="btn btn-primary button-submit" value="Add" (click)="onStartCreate()">
     <div class="search row">
       <div class="col-md-4"><input class="form-control" type='text' placeholder='Type to filter name...' (keyup)='updateFilter($event)' /></div>
       <div class="col-md-4" *ngIf="user && ((user.authorities.indexOf('ADMIN') != -1) ||(user.authorities.indexOf('OBSERVER') != -1))">
         <md-slide-toggle [(ngModel)]="allProjects" (change)="getProjects(offset, limit, sortprop, asc, undefined)">All Projects</md-slide-toggle>
       </div>
+      <div class="col-md-4"><button type="button" class="btn btn-primary pull-right" (click)="onStartCreate()"><span class="glyphicon glyphicon-plus"></span> Add Project</button></div>
     </div>
-
     <ngx-datatable class="material" [rows]="rows" [columns]="columns" [columnMode]="'force'" [headerHeight]="32" [footerHeight]="32"
       [rowHeight]="32" [externalPaging]="true" [count]="totalElements" [offset]="offset" [limit]="limit" [scrollbarH]="true"
       [scrollbarV]="false" [loadingIndicator]="refresh" [externalSorting]="true" (sort)="onSort($event)" (page)='onPage($event)'
@@ -37,14 +36,15 @@
       </ngx-datatable-column>
       <ngx-datatable-column name="Actions" width="128" [resizeable]="false" [sortable]="false">
         <template let-row="row" ngx-datatable-cell-template>
-          <button class="btn btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
+          <button (click)="onStartUpdate(row)" class="btn btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
+          <button (click)="onAddUsers(row)" class="btn btn-xs"><span class="glyphicon glyphicon-user"></span></button>
           <button (click)="onDeleteClicked(row.id)" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
         </template>
       </ngx-datatable-column>
 
     </ngx-datatable>
     </div>
-    <div *ngIf="creating" class="create-overlay" (click)="onStopCreate()">
+    <div *ngIf="cu" class="create-overlay" (click)="onStopCreate()">
       <div class="create-popup" (click)="$event.stopPropagation()">
         <button type="button" class="exit pull-right" (click)="onStopCreate()">
             <i class='fa fa-times'></i>
@@ -52,11 +52,12 @@
         <div class="popup-content">
           <div class="head">
             <h3 class="title">
-              Create Project
+              {{mode}} Project
             </h3>
           </div>
           <div class="body">
-            <tt-project-create (created)="getProjects()"></tt-project-create>
+            <tt-project-create *ngIf="mode === 'Create'" (created)="cuFinished()"></tt-project-create>
+            <tt-project-update *ngIf="mode === 'Update' && toUpdateProject" [project]="toUpdateProject" (updated)="cuFinished()"></tt-project-update>
           </div>
         </div>
       </div>

@@ -18,7 +18,8 @@ import { Ng2Webstorage } from 'ng2-webstorage/dist/app';
 import { UsersComponent } from './ui/users/users.component';
 import { UserCreateComponent } from './ui/users/user-create.component';
 import { ProjectsComponent } from './ui/projects/projects.component';
-import { ProjectCreateComponent } from './ui/projects/project-create.component';
+import { ProjectCreateComponent } from './ui/projects/create/project-create.component';
+import { ProjectUpdateComponent } from './ui/projects/update/project-update.component';
 import {
   ProjectApi, AuthApi, UserApi, AssignmenttagApi, CommentsApi, MemberApi,
   TimecategoryApi, TicketApi, TickettagApi, TickettaggroupApi, GetApi,
@@ -113,6 +114,7 @@ import { ImagePickerComponent } from './util/image-picker/image-picker.component
     UserCreateComponent,
     ProjectsComponent,
     ProjectCreateComponent,
+    ProjectUpdateComponent,
     TicketOverviewComponent,
     TicketDetailComponent,
     TicketSidebarComponent,

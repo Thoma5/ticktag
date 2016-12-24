@@ -1,7 +1,7 @@
 <form (ngSubmit)="onSubmit()" #f="ngForm">
   <div class="row">
      <label for="imagepicker">Icon</label>
-    <tt-image-picker name="imagepicker"></tt-image-picker>
+    <tt-image-picker (image)="setImage($event)" name="imagepicker"></tt-image-picker>
   </div>
   <div class="row">
     <label for="name">Name</label>
