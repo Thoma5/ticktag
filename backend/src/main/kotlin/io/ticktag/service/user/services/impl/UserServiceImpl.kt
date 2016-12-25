@@ -85,6 +85,7 @@ open class UserServiceImpl @Inject constructor(
     @PreAuthorize(AuthExpr.ANONYMOUS)
     override fun checkPassword(mail: String, password: String): UserResult? {
         val user = users.findByMailIgnoreCase(mail) ?: return null
+        if (user.disabled) return null
         if (hashing.checkPassword(password, user.passwordHash)) {
             // This is the only function that may bypass the userToDto function
             // We just checked the password so we can return all the information
