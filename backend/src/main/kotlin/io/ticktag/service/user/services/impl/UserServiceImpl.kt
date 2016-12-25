@@ -119,19 +119,17 @@ open class UserServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.ADMIN) // TODO should probably be more granular
-    override fun listUsers(query: String, role: Role?,  disabled: Boolean?, principal: Principal, pageable: Pageable): Page<UserResult> {
+    override fun listUsers(query: String, role: Role?, disabled: Boolean?, principal: Principal, pageable: Pageable): Page<UserResult> {
         val page: Page<User>
         if (role == null) {
             if (disabled == null) {
                 page = users.findByNameContainingIgnoreCaseOrUsernameContainingIgnoreCaseOrMailContainingIgnoreCase(query, query, query, pageable)
-            }
-            else page = users.findByNameContainingIgnoreCaseOrUsernameContainingIgnoreCaseOrMailContainingIgnoreCaseAndDisabledIs(query, query, query, disabled, pageable)
+            } else page = users.findByNameContainingIgnoreCaseOrUsernameContainingIgnoreCaseOrMailContainingIgnoreCaseAndDisabledIs(query, query, query, disabled, pageable)
         } else {
             val q = "%$query%".toLowerCase()
-            if(disabled == null) {
+            if (disabled == null) {
                 page = users.findAllByRole(q, role, pageable)
-            }
-            else page = users.findAllByRoleAndStatus(q, disabled, role, pageable)
+            } else page = users.findAllByRoleAndStatus(q, disabled, role, pageable)
         }
         val content = page.content.map { e -> userToDto(e, principal) }
         return PageImpl(content, pageable, page.totalElements)
@@ -149,15 +147,13 @@ open class UserServiceImpl @Inject constructor(
         val projectMemberships: List<Member>
         if (disabled == null) {
             projectMemberships = members.findByProject(project) ?: throw NotFoundException()
-        }
-        else {
+        } else {
             projectMemberships = members.findByProjectAndUserDisabledIs(project, disabled) ?: throw NotFoundException()
         }
         val projectUserResult: MutableList<ProjectUserResult> = mutableListOf()
         projectMemberships.map { e -> projectUserResult.add(ProjectUserResult(UserResult(e.user, encodeTempImageId(e.user.id)), e)) }
         return projectUserResult
     }
-
 
 
     @PreAuthorize(AuthExpr.ADMIN) // TODO should probably be more granular
@@ -188,7 +184,10 @@ open class UserServiceImpl @Inject constructor(
         }
 
         if (updateUser.disabled != null) {
-            user.disabled = updateUser.disabled
+            if (user.disabled) { //effectively just usable from the admin since user (self) has no access in this state
+                user.disabled = updateUser.disabled
+                user.currentToken = UUID.randomUUID()
+            }
         }
 
         if (updateUser.role != null) {
@@ -199,6 +198,12 @@ open class UserServiceImpl @Inject constructor(
             }
         }
         return userToDto(user, principal)
+    }
+
+    @PreAuthorize(AuthExpr.ADMIN)
+    override fun deleteUser(id: UUID) {
+        val userToDelete = users.findOne(id) ?: throw NotFoundException()
+        userToDelete.disabled = true
     }
 
     private fun usersToDto(us: List<User>, principal: Principal): List<UserResult> {

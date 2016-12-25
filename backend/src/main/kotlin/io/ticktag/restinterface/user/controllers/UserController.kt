@@ -94,6 +94,11 @@ open class UserController @Inject constructor(
         return PageImpl(content, pageRequest, page.totalElements)
     }
 
+    @DeleteMapping(value = "/{id}")
+    open fun deleteProject(@PathVariable(name = "id") id: UUID) {
+        userService.deleteUser(id)
+    }
+
     @GetMapping("/fuzzy")
     open fun listUsersFuzzy(
             @RequestParam(name = "projectId", required = true) projectId: UUID,
