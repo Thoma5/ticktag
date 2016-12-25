@@ -49,7 +49,7 @@ class UserApiTest : ApiBaseTest() {
             val res = userController.createUser(req, p)
 
             val userId = res.id
-            val storedUser = userController.listUsers(0,100, listOf(UserSort.NAME_ASC),"",null,p).content
+            val storedUser = userController.listUsers(0,100, listOf(UserSort.NAME_ASC),"",null, false, p).content
                     .filter { it.id == userId }
                     .singleOrNull()
 
@@ -72,7 +72,7 @@ class UserApiTest : ApiBaseTest() {
 
         withUser(id) { principal ->
 
-            userController.updateUser(id, UpdateUserRequestJson(oldPassword = "aaaa", password = newPassword, mail = mail, role = Role.ADMIN, name = name), principal)
+            userController.updateUser(id, UpdateUserRequestJson(oldPassword = "aaaa", password = newPassword, mail = mail, role = Role.ADMIN, disabled = false, name = name), principal)
 
             val user = userController.getUser(id, principal)
 
@@ -95,7 +95,7 @@ class UserApiTest : ApiBaseTest() {
         val newPassword = "password"
 
         withUser(id) { principal ->
-            userController.updateUser(id, UpdateUserRequestJson(oldPassword = OBSERVER_PASSWORD, password = newPassword, mail = mail, role = null, name = name), principal)
+            userController.updateUser(id, UpdateUserRequestJson(oldPassword = OBSERVER_PASSWORD, password = newPassword, mail = mail, role = null, disabled = true, name = name), principal)
 
             val user = userController.getUser(id, principal)
 
@@ -114,7 +114,7 @@ class UserApiTest : ApiBaseTest() {
         val id = OBSERVER_ID
 
         withUser(id) { principal ->
-            userController.updateUser(id, UpdateUserRequestJson(role = Role.ADMIN, oldPassword = null, password = null, mail = null, name = null), principal)
+            userController.updateUser(id, UpdateUserRequestJson(role = Role.ADMIN, oldPassword = null, password = null, mail = null, name = null, disabled = false), principal)
         }
     }
 
@@ -124,7 +124,7 @@ class UserApiTest : ApiBaseTest() {
         val ownId = USER_ID
         val otherId = OBSERVER_ID
         withUser(ownId) { principal ->
-            userController.updateUser(otherId, UpdateUserRequestJson(role = Role.ADMIN, oldPassword = null, password = null, mail = null, name = null), principal)
+            userController.updateUser(otherId, UpdateUserRequestJson(role = Role.ADMIN, oldPassword = null, password = null, mail = null, name = null, disabled = true), principal)
         }
     }
 

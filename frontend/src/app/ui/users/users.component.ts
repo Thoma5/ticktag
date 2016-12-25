@@ -8,6 +8,7 @@ import {UserApi, PageUserResultJson, UserResultJson} from '../../api';
 })
 export class UsersComponent implements OnInit {
   users: UserResultJson[];
+  disabled = false;
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(private userApi: UserApi,
@@ -20,7 +21,8 @@ export class UsersComponent implements OnInit {
 
   getUsers(): void {
     this.apiCallService
-      .callNoError<PageUserResultJson>(h => this.userApi.listUsersUsingGETWithHttpInfo(0, 50, undefined, undefined, undefined, h))
+      .callNoError<PageUserResultJson>(h => this.userApi
+      .listUsersUsingGETWithHttpInfo(0, 50, undefined, undefined, undefined, this.disabled, h))
       .subscribe(users => { this.users = users.content; });
   }
 }

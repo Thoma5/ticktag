@@ -58,16 +58,18 @@ open class ProjectController @Inject constructor(
 
     @GetMapping(value = "/{id}/users")
     open fun listProjectUsers(@PathVariable(name = "id") id: UUID,
+                              @RequestParam(name = "disabled", required = false) disabled: Boolean?,
                               @AuthenticationPrincipal principal: Principal
     ): List<UserResultJson> {
-        return userService.listUsersInProject(id, principal).map(::UserResultJson)
+        return userService.listUsersInProject(id, disabled, principal).map(::UserResultJson)
     }
 
     @GetMapping(value = "/{id}/members")
     open fun listProjectMembers(@PathVariable(name = "id") id: UUID,
+                                @RequestParam(name = "disabled", required = false) disabled: Boolean?,
                                 @AuthenticationPrincipal principal: Principal
     ): List<ProjectUserResultJson> {
-        return userService.listProjectUsers(id, principal).map(::ProjectUserResultJson)
+        return userService.listProjectUsers(id, disabled, principal).map(::ProjectUserResultJson)
     }
 
     @PostMapping

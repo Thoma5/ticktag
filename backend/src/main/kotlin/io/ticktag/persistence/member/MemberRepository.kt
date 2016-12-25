@@ -12,7 +12,9 @@ import java.util.*
 
 @TicktagRepository
 interface MemberRepository : TicktagCrudRepository<Member, MemberKey> {
+    fun findByUserAndUserDisabledIs(user: User, disabledUsers: Boolean): List<Member>?
     fun findByUser(user: User): List<Member>?
+    fun findByProjectAndUserDisabledIs(project: Project, disabledUsers: Boolean): List<Member>?
     fun findByProject(project: Project): List<Member>?
 
     fun findByUserIdAndProjectId(userId: UUID, projectId: UUID): Member?

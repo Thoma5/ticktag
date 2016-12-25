@@ -13,10 +13,11 @@ data class ProjectUserResult(
         val name: String,
         val currentToken: UUID,
         val role: Role,
+        val disabled: Boolean,
         val projectRole: ProjectRole,
         val imageId: TempImageId,
         val projectId: UUID,
         val joinDate: Instant
 ) {
-    constructor(u: UserResult, m: Member) : this(id = u.id, mail = u.mail, name = u.name, currentToken = u.currentToken, role = u.role, username = u.username, imageId = u.imageId, projectRole = m.role, projectId = m.project.id, joinDate = m.joinDate)
+    constructor(u: UserResult, m: Member) : this(id = u.id, mail = u.mail, name = u.name, currentToken = u.currentToken, role = u.role, disabled = u.disabled, username = u.username, imageId = u.imageId, projectRole = m.role, projectId = m.project.id, joinDate = m.joinDate)
 }

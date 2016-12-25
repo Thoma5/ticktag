@@ -21,6 +21,7 @@ export class ProjectsComponent implements OnInit {
   loading = true;
   refresh = true;
   cu = false;
+  disabled = false;
   mode = '';
   toUpdateProject: PageProjectResultJson = undefined;
   asc = true;
@@ -56,7 +57,7 @@ export class ProjectsComponent implements OnInit {
   getProjects(page?: number, size?: number, order?: string, asc?: boolean, name?: string): void {
     this.apiCallService
       .callNoError<PageProjectResultJson>(h => this.projectApi
-      .listProjectsUsingGETWithHttpInfo(page, size, order, asc, name, this.allProjects, h))
+      .listProjectsUsingGETWithHttpInfo(page, size, order, asc, name, this.allProjects, this.disabled, h))
       .subscribe(projects => {
         this.refresh = true;
         this.projects = projects;

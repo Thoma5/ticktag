@@ -49,7 +49,7 @@ open class UserController @Inject constructor(
                         @RequestBody req: UpdateUserRequestJson,
                         @AuthenticationPrincipal principal: Principal): UserResultJson {
         val user = userService.updateUser(principal, id, UpdateUser(mail = req.mail, name = req.name, password = req.password,
-                role = req.role, oldPassword = req.oldPassword))
+                role = req.role, disabled = req.disabled, oldPassword = req.oldPassword))
         return UserResultJson(user)
     }
 
@@ -85,10 +85,11 @@ open class UserController @Inject constructor(
                         @RequestParam(name = "order", defaultValue = "NAME_ASC", required = false) order: List<UserSort>,
                         @RequestParam(name = "query", defaultValue = "", required = false) query: String,
                         @RequestParam(name = "role", defaultValue = "", required = false) role: Role?,
+                        @RequestParam(name = "disabled", defaultValue = "false", required = false) disabled: Boolean,
                         @AuthenticationPrincipal principal: Principal
     ): Page<UserResultJson> {
         val pageRequest = PageRequest(pageNumber, size, Sort(order.map { it.order }))
-        val page = userService.listUsers(query, role, principal, pageRequest)
+        val page = userService.listUsers(query, role, disabled, principal, pageRequest)
         val content = page.content.map(::UserResultJson)
         return PageImpl(content, pageRequest, page.totalElements)
     }

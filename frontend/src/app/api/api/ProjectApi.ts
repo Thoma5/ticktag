@@ -120,9 +120,10 @@ export class ProjectApi {
      * listProjectMembers
      * 
      * @param id id
+     * @param disabled disabled
      */
-    public listProjectMembersUsingGET(id: string, extraHttpRequestParams?: any): Observable<Array<models.ProjectUserResultJson>> {
-        return this.listProjectMembersUsingGETWithHttpInfo(id, extraHttpRequestParams)
+    public listProjectMembersUsingGET(id: string, disabled?: boolean, extraHttpRequestParams?: any): Observable<Array<models.ProjectUserResultJson>> {
+        return this.listProjectMembersUsingGETWithHttpInfo(id, disabled, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -136,9 +137,10 @@ export class ProjectApi {
      * listProjectUsers
      * 
      * @param id id
+     * @param disabled disabled
      */
-    public listProjectUsersUsingGET(id: string, extraHttpRequestParams?: any): Observable<Array<models.UserResultJson>> {
-        return this.listProjectUsersUsingGETWithHttpInfo(id, extraHttpRequestParams)
+    public listProjectUsersUsingGET(id: string, disabled?: boolean, extraHttpRequestParams?: any): Observable<Array<models.UserResultJson>> {
+        return this.listProjectUsersUsingGETWithHttpInfo(id, disabled, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -325,8 +327,9 @@ export class ProjectApi {
      * listProjectMembers
      * 
      * @param id id
+     * @param disabled disabled
      */
-    public listProjectMembersUsingGETWithHttpInfo(id: string, extraHttpRequestParams?: any): Observable<Response> {
+    public listProjectMembersUsingGETWithHttpInfo(id: string, disabled?: boolean, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/project/${id}/members`;
 
         let queryParameters = new URLSearchParams();
@@ -334,6 +337,9 @@ export class ProjectApi {
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling listProjectMembersUsingGET.');
+        }
+        if (disabled !== undefined) {
+            queryParameters.set('disabled', <any>disabled);
         }
 
 
@@ -369,8 +375,9 @@ export class ProjectApi {
      * listProjectUsers
      * 
      * @param id id
+     * @param disabled disabled
      */
-    public listProjectUsersUsingGETWithHttpInfo(id: string, extraHttpRequestParams?: any): Observable<Response> {
+    public listProjectUsersUsingGETWithHttpInfo(id: string, disabled?: boolean, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/project/${id}/users`;
 
         let queryParameters = new URLSearchParams();
@@ -378,6 +385,9 @@ export class ProjectApi {
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling listProjectUsersUsingGET.');
+        }
+        if (disabled !== undefined) {
+            queryParameters.set('disabled', <any>disabled);
         }
 
 

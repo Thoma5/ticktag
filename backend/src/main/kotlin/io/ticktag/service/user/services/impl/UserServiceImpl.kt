@@ -4,6 +4,7 @@ import io.ticktag.ApplicationProperties
 import io.ticktag.TicktagService
 import io.ticktag.library.hashing.HashingLibrary
 import io.ticktag.persistence.member.MemberRepository
+import io.ticktag.persistence.member.entity.Member
 import io.ticktag.persistence.project.ProjectRepository
 import io.ticktag.persistence.project.entity.Project
 import io.ticktag.persistence.user.UserRepository
@@ -117,28 +118,40 @@ open class UserServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.ADMIN) // TODO should probably be more granular
-    override fun listUsers(query: String, role: Role?, principal: Principal, pageable: Pageable): Page<UserResult> {
+    override fun listUsers(query: String, role: Role?,  disabled: Boolean?, principal: Principal, pageable: Pageable): Page<UserResult> {
         val page: Page<User>
         if (role == null) {
-            page = users.findByNameContainingIgnoreCaseOrUsernameContainingIgnoreCaseOrMailContainingIgnoreCase(query, query, query, pageable)
+            if (disabled == null) {
+                page = users.findByNameContainingIgnoreCaseOrUsernameContainingIgnoreCaseOrMailContainingIgnoreCase(query, query, query, pageable)
+            }
+            else page = users.findByNameContainingIgnoreCaseOrUsernameContainingIgnoreCaseOrMailContainingIgnoreCaseAndDisabledIs(query, query, query, disabled, pageable)
         } else {
             val q = "%$query%".toLowerCase()
-            page = users.findAllByRole(q, role, pageable)
+            if(disabled == null) {
+                page = users.findAllByRole(q, role, pageable)
+            }
+            else page = users.findAllByRoleAndStatus(q, disabled, role, pageable)
         }
         val content = page.content.map { e -> userToDto(e, principal) }
         return PageImpl(content, pageable, page.totalElements)
     }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
-    override fun listUsersInProject(@P("authProjectId") projectId: UUID, principal: Principal): List<UserResult> {
+    override fun listUsersInProject(@P("authProjectId") projectId: UUID, disabled: Boolean?, principal: Principal): List<UserResult> {
         projects.findOne(projectId) ?: throw NotFoundException()
         return usersToDto(users.findInProject(projectId), principal)
     }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
-    override fun listProjectUsers(@P("authProjectId") projectId: UUID, principal: Principal): List<ProjectUserResult> {
+    override fun listProjectUsers(@P("authProjectId") projectId: UUID, disabled: Boolean?, principal: Principal): List<ProjectUserResult> {
         val project = projects.findOne(projectId) ?: throw NotFoundException()
-        val projectMemberships = members.findByProject(project) ?: throw NotFoundException()
+        val projectMemberships: List<Member>
+        if (disabled == null) {
+            projectMemberships = members.findByProject(project) ?: throw NotFoundException()
+        }
+        else {
+            projectMemberships = members.findByProjectAndUserDisabledIs(project, disabled) ?: throw NotFoundException()
+        }
         val projectUserResult: MutableList<ProjectUserResult> = mutableListOf()
         projectMemberships.map { e -> projectUserResult.add(ProjectUserResult(UserResult(e.user, encodeTempImageId(e.user.id)), e)) }
         return projectUserResult
@@ -171,6 +184,10 @@ open class UserServiceImpl @Inject constructor(
 
         if (updateUser.name != null) {
             user.name = updateUser.name
+        }
+
+        if (updateUser.disabled != null) {
+            user.disabled = updateUser.disabled
         }
 
         if (updateUser.role != null) {

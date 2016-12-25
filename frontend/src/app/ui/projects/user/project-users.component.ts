@@ -20,6 +20,7 @@ export class ProjectUsersComponent implements OnInit {
   };
   loading = true;
   refresh = true;
+  disabled = false;
   projectId: string;
   rows: UserResultJson[];
   temp: UserResultJson[];
@@ -60,7 +61,7 @@ export class ProjectUsersComponent implements OnInit {
 
   getProjects(order?: string, asc?: boolean, name?: string): void {
     this.apiCallService
-      .callNoError<UserResultJson[]>(h => this.projectApi.listProjectMembersUsingGETWithHttpInfo(this.projectId, h))
+      .callNoError<UserResultJson[]>(h => this.projectApi.listProjectMembersUsingGETWithHttpInfo(this.projectId, this.disabled, h))
       .subscribe(users => {
         this.refresh = true;
         this.users = users;

@@ -27,9 +27,13 @@ interface UserRepository : TicktagCrudRepository<User, UUID>, UserRepositoryCust
     fun findInProject(@Param("projectId") projectId: UUID): List<User>
 
     fun findByNameContainingIgnoreCaseOrUsernameContainingIgnoreCaseOrMailContainingIgnoreCase(name: String, username: String, mail: String, pageable: Pageable): Page<User>
+    fun findByNameContainingIgnoreCaseOrUsernameContainingIgnoreCaseOrMailContainingIgnoreCaseAndDisabledIs(name: String, username: String, mail: String, disabled: Boolean, pageable: Pageable): Page<User>
 
     @Query("select u from User u where u.role = :role AND (LOWER(u.name) LIKE :query OR LOWER(u.username) LIKE :query OR LOWER(u.mail) LIKE :query )")
     fun findAllByRole(@Param("query") query: String, @Param("role") role: Role, pageable: Pageable): Page<User>
+
+    @Query("select u from User u where u.role = :role AND u.disabled = :disabled AND (LOWER(u.name) LIKE :query OR LOWER(u.username) LIKE :query OR LOWER(u.mail) LIKE :query )")
+    fun findAllByRoleAndStatus(@Param("query") query: String, @Param("disabled") disabled: Boolean, @Param("role") role: Role, pageable: Pageable): Page<User>
 
 }
 
@@ -67,6 +71,7 @@ open class UserRepositoryImpl @Inject constructor(private val em: EntityManager)
             join u.memberships m
             left join fetch u.image
             where m.project.id = :project
+            and u.disabled = false
             and (
                 upper(mail) like '%'||upper(:mail)||'%' escape '!'
                 or upper(name) like '%'||upper(:name)||'%' escape '!'

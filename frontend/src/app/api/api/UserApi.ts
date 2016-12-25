@@ -173,9 +173,10 @@ export class UserApi {
      * @param order order
      * @param query query
      * @param role role
+     * @param disabled disabled
      */
-    public listUsersUsingGET(page?: number, size?: number, order?: Array<string>, query?: string, role?: string, extraHttpRequestParams?: any): Observable<models.PageUserResultJson> {
-        return this.listUsersUsingGETWithHttpInfo(page, size, order, query, role, extraHttpRequestParams)
+    public listUsersUsingGET(page?: number, size?: number, order?: Array<string>, query?: string, role?: string, disabled?: boolean, extraHttpRequestParams?: any): Observable<models.PageUserResultJson> {
+        return this.listUsersUsingGETWithHttpInfo(page, size, order, query, role, disabled, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -491,8 +492,9 @@ export class UserApi {
      * @param order order
      * @param query query
      * @param role role
+     * @param disabled disabled
      */
-    public listUsersUsingGETWithHttpInfo(page?: number, size?: number, order?: Array<string>, query?: string, role?: string, extraHttpRequestParams?: any): Observable<Response> {
+    public listUsersUsingGETWithHttpInfo(page?: number, size?: number, order?: Array<string>, query?: string, role?: string, disabled?: boolean, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/user`;
 
         let queryParameters = new URLSearchParams();
@@ -511,6 +513,9 @@ export class UserApi {
         }
         if (role !== undefined) {
             queryParameters.set('role', <any>role);
+        }
+        if (disabled !== undefined) {
+            queryParameters.set('disabled', <any>disabled);
         }
 
 

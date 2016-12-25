@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS "user" (
   "name"          TEXT NOT NULL,
   "password_hash" TEXT NOT NULL,
   "role"          TEXT NOT NULL,
-  "current_token" UUID NOT NULL
+  "current_token" UUID NOT NULL,
+  "disabled"      BOOLEAN
 );
 CREATE INDEX ON "user" (upper("mail"));
 
