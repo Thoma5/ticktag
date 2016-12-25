@@ -19,6 +19,21 @@ html {
   box-sizing: border-box;
 }
 
+// Somehow those datepicker styles are ignored if put into ticket-filter.component.scss
+datepicker .well-sm {
+    padding: 0px !important;
+    border-color: white !important;
+    border-radius: 0 !important;
+    background-color: white !important;
+    margin-bottom: 0px;
+    .btn {
+        border-radius: 0px;
+    }
+}
+datepicker th {
+    vertical-align: middle !important;
+}
+
 *, *:before, *:after {
   box-sizing: inherit;
 }
