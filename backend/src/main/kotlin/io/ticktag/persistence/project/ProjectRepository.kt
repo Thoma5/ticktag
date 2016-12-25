@@ -12,8 +12,8 @@ import javax.persistence.EntityManager
 
 @TicktagRepository
 interface ProjectRepository : TicktagCrudRepository<Project, UUID>, ProjectRepositoryCustom {
-    fun findByNameContainingIgnoreCase(name: String, pageable: Pageable): Page<Project>
-    fun findByMembersUserIdAndNameContainingIgnoreCase(userId: UUID, name: String, pageable: Pageable): Page<Project>
+    fun findByNameContainingIgnoreCaseAndDisabledIs(name: String, disabled: Boolean, pageable: Pageable): Page<Project>
+    fun findByMembersUserIdAndNameContainingIgnoreCaseAndDisabledIs(userId: UUID, name: String, disabled: Boolean, pageable: Pageable): Page<Project>
     fun countByMembersUserId(userId: UUID): Int
 }
 

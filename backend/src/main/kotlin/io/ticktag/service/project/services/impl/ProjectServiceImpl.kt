@@ -41,15 +41,15 @@ open class ProjectServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.OBSERVER)
-    override fun listAllProjects(name: String, pageable: Pageable): Page<ProjectResult> {
-        val page = projects.findByNameContainingIgnoreCase(name, pageable)
+    override fun listAllProjects(name: String, disabled: Boolean, pageable: Pageable): Page<ProjectResult> {
+        val page = projects.findByNameContainingIgnoreCaseAndDisabledIs(name, disabled, pageable)
         val content = page.content.map(::ProjectResult)
         return PageImpl(content, pageable, page.totalElements)
     }
 
     @PreAuthorize(AuthExpr.ADMIN_OR_SELF)
-    override fun listUserProjects(userId: UUID, name: String, pageable: Pageable): Page<ProjectResult> {
-        val page = projects.findByMembersUserIdAndNameContainingIgnoreCase(userId, name, pageable)
+    override fun listUserProjects(userId: UUID, name: String, disabled: Boolean, pageable: Pageable): Page<ProjectResult> {
+        val page = projects.findByMembersUserIdAndNameContainingIgnoreCaseAndDisabledIs(userId, name, disabled, pageable)
         val content = page.content.map(::ProjectResult)
         return PageImpl(content, pageable, page.totalElements)
     }
@@ -57,7 +57,7 @@ open class ProjectServiceImpl @Inject constructor(
     @PreAuthorize(AuthExpr.ADMIN)
     override fun deleteProject(id: UUID) {
         val projectToDelete = projects.findOne(id) ?: throw NotFoundException()
-        projects.delete(projectToDelete)
+        projectToDelete.disabled = true
     }
 
     @PreAuthorize(AuthExpr.PROJECT_ADMIN)
@@ -68,6 +68,9 @@ open class ProjectServiceImpl @Inject constructor(
         }
         if (project.description != null) {
             projectToUpdate.description = project.description
+        }
+        if (project.disabled != null) {
+            projectToUpdate.disabled = project.disabled
         }
         if (project.icon != null) {
             if (project.icon.isEmpty()) {

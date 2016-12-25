@@ -7,8 +7,9 @@ class ProjectResultJson(
         val id: UUID,
         val name: String,
         val description: String,
+        val disabled: Boolean,
         val creationDate: Date,
         val icon: String?
 ) {
-    constructor(p: ProjectResult) : this(id = p.id, name = p.name, description = p.description, creationDate = p.creationDate, icon = if(p.icon != null && p.iconMimeInfo!= null) p.iconMimeInfo + "," + p.icon else null)
+    constructor(p: ProjectResult) : this(id = p.id, name = p.name, description = p.description, disabled = p.disabled, creationDate = p.creationDate, icon = if(p.icon != null && p.iconMimeInfo!= null) p.iconMimeInfo + "," + p.icon else null)
 }

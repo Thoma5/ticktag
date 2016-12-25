@@ -17,6 +17,7 @@ open class Project protected constructor() {
             p.id = UUID.randomUUID()
             p.name = name
             p.description = description
+            p.disabled = false
             p.creationDate = creationDate
             p.iconMimeInfo = iconMimeInfo
             p.icon = icon
@@ -42,6 +43,9 @@ open class Project protected constructor() {
 
     @Column(name = "creation_date", nullable = false)
     lateinit open var creationDate: Date
+
+    @Column(name = "disabled", nullable = false)
+    open var disabled: Boolean = false
 
     @Column(name = "icon_mime_info", nullable = true)
     open var iconMimeInfo: String? = null

@@ -38,6 +38,7 @@ open class ProjectController @Inject constructor(
                           @RequestParam(name = "asc", defaultValue = "true", required = false) asc: Boolean,
                           @RequestParam(name = "name", defaultValue = "", required = false) name: String,
                           @RequestParam(name = "all", defaultValue = "false", required = false) all: Boolean,
+                          @RequestParam(name = "disabled", defaultValue = "false", required = false) disabled: Boolean,
                           @AuthenticationPrincipal principal: Principal
     ): Page<ProjectResultJson> {
         val ascOrder = if (asc) Sort.Direction.ASC else Sort.Direction.DESC
@@ -45,11 +46,11 @@ open class ProjectController @Inject constructor(
         val pageRequest = PageRequest(pageNumber, size, Sort(sortOrder))
 
         return if (all) {
-            val page = projectService.listAllProjects(name, pageRequest)
+            val page = projectService.listAllProjects(name, disabled, pageRequest)
             val content = page.content.map(::ProjectResultJson)
             PageImpl(content, pageRequest, page.totalElements)
         } else {
-            val page = projectService.listUserProjects(principal.id, name, pageRequest)
+            val page = projectService.listUserProjects(principal.id, name, disabled, pageRequest)
             val content = page.content.map(::ProjectResultJson)
             PageImpl(content, pageRequest, page.totalElements)
         }
@@ -83,7 +84,7 @@ open class ProjectController @Inject constructor(
     @PutMapping(value = "/{id}")
     open fun updateProject(@PathVariable(name = "id") id: UUID,
                            @RequestBody req: UpdateProjectRequestJson): ProjectResultJson {
-        val project = projectService.updateProject(id, UpdateProject(req.name, req.description, req.icon))
+        val project = projectService.updateProject(id, UpdateProject(req.name, req.description, req.disabled, req.icon))
         return ProjectResultJson(project)
     }
 

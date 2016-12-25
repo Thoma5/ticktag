@@ -22,7 +22,8 @@ CREATE TABLE IF NOT EXISTS "project" (
   "description"    TEXT      NOT NULL,
   "creation_date"  TIMESTAMP NOT NULL,
   "icon_mime_info" TEXT,
-  "icon"           BYTEA
+  "icon"           BYTEA,
+  "disabled"       BOOLEAN   NOT NULL
 );
 CREATE TABLE IF NOT EXISTS "member" (
   "u_id"         UUID      NOT NULL REFERENCES "user",

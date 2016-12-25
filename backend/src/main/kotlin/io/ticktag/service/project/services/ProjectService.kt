@@ -9,8 +9,8 @@ import java.util.*
 
 interface ProjectService {
     fun getProject(id: UUID): ProjectResult?
-    fun listAllProjects(name: String, pageable: Pageable): Page<ProjectResult>
-    fun listUserProjects(userId: UUID, name: String, pageable: Pageable): Page<ProjectResult>
+    fun listAllProjects(name: String, disabled: Boolean, pageable: Pageable): Page<ProjectResult>
+    fun listUserProjects(userId: UUID, name: String, disabled: Boolean, pageable: Pageable): Page<ProjectResult>
     fun createProject(project: CreateProject): ProjectResult
     fun deleteProject(id: UUID)
     fun updateProject(id: UUID, project: UpdateProject): ProjectResult

@@ -30,6 +30,8 @@ export interface ProjectResultJson {
 
     description: string;
 
+    disabled: boolean;
+
     icon?: string;
 
     id: string;

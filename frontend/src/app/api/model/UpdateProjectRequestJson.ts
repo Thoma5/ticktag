@@ -30,6 +30,8 @@ export interface UpdateProjectRequestJson {
 
     description?: string;
 
+    disabled?: boolean;
+
     icon?: string;
 
 }

@@ -157,9 +157,10 @@ export class ProjectApi {
      * @param asc asc
      * @param name name
      * @param all all
+     * @param disabled disabled
      */
-    public listProjectsUsingGET(page?: number, size?: number, order?: string, asc?: boolean, name?: string, all?: boolean, extraHttpRequestParams?: any): Observable<models.PageProjectResultJson> {
-        return this.listProjectsUsingGETWithHttpInfo(page, size, order, asc, name, all, extraHttpRequestParams)
+    public listProjectsUsingGET(page?: number, size?: number, order?: string, asc?: boolean, name?: string, all?: boolean, disabled?: boolean, extraHttpRequestParams?: any): Observable<models.PageProjectResultJson> {
+        return this.listProjectsUsingGETWithHttpInfo(page, size, order, asc, name, all, disabled, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -417,8 +418,9 @@ export class ProjectApi {
      * @param asc asc
      * @param name name
      * @param all all
+     * @param disabled disabled
      */
-    public listProjectsUsingGETWithHttpInfo(page?: number, size?: number, order?: string, asc?: boolean, name?: string, all?: boolean, extraHttpRequestParams?: any): Observable<Response> {
+    public listProjectsUsingGETWithHttpInfo(page?: number, size?: number, order?: string, asc?: boolean, name?: string, all?: boolean, disabled?: boolean, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/project`;
 
         let queryParameters = new URLSearchParams();
@@ -440,6 +442,9 @@ export class ProjectApi {
         }
         if (all !== undefined) {
             queryParameters.set('all', <any>all);
+        }
+        if (disabled !== undefined) {
+            queryParameters.set('disabled', <any>disabled);
         }
 
 
