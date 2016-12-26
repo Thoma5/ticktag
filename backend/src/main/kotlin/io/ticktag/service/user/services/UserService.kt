@@ -20,5 +20,5 @@ interface UserService {
     fun listUsersFuzzy(projectId: UUID, query: String, pageable: Pageable, principal: Principal): List<UserResult>
     fun getUsers(ids: Collection<UUID>, principal: Principal): Map<UUID, UserResult>
     fun getUserByUsername(username: String, principal: Principal): UserResult
-    fun deleteUser(id: UUID)
+    fun deleteUser(id: UUID, principal: Principal)
 }

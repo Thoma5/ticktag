@@ -1,12 +1,82 @@
-<h2>Users</h2>
-
-<ul>
-  <li *ngFor="let user of users">
-    <span class="id">{{user.id}}</span>
-    <span class="mail">{{user.mail}}</span>
-    <span class="name">{{user.name}}</span>
-    <span class="name">{{user.role}}</span>
-  </li>
-</ul>
-
-<tt-user-create (created)="getUsers()"></tt-user-create>
+<div class="col-md-10 col-md-offset-1 form-box">
+  <div *ngIf="!loading">
+    <div [ngClass]="{'no-scroll': creating }">
+      <div class="search row">
+        <div class="col-md-4"><input class="form-control" type='text' [(ngModel)]="filter" placeholder='Type to filter...' (keyup)='updateFilter()'
+          /></div>
+        <div class="col-md-4" *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0) ||(user.authorities.indexOf('OBSERVER') != -1))">
+          <div class="col-md-4">
+            <md-slide-toggle [(ngModel)]="disabled" (change)="getUsers()">Deleted</md-slide-toggle>
+          </div>
+          <div *ngIf="roles" class="col-md-6">
+            <div class="form-group form-inline">
+              <label for="rolefilter">Filter for Roles:</label>
+              <select class="form-control" id="rolefilter" name="Role" size="1" placeholder="Filter role" [(ngModel)]="filterRole" (change)="getUsers()">
+                <option selected disabled value="">Select</option>
+                <option value=""></option>
+                <option *ngFor="let role of roles" value="{{role.role}}">{{role.role.charAt(0) + role.role.slice(1).toLowerCase()}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4"><button type="button" class="btn btn-primary pull-right" (click)="onStartCreate()"><span class="glyphicon glyphicon-plus"></span> Add User</button></div>
+      </div>
+      <ngx-datatable class="material" [rows]="rows" [columns]="columns" [columnMode]="'force'" [headerHeight]="32" [footerHeight]="32"
+        [rowHeight]="32" [externalPaging]="true" [count]="totalElements" [offset]="offset" [limit]="limit" [scrollbarH]="true"
+        [scrollbarV]="false" [loadingIndicator]="refresh" [externalSorting]="true" (sort)="onSort($event)" (page)='onPage($event)'
+        [cssClasses]="iconsCss" [selectionType]="'row'">
+        <ngx-datatable-column name="Icon" prop="imageId" width="48" [resizeable]="false" [sortable]="false">
+          <template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <div style="width:22px; height:22px;">
+              <tt-user-image [imageId]="value"></tt-user-image>
+            </div>
+          </template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Name" width="256" [resizeable]="false">
+          <template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <a>{{value}}</a>
+          </template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Username" prop="username" width="128" [resizeable]="false">
+          <template let-row="row" let-value="value" ngx-datatable-cell-template>
+            {{value}}
+          </template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Role" minWidth="128" width="128" maxWidth="1024">
+          <template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <span *ngIf="value === 'ADMIN'"><span class="glyphicon glyphicon-king"></span> Admin</span>
+            <span *ngIf="value === 'OBSERVER'"><span class="glyphicon glyphicon-tower"></span> Observer</span>
+            <span *ngIf="value === 'USER'"><span class="glyphicon glyphicon-pawn"></span> User</span>
+          </template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="E-Mail" prop="mail" minWidth="256" width="256" maxWidth="1024">
+          <template let-row="row" let-value="value" ngx-datatable-cell-template>
+            {{value}}
+          </template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Actions" width="128" [resizeable]="false" [sortable]="false" *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0))">
+          <template let-row="row" ngx-datatable-cell-template>
+            <button [attr.disabled]="this.me && this.me.id !== row.id ? null : true" (click)="onDeleteClicked(row.id)" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
+          </template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+    </div>
+    <div *ngIf="cu" class="create-overlay" (click)="onStopCreate()">
+      <div class="create-popup" (click)="$event.stopPropagation()">
+        <button type="button" class="exit pull-right" (click)="onStopCreate()">
+            <i class='fa fa-times'></i>
+          </button>
+        <div class="popup-content">
+          <div class="head">
+            <h3 class="title">
+              {{mode}} User
+            </h3>
+          </div>
+          <div class="body">
+            <tt-user-create *ngIf="mode === 'Create'" (created)="cuFinished()"></tt-user-create>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

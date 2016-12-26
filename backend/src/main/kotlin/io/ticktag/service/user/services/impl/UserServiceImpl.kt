@@ -184,14 +184,15 @@ open class UserServiceImpl @Inject constructor(
         }
 
         if (updateUser.disabled != null) {
-            if (user.disabled) { //effectively just usable from the admin since user (self) has no access in this state
+            if (user.disabled && !principal.isId(id)) { //effectively just usable from the admin since user (self) has no access in this state
                 user.disabled = updateUser.disabled
                 user.currentToken = UUID.randomUUID()
             }
+            else throw TicktagValidationException(listOf(ValidationError("updateUser.disabled", ValidationErrorDetail.Other("notpermitted"))))
         }
 
         if (updateUser.role != null) {
-            if (principal.hasRole(AuthExpr.ROLE_GLOBAL_ADMIN)) {  //Only Admins can change user roles!
+            if (principal.hasRole(AuthExpr.ROLE_GLOBAL_ADMIN) && !principal.isId(id)) {  //Only Admins can change user roles!
                 user.role = updateUser.role
             } else {
                 throw TicktagValidationException(listOf(ValidationError("updateUser.role", ValidationErrorDetail.Other("notpermitted"))))
@@ -201,7 +202,8 @@ open class UserServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.ADMIN)
-    override fun deleteUser(id: UUID) {
+    override fun deleteUser(id: UUID, principal: Principal) {
+        if (principal.isId(id)) throw TicktagValidationException(listOf(ValidationError("deleteUser", ValidationErrorDetail.Other("notpermitted"))))
         val userToDelete = users.findOne(id) ?: throw NotFoundException()
         userToDelete.currentToken = UUID.randomUUID()
         userToDelete.disabled = true

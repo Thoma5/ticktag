@@ -95,8 +95,9 @@ open class UserController @Inject constructor(
     }
 
     @DeleteMapping(value = "/{id}")
-    open fun deleteProject(@PathVariable(name = "id") id: UUID) {
-        userService.deleteUser(id)
+    open fun deleteUser(@PathVariable(name = "id") id: UUID,
+                        @AuthenticationPrincipal principal: Principal) {
+        userService.deleteUser(id, principal)
     }
 
     @GetMapping("/fuzzy")

@@ -9,7 +9,9 @@
         [scrollbarV]="false" [loadingIndicator]="refresh" [cssClasses]="iconsCss" [selectionType]="'row'">
         <ngx-datatable-column name="Icon" prop="imageId" width="48" [resizeable]="false" [sortable]="false">
           <template let-row="row" let-value="value" ngx-datatable-cell-template>
-            <tt-user-image [imageId]="value"></tt-user-image>
+            <div  style="width:22px; height:22px;">
+              <tt-user-image [imageId]="value"></tt-user-image>
+            </div>
           </template>
         </ngx-datatable-column>
         <ngx-datatable-column name="Name" width="256" [resizeable]="false">

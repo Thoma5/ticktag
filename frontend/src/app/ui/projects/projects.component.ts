@@ -8,8 +8,6 @@ import { ProjectApi, PageProjectResultJson, ProjectResultJson } from '../../api'
   styleUrls: ['./project.component.scss']
 })
 export class ProjectsComponent implements OnInit {
-  projects: PageProjectResultJson;
-
   iconsCss = {
     sortAscending: 'glyphicon glyphicon-chevron-down',
     sortDescending: 'glyphicon glyphicon-chevron-up',
@@ -18,6 +16,7 @@ export class ProjectsComponent implements OnInit {
     pagerPrevious: 'glyphicon glyphicon-backward',
     pagerNext: 'glyphicon glyphicon-forward'
   };
+  projects: PageProjectResultJson;
   loading = true;
   refresh = true;
   cu = false;
@@ -34,9 +33,6 @@ export class ProjectsComponent implements OnInit {
   private allProjects: boolean = false;
   private user: User;
 
-
-
-  // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(
     private router: Router,
     private projectApi: ProjectApi,
