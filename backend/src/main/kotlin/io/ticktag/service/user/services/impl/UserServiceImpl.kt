@@ -203,6 +203,7 @@ open class UserServiceImpl @Inject constructor(
     @PreAuthorize(AuthExpr.ADMIN)
     override fun deleteUser(id: UUID) {
         val userToDelete = users.findOne(id) ?: throw NotFoundException()
+        userToDelete.currentToken = UUID.randomUUID()
         userToDelete.disabled = true
     }
 
