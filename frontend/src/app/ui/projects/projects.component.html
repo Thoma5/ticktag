@@ -4,11 +4,11 @@
       <div class="search row">
         <div class="col-md-4"><input class="form-control" type='text' placeholder='Type to filter name...' (keyup)='updateFilter($event)' /></div>
         <div class="col-md-4" *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0) ||(user.authorities.indexOf('OBSERVER') != -1))">
-          <div class="col-md-4">
-            <md-slide-toggle [(ngModel)]="allProjects" (change)="getProjects(offset, limit, sortprop, asc, filter)">All Projects</md-slide-toggle>
+          <div class="col-md-6">
+            <md-slide-toggle [(ngModel)]="allProjects" color="primary" (change)="getProjects(offset, limit, sortprop, asc, filter)">Include Foreign Projects</md-slide-toggle>
           </div>
-          <div class="col-md-4">
-            <md-slide-toggle [(ngModel)]="disabled" (change)="getProjects(offset, limit, sortprop, asc, undefined)">Deleted</md-slide-toggle>
+          <div class="col-md-6">
+            <md-slide-toggle [(ngModel)]="disabled" color="primary" (change)="getProjects(offset, limit, sortprop, asc, undefined)">View Disabled</md-slide-toggle>
           </div>
         </div>
         <div class="col-md-4"><button type="button" class="btn btn-primary pull-right" (click)="onStartCreate()"><span class="glyphicon glyphicon-plus"></span> Add Project</button></div>

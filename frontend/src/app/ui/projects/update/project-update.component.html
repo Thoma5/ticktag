@@ -1,7 +1,13 @@
 <form (ngSubmit)="onSubmit()" #f="ngForm">
   <div class="row">
-     <label for="imagepicker">Icon</label>
-    <tt-image-picker (image)="setImage($event)" [defaultImage]="request.icon" name="imagepicker"></tt-image-picker>
+    <div class="col-md-6" id="imagePickerCol">
+      <label for="imagepicker">Icon</label>
+      <tt-image-picker (image)="setImage($event)" [defaultImage]="request.icon" name="imagepicker"></tt-image-picker>
+    </div>
+    <div class="col-md-4 pull-right">
+      <label for="status">Active</label>
+       <md-slide-toggle [(ngModel)]="active" (change)="changeActive()"  name="active" color="warn"></md-slide-toggle>
+    </div>
   </div>
   <div class="row">
     <label for="name">Name</label>
@@ -9,10 +15,10 @@
   </div>
   <div class="row">
     <label for="description">Description</label>
-    <textarea rows="10" cols="50" class="form-control" type="text" name="description" [(ngModel)]="request.description" placeholder="Description" required></textarea></div>
+    <textarea rows="10" cols="50" class="form-control" type="text" name="description" [(ngModel)]="request.description" placeholder="Description"
+      required></textarea></div>
   <div class="row">
-    <input type="button" class="btn btn-default btn-block" (click)="revert()"
-      value="Revert Changes">
+    <input type="button" class="btn btn-default btn-block" (click)="revert()" value="Revert Changes">
     <input type="button" type="submit" [disabled]="!f.form.valid" class="btn btn-success btn-block" *ngIf="!working" (click)="onSubmit()"
       value="Update Project">
   </div>

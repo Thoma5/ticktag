@@ -2,7 +2,7 @@
     position: relative;
     border-radius: 0;
     overflow: hidden;
-    width: 100%;
+    width: 8em;
 }
 imagepicker {
     height: 48px;
@@ -12,6 +12,8 @@ img {
 }
 .show-icon {
     position: relative;
+    width: 48px;
+    float: left;
 }
 div.show-icon:hover label
   {
@@ -37,4 +39,8 @@ div.show-icon label span{
 div {
     padding-left: 0;
     padding-right: 0;
+}
+#imagePickBtn{
+    position: relative;
+    margin-left: 54px;
 }

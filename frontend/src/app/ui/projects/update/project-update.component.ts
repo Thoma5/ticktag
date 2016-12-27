@@ -11,14 +11,15 @@ export class ProjectUpdateComponent implements OnInit {
   request: UpdateProjectRequestJson = {
     name: '',
     description: '',
-    icon: undefined
+    icon: undefined,
+    disabled: undefined
   };
+  active: Boolean;
   upload = false;
   working = false;
   @Input() project: ProjectResultJson;
   @Output() readonly updated = new EventEmitter<ProjectResultJson>();
 
-  // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(private apiCallService: ApiCallService,
     private projectApi: ProjectApi) { }
 
@@ -27,6 +28,7 @@ export class ProjectUpdateComponent implements OnInit {
     this.request.name = this.project.name;
     this.request.description = this.project.description;
     this.request.icon = this.project.icon;
+    this.active = ! this.project.disabled;
   }
   onSubmit(): void {
     this.working = true;
@@ -54,5 +56,12 @@ export class ProjectUpdateComponent implements OnInit {
     this.request.name = this.project.name;
     this.request.description = this.project.description;
     this.request.icon = this.project.icon;
+    this.request.disabled = this.project.disabled;
+    this.active = ! this.project.disabled;
+  }
+
+  changeActive() {
+    this.request.disabled = ! this.active;
+
   }
 }
