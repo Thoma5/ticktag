@@ -8,8 +8,11 @@ import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angu
 export class ImagePickerComponent implements OnInit, OnChanges {
     preview: string;
     loadPreview: boolean;
+    error: boolean = false;
+    errorMsg = '';
     @Input() defaultImage: string = undefined;
     @Input() size: number = 2048000;
+    @Input() portrait: boolean = false;
     @Output() loading = new EventEmitter<boolean>(); // indicates loading                         
     @Output() image = new EventEmitter<string>(); // image with mime data and base64 encoded image as string
 
@@ -30,10 +33,16 @@ export class ImagePickerComponent implements OnInit, OnChanges {
         if (fileInput.target.files && fileInput.target.files[0]) {
             if (fileInput.target.files[0].size > this.size ||
                 ['image/jpeg', 'image/gif', 'image/png'].indexOf(fileInput.target.files[0].type) < 0) {
-                alert('File too big!');
+                    if (fileInput.target.files[0].size > this.size) {
+                        this.errorMsg = 'File is >' + this.size / 1000 + ' KB';
+                    } else {
+                        this.errorMsg = 'Wrong file format!';
+                    }
+                this.error = true;
                 this.preview = this.defaultImage;
                 this.image.emit(undefined);
             } else {
+                this.error = false;
                 let reader = new FileReader();
                 let self = this;
 
