@@ -37,7 +37,7 @@ class UserApiTest : ApiBaseTest() {
     @Test(expected = AccessDeniedException::class)
     fun test_createUser_negative() {
         withUser(OBSERVER_ID) { p ->
-            val req = CreateUserRequestJson("a@b.com", "name", "password", "unique_test_user", Role.USER, null)
+            val req = CreateUserRequestJson("a@b.com", "name", "Pa\$\$w0rd", "unique_test_user", Role.USER, null)
             userController.createUser(req, p)
         }
     }
@@ -45,7 +45,7 @@ class UserApiTest : ApiBaseTest() {
     @Test
     fun test_createUser_positive() {
         withUser(ADMIN_ID) { p ->
-            val req = CreateUserRequestJson("a@b.com", "name", "password", "unique_test_user", Role.USER, null)
+            val req = CreateUserRequestJson("a@b.com", "name", "uname", "Pa\$\$w0rd", Role.USER, null)
             val res = userController.createUser(req, p)
 
             val userId = res.id
@@ -68,7 +68,7 @@ class UserApiTest : ApiBaseTest() {
         val id = ADMIN_ID
         val name = "name"
         val mail = "mail"
-        val newPassword = "password"
+        val newPassword = "Pa\$\$w0rd"
 
         withUser(id) { principal ->
 
@@ -136,7 +136,7 @@ class UserApiTest : ApiBaseTest() {
         val id = OBSERVER_ID
         val name = "name"
         val mail = "cccc@c.c"
-        val newPassword = "password"
+        val newPassword = "Pa\$\$w0rd"
 
         withUser(id) { principal ->
             userController.updateUser(id, UpdateUserRequestJson(oldPassword = OBSERVER_PASSWORD, password = newPassword, mail = mail, role = null, image = null, disabled = null, name = name), principal)
@@ -186,7 +186,7 @@ class UserApiTest : ApiBaseTest() {
     @Test
     fun `getUser with other user should hide email`() {
         val newUser = withUser(ADMIN_ID) { p ->
-            userController.createUser(CreateUserRequestJson("newuser@example.com", "newuser", "new user", "password", Role.USER, null), p)
+            userController.createUser(CreateUserRequestJson("newuser@example.com", "newuser", "new user", "Pa\$\$w0rd", Role.USER, null), p)
         }
 
         withUser(USER_ID) { p ->
