@@ -5,24 +5,26 @@
   </div>
   <div class="row">
     <label for="name">Name *</label>
-    <div class="form-group" [ngClass]="{'has-error has-feedback': false}">
-      <input class="form-control" type="text" name="name" [(ngModel)]="request.name" placeholder="Name" required>
+    <div class="form-group" [ngClass]="{'has-error has-feedback': f.controls.name?.touched && ! f.controls.name?.valid}">
+      <input class="form-control" type="text" name="name" minlength="1" [(ngModel)]="request.name" placeholder="Firstname Lastname" required>
+      <span *ngIf="f.controls.name?.touched && !f.controls.name?.valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
     </div>
   </div>
   <div class="row">
     <label for="username">Username *</label>
-    <div class="form-group" [ngClass]="{'has-error has-feedback': false}">
-      <input class="form-control" type="text" name="username" pattern="^[a-z0-9_]{3,30}$" [(ngModel)]="request.username" placeholder="Username"
+    <div class="form-group" [ngClass]="{'has-error has-feedback': f.controls.username?.touched && ! f.controls.username?.valid}">
+      <input class="form-control" type="text" name="username" pattern="{{USERNAME_REGEX}}" [(ngModel)]="request.username" placeholder="Username"
         required>
-        <small>Only 3 to 30 max. lowercase letters and numbers</small>
-      <span *ngIf="false" class="glyphicon glyphicon-remove form-control-feedback"></span>
+      <small>Only 3 to 30 max. lowercase letters and numbers</small>
+      <span *ngIf="f.controls.username?.touched && !f.controls.username?.valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
     </div>
   </div>
   <div class="row">
     <label for="mail">E-Mail *</label>
-    <div class="form-group" [ngClass]="{'has-error has-feedback': false}">
-      <input class="form-control" type="email" #mail name="mail" [(ngModel)]="request.mail" placeholder="mail@example.e" required>
-      <span *ngIf="false" class="glyphicon glyphicon-remove form-control-feedback"></span>
+    <div class="form-group" [ngClass]="{'has-error has-feedback': f.controls.mail?.touched && ! f.controls.mail?.valid}">
+      <input class="form-control" type="email" pattern="{{MAIL_REGEX}}" #mail name="mail" [(ngModel)]="request.mail" placeholder="mail@example.e"
+        required>
+      <span *ngIf="f.controls.mail?.touched && !f.controls.mail?.valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
     </div>
   </div>
   <div class="row">
@@ -33,18 +35,16 @@
   </div>
   <div class="row">
     <label for="password">Password *</label>
-    <div class="form-group" [ngClass]="{'has-error has-feedback': false}">
-      <input class="form-control" type="password" name="password" [(ngModel)]="request.password" placeholder="Password" required>
-      <span *ngIf="false" class="glyphicon glyphicon-remove form-control-feedback"></span>
+    <div class="form-group" [ngClass]="{'has-error has-feedback': f.controls.password?.touched && ! f.controls.password?.valid}">
+      <input class="form-control" type="password" pattern="{{PASSWD_REGEX}}" name="password" [(ngModel)]="request.password" placeholder="Password"
+        required>
+      <span *ngIf="f.controls.password?.touched && !f.controls.password?.valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
     </div>
-  </div>
-  <div class="row">
-    <label for="confPassword">Confirm Password *</label>
-    <div class="form-group" [ngClass]="{'has-error has-feedback': pwdConfFailed}">
-      <input class="form-control" type="password" name="confPassword" [(ngModel)]="confPassword" placeholder="Confirm Password"
-        (key-down)="pwdConfFailed = false" required>
-      <span *ngIf="pwdConfFailed" class="glyphicon glyphicon-remove form-control-feedback"></span>
+    <div class="form-group" [ngClass]="{'has-error has-feedback': f.controls.confPassword?.touched && (! f.controls.confPassword?.valid || request.password !== confPassword)}">
+      <input class="form-control" type="password" pattern="{{PASSWD_REGEX}}" name="confPassword" [(ngModel)]="confPassword" placeholder="Confirm Password" required>
+      <span *ngIf="f.controls.confPassword?.touched && !f.controls.confPassword?.valid && request.password !== confPassword" class="glyphicon glyphicon-remove form-control-feedback"></span>
     </div>
+    <small>Length at least 8 characters, including uppercase, lowercase and special characters and numbers .</small>
   </div>
   <div class="row">
     <input type="button" type="submit" [disabled]="!f.form.valid" class="btn btn-success btn-block" *ngIf="!working" (click)="onSubmit()"

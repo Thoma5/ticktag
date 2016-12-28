@@ -12,6 +12,10 @@ import RoleEnum = CreateUserRequestJson.RoleEnum;
 })
 
 export class UserCreateComponent implements OnInit {
+  readonly MAIL_REGEX = '^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$';
+  readonly PASSWD_REGEX = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}';
+  readonly USERNAME_REGEX = '^[a-z0-9_]{3,30}$';
+
   request: CreateUserRequestJson = {
     username: '',
     mail: '',
@@ -21,7 +25,6 @@ export class UserCreateComponent implements OnInit {
     image: '',
   };
   working = false;
-  pwdConfFailed = false;
   confPassword: string = undefined;
   imageWithMimeType: String = undefined;
   private roles: RoleResultJson[] = [];
@@ -36,37 +39,32 @@ export class UserCreateComponent implements OnInit {
       .callNoError<RoleResultJson[]>(h => this.userApi.listRolesUsingGETWithHttpInfo(h))
       .subscribe(roles => {
         this.roles = roles;
-        console.log(this.roles);
       });
   }
 
-  // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(private apiCallService: ApiCallService,
     private userApi: UserApi) { }
 
   onSubmit(): void {
-    if (this.request.password === this.confPassword) {
-      this.working = true;
-      this.apiCallService
-        .call<UserResultJson>(h => this.userApi.createUserUsingPOSTWithHttpInfo(this.request, h))
-        .subscribe(
-        result => {
-          if (result.isValid) {
-            this.request.mail = '';
-            this.request.name = '';
-            this.request.password = '';
-            this.created.emit(result.result);
-          } else {
-            window.alert('Could not create user:\n\n' + JSON.stringify(result.error));
-          }
-        },
-        undefined,
-        () => { this.working = false; });
-    } else {
-      this.pwdConfFailed = true;
-    }
+    this.working = true;
+    this.apiCallService
+      .call<UserResultJson>(h => this.userApi.createUserUsingPOSTWithHttpInfo(this.request, h))
+      .subscribe(
+      result => {
+        if (result.isValid) {
+          this.request.mail = '';
+          this.request.name = '';
+          this.request.password = '';
+          this.created.emit(result.result);
+        } else {
+          window.alert('Could not create user:\n\n' + JSON.stringify(result.error));
+        }
+      },
+      undefined,
+      () => { this.working = false; });
   }
-    setImage(img: string) {
+
+  setImage(img: string) {
     this.imageWithMimeType = img;
     this.request.image = img ? img.split(',')[1] : undefined;
   }
