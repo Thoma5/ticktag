@@ -72,7 +72,7 @@ class UserApiTest : ApiBaseTest() {
 
         withUser(id) { principal ->
 
-            userController.updateUser(id, UpdateUserRequestJson(oldPassword = "aaaa", password = newPassword, mail = mail, role = Role.ADMIN, image = null, disabled = false, name = name), principal)
+            userController.updateUser(id, UpdateUserRequestJson(oldPassword = "aaaa", password = newPassword, mail = mail, role = null, image = null, disabled = null, name = name), principal)
 
             val user = userController.getUser(id, principal)
 
@@ -86,6 +86,50 @@ class UserApiTest : ApiBaseTest() {
         }
     }
 
+    @Test(expected = TicktagValidationException::class)
+    fun test_updateUser_own_role_admin_negative() {
+        val id = ADMIN_ID
+        val name = "name"
+        val mail = "mail"
+        val newPassword = "password"
+
+        withUser(id) { principal ->
+
+            userController.updateUser(id, UpdateUserRequestJson(oldPassword = "aaaa", password = newPassword, mail = mail, role = Role.USER, image = null, disabled = null, name = name), principal)
+
+            val user = userController.getUser(id, principal)
+
+            assertEquals(user.name, name)
+            assertEquals(user.mail, mail)
+            assertEquals(user.role.name, Role.ADMIN.name)
+
+            val result = authController.login(LoginRequestJson(mail, newPassword))
+            assertNotNull(result.token)
+            assertThat(result.token, `is`(not("")))
+        }
+    }
+
+    @Test(expected = TicktagValidationException::class)
+    fun test_updateUser_disable_negative_own_user() {
+        val id = OBSERVER_ID
+        val name = "name"
+        val mail = "cccc@c.c"
+        val newPassword = "password"
+
+        withUser(id) { principal ->
+            userController.updateUser(id, UpdateUserRequestJson(oldPassword = OBSERVER_PASSWORD, password = newPassword, mail = mail, role = null, image = null, disabled = true, name = name), principal)
+
+            val user = userController.getUser(id, principal)
+
+            assertEquals(user.name, name)
+            assertEquals(user.mail, mail)
+            assertEquals(user.role.name, Role.OBSERVER.name) //Can't change own role!
+
+            val result = authController.login(LoginRequestJson(mail, newPassword))
+            assertNotNull(result.token)
+            assertThat(result.token, `is`(not("")))
+        }
+    }
 
     @Test
     fun test_updateUser_positive_own_user() {
@@ -95,7 +139,7 @@ class UserApiTest : ApiBaseTest() {
         val newPassword = "password"
 
         withUser(id) { principal ->
-            userController.updateUser(id, UpdateUserRequestJson(oldPassword = OBSERVER_PASSWORD, password = newPassword, mail = mail, role = null, image = null, disabled = true, name = name), principal)
+            userController.updateUser(id, UpdateUserRequestJson(oldPassword = OBSERVER_PASSWORD, password = newPassword, mail = mail, role = null, image = null, disabled = null, name = name), principal)
 
             val user = userController.getUser(id, principal)
 
