@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiCallService, AuthService, User } from '../../service';
-import { AuthApi, UserApi, PageUserResultJson, UserResultJson, CreateUserRequestJson } from '../../api';
+import { AuthApi, UserApi, PageUserResultJson, UserResultJson } from '../../api';
 import { RoleResultJson } from '../../api/model/RoleResultJson';
 import { WhoamiResultJson } from '../../api/model/WhoamiResultJson';
-
-import RoleEnum = CreateUserRequestJson.RoleEnum;
 
 @Component({
   selector: 'tt-users',

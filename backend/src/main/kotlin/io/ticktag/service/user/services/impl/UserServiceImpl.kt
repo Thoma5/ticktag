@@ -2,14 +2,17 @@ package io.ticktag.service.user.services.impl
 
 import io.ticktag.ApplicationProperties
 import io.ticktag.TicktagService
+import io.ticktag.library.base64ImageDecoder.Base64ImageDecoder
 import io.ticktag.library.hashing.HashingLibrary
 import io.ticktag.persistence.member.MemberRepository
 import io.ticktag.persistence.member.entity.Member
 import io.ticktag.persistence.project.ProjectRepository
 import io.ticktag.persistence.project.entity.Project
+import io.ticktag.persistence.user.UserImageRepository
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.persistence.user.entity.Role
 import io.ticktag.persistence.user.entity.User
+import io.ticktag.persistence.user.entity.UserImage
 import io.ticktag.service.*
 import io.ticktag.service.user.dto.*
 import io.ticktag.service.user.services.UserService
@@ -27,7 +30,10 @@ import java.awt.Font
 import java.awt.geom.AffineTransform
 import java.awt.geom.Rectangle2D
 import java.awt.image.BufferedImage
+import java.io.BufferedInputStream
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.net.URLConnection
 import java.nio.ByteBuffer
 import java.security.MessageDigest
 import java.time.Clock
@@ -41,14 +47,17 @@ import javax.validation.Valid
 @TicktagService
 open class UserServiceImpl @Inject constructor(
         private val users: UserRepository,
+        private val userimages: UserImageRepository,
         private val members: MemberRepository,
         private val projects: ProjectRepository,
         private val hashing: HashingLibrary,
         private val props: ApplicationProperties,
+        private val base64ImageDecoder: Base64ImageDecoder,
         private val clock: Clock
 ) : UserService {
     companion object {
         val IMAGE_ID_VALID_DURATION: Duration = Duration.ofDays(1)
+        val MAX_IMAGE_SIZE: Int = 512000
     }
 
     // Authorization is performed via the temp image ids which are kept secret and expire
@@ -109,6 +118,20 @@ open class UserServiceImpl @Inject constructor(
         val passwordHash = hashing.hashPassword(createUser.password)
         val user = User.create(mail, passwordHash, name, createUser.username, createUser.role, UUID.randomUUID())
         users.insert(user)
+        if (createUser.image != null) {
+            var image: ByteArray? = null
+            if (createUser.image.isNotEmpty()) {
+                image = base64ImageDecoder.decode(createUser.image).image
+                if (image.size > MAX_IMAGE_SIZE)  throw TicktagValidationException(listOf(ValidationError("createUser.image", ValidationErrorDetail.Other("maxsize"+ MAX_IMAGE_SIZE + "KB"))))
+            }
+            var userimage = userimages.findOne(user.id)
+            if (userimage == null && image != null) {
+                userimage = UserImage.create(user.id, image)
+                userimages.insert(userimage)
+            } else if(userimage != null && image != null) {
+                userimage.image = image
+            }
+        }
 
         return userToDto(user, principal)
     }
@@ -187,8 +210,7 @@ open class UserServiceImpl @Inject constructor(
             if (user.disabled && !principal.isId(id)) { //effectively just usable from the admin since user (self) has no access in this state
                 user.disabled = updateUser.disabled
                 user.currentToken = UUID.randomUUID()
-            }
-            else throw TicktagValidationException(listOf(ValidationError("updateUser.disabled", ValidationErrorDetail.Other("notpermitted"))))
+            } else throw TicktagValidationException(listOf(ValidationError("updateUser.disabled", ValidationErrorDetail.Other("notpermitted"))))
         }
 
         if (updateUser.role != null) {
@@ -196,6 +218,23 @@ open class UserServiceImpl @Inject constructor(
                 user.role = updateUser.role
             } else {
                 throw TicktagValidationException(listOf(ValidationError("updateUser.role", ValidationErrorDetail.Other("notpermitted"))))
+            }
+        }
+        if (updateUser.image != null) {
+            var image: ByteArray? = null
+            if (updateUser.image.isNotEmpty()) {
+                image = base64ImageDecoder.decode(updateUser.image).image
+                if (image.size > MAX_IMAGE_SIZE)  throw TicktagValidationException(listOf(ValidationError("updateUser.image", ValidationErrorDetail.Other("maxsize"+ MAX_IMAGE_SIZE + "KB"))))
+            }
+
+            var userimage = userimages.findOne(user.id)
+            if (userimage == null && image != null) {
+                userimage = UserImage.create(user.id, image)
+                userimages.insert(userimage)
+            } else if (userimage != null && image != null){
+                userimage.image = image
+            } else if (userimage != null && image == null){
+                userimages.delete(userimage)
             }
         }
         return userToDto(user, principal)

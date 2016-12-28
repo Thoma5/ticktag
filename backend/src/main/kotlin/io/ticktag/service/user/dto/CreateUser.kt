@@ -2,6 +2,7 @@ package io.ticktag.service.user.dto
 
 import io.ticktag.persistence.user.entity.Role
 import io.ticktag.persistence.user.entity.User
+import java.util.*
 import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 
@@ -11,5 +12,6 @@ data class CreateUser(
         @field:Pattern(regexp = User.USERNAME_REGEX) val username: String,
         @field:Size(min = 3, max = 30) val name: String,
         @field:Size(min = 1) val password: String,
-        val role: Role
+        val role: Role,
+        val image: String?
 )

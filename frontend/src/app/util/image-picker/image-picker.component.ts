@@ -11,10 +11,10 @@ export class ImagePickerComponent implements OnInit, OnChanges {
     error: boolean = false;
     errorMsg = '';
     @Input() defaultImage: string = undefined;
-    @Input() size: number = 2048000;
+    @Input() size: number = 150000;
     @Input() portrait: boolean = false;
     @Output() loading = new EventEmitter<boolean>(); // indicates loading                         
-    @Output() image = new EventEmitter<string>(); // image with mime data and base64 encoded image as string
+    @Output() image = new EventEmitter<string>();
 
     constructor() { }
 
@@ -26,7 +26,6 @@ export class ImagePickerComponent implements OnInit, OnChanges {
     }
     ngOnChanges() {
         this.preview = this.defaultImage;
-        this.loadPreview = this.defaultImage === undefined;
     }
 
     encodeFile(fileInput: any) {
@@ -34,9 +33,9 @@ export class ImagePickerComponent implements OnInit, OnChanges {
             if (fileInput.target.files[0].size > this.size ||
                 ['image/jpeg', 'image/gif', 'image/png'].indexOf(fileInput.target.files[0].type) < 0) {
                     if (fileInput.target.files[0].size > this.size) {
-                        this.errorMsg = 'File is >' + this.size / 1000 + ' KB';
+                        this.errorMsg = ' File is >' + this.size / 1000 + ' KB';
                     } else {
-                        this.errorMsg = 'Wrong file format!';
+                        this.errorMsg = ' Wrong file format!';
                     }
                 this.error = true;
                 this.preview = this.defaultImage;

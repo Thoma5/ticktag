@@ -1,13 +1,14 @@
-import {Component, Output, EventEmitter, OnInit} from '@angular/core';
-import {ApiCallService} from '../../service';
-import {UserApi, CreateUserRequestJson, UserResultJson} from '../../api';
-import {RoleResultJson} from '../../api/model/RoleResultJson';
+import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { ApiCallService } from '../../../service';
+import { UserApi, CreateUserRequestJson, UserResultJson } from '../../../api';
+import { RoleResultJson } from '../../../api/model/RoleResultJson';
 import RoleEnum = CreateUserRequestJson.RoleEnum;
 
 
 @Component({
   selector: 'tt-user-create',
   templateUrl: './user-create.component.html',
+  styleUrls: ['./user-create.component.scss']
 })
 
 export class UserCreateComponent implements OnInit {
@@ -17,8 +18,12 @@ export class UserCreateComponent implements OnInit {
     name: '',
     password: '',
     role: RoleEnum.USER,
+    image: '',
   };
   working = false;
+  pwdConfFailed = false;
+  confPassword: string = undefined;
+  imageWithMimeType: String = undefined;
   private roles: RoleResultJson[] = [];
   @Output() readonly created = new EventEmitter<UserResultJson>();
 
@@ -37,13 +42,14 @@ export class UserCreateComponent implements OnInit {
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(private apiCallService: ApiCallService,
-              private userApi: UserApi) {}
+    private userApi: UserApi) { }
 
   onSubmit(): void {
-    this.working = true;
-    this.apiCallService
-      .call<UserResultJson>(h => this.userApi.createUserUsingPOSTWithHttpInfo(this.request, h))
-      .subscribe(
+    if (this.request.password === this.confPassword) {
+      this.working = true;
+      this.apiCallService
+        .call<UserResultJson>(h => this.userApi.createUserUsingPOSTWithHttpInfo(this.request, h))
+        .subscribe(
         result => {
           if (result.isValid) {
             this.request.mail = '';
@@ -56,5 +62,12 @@ export class UserCreateComponent implements OnInit {
         },
         undefined,
         () => { this.working = false; });
+    } else {
+      this.pwdConfFailed = true;
+    }
+  }
+    setImage(img: string) {
+    this.imageWithMimeType = img;
+    this.request.image = img ? img.split(',')[1] : undefined;
   }
 }

@@ -1,10 +1,11 @@
 package io.ticktag.service.project.services.impl
 
 import io.ticktag.TicktagService
+import io.ticktag.library.base64ImageDecoder.Base64ImageDecoder
+import io.ticktag.library.base64ImageDecoder.Image
 import io.ticktag.persistence.project.ProjectRepository
 import io.ticktag.persistence.project.entity.Project
-import io.ticktag.service.AuthExpr
-import io.ticktag.service.NotFoundException
+import io.ticktag.service.*
 import io.ticktag.service.project.dto.CreateProject
 import io.ticktag.service.project.dto.ProjectResult
 import io.ticktag.service.project.dto.UpdateProject
@@ -20,15 +21,25 @@ import javax.validation.Valid
 
 @TicktagService
 open class ProjectServiceImpl @Inject constructor(
-        private val projects: ProjectRepository
+        private val projects: ProjectRepository,
+        private val base64ImageDecoder: Base64ImageDecoder
 ) : ProjectService {
+    companion object {
+        val MAX_IMAGE_SIZE: Int = 150000
+    }
 
     @PreAuthorize(AuthExpr.ADMIN)
     override fun createProject(@Valid project: CreateProject): ProjectResult {
         val name = project.name
         val description = project.description
-        val iconMimeInfo = project.iconMimeInfo
-        val icon = project.icon
+        var icon: ByteArray? = null
+        var iconMimeInfo: String? = null
+        if (project.icon != null) {
+            val tempImg = base64ImageDecoder.decode(project.icon)
+            if (tempImg.image.size > MAX_IMAGE_SIZE) throw TicktagValidationException(listOf(ValidationError("project.icon", ValidationErrorDetail.Other("maxsize"+ MAX_IMAGE_SIZE + "KB"))))
+            icon = tempImg.image
+            iconMimeInfo = tempImg.mimeType
+        }
         val creationDate = Date()
         val newProject = Project.create(name, description, creationDate, iconMimeInfo, icon)
         projects.insert(newProject)
@@ -76,9 +87,14 @@ open class ProjectServiceImpl @Inject constructor(
             if (project.icon.isEmpty()) {
                 projectToUpdate.iconMimeInfo = null
                 projectToUpdate.icon = null
+            } else {
+                val tempImg = base64ImageDecoder.decode(project.icon)
+                if (tempImg.image.size > MAX_IMAGE_SIZE) throw TicktagValidationException(listOf(ValidationError("project.icon", ValidationErrorDetail.Other("maxsize"+ MAX_IMAGE_SIZE + "KB"))))
+                val icon= tempImg.image
+                val iconMimeInfo= tempImg.mimeType
+                projectToUpdate.iconMimeInfo = iconMimeInfo
+                projectToUpdate.icon = icon
             }
-            projectToUpdate.iconMimeInfo = project.iconMimeInfo
-            projectToUpdate.icon = project.icon
         }
         return ProjectResult(projectToUpdate)
     }

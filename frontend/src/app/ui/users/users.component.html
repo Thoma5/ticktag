@@ -2,24 +2,20 @@
   <div *ngIf="!loading">
     <div [ngClass]="{'no-scroll': creating }">
       <div class="search row">
-        <div class="col-md-4"><input class="form-control" type='text' [(ngModel)]="filter" placeholder='Type to filter...' (keyup)='updateFilter()'
+        <div class="col-lg-4"><input class="form-control" type='text' [(ngModel)]="filter" placeholder='Type to filter...' (keyup)='updateFilter()'
           /></div>
-        <div class="col-md-4" *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0) ||(user.authorities.indexOf('OBSERVER') != -1))">
-          <div class="col-md-4">
-            <md-slide-toggle [(ngModel)]="disabled" (change)="getUsers()">Deleted</md-slide-toggle>
-          </div>
-          <div *ngIf="roles" class="col-md-6">
-            <div class="form-group form-inline">
+        <div class="col-lg-6" *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0) ||(user.authorities.indexOf('OBSERVER') != -1))">
+          <md-slide-toggle class="admintoggles" [(ngModel)]="disabled" (change)="getUsers()">Deleted</md-slide-toggle>
+            <div class="admintoggles form-group form-inline">
               <label for="rolefilter">Filter for Roles:</label>
               <select class="form-control" id="rolefilter" name="Role" size="1" placeholder="Filter role" [(ngModel)]="filterRole" (change)="getUsers()">
                 <option selected disabled value="">Select</option>
                 <option value=""></option>
                 <option *ngFor="let role of roles" value="{{role.role}}">{{role.role.charAt(0) + role.role.slice(1).toLowerCase()}}</option>
               </select>
-            </div>
           </div>
         </div>
-        <div class="col-md-4"><button type="button" class="btn btn-primary pull-right" (click)="onStartCreate()"><span class="glyphicon glyphicon-plus"></span> Add User</button></div>
+        <div class="col-lg-2"><button type="button" class="btn btn-primary pull-right" (click)="onStartCreate()"><span class="glyphicon glyphicon-plus"></span> Add User</button></div>
       </div>
       <ngx-datatable class="material" [rows]="rows" [columns]="columns" [columnMode]="'force'" [headerHeight]="32" [footerHeight]="32"
         [rowHeight]="32" [externalPaging]="true" [count]="totalElements" [offset]="offset" [limit]="limit" [scrollbarH]="true"

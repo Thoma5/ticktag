@@ -39,7 +39,7 @@ open class UserController @Inject constructor(
     open fun createUser(@RequestBody req: CreateUserRequestJson,
                         @AuthenticationPrincipal principal: Principal
     ): UserResultJson {
-        val create = CreateUser(mail = req.mail, name = req.name, password = req.password, role = req.role, username = req.username)
+        val create = CreateUser(mail = req.mail, name = req.name, password = req.password, role = req.role, username = req.username, image = req.image)
         val user = userService.createUser(create, principal)
         return UserResultJson(user)
     }
@@ -48,8 +48,7 @@ open class UserController @Inject constructor(
     open fun updateUser(@PathVariable(name = "id") id: UUID,
                         @RequestBody req: UpdateUserRequestJson,
                         @AuthenticationPrincipal principal: Principal): UserResultJson {
-        val user = userService.updateUser(principal, id, UpdateUser(mail = req.mail, name = req.name, password = req.password,
-                role = req.role, disabled = req.disabled, oldPassword = req.oldPassword))
+        val user = userService.updateUser(principal, id, UpdateUser(mail = req.mail, name = req.name, password = req.password, oldPassword = req.oldPassword, role = req.role, image = req.image, disabled  = req.disabled))
         return UserResultJson(user)
     }
 

@@ -37,6 +37,7 @@ md-slide-toggle{
 .create-popup {
   @extend %card;
   box-shadow: 0 ($px * 1rem) ($px * 16rem) rgba(0,0,0,0.6);
+  width: 30em;
   .exit {
       @extend %reset-button;
       
@@ -65,4 +66,9 @@ md-slide-toggle{
         margin-bottom: 10px;
       }
     }
+}
+
+.admintoggles{
+  float: left;
+  margin-left: 2em;
 }

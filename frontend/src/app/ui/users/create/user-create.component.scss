@@ -1,0 +1,12 @@
+ @import '../../../../style/constants.scss';
+  .row {
+    margin-top: $small-gap;
+    position: relative;
+    }
+
+  * .btn {
+    border-radius: 0;
+  }   
+  small {
+      color: darkgrey;
+  }

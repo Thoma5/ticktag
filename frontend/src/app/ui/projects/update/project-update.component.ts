@@ -17,6 +17,7 @@ export class ProjectUpdateComponent implements OnInit {
   active: Boolean;
   upload = false;
   working = false;
+  iconWithMimeType = '';
   @Input() project: ProjectResultJson;
   @Output() readonly updated = new EventEmitter<ProjectResultJson>();
 
@@ -27,7 +28,7 @@ export class ProjectUpdateComponent implements OnInit {
   ngOnInit(): void {
     this.request.name = this.project.name;
     this.request.description = this.project.description;
-    this.request.icon = this.project.icon;
+    this.iconWithMimeType = this.project.icon;
     this.active = ! this.project.disabled;
   }
   onSubmit(): void {
@@ -50,12 +51,14 @@ export class ProjectUpdateComponent implements OnInit {
   }
 
   setImage(image: string) {
-    this.request.icon = image ? image : null;
+    this.iconWithMimeType = image;
+    this.request.icon = image ? image.split(',')[1] : '';
   }
   revert() {
     this.request.name = this.project.name;
     this.request.description = this.project.description;
-    this.request.icon = this.project.icon;
+    this.request.icon = this.project.icon ? this.project.icon.split(',')[1] : undefined;
+    this.iconWithMimeType = this.project.icon;
     this.request.disabled = this.project.disabled;
     this.active = ! this.project.disabled;
   }

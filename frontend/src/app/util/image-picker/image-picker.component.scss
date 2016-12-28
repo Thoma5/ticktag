@@ -32,6 +32,9 @@ div.show-icon label {
     left:0;
     display:none;
 }
+div.show-icon.portrait label {
+    border-radius: 24px;
+}
 div.show-icon label span{
     left: 6px;
     top: 6px;

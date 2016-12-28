@@ -11,5 +11,5 @@ class ProjectResultJson(
         val creationDate: Date,
         val icon: String?
 ) {
-    constructor(p: ProjectResult) : this(id = p.id, name = p.name, description = p.description, disabled = p.disabled, creationDate = p.creationDate, icon = if(p.icon != null && p.iconMimeInfo!= null) p.iconMimeInfo + "," + p.icon else null)
+    constructor(p: ProjectResult) : this(id = p.id, name = p.name, description = p.description, disabled = p.disabled, creationDate = p.creationDate, icon = if(p.icon != null && p.iconMimeInfo!= null) "data:" + p.iconMimeInfo + ";base64," + p.icon else null)
 }

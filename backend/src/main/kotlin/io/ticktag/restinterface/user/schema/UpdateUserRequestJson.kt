@@ -8,5 +8,6 @@ data class UpdateUserRequestJson(
         val password: String?,
         val oldPassword: String?,
         val role: Role?,
-        val disabled: Boolean
+        val image: String?,
+        val disabled: Boolean?
 )

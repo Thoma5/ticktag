@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-md-6" id="imagePickerCol">
       <label for="imagepicker">Icon</label>
-      <tt-image-picker (image)="setImage($event)" [defaultImage]="request.icon" name="imagepicker"></tt-image-picker>
+      <tt-image-picker (image)="setImage($event)" [defaultImage]="iconWithMimeType" name="imagepicker"></tt-image-picker>
     </div>
     <div class="col-md-4 pull-right">
       <label for="status">Active</label>
@@ -10,11 +10,11 @@
     </div>
   </div>
   <div class="row">
-    <label for="name">Name</label>
+    <label for="name">Name *</label>
     <input class="form-control" type="text" name="name" [(ngModel)]="request.name" placeholder="Name" required>
   </div>
   <div class="row">
-    <label for="description">Description</label>
+    <label for="description">Description *</label>
     <textarea rows="10" cols="50" class="form-control" type="text" name="description" [(ngModel)]="request.description" placeholder="Description"
       required></textarea></div>
   <div class="row">
