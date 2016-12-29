@@ -2,8 +2,6 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { ApiCallService } from '../../../service';
 import { UserApi, UpdateUserRequestJson, UserResultJson, WhoamiResultJson } from '../../../api';
 import { RoleResultJson } from '../../../api/model/RoleResultJson';
-import RoleEnum = UpdateUserRequestJson.RoleEnum;
-
 
 @Component({
   selector: 'tt-user-update',

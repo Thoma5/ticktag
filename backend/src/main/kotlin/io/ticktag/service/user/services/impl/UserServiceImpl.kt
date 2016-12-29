@@ -218,7 +218,7 @@ open class UserServiceImpl @Inject constructor(
         if (updateUser.role != null) {
             if (principal.hasRole(AuthExpr.ROLE_GLOBAL_ADMIN) && !principal.isId(id)) {  //Only Admins can change user roles!
                 user.role = updateUser.role
-            } else  if (principal.hasRole(AuthExpr.ROLE_GLOBAL_ADMIN) && principal.isId(id) && updateUser.role != user.role){
+            } else  if (principal.isId(id) && updateUser.role != user.role){
                 throw TicktagValidationException(listOf(ValidationError("updateUser.role", ValidationErrorDetail.Other("notpermitted"))))
             }
         }
