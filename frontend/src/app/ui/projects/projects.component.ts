@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiCallService, AuthService, User } from '../../service';
 import { ProjectApi, PageProjectResultJson, ProjectResultJson } from '../../api';
+import { Subject } from 'rxjs/Subject';
 @Component({
   selector: 'tt-projects',
   templateUrl: './projects.component.html',
@@ -29,7 +30,8 @@ export class ProjectsComponent implements OnInit {
   limit = 25;
   rows: ProjectResultJson[] = [];
   totalElements = 0;
-  filter: string = '';
+  filter= new Subject<string>();
+  projectFilter: string = '';
   private allProjects: boolean = false;
   private user: User;
 
@@ -48,12 +50,19 @@ export class ProjectsComponent implements OnInit {
       .subscribe(user => {
         this.user = user;
       });
+    this.filter.debounceTime(300).do(term  => 
+    this.getProjects(this.offset, this.limit, this.sortprop, this.asc, term)).subscribe(result => {}, error => {});
   }
 
-  getProjects(page?: number, size?: number, order?: string, asc?: boolean, name?: string): void {
+  getProjects(page?: number, size?: number, order?: string, asc?: boolean, filter?: string): void {
+    if (filter === undefined) {
+      filter = this.projectFilter;
+    } else {
+      this.projectFilter = filter;
+    }
     this.apiCallService
       .callNoError<PageProjectResultJson>(h => this.projectApi
-      .listProjectsUsingGETWithHttpInfo(page, size, order, asc, name, this.allProjects, this.disabled, h))
+        .listProjectsUsingGETWithHttpInfo(page, size, order, asc, filter ? filter : '', this.allProjects, this.disabled, h))
       .subscribe(projects => {
         this.refresh = true;
         this.projects = projects;
@@ -86,11 +95,8 @@ export class ProjectsComponent implements OnInit {
   }
 
   updateFilter(event: any) {
-    this.filter = event.target.value;
-
-    // filter our data
+    this.filter.next(event.target.value);
     this.offset = 0;
-    this.getProjects(this.offset, this.limit, this.sortprop, this.asc, this.filter);
   }
 
   activate(event: any) {
@@ -102,7 +108,7 @@ export class ProjectsComponent implements OnInit {
   onDeleteClicked(id: string) {
     this.apiCallService
       .call<ProjectResultJson>(h => this.projectApi.deleteProjectUsingDELETEWithHttpInfo(id, h))
-      .subscribe( param => {
+      .subscribe(param => {
         this.refresh = true;
         this.getProjects(this.offset, this.limit, this.sortprop, this.asc, undefined);
       }

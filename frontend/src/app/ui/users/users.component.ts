@@ -3,6 +3,7 @@ import { ApiCallService, AuthService, User } from '../../service';
 import { AuthApi, UserApi, PageUserResultJson, UserResultJson } from '../../api';
 import { RoleResultJson } from '../../api/model/RoleResultJson';
 import { WhoamiResultJson } from '../../api/model/WhoamiResultJson';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
   selector: 'tt-users',
@@ -30,9 +31,10 @@ export class UsersComponent implements OnInit {
   limit = 30;
   rows: UserResultJson[] = [];
   totalElements = 0;
-  filter: string = '';
+  filter= new Subject<string>();
   roles: RoleResultJson[];
   filterRole: string = '';
+  private userFilter: string;
   private user: User;
   private me: WhoamiResultJson;
 
@@ -53,6 +55,7 @@ export class UsersComponent implements OnInit {
       .subscribe(user => {
         this.user = user;
       });
+    this.filter.debounceTime(300).do(term  => this.getUsers(term)).subscribe(result => {}, error => {});
   }
 
   onPage(event: any) {
@@ -74,16 +77,21 @@ export class UsersComponent implements OnInit {
     this.getUsers();
   }
 
-  updateFilter() {
+  updateFilter(filter: any) {
     this.offset = 0;
-    this.getUsers();
+    this.filter.next(filter.target.value);
   }
 
-  getUsers(): void {
+  getUsers(filter?: string): void {
+    if (filter === undefined) {
+      filter = this.userFilter;
+    } else {
+      this.userFilter = filter;
+    }
     let filterRole = this.filterRole === '' ? undefined : this.filterRole;
     this.apiCallService
       .callNoError<PageUserResultJson>(h => this.userApi
-        .listUsersUsingGETWithHttpInfo(this.offset, this.limit, this.sortprop, this.filter, filterRole, this.disabled, h))
+        .listUsersUsingGETWithHttpInfo(this.offset, this.limit, this.sortprop, filter ? filter : '', filterRole, this.disabled, h))
       .subscribe(users => {
         this.refresh = true;
         this.users = users;

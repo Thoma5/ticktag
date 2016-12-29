@@ -3,13 +3,12 @@
     <div [ngClass]="{'no-scroll': creating }">
       <div id="title">Users</div>
       <div class="search row">
-        <div class="col-lg-4"><input class="form-control" type='text' [(ngModel)]="filter" placeholder='Type to filter...' (keyup)='updateFilter()'
-          /></div>
+        <div class="col-lg-4"><input class="form-control" type='text' placeholder='Type to filter...' (keyup)='updateFilter($event)' /></div>
         <div class="col-lg-6" *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0) ||(user.authorities.indexOf('OBSERVER') != -1))">
           <md-slide-toggle class="admintoggles" [(ngModel)]="disabled" (change)="getUsers()">Deleted</md-slide-toggle>
-            <div class="admintoggles form-group form-inline">
-              <label for="rolefilter">Filter for Roles:</label>
-              <select class="form-control" id="rolefilter" name="Role" size="1" placeholder="Filter role" [(ngModel)]="filterRole" (change)="getUsers()">
+          <div class="admintoggles form-group form-inline">
+            <label for="rolefilter">Filter for Roles:</label>
+            <select class="form-control" id="rolefilter" name="Role" size="1" placeholder="Filter role" [(ngModel)]="filterRole" (change)="getUsers()">
                 <option selected disabled value="">Select</option>
                 <option value=""></option>
                 <option *ngFor="let role of roles" value="{{role.role}}">{{role.role.charAt(0) + role.role.slice(1).toLowerCase()}}</option>
@@ -53,7 +52,7 @@
         </ngx-datatable-column>
         <ngx-datatable-column name="Actions" width="128" [resizeable]="false" [sortable]="false" *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0))">
           <template let-row="row" ngx-datatable-cell-template>
-              <button (click)="onStartUpdate(row)" class="btn btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
+            <button (click)="onStartUpdate(row)" class="btn btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
             <button [attr.disabled]="this.me && this.me.id !== row.id ? null : true" (click)="onDeleteClicked(row.id)" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
           </template>
         </ngx-datatable-column>
