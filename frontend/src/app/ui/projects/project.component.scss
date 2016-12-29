@@ -10,6 +10,13 @@
 .search{
   margin-top: $medium-gap;
 }
+
+ #title {
+   @extend %title;
+   margin-bottom: $medium-gap;
+ }
+ 
+
 md-slide-toggle{
   margin: 0.3em;
 }
@@ -42,7 +49,7 @@ md-slide-toggle{
       
     }
     .popup-content{
-      padding: 2em 4em 2em 4em;
+      padding: 0em 3em 0em 3em;
 
       .head {
         width: 100%;

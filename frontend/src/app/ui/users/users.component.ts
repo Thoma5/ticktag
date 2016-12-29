@@ -75,6 +75,7 @@ export class UsersComponent implements OnInit {
   }
 
   updateFilter() {
+    this.offset = 0;
     this.getUsers();
   }
 
@@ -82,7 +83,7 @@ export class UsersComponent implements OnInit {
     let filterRole = this.filterRole === '' ? undefined : this.filterRole;
     this.apiCallService
       .callNoError<PageUserResultJson>(h => this.userApi
-        .listUsersUsingGETWithHttpInfo(0, 50, this.sortprop, this.filter, filterRole, this.disabled, h))
+        .listUsersUsingGETWithHttpInfo(this.offset, this.limit, this.sortprop, this.filter, filterRole, this.disabled, h))
       .subscribe(users => {
         this.refresh = true;
         this.users = users;

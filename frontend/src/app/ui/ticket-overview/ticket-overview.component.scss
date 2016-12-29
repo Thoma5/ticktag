@@ -32,7 +32,12 @@
     padding: 15px;
     font-size: 20px;
 }
-
+ 
+ #title {
+   @extend %title;
+   margin-bottom: $medium-gap;
+ }
+ 
 .overview {
   position: relative;
   z-index: 0;

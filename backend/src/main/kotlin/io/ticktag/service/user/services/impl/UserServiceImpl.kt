@@ -144,15 +144,15 @@ open class UserServiceImpl @Inject constructor(
     @PreAuthorize(AuthExpr.ADMIN) // TODO should probably be more granular
     override fun listUsers(query: String, role: Role?, disabled: Boolean?, principal: Principal, pageable: Pageable): Page<UserResult> {
         val page: Page<User>
+        val q = "%$query%".toLowerCase()
         if (role == null) {
             if (disabled == null) {
                 page = users.findByNameContainingIgnoreCaseOrUsernameContainingIgnoreCaseOrMailContainingIgnoreCase(query, query, query, pageable)
-            } else page = users.findByNameContainingIgnoreCaseOrUsernameContainingIgnoreCaseOrMailContainingIgnoreCaseAndDisabledIs(query, query, query, disabled, pageable)
+            } else page = users.findAllByStatusAndQuery(q, disabled, pageable)
         } else {
-            val q = "%$query%".toLowerCase()
             if (disabled == null) {
-                page = users.findAllByRole(q, role, pageable)
-            } else page = users.findAllByRoleAndStatus(q, disabled, role, pageable)
+                page = users.findAllByRoleAndQuery(q, role, pageable)
+            } else page = users.findAllByRoleAndStatusAndQuery(q, disabled, role, pageable)
         }
         val content = page.content.map { e -> userToDto(e, principal) }
         return PageImpl(content, pageable, page.totalElements)
@@ -207,16 +207,18 @@ open class UserServiceImpl @Inject constructor(
         }
 
         if (updateUser.disabled != null) {
-            if (user.disabled && !principal.isId(id)) { //effectively just usable from the admin since user (self) has no access in this state
+            if (!principal.isId(id)) { //effectively just usable from the admin since user (self) has no access in this state
                 user.disabled = updateUser.disabled
                 user.currentToken = UUID.randomUUID()
-            } else throw TicktagValidationException(listOf(ValidationError("updateUser.disabled", ValidationErrorDetail.Other("notpermitted"))))
+            } else if (principal.isId(id) && updateUser.disabled != user.disabled){
+                throw TicktagValidationException(listOf(ValidationError("updateUser.disabled", ValidationErrorDetail.Other("notpermitted"))))
+            }
         }
 
         if (updateUser.role != null) {
             if (principal.hasRole(AuthExpr.ROLE_GLOBAL_ADMIN) && !principal.isId(id)) {  //Only Admins can change user roles!
                 user.role = updateUser.role
-            } else {
+            } else  if (principal.hasRole(AuthExpr.ROLE_GLOBAL_ADMIN) && principal.isId(id) && updateUser.role != user.role){
                 throw TicktagValidationException(listOf(ValidationError("updateUser.role", ValidationErrorDetail.Other("notpermitted"))))
             }
         }

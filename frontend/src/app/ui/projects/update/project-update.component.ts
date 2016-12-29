@@ -9,8 +9,8 @@ import { ProjectApi, UpdateProjectRequestJson, ProjectResultJson } from '../../.
 })
 export class ProjectUpdateComponent implements OnInit {
   request: UpdateProjectRequestJson = {
-    name: '',
-    description: '',
+    name: undefined,
+    description: undefined,
     icon: undefined,
     disabled: undefined
   };
@@ -18,6 +18,7 @@ export class ProjectUpdateComponent implements OnInit {
   upload = false;
   working = false;
   iconWithMimeType = '';
+  private defaultIcon: string;
   @Input() project: ProjectResultJson;
   @Output() readonly updated = new EventEmitter<ProjectResultJson>();
 
@@ -26,10 +27,8 @@ export class ProjectUpdateComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.request.name = this.project.name;
-    this.request.description = this.project.description;
-    this.iconWithMimeType = this.project.icon;
-    this.active = ! this.project.disabled;
+    this.defaultIcon = this.project.icon ? this.project.icon.split(',')[1] : undefined;
+    this.revert();
   }
   onSubmit(): void {
     this.working = true;
@@ -50,21 +49,27 @@ export class ProjectUpdateComponent implements OnInit {
       () => { this.working = false; });
   }
 
-  setImage(image: string) {
-    this.iconWithMimeType = image;
-    this.request.icon = image ? image.split(',')[1] : '';
+  setImage(img: string) {
+    this.iconWithMimeType = img;
+    if (img && img !== this.defaultIcon) {
+      this.request.icon = img.split(',')[1];
+    } else if (img && img === this.defaultIcon) {
+      this.request.icon = undefined;
+    } else {
+      this.request.icon = '';
+    }
   }
   revert() {
     this.request.name = this.project.name;
     this.request.description = this.project.description;
-    this.request.icon = this.project.icon ? this.project.icon.split(',')[1] : undefined;
+    this.request.icon = this.defaultIcon;
     this.iconWithMimeType = this.project.icon;
     this.request.disabled = this.project.disabled;
-    this.active = ! this.project.disabled;
+    this.active = !this.project.disabled;
   }
 
   changeActive() {
-    this.request.disabled = ! this.active;
+    this.request.disabled = !this.active;
 
   }
 }

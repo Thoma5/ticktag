@@ -17,6 +17,7 @@ import { HomeComponent } from './ui/home/home.component';
 import { Ng2Webstorage } from 'ng2-webstorage/dist/app';
 import { UsersComponent } from './ui/users/users.component';
 import { UserCreateComponent } from './ui/users/create/user-create.component';
+import { UserUpdateComponent } from './ui/users/update/user-update.component';
 import { ProjectsComponent } from './ui/projects/projects.component';
 import { ProjectCreateComponent } from './ui/projects/create/project-create.component';
 import { ProjectUpdateComponent } from './ui/projects/update/project-update.component';
@@ -113,6 +114,7 @@ import { ImagePickerComponent } from './util/image-picker/image-picker.component
     WhoamiComponent,
     UsersComponent,
     UserCreateComponent,
+    UserUpdateComponent,
     ProjectsComponent,
     ProjectCreateComponent,
     ProjectUpdateComponent,

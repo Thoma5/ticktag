@@ -1,74 +1,85 @@
  @import '../../../style/constants.scss';
  .row {
-  margin-top: $small-gap;
-  position: relative;
-    }
-.datatable {
-  text-align: left;
-  margin: 10px 0 10px 0;
-    }
-.search{
-  margin-top: $medium-gap;
-}
-md-slide-toggle{
-  margin: 0.3em;
-}
-.no-scroll { 
-  overflow: hidden;
-}
-* .btn {
-  border-radius: 0;
-}
-.create-overlay {
-  width: 100%;
-  height: 100%;
-  position: fixed; 
-  top: 0;
-  left: 0;
-  display: flex;
-  padding-top: 5em;
-  padding-bottom: 3em;
-  justify-content: center;
-  align-items: center;
-  transition: 0.5s;
-  z-index: 1;
-}
-
-.create-popup {
-  @extend %card;
-  box-shadow: 0 ($px * 1rem) ($px * 16rem) rgba(0,0,0,0.6);
-  width: 30em;
-  .exit {
-      @extend %reset-button;
-      
-    }
-    .popup-content{
-      padding: 2em 4em 2em 4em;
-
-      .head {
-        width: 100%;
-        position: relative;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        border-bottom: $thin-line solid palette(Grey, 300);
-        margin-bottom: $small-gap;
-
-        .title {
-          @extend %title;
-          flex-grow: 1;
-        }
-      }
-
-      .body {
-        width: 100%;
-        position: relative;
-        margin-bottom: 10px;
-      }
-    }
-}
-
-.admintoggles{
-  float: left;
-  margin-left: 2em;
-}
+   margin-top: $small-gap;
+   position: relative;
+ }
+ 
+ .datatable {
+   text-align: left;
+   margin: 10px 0 10px 0;
+ }
+ 
+ .search {
+   margin-top: $medium-gap;
+ }
+ 
+ #title {
+   @extend %title;
+   margin-bottom: $medium-gap;
+ }
+ 
+ .form-group {
+   margin: 0 0 0 0;
+ }
+ 
+ md-slide-toggle {
+   margin: 0.3em;
+ }
+ 
+ .no-scroll {
+   overflow: hidden;
+ }
+ 
+ * .btn {
+   border-radius: 0;
+ }
+ 
+ .create-overlay {
+   width: 100%;
+   height: 100%;
+   position: fixed;
+   top: 0;
+   left: 0;
+   display: flex;
+   padding-top: 5em;
+   padding-bottom: 3em;
+   justify-content: center;
+   align-items: center;
+   transition: 0.5s;
+   z-index: 1;
+ }
+ 
+ .create-popup {
+   @extend %card;
+   box-shadow: 0 ($px * 1rem) ($px * 16rem) rgba(0, 0, 0, 0.6);
+   width: 30em;
+   .exit {
+     @extend %reset-button;
+   }
+   .popup-content {
+     padding: 0em 3em 0em 3em;
+     .head {
+       width: 100%;
+       position: relative;
+       display: flex;
+       flex-direction: row;
+       flex-wrap: nowrap;
+       border-bottom: $thin-line solid palette(Grey, 300);
+       margin-bottom: $small-gap;
+       .title {
+         @extend %title;
+         flex-grow: 1;
+       }
+     }
+     .body {
+       width: 100%;
+       position: relative;
+       margin-bottom: 10px;
+     }
+   }
+ }
+ 
+ .admintoggles {
+   float: left;
+   margin-left: 2em;
+ }

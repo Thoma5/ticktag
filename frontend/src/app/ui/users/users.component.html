@@ -1,6 +1,7 @@
-<div class="col-md-10 col-md-offset-1 form-box">
+<div class="col-md-12 form-box">
   <div *ngIf="!loading">
     <div [ngClass]="{'no-scroll': creating }">
+      <div id="title">Users</div>
       <div class="search row">
         <div class="col-lg-4"><input class="form-control" type='text' [(ngModel)]="filter" placeholder='Type to filter...' (keyup)='updateFilter()'
           /></div>
@@ -52,6 +53,7 @@
         </ngx-datatable-column>
         <ngx-datatable-column name="Actions" width="128" [resizeable]="false" [sortable]="false" *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0))">
           <template let-row="row" ngx-datatable-cell-template>
+              <button (click)="onStartUpdate(row)" class="btn btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
             <button [attr.disabled]="this.me && this.me.id !== row.id ? null : true" (click)="onDeleteClicked(row.id)" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
           </template>
         </ngx-datatable-column>
@@ -70,6 +72,7 @@
           </div>
           <div class="body">
             <tt-user-create *ngIf="mode === 'Create'" (created)="cuFinished()"></tt-user-create>
+            <tt-user-update *ngIf="mode === 'Update' && toUpdateUser" [user]="toUpdateUser" [currentUser]="me" (updated)="cuFinished()"></tt-user-update>
           </div>
         </div>
       </div>

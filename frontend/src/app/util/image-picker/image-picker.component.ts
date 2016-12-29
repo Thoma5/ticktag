@@ -26,6 +26,7 @@ export class ImagePickerComponent implements OnInit, OnChanges {
     }
     ngOnChanges() {
         this.preview = this.defaultImage;
+        this.image.emit(this.defaultImage);
     }
 
     encodeFile(fileInput: any) {

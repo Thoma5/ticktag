@@ -3,6 +3,7 @@
     <tt-loading></tt-loading>
   </div>
   <div *ngIf="!loading">
+    <div id="title">Tickets</div>
     <div class="overview">
       <div class="search row">
         <div class="col-md-12">
@@ -21,8 +22,8 @@
             <a  *ngIf="row.parentTicketOpen" routerLink="/project/{{projectId}}/ticket/{{row.parentTicketNumber}}" tooltip="{{row.parentTicketTitle}}" tooltipPlacement="bottom" tooltipPopupDelay="500" tooltipPlacement="right" tooltipTrigger="mouseenter">#{{row.parentTicketNumber}}</a>    
             <a  *ngIf="!row.parentTicketOpen"routerLink="/project/{{projectId}}/ticket/{{row.parentTicketNumber}}" tooltip="{{row.parentTicketTitle}}" tooltipPlacement="bottom" tooltipPopupDelay="500" tooltipPlacement="right" tooltipTrigger="mouseenter"><s style="color: grey;">#{{row.parentTicketNumber}}</s></a> /   
             </span>
-          <s *ngIf="!row.open"><a routerLink="/project/{{projectId}}/ticket/{{row.number}}" style="color: grey;">#{{value}}</a></s>
-          <span *ngIf="row.open"><a routerLink="/project/{{projectId}}/ticket/{{row.number}}">#{{value}}</a></span>
+            <s *ngIf="!row.open"><a routerLink="/project/{{projectId}}/ticket/{{row.number}}" style="color: grey;">#{{value}}</a></s>
+            <span *ngIf="row.open"><a routerLink="/project/{{projectId}}/ticket/{{row.number}}">#{{value}}</a></span>
           </template>
         </ngx-datatable-column>
         <ngx-datatable-column name="Title" minWidth="128" width="256" [draggable]="false">
@@ -38,7 +39,8 @@
             <tt-tagview [tags]="value" (clickedTag)="onTagClicked($event)"></tt-tagview>
           </template>
         </ngx-datatable-column>
-        <ngx-datatable-column name="Asignees" prop="users" minWidth="128" width="128" maxWidth="128" [draggable]="false" [sortable]="false" [resizeable]="false">
+        <ngx-datatable-column name="Asignees" prop="users" minWidth="128" width="128" maxWidth="128" [draggable]="false" [sortable]="false"
+          [resizeable]="false">
           <template let-row="row" let-value="value" ngx-datatable-cell-template>
             <div float="left">
               <tt-assigned-user-overview [users]="value" (clickedUser)="onUserClicked($event)"></tt-assigned-user-overview>
