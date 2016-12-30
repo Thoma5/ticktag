@@ -1,14 +1,18 @@
 <div class="col-md-12 form-box">
   <div *ngIf="!loading">
-    <div [ngClass]="{'no-scroll': creating }">
-      <div id="title">Projects</div>
+    <div class="card" [ngClass]="{'no-scroll': creating }">
+      <div class="head">
+        <div class="title">
+          Projects
+        </div>
+      </div>
       <div class="search row">
         <div class="col-lg-4"><input class="form-control" type='text' placeholder='Type to filter name...' (keyup)='updateFilter($event)' /></div>
         <div class="col-lg-6" *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0) ||(user.authorities.indexOf('OBSERVER') != -1))">
           <md-slide-toggle class="admintoggles" [(ngModel)]="allProjects" color="primary" (change)="getProjects(offset, limit, sortprop, asc, undefined)">Include Foreign Projects</md-slide-toggle>
           <md-slide-toggle class="admintoggles" [(ngModel)]="disabled" color="primary" (change)="getProjects(offset, limit, sortprop, asc, undefined)">View Disabled</md-slide-toggle>
         </div>
-        <div class="col-lg-2"><button type="button" class="btn btn-primary pull-right" (click)="onStartCreate()"><span class="glyphicon glyphicon-plus"></span> Add Project</button></div>
+        <div *ngIf="user && (user.authorities.indexOf('ADMIN') >= 0)" class="col-lg-2"><button type="button" class="btn btn-primary pull-right" (click)="onStartCreate()"><span class="glyphicon glyphicon-plus"></span> Add Project</button></div>
       </div>
       <ngx-datatable class="material" [rows]="rows" [columns]="columns" [columnMode]="'force'" [headerHeight]="32" [footerHeight]="32"
         [rowHeight]="32" [externalPaging]="true" [count]="totalElements" [offset]="offset" [limit]="limit" [scrollbarH]="true"
@@ -36,22 +40,22 @@
             </div>
           </template>
         </ngx-datatable-column>
-        <ngx-datatable-column name="Actions" width="128" [resizeable]="false" [sortable]="false" *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0))">
+        <ngx-datatable-column name="Actions" width="128" [resizeable]="false" [sortable]="false">
           <template let-row="row" ngx-datatable-cell-template>
-            <button (click)="onStartUpdate(row)" class="btn btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
+            <button *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0))" (click)="onStartUpdate(row)" class="btn btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
             <button routerLink="/project/{{row.id}}/users" class="btn btn-xs"><span class="glyphicon glyphicon-user"></span></button>
             <button routerLink="/project/{{row.id}}/burndown" class="btn btn-xs"><span class="glyphicon glyphicon-fire"></span></button>
-            <button *ngIf="!row.disabled" (click)="onDeleteClicked(row.id)" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
+            <button *ngIf="!row.disabled && user && ((user.authorities.indexOf('ADMIN') >= 0))" (click)="onDeleteClicked(row.id)" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
           </template>
         </ngx-datatable-column>
       </ngx-datatable>
     </div>
-    <div *ngIf="cu" class="create-overlay" (click)="onStopCreate()">
-      <div class="create-popup" (click)="$event.stopPropagation()">
+    <div *ngIf="cu" class="overlay" (click)="$event.stopPropagation()">
+      <div class="overlay-body" (click)="$event.stopPropagation()">
         <button type="button" class="exit pull-right" (click)="onStopCreate()">
             <i class='fa fa-times'></i>
           </button>
-        <div class="popup-content">
+        <div class="overlay-content">
           <div class="head">
             <h3 class="title">
               {{mode}} Project

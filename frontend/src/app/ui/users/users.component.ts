@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 import { ApiCallService, AuthService, User } from '../../service';
 import { AuthApi, UserApi, PageUserResultJson, UserResultJson } from '../../api';
 import { RoleResultJson } from '../../api/model/RoleResultJson';
@@ -10,7 +10,7 @@ import { Subject } from 'rxjs/Subject';
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss'],
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent implements OnInit, OnChanges {
   iconsCss = {
     sortAscending: 'glyphicon glyphicon-chevron-down',
     sortDescending: 'glyphicon glyphicon-chevron-up',
@@ -25,7 +25,7 @@ export class UsersComponent implements OnInit {
   cu = false;
   disabled = false;
   mode = '';
-  toUpdateUser: PageUserResultJson = undefined;
+  toUpdateUser: UserResultJson = undefined;
   sortprop = ['NAME_ASC'];
   offset = 0;
   limit = 30;
@@ -37,6 +37,9 @@ export class UsersComponent implements OnInit {
   private userFilter: string;
   private user: User;
   private me: WhoamiResultJson;
+  @Input() assignMode: false;
+  @Input() assignedUsers: UserResultJson[]= [];
+  @Output() assignUser= new EventEmitter<UserResultJson>();
 
   constructor(
     private userApi: UserApi,
@@ -44,7 +47,9 @@ export class UsersComponent implements OnInit {
     private authApi: AuthApi,
     private authService: AuthService) {
   }
-
+  ngOnChanges(changes: any): void {
+    this.assignedUsers = changes.assignedUsers;
+  }
   ngOnInit(): void {
     this.users = [];
     this.getRoles();
@@ -147,5 +152,9 @@ export class UsersComponent implements OnInit {
   cuFinished() {
     this.cu = false;
     this.getUsers();
+  }
+  onAssignUser(user: UserResultJson) {
+    this.assignUser.emit(user);
+
   }
 }

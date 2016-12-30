@@ -3,11 +3,13 @@ package io.ticktag.service.project.services.impl
 import io.ticktag.TicktagService
 import io.ticktag.library.base64ImageDecoder.Base64ImageDecoder
 import io.ticktag.library.base64ImageDecoder.Image
+import io.ticktag.persistence.member.entity.ProjectRole
 import io.ticktag.persistence.project.ProjectRepository
 import io.ticktag.persistence.project.entity.Project
 import io.ticktag.service.*
 import io.ticktag.service.project.dto.CreateProject
 import io.ticktag.service.project.dto.ProjectResult
+import io.ticktag.service.project.dto.ProjectRoleResult
 import io.ticktag.service.project.dto.UpdateProject
 import io.ticktag.service.project.services.ProjectService
 import org.springframework.data.domain.Page
@@ -108,5 +110,10 @@ open class ProjectServiceImpl @Inject constructor(
     override fun getUserProjectCount(userId: UUID): Int {
         return projects.countByMembersUserId(userId)
     }
+    @PreAuthorize(AuthExpr.ADMIN)
+    override fun listProjectRoles(): List<ProjectRoleResult> {
+        return ProjectRole.values().map(::ProjectRoleResult)
+    }
+
 
 }

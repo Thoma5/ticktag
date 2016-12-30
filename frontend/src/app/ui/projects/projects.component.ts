@@ -50,7 +50,7 @@ export class ProjectsComponent implements OnInit {
       .subscribe(user => {
         this.user = user;
       });
-    this.filter.debounceTime(300).do(term  => 
+    this.filter.debounceTime(300).do(term  =>
     this.getProjects(this.offset, this.limit, this.sortprop, this.asc, term)).subscribe(result => {}, error => {});
   }
 

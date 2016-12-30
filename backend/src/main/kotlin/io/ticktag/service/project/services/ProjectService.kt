@@ -2,6 +2,7 @@ package io.ticktag.service.project.services
 
 import io.ticktag.service.project.dto.CreateProject
 import io.ticktag.service.project.dto.ProjectResult
+import io.ticktag.service.project.dto.ProjectRoleResult
 import io.ticktag.service.project.dto.UpdateProject
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -16,4 +17,5 @@ interface ProjectService {
     fun updateProject(id: UUID, project: UpdateProject): ProjectResult
     fun getProjectCount(): Int
     fun getUserProjectCount(userId: UUID): Int
+    fun listProjectRoles(): List<ProjectRoleResult>
 }

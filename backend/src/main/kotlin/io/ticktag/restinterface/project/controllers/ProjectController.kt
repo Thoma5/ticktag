@@ -3,10 +3,7 @@ package io.ticktag.restinterface.project.controllers
 import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.generic.CountJson
-import io.ticktag.restinterface.project.schema.CreateProjectRequestJson
-import io.ticktag.restinterface.project.schema.ProjectResultJson
-import io.ticktag.restinterface.project.schema.ProjectSort
-import io.ticktag.restinterface.project.schema.UpdateProjectRequestJson
+import io.ticktag.restinterface.project.schema.*
 import io.ticktag.restinterface.user.schema.ProjectUserResultJson
 import io.ticktag.restinterface.user.schema.UserResultJson
 import io.ticktag.service.Principal
@@ -98,5 +95,10 @@ open class ProjectController @Inject constructor(
         } else {
             CountJson(projectService.getUserProjectCount(principal.id))
         }
+    }
+
+    @GetMapping(value = "/roles")
+    open fun listProjectRoles(): List<ProjectRoleResultJson> {
+        return projectService.listProjectRoles().map(::ProjectRoleResultJson)
     }
 }

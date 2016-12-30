@@ -22,6 +22,8 @@ import { ProjectsComponent } from './ui/projects/projects.component';
 import { ProjectCreateComponent } from './ui/projects/create/project-create.component';
 import { ProjectUpdateComponent } from './ui/projects/update/project-update.component';
 import { ProjectUsersComponent } from './ui/projects/user/project-users.component';
+import { MemberAddComponent } from './ui/projects/user/add/member-add.component';
+import { MemberUpdateComponent } from './ui/projects/user/update/member-update.component';
 import {
   ProjectApi, AuthApi, UserApi, AssignmenttagApi, CommentsApi, MemberApi,
   TimecategoryApi, TicketApi, TickettagApi, TickettaggroupApi, GetApi,
@@ -119,6 +121,8 @@ import { ImagePickerComponent } from './util/image-picker/image-picker.component
     ProjectCreateComponent,
     ProjectUpdateComponent,
     ProjectUsersComponent,
+    MemberAddComponent,
+    MemberUpdateComponent,
     TicketOverviewComponent,
     TicketDetailComponent,
     TicketSidebarComponent,

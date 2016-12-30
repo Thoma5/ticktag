@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiCallService, AuthService, User } from '../../../service';
-import { ProjectApi, UserResultJson } from '../../../api';
+import { ProjectApi, ProjectUserResultJson, ProjectRoleResultJson } from '../../../api';
 @Component({
   selector: 'tt-project-users',
   templateUrl: './project-users.component.html',
   styleUrls: ['./project-users.component.scss']
 })
 export class ProjectUsersComponent implements OnInit {
-  users: UserResultJson[];
+  users: ProjectUserResultJson[];
 
   iconsCss = {
     sortAscending: 'glyphicon glyphicon-chevron-down',
@@ -22,15 +22,17 @@ export class ProjectUsersComponent implements OnInit {
   refresh = true;
   disabled = false;
   projectId: string;
-  rows: UserResultJson[];
-  temp: UserResultJson[];
+  rows: ProjectUserResultJson[];
+  temp: ProjectUserResultJson[];
   totalElements = 0;
   filter: string = '';
   private user: User;
+  private roles: ProjectRoleResultJson[];
+  private filterRole= '';
+  private cu = false;
+  private mode = '';
+  private toUpdateMember: ProjectUserResultJson = undefined;
 
-
-
-  // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -40,6 +42,7 @@ export class ProjectUsersComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getRoles();
     this.route.params
       .do(() => { this.loading = true; })
       .switchMap(params => {
@@ -51,7 +54,7 @@ export class ProjectUsersComponent implements OnInit {
         this.loading = false;
       });
     this.users = [];
-    this.getProjects('NAME', true, undefined);
+    this.getProjectMembers();
     this.user = this.authService.user;
     this.authService.observeUser()
       .subscribe(user => {
@@ -59,9 +62,9 @@ export class ProjectUsersComponent implements OnInit {
       });
   }
 
-  getProjects(order?: string, asc?: boolean, name?: string): void {
+  getProjectMembers(): void {
     this.apiCallService
-      .callNoError<UserResultJson[]>(h => this.projectApi.listProjectMembersUsingGETWithHttpInfo(this.projectId, this.disabled, h))
+      .callNoError<ProjectUserResultJson[]>(h => this.projectApi.listProjectMembersUsingGETWithHttpInfo(this.projectId, this.disabled, h))
       .subscribe(users => {
         this.refresh = true;
         this.users = users;
@@ -71,17 +74,44 @@ export class ProjectUsersComponent implements OnInit {
       });
   }
 
-  updateFilter(event: any) {
-    let val = event.target.value.toLocaleLowerCase();
+  updateFilter(event?: any) {
+    if (event) {
+      this.filter = event.target.value.toLocaleLowerCase();
+    }
     this.temp = this.users;
     // filter our data
-    let temp = this.temp.filter(e => e.name.toLocaleLowerCase().indexOf(val) >= 0 ||
-      e.username.toLocaleLowerCase().indexOf(val) >= 0 ||
-      e.mail.toLocaleLowerCase().indexOf(val) >= 0 ||
-      e.role.toString().toLocaleLowerCase().indexOf(val) >= 0);
+    let temp = this.temp.filter(e => (e.name.toLocaleLowerCase().indexOf(this.filter) >= 0 ||
+      e.username.toLocaleLowerCase().indexOf(this.filter) >= 0 ||
+      e.mail.toLocaleLowerCase().indexOf(this.filter) >= 0 ) &&
+      (e.projectRole.toString().indexOf(this.filterRole) >= 0));
 
     // update the rows
     this.rows = temp;
+  }
+
+  getRoles(): void {
+    this.apiCallService
+      .callNoError<ProjectRoleResultJson[]>(h => this.projectApi.listProjectRolesUsingGETWithHttpInfo(h))
+      .subscribe(roles => {
+        this.roles = roles;
+      });
+  }
+
+  onStartAdd() {
+    this.mode = 'Add';
+    this.cu = true;
+  }
+  onStartUpdate(member: ProjectUserResultJson) {
+    this.toUpdateMember = member;
+    this.cu = true;
+    this.mode = 'Update';
+  }
+  onStopCreate() {
+    this.cu = false;
+  }
+  cuFinished() {
+    this.cu = false;
+    this.getProjectMembers();
   }
 
 

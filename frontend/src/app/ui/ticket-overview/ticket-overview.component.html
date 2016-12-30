@@ -2,8 +2,12 @@
   <div *ngIf="loading" class="loading">
     <tt-loading></tt-loading>
   </div>
-  <div *ngIf="!loading">
-    <div id="title">Tickets</div>
+  <div class="card" *ngIf="!loading">
+    <div class="head">
+      <div class="title">
+        Tickets
+      </div>
+    </div>
     <div class="overview">
       <div class="search row">
         <div class="col-md-12">
@@ -74,20 +78,22 @@
         <input type="button" class="btn btn-primary button-submit" value="Add" (click)="onStartCreate()">
       </div>
     </div>
-    <div *ngIf="creating" class="create-overlay" (click)="onStopCreate()">
-      <div class="create-popup" (click)="$event.stopPropagation()">
-        <div class="head">
-          <h3 class="title">
-            Create Ticket
-          </h3>
-          <button type="button" class="exit" (click)="onStopCreate()">
+    <div *ngIf="creating" class="overlay" (click)="$event.stopPropagation()">
+      <div class="overlay-body" (click)="$event.stopPropagation()">
+        <button type="button" class="exit pull-right" (click)="onStopCreate()">
             <i class='fa fa-times'></i>
           </button>
-        </div>
-        <div class="body">
-          <tt-ticket-create [projectId]="projectId" [allTicketTags]="allTicketTags" [allTimeCategories]="allTimeCategories" [allAssignmentTags]="allAssignmentTags"
-            (ticketAdd)="onTicketCreate($event)" [working]="createRunning">
-          </tt-ticket-create>
+        <div class="overlay-content">
+          <div class="head">
+            <h3 class="title">
+              Create Ticket
+            </h3>
+          </div>
+          <div class="body">
+            <tt-ticket-create [projectId]="projectId" [allTicketTags]="allTicketTags" [allTimeCategories]="allTimeCategories" [allAssignmentTags]="allAssignmentTags"
+              (ticketAdd)="onTicketCreate($event)" [working]="createRunning">
+            </tt-ticket-create>
+          </div>
         </div>
       </div>
     </div>

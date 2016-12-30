@@ -1,0 +1,41 @@
+ @import '../../../../../style/constants.scss';
+ .row {
+   margin-top: $small-gap;
+   margin-bottom: 0;
+   padding-bottom: 0;
+   position: relative;
+ }
+ 
+ .row .form-group {
+   margin-bottom: 0;
+ }
+ 
+ * .btn {
+   border-radius: 0;
+ }
+ 
+ small {
+   color: darkgrey;
+ }
+ 
+ .memberinfo {
+   align-items: center;
+   text-align: center;
+   color: darkgray;
+   .image {
+     display: block;
+     margin: auto;
+     width: 48px;
+     height: 48px;
+   }
+   .name {
+     color: black;
+     font-size: 1.5em;
+     font-weight: 600;
+   }
+   .username {
+     color: dimgrey;
+     font-size: 1.2em;
+     font-weight: 600;
+   }
+ }
