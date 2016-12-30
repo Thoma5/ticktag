@@ -61,11 +61,11 @@
         <ngx-datatable-column name="Progress" minWidth="128" width="128" [draggable]="false" [resizeable]="false">
           <template let-row="row" let-value="value" ngx-datatable-cell-template>
             <div *ngIf="value !== '' && value <= 1" style="border:solid 0.11em #d3d3d3; margin:0.5em" tooltip="{{value*100 | number : '1.0-0'}}%"
-              tooltipPlacement="bottom" tooltipTrigger="mouseenter">
+              tooltipPlacement="left" tooltipTrigger="mouseenter">
               <div style="background:linear-gradient(to bottom, #00b7ea 0%,#009ec3 100%);height:0.8em" [style.width]="value*100+'%'"></div>
             </div>
             <div *ngIf="value !== '' && value > 1" style="border:solid 0.11em #d3d3d3; margin:0.5em" tooltip="{{value*100 | number : '1.0-0'}}%"
-              tooltipPlacement="bottom" tooltipTrigger="mouseenter">
+              tooltipPlacement="left" tooltipTrigger="mouseenter">
               <div style="background:linear-gradient(to bottom, #ff3019 0%,#cf0404 100%);height:0.8em" [style.width]="100+'%'"></div>
             </div>
             <div *ngIf="value === ''" style="margin-left: 3em" tooltip="No estimation!" tooltipPlacement="left" tooltipTrigger="mouseenter">

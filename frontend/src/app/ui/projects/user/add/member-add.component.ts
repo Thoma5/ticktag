@@ -72,6 +72,7 @@ export class MemberAddComponent implements OnInit {
       .subscribe(
       result => {
         if (result.isValid) {
+          this.getProjectMembers();
           this.selectedUser = undefined;
           this.created.emit(result.result);
         } else {

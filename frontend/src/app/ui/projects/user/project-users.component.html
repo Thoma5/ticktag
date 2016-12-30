@@ -17,7 +17,7 @@
               </select>
           </div>
         </div>
-        <div class="col-lg-2"><a type="button" routerLink="/project/{{projectId}}/users/add" class="btn btn-primary pull-right"><span class="glyphicon glyphicon-plus"></span> Add User</a></div>
+        <div class="col-lg-2"><a *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0))" type="button" routerLink="/project/{{projectId}}/users/add" class="btn btn-primary pull-right"><span class="glyphicon glyphicon-plus"></span> Add User</a></div>
       </div>
       <ngx-datatable *ngIf="rows" class="material" [rows]="rows" [columns]="columns" [columnMode]="'force'" [headerHeight]="32"
         [footerHeight]="32" [rowHeight]="32" [scrollbarH]="true" [scrollbarV]="false" [loadingIndicator]="refresh" [cssClasses]="iconsCss"
@@ -44,6 +44,7 @@
             <span *ngIf="value === 'ADMIN'"><span class="glyphicon glyphicon-king"></span> Admin</span>
             <span *ngIf="value === 'OBSERVER'"><span class="glyphicon glyphicon-tower"></span> Observer</span>
             <span *ngIf="value === 'USER'"><span class="glyphicon glyphicon-pawn"></span> User</span>
+            <span *ngIf="value === 'NONE'"><span class="glyphicon glyphicon-trash"></span> None</span>
           </template>
         </ngx-datatable-column>
         <ngx-datatable-column name="E-Mail" prop="mail" minWidth="256" width="256" maxWidth="1024">
@@ -53,8 +54,8 @@
         </ngx-datatable-column>
         <ngx-datatable-column name="Actions" width="128" [resizeable]="false" [sortable]="false" *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0))">
           <template let-row="row" ngx-datatable-cell-template>
-            <button (click)="onDeleteClicked(row.id)" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove"></span></button>
-            <button (click)="onStartUpdate(row)" class="btn btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
+            <button (click)="onStartUpdate(row)" class="btn btn-xs"><i class="glyphicon glyphicon-edit"></i></button>
+            <button (click)="onDisable(row.id)" class="btn btn-xs btn-danger"><i class='fa fa-times'></i></button>
           </template>
         </ngx-datatable-column>
       </ngx-datatable>
@@ -71,8 +72,7 @@
             </h3>
           </div>
           <div class="body">
-            <tt-member-add *ngIf="mode === 'Add'" [projectId]="projectId" (created)="cuFinished()"></tt-member-add>
-            <tt-member-update *ngIf="mode === 'Update' && toUpdateMember" [roles]="roles" [user]="toUpdateMember" (updated)="cuFinished()"></tt-member-update>
+            <tt-member-update *ngIf="mode === 'Update' && toUpdateMember" [roles]="roles" [user]="toUpdateMember" (updated)="cuFinished($event)"></tt-member-update>
           </div>
         </div>
       </div>

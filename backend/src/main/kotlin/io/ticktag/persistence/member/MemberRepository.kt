@@ -4,8 +4,10 @@ import io.ticktag.TicktagRepository
 import io.ticktag.persistence.TicktagCrudRepository
 import io.ticktag.persistence.member.entity.Member
 import io.ticktag.persistence.member.entity.MemberKey
+import io.ticktag.persistence.member.entity.ProjectRole
 import io.ticktag.persistence.project.entity.Project
 import io.ticktag.persistence.user.entity.User
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import java.util.*
@@ -13,7 +15,7 @@ import java.util.*
 @TicktagRepository
 interface MemberRepository : TicktagCrudRepository<Member, MemberKey> {
     fun findByUserAndUserDisabledIs(user: User, disabledUsers: Boolean): List<Member>?
-    fun findByUser(user: User): List<Member>?
+    fun findByUserAndRoleNot(user: User, projectRole: ProjectRole): List<Member>?
     fun findByProjectAndUserDisabledIs(project: Project, disabledUsers: Boolean): List<Member>?
     fun findByProject(project: Project): List<Member>?
 

@@ -48,13 +48,14 @@ export class UsersComponent implements OnInit, OnChanges {
     private authService: AuthService) {
   }
   ngOnChanges(changes: any): void {
-    this.assignedUsers = changes.assignedUsers;
+    this.assignedUsers = changes.assignedUsers.currentValue;
   }
   ngOnInit(): void {
     this.users = [];
     this.getRoles();
     this.getUsers();
     this.getWhoami();
+    this.limit = this.assignMode ? 10 : this.limit;
     this.user = this.authService.user;
     this.authService.observeUser()
       .subscribe(user => {
@@ -156,5 +157,8 @@ export class UsersComponent implements OnInit, OnChanges {
   onAssignUser(user: UserResultJson) {
     this.assignUser.emit(user);
 
+  }
+  checkAssigned(id: string): boolean {
+    return this.assignedUsers ? this.assignedUsers.filter(e => e.id === id).length > 0 : true;
   }
 }

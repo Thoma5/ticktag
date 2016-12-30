@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiCallService, AuthService, User } from '../../../service';
-import { ProjectApi, ProjectUserResultJson, ProjectRoleResultJson } from '../../../api';
+import { ProjectApi, MemberApi, ProjectUserResultJson, ProjectRoleResultJson} from '../../../api';
 @Component({
   selector: 'tt-project-users',
   templateUrl: './project-users.component.html',
@@ -37,6 +37,7 @@ export class ProjectUsersComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private projectApi: ProjectApi,
+    private memberApi: MemberApi,
     private apiCallService: ApiCallService,
     private authService: AuthService) {
   }
@@ -95,6 +96,15 @@ export class ProjectUsersComponent implements OnInit {
       .subscribe(roles => {
         this.roles = roles;
       });
+  }
+
+  onDisable(userId: string) {
+    this.apiCallService
+      .callNoError<void>(h => this.memberApi.deleteMemberUsingDELETEWithHttpInfo(userId, this.projectId, h))
+      .subscribe(params => {
+        this.users.filter(u => u.id === userId)[0].projectRole = ProjectUserResultJson.ProjectRoleEnum.NONE;
+        this.updateFilter();
+      }, error => {});
   }
 
   onStartAdd() {

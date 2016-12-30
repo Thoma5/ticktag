@@ -31,6 +31,7 @@ export interface ProjectRoleResultJson {
 }
 export namespace ProjectRoleResultJson {
     export enum RoleEnum {
+        NONE = <any> 'NONE',
         OBSERVER = <any> 'OBSERVER',
         USER = <any> 'USER',
         ADMIN = <any> 'ADMIN'

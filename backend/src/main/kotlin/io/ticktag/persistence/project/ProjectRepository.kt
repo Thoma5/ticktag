@@ -2,6 +2,7 @@ package io.ticktag.persistence.project
 
 import io.ticktag.TicktagRepository
 import io.ticktag.persistence.TicktagCrudRepository
+import io.ticktag.persistence.member.entity.ProjectRole
 import io.ticktag.persistence.nullIfEmpty
 import io.ticktag.persistence.project.entity.Project
 import org.springframework.data.domain.Page
@@ -13,7 +14,7 @@ import javax.persistence.EntityManager
 @TicktagRepository
 interface ProjectRepository : TicktagCrudRepository<Project, UUID>, ProjectRepositoryCustom {
     fun findByNameContainingIgnoreCaseAndDisabledIs(name: String, disabled: Boolean, pageable: Pageable): Page<Project>
-    fun findByMembersUserIdAndNameContainingIgnoreCaseAndDisabledIs(userId: UUID, name: String, disabled: Boolean, pageable: Pageable): Page<Project>
+    fun findByMembersUserIdAndMembersRoleNotAndNameContainingIgnoreCaseAndDisabledIs(userId: UUID, projectRole: ProjectRole, name: String, disabled: Boolean, pageable: Pageable): Page<Project>
     fun countByMembersUserId(userId: UUID): Int
 }
 

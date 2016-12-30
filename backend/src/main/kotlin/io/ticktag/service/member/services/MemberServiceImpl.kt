@@ -4,6 +4,7 @@ import io.ticktag.TicktagService
 import io.ticktag.persistence.member.MemberRepository
 import io.ticktag.persistence.member.entity.Member
 import io.ticktag.persistence.member.entity.MemberKey
+import io.ticktag.persistence.member.entity.ProjectRole
 import io.ticktag.persistence.project.ProjectRepository
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.AuthExpr
@@ -45,7 +46,7 @@ open class MemberServiceImpl @Inject constructor(
         val user = users.findOne(userId) ?: throw NotFoundException()
         val project = projects.findOne(projectId) ?: throw NotFoundException()
         val memberToDelete = members.findOne(MemberKey.create(user, project)) ?: throw NotFoundException()
-        members.delete(memberToDelete)
+        memberToDelete.role = ProjectRole.NONE
     }
 
     @PreAuthorize(AuthExpr.ADMIN)

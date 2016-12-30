@@ -6,6 +6,7 @@ import io.ticktag.library.base64ImageDecoder.Base64ImageDecoder
 import io.ticktag.library.hashing.HashingLibrary
 import io.ticktag.persistence.member.MemberRepository
 import io.ticktag.persistence.member.entity.Member
+import io.ticktag.persistence.member.entity.ProjectRole
 import io.ticktag.persistence.project.ProjectRepository
 import io.ticktag.persistence.project.entity.Project
 import io.ticktag.persistence.user.UserImageRepository
@@ -246,6 +247,8 @@ open class UserServiceImpl @Inject constructor(
     override fun deleteUser(id: UUID, principal: Principal) {
         if (principal.isId(id)) throw TicktagValidationException(listOf(ValidationError("deleteUser", ValidationErrorDetail.Other("notpermitted"))))
         val userToDelete = users.findOne(id) ?: throw NotFoundException()
+        val memberships = members.findByUserAndRoleNot(userToDelete, ProjectRole.NONE) ?: throw NotFoundException()
+        memberships.map { m ->  m.role = ProjectRole.NONE}
         userToDelete.currentToken = UUID.randomUUID()
         userToDelete.disabled = true
     }

@@ -25,10 +25,10 @@
         [rowHeight]="32" [externalPaging]="true" [count]="totalElements" [offset]="offset" [limit]="limit" [scrollbarH]="true"
         [scrollbarV]="false" [loadingIndicator]="refresh" [externalSorting]="true" (sort)="onSort($event)" (page)='onPage($event)'
         [cssClasses]="iconsCss" [selectionType]="'row'">
-        <ngx-datatable-column name="Assign" width="50" [sortable]="false" *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0)) && assignMode"
+        <ngx-datatable-column name="Assign" [minWidth]="80" [width]="80" [maxWidth]="80" [sortable]="false" *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0)) && assignMode"
           [frozenLeft]="true">
           <template let-row="row" ngx-datatable-cell-template>
-            <button *ngIf="assignMode" (click)="onAssignUser(row)" class="btn btn-xs btn-primary">Select</button>
+              <button [disabled]="checkAssigned(row.id)" (click)="onAssignUser(row)" class="btn btn-xs btn-primary">Select</button>
           </template>
         </ngx-datatable-column>
         <ngx-datatable-column name="Icon" prop="imageId" width="48" [resizeable]="false" [sortable]="false">
