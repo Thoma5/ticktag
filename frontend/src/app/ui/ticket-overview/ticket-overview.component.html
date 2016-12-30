@@ -9,25 +9,28 @@
       </div>
     </div>
     <div class="overview">
-      <div class="search row">
-        <div class="col-md-12">
+      <div class="aboveTableRow row">
+        <div class="col-md-11">
           <tt-ticket-filter [allTicketTags]="allTicketTags" [addToQuery]="query" [allUsers]="allProjectUsers" [defaultFilterOpen]="true"
             (ticketFilter)="updateFilter($event)">
           </tt-ticket-filter>
+        </div>
+        <div class="col-md-1 aboveTableButtons">
+          <input type="button" class="btn btn-primary button-submit pull-right" value="Add" (click)="onStartCreate()">
         </div>
       </div>
       <ngx-datatable class="material" [rows]="rows" [columns]="columns" [columnMode]="'force'" [headerHeight]="32" [rowHeight]="32"
         [footerHeight]="32" [externalPaging]="true" [count]="totalElements" [offset]="offset" [limit]="limit" [scrollbarH]="true"
         [scrollbarV]="false" [loadingIndicator]="reloading" reorderable="false" [externalSorting]="true" (sort)="onSort($event)"
         (page)='onPage($event)' [cssClasses]="iconsCss" [selectionType]="'row'" (activate)="activate($event)">
-        <ngx-datatable-column name="#" prop="number" width="64" maxWidth="64" [draggable]="false" [resizeable]="false">
+        <ngx-datatable-column name="#" prop="number" width="96" [maxWidth]="128" [draggable]="false" [resizeable]="false">
           <template let-row="row" let-value="value" ngx-datatable-cell-template>
-            <span *ngIf="row.parentTicketNumber">
-            <a  *ngIf="row.parentTicketOpen" routerLink="/project/{{projectId}}/ticket/{{row.parentTicketNumber}}" tooltip="{{row.parentTicketTitle}}" tooltipPlacement="bottom" tooltipPopupDelay="500" tooltipPlacement="right" tooltipTrigger="mouseenter">#{{row.parentTicketNumber}}</a>    
-            <a  *ngIf="!row.parentTicketOpen"routerLink="/project/{{projectId}}/ticket/{{row.parentTicketNumber}}" tooltip="{{row.parentTicketTitle}}" tooltipPlacement="bottom" tooltipPopupDelay="500" tooltipPlacement="right" tooltipTrigger="mouseenter"><s style="color: grey;">#{{row.parentTicketNumber}}</s></a> /   
+            <span style="text-align:center;" *ngIf="row.parentTicketNumber">
+            <a  *ngIf="row.parentTicketOpen" routerLink="/project/{{projectId}}/ticket/{{row.parentTicketNumber}}" tooltip="{{row.parentTicketTitle}}" tooltipPopupDelay="500" tooltipPlacement="right" tooltipTrigger="mouseenter">#{{row.parentTicketNumber}}</a>    
+            <a  *ngIf="!row.parentTicketOpen"routerLink="/project/{{projectId}}/ticket/{{row.parentTicketNumber}}" tooltip="{{row.parentTicketTitle}}" tooltipPopupDelay="500" tooltipPlacement="right" tooltipTrigger="mouseenter"><s style="color: grey;">#{{row.parentTicketNumber}}</s></a> /   
             </span>
-            <s *ngIf="!row.open"><a routerLink="/project/{{projectId}}/ticket/{{row.number}}" style="color: grey;">#{{value}}</a></s>
-            <span *ngIf="row.open"><a routerLink="/project/{{projectId}}/ticket/{{row.number}}">#{{value}}</a></span>
+            <s style="text-align:center;" *ngIf="!row.open"><a routerLink="/project/{{projectId}}/ticket/{{row.number}}" style="color: grey;">#{{value}}</a></s>
+            <span style="text-align:center;" *ngIf="row.open"><a routerLink="/project/{{projectId}}/ticket/{{row.number}}">#{{value}}</a></span>
           </template>
         </ngx-datatable-column>
         <ngx-datatable-column name="Title" minWidth="128" width="256" [draggable]="false">
@@ -74,9 +77,6 @@
           </template>
         </ngx-datatable-column>
       </ngx-datatable>
-      <div class="bottom">
-        <input type="button" class="btn btn-primary button-submit" value="Add" (click)="onStartCreate()">
-      </div>
     </div>
     <div *ngIf="creating" class="overlay" (click)="$event.stopPropagation()">
       <div class="overlay-body" (click)="$event.stopPropagation()">

@@ -25,7 +25,8 @@
         </ngx-datatable-column>
         <ngx-datatable-column name="Name" width="256" [resizeable]="false">
           <template let-row="row" let-value="value" ngx-datatable-cell-template>
-            <a routerLink="/project/{{row.id}}/tickets">{{value}}</a>
+            <a routerLink="/project/{{row.id}}/tickets" tooltip="Tickets"
+              tooltipPopupDelay="500" tooltipPlacement="left" tooltipTrigger="mouseenter">{{value}}</a>
           </template>
         </ngx-datatable-column>
         <ngx-datatable-column name="Created" prop="creationDate" width="128" [resizeable]="false">
@@ -42,10 +43,14 @@
         </ngx-datatable-column>
         <ngx-datatable-column name="Actions" width="128" [resizeable]="false" [sortable]="false">
           <template let-row="row" ngx-datatable-cell-template>
-            <button *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0))" (click)="onStartUpdate(row)" class="btn btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
-            <button routerLink="/project/{{row.id}}/users" class="btn btn-xs"><span class="glyphicon glyphicon-user"></span></button>
-            <button routerLink="/project/{{row.id}}/burndown" class="btn btn-xs"><span class="glyphicon glyphicon-fire"></span></button>
-            <button *ngIf="!row.disabled && user && ((user.authorities.indexOf('ADMIN') >= 0))" (click)="onDeleteClicked(row.id)" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
+            <button *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0))" (click)="onStartUpdate(row)" class="btn btn-xs" tooltip="Edit Project"
+              tooltipPopupDelay="500" tooltipPlacement="left" tooltipTrigger="mouseenter"><span class="glyphicon glyphicon-edit"></span></button>
+            <button routerLink="/project/{{row.id}}/users" class="btn btn-xs" tooltip="Project Users" tooltipPopupDelay="500" tooltipPlacement="left"
+              tooltipTrigger="mouseenter"><span class="glyphicon glyphicon-user"></span></button>
+            <button routerLink="/project/{{row.id}}/burndown" class="btn btn-xs" tooltip="Burndown Chart" tooltipPopupDelay="500" tooltipPlacement="left"
+              tooltipTrigger="mouseenter"><span class="glyphicon glyphicon-fire"></span></button>
+            <button *ngIf="!row.disabled && user && ((user.authorities.indexOf('ADMIN') >= 0))" (click)="onDeleteClicked(row.id)" class="btn btn-xs btn-danger" tooltip="Disable Project"
+              tooltipPopupDelay="500" tooltipPlacement="left" tooltipTrigger="mouseenter"><span class="glyphicon glyphicon-trash"></span></button>
           </template>
         </ngx-datatable-column>
       </ngx-datatable>

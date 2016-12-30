@@ -9,7 +9,7 @@
       <div class="search row">
         <div class="col-lg-4"><input class="form-control" type='text' placeholder='Type to filter...' (keyup)='updateFilter($event)' /></div>
         <div class="col-lg-6">
-          <md-slide-toggle *ngIf="!assignMode" class="admintoggles" [(ngModel)]="disabled" (change)="getUsers()">Deleted</md-slide-toggle>
+          <md-slide-toggle *ngIf="!assignMode" class="admintoggles" [(ngModel)]="disabled" (change)="getUsers()">View Disabled</md-slide-toggle>
           <div *ngIf="!assignMode" class="admintoggles form-group form-inline">
             <label for="rolefilter">Filter for Roles:</label>
             <select class="form-control" id="rolefilter" name="Role" size="1" placeholder="Filter role" [(ngModel)]="filterRole" (change)="getUsers()">
@@ -28,7 +28,7 @@
         <ngx-datatable-column name="Assign" [minWidth]="80" [width]="80" [maxWidth]="80" [sortable]="false" *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0)) && assignMode"
           [frozenLeft]="true">
           <template let-row="row" ngx-datatable-cell-template>
-              <button [disabled]="checkAssigned(row.id)" (click)="onAssignUser(row)" class="btn btn-xs btn-primary">Select</button>
+            <button [disabled]="checkAssigned(row.id)" (click)="onAssignUser(row)" class="btn btn-xs btn-primary">Select</button>
           </template>
         </ngx-datatable-column>
         <ngx-datatable-column name="Icon" prop="imageId" width="48" [resizeable]="false" [sortable]="false">
@@ -40,8 +40,7 @@
         </ngx-datatable-column>
         <ngx-datatable-column name="Name" width="256" [resizeable]="false">
           <template let-row="row" let-value="value" ngx-datatable-cell-template>
-            <a *ngIf="!assignMode">{{value}}</a>
-            <p *ngIf="assignMode">{{value}}</p>
+            <p>{{value}}</p>
           </template>
         </ngx-datatable-column>
         <ngx-datatable-column name="Username" prop="username" width="128" [resizeable]="false">
@@ -63,8 +62,10 @@
         </ngx-datatable-column>
         <ngx-datatable-column name="Actions" width="128" [resizeable]="false" [sortable]="false" *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0)) && !assignMode">
           <template let-row="row" ngx-datatable-cell-template>
-            <button (click)="onStartUpdate(row)" class="btn btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
-            <button [disabled]="me && me.id === row.id" (click)="onDeleteClicked(row.id)" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
+            <button (click)="onStartUpdate(row)" class="btn btn-xs" tooltip="Edit User" tooltipPopupDelay="500" tooltipPlacement="left"
+              tooltipTrigger="mouseenter"><span class="glyphicon glyphicon-edit"></span></button>
+            <button [disabled]="me && me.id === row.id" (click)="onDeleteClicked(row.id)" class="btn btn-xs btn-danger" tooltip="Disable User"
+              tooltipPopupDelay="500" tooltipPlacement="left" tooltipTrigger="mouseenter"><span class="glyphicon glyphicon-trash"></span></button>
           </template>
         </ngx-datatable-column>
       </ngx-datatable>

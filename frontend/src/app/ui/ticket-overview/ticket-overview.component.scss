@@ -24,8 +24,8 @@
   text-align: left;
   margin: 10px 0 10px 0;
     }
-.search{
-  margin-top:  $medium-gap;
+.aboveTableButtons{
+  margin-top: 3.5em;
 }
 
 .tooltip > .tooltip-inner {
@@ -39,12 +39,6 @@
 .overview {
   position: relative;
   z-index: 0;
-}
-
-.bottom {
-  margin-top: $small-gap;
-  display: flex;
-  flex-direction: row-reverse;
 }
 
 .overlay {

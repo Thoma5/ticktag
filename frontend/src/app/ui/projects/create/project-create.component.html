@@ -5,11 +5,18 @@
   </div>
   <div class="row">
     <label for="name">Name *</label>
-    <input class="form-control" type="text" name="name" [(ngModel)]="request.name" placeholder="Name" required>
+    <div class="form-group" [ngClass]="{'has-error has-feedback': f.controls.name?.touched && ! f.controls.name?.valid}">
+    <input class="form-control"  minlength="3" maxlength="30" type="text" name="name" [(ngModel)]="request.name" placeholder="Name" required>
+    <span *ngIf="f.controls.name?.touched && ! f.controls.name?.valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
+    <small>At least 3 characters, max. 30</small>
+    </div>
   </div>
   <div class="row">
     <label for="description">Description *</label>
-    <textarea rows="10" cols="50" class="form-control" type="text" name="description" [(ngModel)]="request.description" placeholder="Description" required></textarea></div>
+    <div class="form-group" [ngClass]="{'has-error': f.controls.description?.touched && ! f.controls.description?.valid}">
+    <textarea rows="6" cols="50" class="form-control"  minlength="3" maxlength="255" type="text" name="description" [(ngModel)]="request.description" placeholder="Description" required></textarea></div>
+    <small>At least 3 characters, max. 255</small>
+    </div>
   <div class="row">
     <input type="button" type="submit" [disabled]="!f.form.valid" class="btn btn-success btn-block" *ngIf="!working" (click)="onSubmit()"
       value="Create Project">
