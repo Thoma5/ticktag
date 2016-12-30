@@ -73,6 +73,7 @@ open class UserRepositoryImpl @Inject constructor(private val em: EntityManager)
             join u.memberships m
             left join fetch u.image
             where m.project.id = :project
+            and m.role <> 'NONE'
             and u.disabled = false
             and (
                 upper(mail) like '%'||upper(:mail)||'%' escape '!'
