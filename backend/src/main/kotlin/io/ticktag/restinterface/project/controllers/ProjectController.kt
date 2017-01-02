@@ -2,10 +2,8 @@ package io.ticktag.restinterface.project.controllers
 
 import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
-import io.ticktag.restinterface.generic.CountJson
 import io.ticktag.restinterface.project.schema.*
 import io.ticktag.restinterface.user.schema.ProjectUserResultJson
-import io.ticktag.restinterface.user.schema.UserResultJson
 import io.ticktag.service.Principal
 import io.ticktag.service.project.dto.CreateProject
 import io.ticktag.service.project.dto.UpdateProject
@@ -52,15 +50,6 @@ open class ProjectController @Inject constructor(
             PageImpl(content, pageRequest, page.totalElements)
         }
     }
-
-    @GetMapping(value = "/{id}/users")
-    open fun listProjectUsers(@PathVariable(name = "id") id: UUID,
-                              @RequestParam(name = "disabled", required = false) disabled: Boolean?,
-                              @AuthenticationPrincipal principal: Principal
-    ): List<UserResultJson> {
-        return userService.listUsersInProject(id, disabled, principal).map(::UserResultJson)
-    }
-
     @GetMapping(value = "/{id}/members")
     open fun listProjectMembers(@PathVariable(name = "id") id: UUID,
                                 @RequestParam(name = "disabled", required = false) disabled: Boolean?,
@@ -85,16 +74,6 @@ open class ProjectController @Inject constructor(
                            @RequestBody req: UpdateProjectRequestJson): ProjectResultJson {
         val project = projectService.updateProject(id, UpdateProject(req.name, req.description, req.disabled, req.icon))
         return ProjectResultJson(project)
-    }
-
-    @GetMapping(value = "/count")
-    open fun getProjectsCount(@RequestParam(name = "all", defaultValue = "false", required = false) all: Boolean,
-                              @AuthenticationPrincipal principal: Principal): CountJson {
-        return if (all) {
-            CountJson(projectService.getProjectCount())
-        } else {
-            CountJson(projectService.getUserProjectCount(principal.id))
-        }
     }
 
     @GetMapping(value = "/roles")

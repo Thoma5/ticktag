@@ -2,7 +2,6 @@ package io.ticktag.service.project.services.impl
 
 import io.ticktag.TicktagService
 import io.ticktag.library.base64ImageDecoder.Base64ImageDecoder
-import io.ticktag.library.base64ImageDecoder.Image
 import io.ticktag.persistence.member.entity.ProjectRole
 import io.ticktag.persistence.project.ProjectRepository
 import io.ticktag.persistence.project.entity.Project
@@ -101,15 +100,6 @@ open class ProjectServiceImpl @Inject constructor(
         return ProjectResult(projectToUpdate)
     }
 
-    @PreAuthorize(AuthExpr.ADMIN)
-    override fun getProjectCount(): Int {
-        return projects.count()
-    }
-
-    @PreAuthorize(AuthExpr.ADMIN_OR_SELF)
-    override fun getUserProjectCount(userId: UUID): Int {
-        return projects.countByMembersUserId(userId)
-    }
     @PreAuthorize(AuthExpr.USER)
     override fun listProjectRoles(): List<ProjectRoleResult> {
         return ProjectRole.values().map(::ProjectRoleResult)

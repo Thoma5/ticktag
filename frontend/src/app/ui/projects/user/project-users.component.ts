@@ -45,15 +45,13 @@ export class ProjectUsersComponent implements OnInit {
   ngOnInit(): void {
     this.getRoles();
     this.route.params
-      .do(() => { this.loading = true; })
+      .do(() => {})
       .switchMap(params => {
         let projectId = params['projectId'];
         this.projectId = projectId;
         return projectId;
       }, error => { })
-      .subscribe(result => {
-        this.loading = false;
-      });
+      .subscribe(result => {});
     this.users = [];
     this.getProjectMembers();
     this.user = this.authService.user;
@@ -119,7 +117,7 @@ export class ProjectUsersComponent implements OnInit {
   onStopCreate() {
     this.cu = false;
   }
-  cuFinished() {
+  finishCreateUpdate() {
     this.cu = false;
     this.getProjectMembers();
   }

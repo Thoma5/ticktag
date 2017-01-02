@@ -12,7 +12,6 @@ interface UserService {
     fun createUser(createUser: CreateUser, principal: Principal): UserResult
     fun getUser(id: UUID, principal: Principal): UserResult
     fun listUsers(query: String, role: Role?, disabled: Boolean?, principal: Principal, pageable: Pageable): Page<UserResult>
-    fun listUsersInProject(projectId: UUID, disabled: Boolean?, principal: Principal): List<UserResult>
     fun listProjectUsers(projectId: UUID, disabled: Boolean?, principal: Principal): List<ProjectUserResult>
     fun listRoles(): List<RoleResult>
     fun updateUser(principal: Principal, id: UUID, updateUser: UpdateUser): UserResult

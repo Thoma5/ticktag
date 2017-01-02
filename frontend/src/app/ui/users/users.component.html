@@ -1,3 +1,6 @@
+<div *ngIf="loading" class="loading">
+  <tt-loading></tt-loading>
+</div>
 <div class="col-md-12 form-box" *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0) ||(user.authorities.indexOf('OBSERVER') != -1))">
   <div [ngClass]="{'card': !assignMode }" *ngIf="!loading">
     <div [ngClass]="{'no-scroll': creating }">
@@ -82,8 +85,8 @@
             </h3>
           </div>
           <div class="body">
-            <tt-user-create *ngIf="mode === 'Create'" (created)="cuFinished()"></tt-user-create>
-            <tt-user-update *ngIf="mode === 'Update' && toUpdateUser" [user]="toUpdateUser" [currentUser]="me" (updated)="cuFinished()"></tt-user-update>
+            <tt-user-create *ngIf="mode === 'Create'" (created)="finishCreateUpdate()"></tt-user-create>
+            <tt-user-update *ngIf="mode === 'Update' && toUpdateUser" [user]="toUpdateUser" [currentUser]="me" (updated)="finishCreateUpdate()"></tt-user-update>
           </div>
         </div>
       </div>

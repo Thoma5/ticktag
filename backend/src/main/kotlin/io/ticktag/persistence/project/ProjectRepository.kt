@@ -15,7 +15,6 @@ import javax.persistence.EntityManager
 interface ProjectRepository : TicktagCrudRepository<Project, UUID>, ProjectRepositoryCustom {
     fun findByNameContainingIgnoreCaseAndDisabledIs(name: String, disabled: Boolean, pageable: Pageable): Page<Project>
     fun findByMembersUserIdAndMembersRoleNotAndNameContainingIgnoreCaseAndDisabledIs(userId: UUID, projectRole: ProjectRole, name: String, disabled: Boolean, pageable: Pageable): Page<Project>
-    fun countByMembersUserId(userId: UUID): Int
 }
 
 interface ProjectRepositoryCustom {

@@ -42,3 +42,7 @@
   @extend %card;
   margin-bottom: 2em;
 }
+
+.loading {
+  @extend %loading
+}

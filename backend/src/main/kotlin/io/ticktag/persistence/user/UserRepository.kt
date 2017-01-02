@@ -23,8 +23,8 @@ interface UserRepository : TicktagCrudRepository<User, UUID>, UserRepositoryCust
     @Query("select u from User u left join fetch u.image where u.username = :username")
     fun findByUsername(@Param("username") username: String): User?
 
-    @Query("select u from User u join u.memberships m join m.project p left join fetch u.image where p.id = :projectId")
-    fun findInProject(@Param("projectId") projectId: UUID): List<User>
+    @Query("select u from User u left join fetch u.image where u.username = :username and u.disabled = false")
+    fun findByUsernameAndStatusEnabled(@Param("username") username: String): User?
 
     fun findByNameContainingIgnoreCaseOrUsernameContainingIgnoreCaseOrMailContainingIgnoreCase(name: String, username: String, mail: String, pageable: Pageable): Page<User>
 
@@ -42,7 +42,7 @@ interface UserRepository : TicktagCrudRepository<User, UUID>, UserRepositoryCust
 interface UserRepositoryCustom {
     fun findByIds(@Param("ids") ids: Collection<UUID>): List<User>
 
-    fun findByProjectIdAndFuzzy(
+    fun findByProjectIdAndFuzzyAndStatusEnabled(
             projectId: UUID,
             mail: String,
             name: String,
@@ -66,7 +66,7 @@ open class UserRepositoryImpl @Inject constructor(private val em: EntityManager)
                 .associateBy({ it[0] as UUID }, { it[1] as User })
     }
 
-    override fun findByProjectIdAndFuzzy(projectId: UUID, mail: String, name: String, username: String, pageable: Pageable): List<User> {
+    override fun findByProjectIdAndFuzzyAndStatusEnabled(projectId: UUID, mail: String, name: String, username: String, pageable: Pageable): List<User> {
         return em.createQuery("""
             select u
             from User u

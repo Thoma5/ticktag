@@ -140,3 +140,11 @@ $fast-transition: 75ms ease-in-out;
     }
   }
 }
+
+%loading {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content:center;
+  align-items:center;
+}

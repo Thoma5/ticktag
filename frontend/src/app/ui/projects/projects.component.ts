@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ApiCallService, AuthService, User } from '../../service';
 import { ProjectApi, PageProjectResultJson, ProjectResultJson } from '../../api';
 import { Subject } from 'rxjs/Subject';
+
 @Component({
   selector: 'tt-projects',
   templateUrl: './projects.component.html',
@@ -126,7 +127,7 @@ export class ProjectsComponent implements OnInit {
   onStopCreate() {
     this.cu = false;
   }
-  cuFinished() {
+  finishCreateUpdate() {
     this.cu = false;
     this.getProjects();
   }

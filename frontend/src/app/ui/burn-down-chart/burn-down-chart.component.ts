@@ -133,9 +133,7 @@ export class BurnDownChartComponent implements OnInit {
                 this.refresh();
                 return this.loadData(this.projectId);
             })
-            .subscribe(() => {
-                this.loading = false;
-            });
+            .subscribe(() => {});
     }
 
     public handleFromDateChange(dateFrom: Date) {
@@ -199,12 +197,13 @@ export class BurnDownChartComponent implements OnInit {
             .callNoError<TicketTagResultJson[]>(p => this.ticketTagsApi.listTicketTagsUsingGETWithHttpInfo(null, projectId, p))
             .map(tts => idListToMap(tts).map(tt => new TicketOverviewTag(tt)).toMap());
         let projectUsersObs = this.apiCallService
-            .callNoError<UserResultJson[]>(p => this.projectApi.listProjectUsersUsingGETWithHttpInfo(projectId, undefined, p))
+            .callNoError<UserResultJson[]>(p => this.projectApi.listProjectMembersUsingGETWithHttpInfo(projectId, undefined, p))
             .map(users => idListToMap(users).map(user => new TicketOverviewUser(user)).toMap());
         let o = Observable.zip(ticketTagsObs, projectUsersObs);
         o.subscribe(tuple => {
             this.allTicketTagsForFilter = tuple[0];
             this.allProjectUsers = tuple[1];
+            this.loading = false;
         });
         return o.map(it => undefined);
 

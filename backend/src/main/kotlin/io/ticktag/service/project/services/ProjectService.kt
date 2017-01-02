@@ -15,7 +15,5 @@ interface ProjectService {
     fun createProject(project: CreateProject): ProjectResult
     fun deleteProject(id: UUID)
     fun updateProject(id: UUID, project: UpdateProject): ProjectResult
-    fun getProjectCount(): Int
-    fun getUserProjectCount(userId: UUID): Int
     fun listProjectRoles(): List<ProjectRoleResult>
 }

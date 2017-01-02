@@ -1,10 +1,12 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ApiCallService } from '../../../../service';
+import { ApiCallService, ApiCallResult } from '../../../../service';
 import {
   UserApi, ProjectApi, MemberApi, CreateMemberRequestJson, UserResultJson, MemberResultJson
 } from '../../../../api';
 import { RoleResultJson } from '../../../../api/model/RoleResultJson';
+import { showValidationError } from '../../../../util/error';
+import { Modal } from 'angular2-modal/plugins/bootstrap';
 import RoleEnum = CreateMemberRequestJson.ProjectRoleEnum;
 
 @Component({
@@ -31,7 +33,8 @@ export class MemberAddComponent implements OnInit {
     private router: Router,
     private projectApi: ProjectApi,
     private userApi: UserApi,
-    private memberApi: MemberApi) { }
+    private memberApi: MemberApi,
+    private modal: Modal) { }
 
   ngOnInit(): void {
     if (!this.projectId) {
@@ -76,13 +79,18 @@ export class MemberAddComponent implements OnInit {
           this.selectedUser = undefined;
           this.created.emit(result.result);
         } else {
-          window.alert('Could not assign user:\n\n' + JSON.stringify(result.error));
+          this.error(result);
         }
       },
       undefined,
       () => { this.working = false; });
   }
+
   onAssignUser(user: UserResultJson) {
     this.selectedUser = user;
+  }
+
+  private error(result: ApiCallResult<void | {}>): void {
+    showValidationError(this.modal, result);
   }
 }

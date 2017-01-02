@@ -1,9 +1,11 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { ApiCallService } from '../../../../service';
+import { ApiCallService, ApiCallResult } from '../../../../service';
 import {
   ProjectApi, MemberApi, UpdateMemberRequestJson,
   ProjectUserResultJson, MemberResultJson
 } from '../../../../api';
+import { showValidationError } from '../../../../util/error';
+import { Modal } from 'angular2-modal/plugins/bootstrap';
 import { RoleResultJson } from '../../../../api/model/RoleResultJson';
 
 @Component({
@@ -14,7 +16,7 @@ import { RoleResultJson } from '../../../../api/model/RoleResultJson';
 
 export class MemberUpdateComponent implements OnInit {
   request: UpdateMemberRequestJson = {
-    projectRole: undefined,
+    projectRole: undefined
   };
   working = false;
   @Input() readonly user: ProjectUserResultJson;
@@ -23,7 +25,8 @@ export class MemberUpdateComponent implements OnInit {
 
   constructor(private apiCallService: ApiCallService,
     private projectApi: ProjectApi,
-    private memberApi: MemberApi) { }
+    private memberApi: MemberApi,
+    private modal: Modal) { }
 
   ngOnInit(): void {
     this.request.projectRole = this.user.projectRole;
@@ -39,13 +42,18 @@ export class MemberUpdateComponent implements OnInit {
           this.request.projectRole = undefined;
           this.updated.emit(result.result);
         } else {
-          window.alert('Could not update membership:\n\n' + JSON.stringify(result.error));
+          this.error(result);
         }
       },
       undefined,
       () => { this.working = false; });
   }
+
   revert() {
     this.request.projectRole = this.user.projectRole;
+  }
+
+  private error(result: ApiCallResult<void | {}>): void {
+    showValidationError(this.modal, result);
   }
 }

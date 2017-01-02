@@ -1,6 +1,8 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { ApiCallService } from '../../../service';
+import { ApiCallService, ApiCallResult } from '../../../service';
 import { ProjectApi, UpdateProjectRequestJson, ProjectResultJson } from '../../../api';
+import { showValidationError } from '../../../util/error';
+import { Modal } from 'angular2-modal/plugins/bootstrap';
 
 @Component({
   selector: 'tt-project-update',
@@ -23,7 +25,8 @@ export class ProjectUpdateComponent implements OnInit {
   @Output() readonly updated = new EventEmitter<ProjectResultJson>();
 
   constructor(private apiCallService: ApiCallService,
-    private projectApi: ProjectApi) { }
+    private projectApi: ProjectApi,
+    private modal: Modal) { }
 
 
   ngOnInit(): void {
@@ -42,7 +45,7 @@ export class ProjectUpdateComponent implements OnInit {
           this.request.icon = '';
           this.updated.emit(result.result);
         } else {
-          window.alert('Could not update project:\n\n' + JSON.stringify(result.error));
+          this.error(result);
         }
       },
       undefined,
@@ -71,5 +74,9 @@ export class ProjectUpdateComponent implements OnInit {
   changeActive() {
     this.request.disabled = !this.active;
 
+  }
+
+  private error(result: ApiCallResult<void|{}>): void {
+    showValidationError(this.modal, result);
   }
 }

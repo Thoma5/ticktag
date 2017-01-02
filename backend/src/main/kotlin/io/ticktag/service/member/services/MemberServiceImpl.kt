@@ -34,6 +34,7 @@ open class MemberServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.ADMIN)
     override fun createMember(userId: UUID, projectId: UUID, createMember: CreateMember): MemberResult {
+        //since this is admin only, even disabled users and disabled projects should be usable
         val user = users.findOne(userId) ?: throw NotFoundException()
         val project = projects.findOne(projectId) ?: throw NotFoundException()
         val member = Member.create(user, project, createMember.role, Instant.now())

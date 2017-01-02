@@ -121,7 +121,7 @@ class Project:
         self.name = "Big Project"
         self.description = faker.sentence()
         self.time = random_datetime(False)
-        self.disabled = random_status()
+        self.disabled = False
     
     def insert(self):
         return """

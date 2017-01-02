@@ -2,7 +2,6 @@
 export * from './AssignmentTagResultJson';
 export * from './CommandJson';
 export * from './CommentResultJson';
-export * from './CountJson';
 export * from './CreateAssignmentTagRequestJson';
 export * from './CreateCommentRequestJson';
 export * from './CreateLoggedTimeJson';

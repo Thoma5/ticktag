@@ -150,7 +150,7 @@ export class UsersComponent implements OnInit, OnChanges {
   onStopCreate() {
     this.cu = false;
   }
-  cuFinished() {
+  finishCreateUpdate() {
     this.cu = false;
     this.getUsers();
   }

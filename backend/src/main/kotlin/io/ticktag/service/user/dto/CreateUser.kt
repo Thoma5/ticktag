@@ -10,7 +10,7 @@ data class CreateUser(
         @field:Size(min = 3, max = 255) val mail: String,
         @field:Pattern(regexp = User.USERNAME_REGEX) val username: String,
         @field:Size(min = 3, max = 30) val name: String,
-        @field:Pattern(regexp = User.PASSWORD_REGEX) val password: String,
+        @field:Size(min = 8) val password: String,
         val role: Role,
         val image: String?
 )

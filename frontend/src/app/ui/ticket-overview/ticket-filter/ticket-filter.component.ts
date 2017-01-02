@@ -80,46 +80,6 @@ export class TicketFilterComponent implements OnInit, OnChanges {
             .subscribe(term => this.filter(term), error => { });
     }
 
-    onManualClick() {
-        this.modal.alert()
-            .size('lg')
-            .showClose(true)
-            .title('Filter Manual')
-            .body(`
-                    <h3>Filter ticket title</h3>
-                        <p>Some ticket title</p>
-                    <h3>Filter ticket number</h3>
-                        <p>!#:1 </p>
-                    <h3>Filter ticket tag</h3>
-                        <p>!tag:name_1,name_2,...,name_n</p>
-                    <h3>Filter ticket assignees</h3>
-                        <p>!user:name_1,name_2,...,name_n </p>
-                    <h3>Filter story points</h3>
-                        <p>!sp:1-10 </p>
-                        <p>!sp:&gt;10 </p>
-                        <p>!sp:&lt;10</p>
-                        <p>!sp:10</p>
-                    <h3>Filter due dates</h3>
-                        <p>!dueDate:1970-01-01/2038-01-19 </p>
-                        <p>!dueDate:&gt;2038-01-19 </p>
-                        <p>!dueDate:&lt;2038-01-19</p>
-                        <p>!dueDate:2038-01-19</p>
-                    <h3>Filter progress</h3>
-                        <p>!progress:1%-10% </p>
-                        <p>!progress:&gt;10% </p>
-                        <p>!progress:&lt;10%</p>
-                        <p>!progress:10%</p>
-                        <p>Note: also works with 0.1 instead of 10%</p>
-                    <h3>Filter StoryPoints</h3>
-                        <p>!sp:1-10 </p>
-                        <p>!sp:&gt;10 </p>
-                        <p>!sp:&lt;10</p>
-                        <p>!sp:10</p>
-                    <h3>Filter Status</h3>
-                        <p>!open:true </p>
-        `)
-            .open();
-    }
     inputChanged(query: string): void {
         this.searchTerms.next(query);
     }

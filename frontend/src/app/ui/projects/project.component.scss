@@ -33,3 +33,7 @@ md-slide-toggle{
   @extend %card;
   margin-bottom: 3em;
 }
+
+.loading {
+  @extend %loading
+}

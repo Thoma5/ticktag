@@ -1,81 +1,83 @@
-<div class="col-md-12 form-box">
-  <div class="card" *ngIf="!loading">
-    <div [ngClass]="{'no-scroll': creating }">
-      <div class="head">
-        <div class="title">
-          Project Users
-        </div>
+<div *ngIf="loading" class="loading">
+  <tt-loading></tt-loading>
+</div>
+<div class="card" *ngIf="!loading">
+  <div [ngClass]="{'no-scroll': creating }">
+    <div class="head">
+      <div class="title">
+        Project Users
       </div>
-      <div class="search row">
-        <div class="col-lg-4"><input class="form-control" type='text' placeholder='Type to filter...' (keyup)='updateFilter($event)' /></div>
-        <div class="col-lg-6">
-          <div class="admintoggles form-group form-inline">
-            <label for="rolefilter">Filter for Roles:</label>
-            <select class="form-control" id="rolefilter" name="Role" size="1" placeholder="Filter role" [(ngModel)]="filterRole" (change)="updateFilter()">
+    </div>
+    <div class="search row">
+      <div class="col-lg-4"><input class="form-control" type='text' placeholder='Type to filter...' (keyup)='updateFilter($event)' /></div>
+      <div class="col-lg-6">
+        <div class="admintoggles form-group form-inline">
+          <label for="rolefilter">Filter for Roles:</label>
+          <select class="form-control" id="rolefilter" name="Role" size="1" placeholder="Filter role" [(ngModel)]="filterRole" (change)="updateFilter()">
                 <option value=""></option>
                 <option *ngFor="let role of roles" value="{{role.role}}">{{role.role.charAt(0) + role.role.slice(1).toLowerCase()}}</option>
               </select>
-          </div>
         </div>
-        <div class="col-lg-2"><a *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0))" type="button" routerLink="/project/{{projectId}}/users/add" class="btn btn-primary pull-right"><span class="glyphicon glyphicon-plus"></span> Add User</a></div>
       </div>
-      <ngx-datatable *ngIf="rows" class="material" [rows]="rows" [columns]="columns" [columnMode]="'force'" [headerHeight]="32"
-        [footerHeight]="32" [rowHeight]="32" [scrollbarH]="true" [scrollbarV]="false" [loadingIndicator]="refresh" [cssClasses]="iconsCss"
-        [selectionType]="'row'">
-        <ngx-datatable-column name="Icon" prop="imageId" width="48" [resizeable]="false" [sortable]="false">
-          <template let-row="row" let-value="value" ngx-datatable-cell-template>
-            <div style="width:22px; height:22px;">
-              <tt-user-image [imageId]="value"></tt-user-image>
-            </div>
-          </template>
-        </ngx-datatable-column>
-        <ngx-datatable-column name="Name" width="256" [resizeable]="false">
-          <template let-row="row" let-value="value" ngx-datatable-cell-template>
-            <a>{{value}}</a>
-          </template>
-        </ngx-datatable-column>
-        <ngx-datatable-column name="Username" prop="username" width="128" [resizeable]="false">
-          <template let-row="row" let-value="value" ngx-datatable-cell-template>
-            {{value}}
-          </template>
-        </ngx-datatable-column>
-        <ngx-datatable-column name="Project Role" prop="projectRole" minWidth="128" width="128" maxWidth="1024">
-          <template let-row="row" let-value="value" ngx-datatable-cell-template>
-            <span *ngIf="value === 'ADMIN'"><span class="glyphicon glyphicon-king"></span> Admin</span>
-            <span *ngIf="value === 'OBSERVER'"><span class="glyphicon glyphicon-tower"></span> Observer</span>
-            <span *ngIf="value === 'USER'"><span class="glyphicon glyphicon-pawn"></span> User</span>
-            <span *ngIf="value === 'NONE'"><span class="glyphicon glyphicon-trash"></span> None</span>
-          </template>
-        </ngx-datatable-column>
-        <ngx-datatable-column name="E-Mail" prop="mail" minWidth="256" width="256" maxWidth="1024">
-          <template let-row="row" let-value="value" ngx-datatable-cell-template>
-            {{value}}
-          </template>
-        </ngx-datatable-column>
-        <ngx-datatable-column name="Actions" width="128" [resizeable]="false" [sortable]="false" *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0))">
-          <template let-row="row" ngx-datatable-cell-template>
-            <button (click)="onStartUpdate(row)" class="btn btn-xs"><i class="glyphicon glyphicon-edit" tooltip="Edit Membership"
-              tooltipPopupDelay="500" tooltipPlacement="left" tooltipTrigger="mouseenter"></i></button>
-            <button (click)="onDisable(row.id)" class="btn btn-xs btn-danger" tooltip="Disable Member"
-              tooltipPopupDelay="500" tooltipPlacement="left" tooltipTrigger="mouseenter"><i class='fa fa-times'></i></button>
-          </template>
-        </ngx-datatable-column>
-      </ngx-datatable>
+      <div class="col-lg-2"><a *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0))" type="button" routerLink="/project/{{projectId}}/users/add"
+          class="btn btn-primary pull-right"><span class="glyphicon glyphicon-plus"></span> Add User</a></div>
     </div>
-    <div *ngIf="cu" class="overlay" (click)="$event.stopPropagation()">
-      <div class="overlay-body" (click)="$event.stopPropagation()">
-        <button type="button" class="exit pull-right" (click)="onStopCreate()">
+    <ngx-datatable *ngIf="rows" class="material" [rows]="rows" [columns]="columns" [columnMode]="'force'" [headerHeight]="32"
+      [footerHeight]="32" [rowHeight]="32" [scrollbarH]="true" [scrollbarV]="false" [loadingIndicator]="refresh" [cssClasses]="iconsCss"
+      [selectionType]="'row'">
+      <ngx-datatable-column name="Icon" prop="imageId" width="48" [resizeable]="false" [sortable]="false">
+        <template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <div style="width:22px; height:22px;">
+            <tt-user-image [imageId]="value"></tt-user-image>
+          </div>
+        </template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Name" width="256" [resizeable]="false">
+        <template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <a>{{value}}</a>
+        </template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Username" prop="username" width="128" [resizeable]="false">
+        <template let-row="row" let-value="value" ngx-datatable-cell-template>
+          {{value}}
+        </template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Project Role" prop="projectRole" minWidth="128" width="128" maxWidth="1024">
+        <template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <span *ngIf="value === 'ADMIN'"><span class="glyphicon glyphicon-king"></span> Admin</span>
+          <span *ngIf="value === 'OBSERVER'"><span class="glyphicon glyphicon-tower"></span> Observer</span>
+          <span *ngIf="value === 'USER'"><span class="glyphicon glyphicon-pawn"></span> User</span>
+          <span *ngIf="value === 'NONE'"><span class="glyphicon glyphicon-trash"></span> None</span>
+        </template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="E-Mail" prop="mail" minWidth="256" width="256" maxWidth="1024">
+        <template let-row="row" let-value="value" ngx-datatable-cell-template>
+          {{value}}
+        </template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Actions" width="128" [resizeable]="false" [sortable]="false" *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0))">
+        <template let-row="row" ngx-datatable-cell-template>
+          <button (click)="onStartUpdate(row)" class="btn btn-xs"><i class="glyphicon glyphicon-edit" tooltip="Edit Membership"
+              tooltipPopupDelay="500" tooltipPlacement="left" tooltipTrigger="mouseenter"></i></button>
+          <button (click)="onDisable(row.id)" class="btn btn-xs btn-danger" tooltip="Disable Member" tooltipPopupDelay="500" tooltipPlacement="left"
+            tooltipTrigger="mouseenter"><i class='fa fa-times'></i></button>
+        </template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+  </div>
+  <div *ngIf="cu" class="overlay" (click)="$event.stopPropagation()">
+    <div class="overlay-body" (click)="$event.stopPropagation()">
+      <button type="button" class="exit pull-right" (click)="onStopCreate()">
             <i class='fa fa-times'></i>
           </button>
-        <div class="overlay-content">
-          <div class="head">
-            <h3 class="title">
-              {{mode}} Member
-            </h3>
-          </div>
-          <div class="body">
-            <tt-member-update *ngIf="mode === 'Update' && toUpdateMember" [roles]="roles" [user]="toUpdateMember" (updated)="cuFinished($event)"></tt-member-update>
-          </div>
+      <div class="overlay-content">
+        <div class="head">
+          <h3 class="title">
+            {{mode}} Member
+          </h3>
+        </div>
+        <div class="body">
+          <tt-member-update *ngIf="mode === 'Update' && toUpdateMember" [roles]="roles" [user]="toUpdateMember" (updated)="finishCreateUpdate($event)"></tt-member-update>
         </div>
       </div>
     </div>

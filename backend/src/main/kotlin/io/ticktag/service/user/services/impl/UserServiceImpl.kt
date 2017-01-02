@@ -31,10 +31,7 @@ import java.awt.Font
 import java.awt.geom.AffineTransform
 import java.awt.geom.Rectangle2D
 import java.awt.image.BufferedImage
-import java.io.BufferedInputStream
-import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-import java.net.URLConnection
 import java.nio.ByteBuffer
 import java.security.MessageDigest
 import java.time.Clock
@@ -58,7 +55,7 @@ open class UserServiceImpl @Inject constructor(
 ) : UserService {
     companion object {
         val IMAGE_ID_VALID_DURATION: Duration = Duration.ofDays(1)
-        val MAX_IMAGE_SIZE: Int = 512000
+        val MAX_IMAGE_SIZE: Int = 512000 //Byte
     }
 
     // Authorization is performed via the temp image ids which are kept secret and expire
@@ -89,7 +86,7 @@ open class UserServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listUsersFuzzy(@P("authProjectId") projectId: UUID, query: String, pageable: Pageable, principal: Principal): List<UserResult> {
-        return usersToDto(users.findByProjectIdAndFuzzy(projectId, query, query, query, pageable), principal)
+        return usersToDto(users.findByProjectIdAndFuzzyAndStatusEnabled(projectId, query, query, query, pageable), principal)
     }
 
     @PreAuthorize(AuthExpr.ANONYMOUS)
@@ -123,13 +120,13 @@ open class UserServiceImpl @Inject constructor(
             var image: ByteArray? = null
             if (createUser.image.isNotEmpty()) {
                 image = base64ImageDecoder.decode(createUser.image).image
-                if (image.size > MAX_IMAGE_SIZE)  throw TicktagValidationException(listOf(ValidationError("createUser.image", ValidationErrorDetail.Other("maxsize"+ MAX_IMAGE_SIZE + "KB"))))
+                if (image.size > MAX_IMAGE_SIZE) throw TicktagValidationException(listOf(ValidationError("createUser.image", ValidationErrorDetail.Other("maxsize" + MAX_IMAGE_SIZE / 1000 + "KB"))))
             }
             var userimage = userimages.findOne(user.id)
             if (userimage == null && image != null) {
                 userimage = UserImage.create(user.id, image)
                 userimages.insert(userimage)
-            } else if(userimage != null && image != null) {
+            } else if (userimage != null && image != null) {
                 userimage.image = image
             }
         }
@@ -155,14 +152,8 @@ open class UserServiceImpl @Inject constructor(
                 page = users.findAllByRoleAndQuery(q, role, pageable)
             } else page = users.findAllByRoleAndStatusAndQuery(q, disabled, role, pageable)
         }
-        val content = page.content.map { e -> userToDto(e, principal) }
+        val content = usersToDto(page.content, principal)
         return PageImpl(content, pageable, page.totalElements)
-    }
-
-    @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
-    override fun listUsersInProject(@P("authProjectId") projectId: UUID, disabled: Boolean?, principal: Principal): List<UserResult> {
-        projects.findOne(projectId) ?: throw NotFoundException()
-        return usersToDto(users.findInProject(projectId), principal)
     }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
@@ -172,7 +163,11 @@ open class UserServiceImpl @Inject constructor(
         if (disabled == null) {
             projectMemberships = members.findByProject(project) ?: throw NotFoundException()
         } else {
-            projectMemberships = members.findByProjectAndUserDisabledIs(project, disabled) ?: throw NotFoundException()
+            if (disabled) {
+                projectMemberships = members.findByProjectAndUserDisabledIsAndRoleIs(project, disabled, ProjectRole.NONE) ?: throw NotFoundException()
+            } else {
+                projectMemberships = members.findByProjectAndUserDisabledIsAndRoleNot(project, disabled, ProjectRole.NONE) ?: throw NotFoundException()
+            }
         }
         val projectUserResult: MutableList<ProjectUserResult> = mutableListOf()
         projectMemberships.map { e -> projectUserResult.add(ProjectUserResult(UserResult(e.user, encodeTempImageId(e.user.id)), e)) }
@@ -180,7 +175,7 @@ open class UserServiceImpl @Inject constructor(
     }
 
 
-    @PreAuthorize(AuthExpr.ADMIN) // TODO should probably be more granular
+    @PreAuthorize(AuthExpr.ADMIN) // TODO should probably be- more granular
     override fun listRoles(): List<RoleResult> {
         return Role.values().map(::RoleResult)
     }
@@ -211,7 +206,7 @@ open class UserServiceImpl @Inject constructor(
             if (!principal.isId(id)) { //effectively just usable from the admin since user (self) has no access in this state
                 user.disabled = updateUser.disabled
                 user.currentToken = UUID.randomUUID()
-            } else if (principal.isId(id) && updateUser.disabled != user.disabled){
+            } else if (principal.isId(id) && updateUser.disabled != user.disabled) {
                 throw TicktagValidationException(listOf(ValidationError("updateUser.disabled", ValidationErrorDetail.Other("notpermitted"))))
             }
         }
@@ -219,7 +214,7 @@ open class UserServiceImpl @Inject constructor(
         if (updateUser.role != null) {
             if (principal.hasRole(AuthExpr.ROLE_GLOBAL_ADMIN) && !principal.isId(id)) {  //Only Admins can change user roles!
                 user.role = updateUser.role
-            } else  if (principal.isId(id) && updateUser.role != user.role){
+            } else if (principal.isId(id) && updateUser.role != user.role) {
                 throw TicktagValidationException(listOf(ValidationError("updateUser.role", ValidationErrorDetail.Other("notpermitted"))))
             }
         }
@@ -227,16 +222,16 @@ open class UserServiceImpl @Inject constructor(
             var image: ByteArray? = null
             if (updateUser.image.isNotEmpty()) {
                 image = base64ImageDecoder.decode(updateUser.image).image
-                if (image.size > MAX_IMAGE_SIZE)  throw TicktagValidationException(listOf(ValidationError("updateUser.image", ValidationErrorDetail.Other("maxsize"+ MAX_IMAGE_SIZE + "KB"))))
+                if (image.size > MAX_IMAGE_SIZE) throw TicktagValidationException(listOf(ValidationError("updateUser.image", ValidationErrorDetail.Other("maxsize" + MAX_IMAGE_SIZE + "Bytes"))))
             }
 
             var userimage = userimages.findOne(user.id)
             if (userimage == null && image != null) {
                 userimage = UserImage.create(user.id, image)
                 userimages.insert(userimage)
-            } else if (userimage != null && image != null){
+            } else if (userimage != null && image != null) {
                 userimage.image = image
-            } else if (userimage != null && image == null){
+            } else if (userimage != null && image == null) {
                 userimages.delete(userimage)
             }
         }
@@ -248,7 +243,7 @@ open class UserServiceImpl @Inject constructor(
         if (principal.isId(id)) throw TicktagValidationException(listOf(ValidationError("deleteUser", ValidationErrorDetail.Other("notpermitted"))))
         val userToDelete = users.findOne(id) ?: throw NotFoundException()
         val memberships = members.findByUserAndRoleNot(userToDelete, ProjectRole.NONE) ?: throw NotFoundException()
-        memberships.map { m ->  m.role = ProjectRole.NONE}
+        memberships.map { m -> m.role = ProjectRole.NONE }
         userToDelete.currentToken = UUID.randomUUID()
         userToDelete.disabled = true
     }

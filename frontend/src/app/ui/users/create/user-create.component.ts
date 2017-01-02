@@ -1,8 +1,10 @@
 import { Component, Output, EventEmitter, OnInit } from '@angular/core';
-import { ApiCallService } from '../../../service';
+import { ApiCallService, ApiCallResult } from '../../../service';
 import { UserApi, CreateUserRequestJson, UserResultJson } from '../../../api';
 import { RoleResultJson } from '../../../api/model/RoleResultJson';
 import RoleEnum = CreateUserRequestJson.RoleEnum;
+import { showValidationError } from '../../../util/error';
+import { Modal } from 'angular2-modal/plugins/bootstrap';
 
 
 @Component({
@@ -13,7 +15,6 @@ import RoleEnum = CreateUserRequestJson.RoleEnum;
 
 export class UserCreateComponent implements OnInit {
   readonly MAIL_REGEX = '^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$';
-  readonly PASSWD_REGEX = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}';
   readonly USERNAME_REGEX = '^[a-z0-9_]{3,30}$';
 
   request: CreateUserRequestJson = {
@@ -30,6 +31,10 @@ export class UserCreateComponent implements OnInit {
   private roles: RoleResultJson[] = [];
   @Output() readonly created = new EventEmitter<UserResultJson>();
 
+  constructor(private apiCallService: ApiCallService,
+    private userApi: UserApi,
+    private modal: Modal) { }
+
   ngOnInit(): void {
     this.getRoles();
   }
@@ -41,9 +46,6 @@ export class UserCreateComponent implements OnInit {
         this.roles = roles;
       });
   }
-
-  constructor(private apiCallService: ApiCallService,
-    private userApi: UserApi) { }
 
   onSubmit(): void {
     this.working = true;
@@ -57,7 +59,7 @@ export class UserCreateComponent implements OnInit {
           this.request.password = '';
           this.created.emit(result.result);
         } else {
-          window.alert('Could not create user:\n\n' + JSON.stringify(result.error));
+          this.error(result);
         }
       },
       undefined,
@@ -67,5 +69,9 @@ export class UserCreateComponent implements OnInit {
   setImage(img: string) {
     this.imageWithMimeType = img;
     this.request.image = img ? img.split(',')[1] : undefined;
+  }
+
+  private error(result: ApiCallResult<void | {}>): void {
+    showValidationError(this.modal, result);
   }
 }

@@ -1,6 +1,8 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { ApiCallService } from '../../../service';
+import { ApiCallService, ApiCallResult } from '../../../service';
 import { ProjectApi, CreateProjectRequestJson, ProjectResultJson } from '../../../api';
+import { showValidationError } from '../../../util/error';
+import { Modal } from 'angular2-modal/plugins/bootstrap';
 
 @Component({
   selector: 'tt-project-create',
@@ -20,7 +22,8 @@ export class ProjectCreateComponent {
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(private apiCallService: ApiCallService,
-    private projectApi: ProjectApi) { }
+    private projectApi: ProjectApi,
+    private modal: Modal) { }
 
   onSubmit(): void {
     this.working = true;
@@ -34,7 +37,7 @@ export class ProjectCreateComponent {
           this.request.icon = undefined;
           this.created.emit(result.result);
         } else {
-          window.alert('Could not create project:\n\n' + JSON.stringify(result.error));
+          this.error(result);
         }
       },
       undefined,
@@ -44,5 +47,9 @@ export class ProjectCreateComponent {
   setImage(image: string) {
     this.iconWithMimeType = image;
     this.request.icon = image ? image.split(',')[1] : undefined;
+  }
+
+  private error(result: ApiCallResult<void|{}>): void {
+    showValidationError(this.modal, result);
   }
 }
