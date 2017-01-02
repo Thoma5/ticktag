@@ -195,9 +195,9 @@ open class UserServiceImpl @Inject constructor(
 
     private fun generateDefaultImagePng(user: User): ByteArray {
         val hash = ByteBuffer.wrap(MessageDigest.getInstance("SHA-1").digest(user.username.toByteArray()))
-        val alpha = intToDouble(hash.getInt(0), 0.0, Math.PI)
-        val hue0 = intToDouble(hash.getInt(4), 0.0, 1.0).toFloat()
-        val hue1 = intToDouble(hash.getInt(8), 0.0, 1.0).toFloat()
+        val hue = intToDouble(hash.getInt(0), 0.0, 1.0).toFloat()
+        val saturation = intToDouble(hash.getInt(4), 0.25, 0.6).toFloat()
+        val brightness = intToDouble(hash.getInt(8), 0.8, 1.0).toFloat()
         val letter = "${user.username[0].toUpperCase()}"
 
         val image = BufferedImage(128, 128, BufferedImage.TYPE_INT_RGB)
@@ -205,11 +205,10 @@ open class UserServiceImpl @Inject constructor(
 
         g.scale(image.width.toDouble(), image.height.toDouble())
         g.translate(0.5, 0.5)
-        g.rotate(alpha)
-        g.color = Color.getHSBColor(hue0, 0.5f, 1.0f)
+        g.color = Color.getHSBColor(hue, saturation, brightness)
         g.fill(Rectangle2D.Double(-2.0, -2.0, 4.0, 4.0))
-        g.color = Color.getHSBColor(hue1, 0.5f, 1.0f)
-        g.fill(Rectangle2D.Double(0.0, -2.0, 2.0, 4.0))
+        //g.color = Color.getHSBColor(hue1, 0.5f, 1.0f)
+        //g.fill(Rectangle2D.Double(0.0, -2.0, 2.0, 4.0))
 
         g.transform = AffineTransform()
         val font = Font("Arial", Font.PLAIN, 72)
