@@ -17,12 +17,8 @@
                     type="text"
                     value=""
                     placeholder="Username"
-                    [(ngModel)]="newUserName"
                     ttFocus
-                    ttSelectAll
-                    (blur)="onHideAdd()"
-                    (keydown.enter)="onAdd()"
-                    [disabled]="checking">
+                    ttSelectAll>
                 <div *ngIf="checking" class="loading">
                     <tt-spinner>
                     </tt-spinner>
