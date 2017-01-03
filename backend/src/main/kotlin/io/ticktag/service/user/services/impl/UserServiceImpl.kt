@@ -142,7 +142,7 @@ open class UserServiceImpl @Inject constructor(
     @PreAuthorize(AuthExpr.ADMIN) // TODO should probably be more granular
     override fun listUsers(query: String, role: Role?, disabled: Boolean?, principal: Principal, pageable: Pageable): Page<UserResult> {
         val page: Page<User>
-        val q = "%$query%".toLowerCase()
+        val q = "%" + query.replace("_", "\\_", false).replace("%", "\\%", false).toLowerCase() + "%"
         if (role == null) {
             if (disabled == null) {
                 page = users.findByNameContainingIgnoreCaseOrUsernameContainingIgnoreCaseOrMailContainingIgnoreCase(query, query, query, pageable)

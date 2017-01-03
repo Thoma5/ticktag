@@ -28,13 +28,13 @@ interface UserRepository : TicktagCrudRepository<User, UUID>, UserRepositoryCust
 
     fun findByNameContainingIgnoreCaseOrUsernameContainingIgnoreCaseOrMailContainingIgnoreCase(name: String, username: String, mail: String, pageable: Pageable): Page<User>
 
-    @Query("select u from User u where u.disabled = :disabled AND (LOWER(u.name) LIKE :query OR LOWER(u.username) LIKE :query OR LOWER(u.mail) LIKE :query )")
+    @Query("select u from User u where u.disabled = :disabled AND (LOWER(u.name) LIKE :query ESCAPE '\' OR LOWER(u.username) LIKE :query ESCAPE '\'  OR LOWER(u.mail) LIKE :query ESCAPE '\'  )")
     fun findAllByStatusAndQuery(@Param("query") query: String, @Param("disabled") disabled: Boolean, pageable: Pageable): Page<User>
 
-    @Query("select u from User u where u.role = :role AND (LOWER(u.name) LIKE :query OR LOWER(u.username) LIKE :query OR LOWER(u.mail) LIKE :query )")
+    @Query("select u from User u where u.role = :role AND (LOWER(u.name) LIKE :query OR LOWER(u.username) LIKE :query ESCAPE '\'  OR LOWER(u.mail) LIKE :query  ESCAPE '\'  )")
     fun findAllByRoleAndQuery(@Param("query") query: String, @Param("role") role: Role, pageable: Pageable): Page<User>
 
-    @Query("select u from User u where u.role = :role AND u.disabled = :disabled AND (LOWER(u.name) LIKE :query OR LOWER(u.username) LIKE :query OR LOWER(u.mail) LIKE :query )")
+    @Query("select u from User u where u.role = :role AND u.disabled = :disabled AND (LOWER(u.name) LIKE :query  ESCAPE '\'  OR LOWER(u.username) LIKE :query  ESCAPE '\'  OR LOWER(u.mail) LIKE :query  ESCAPE '\' )")
     fun findAllByRoleAndStatusAndQuery(@Param("query") query: String, @Param("disabled") disabled: Boolean, @Param("role") role: Role, pageable: Pageable): Page<User>
 
 }
