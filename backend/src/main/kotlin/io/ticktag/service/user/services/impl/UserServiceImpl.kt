@@ -169,9 +169,13 @@ open class UserServiceImpl @Inject constructor(
                 projectMemberships = members.findByProjectAndUserDisabledIsAndRoleNot(project, disabled, ProjectRole.NONE) ?: throw NotFoundException()
             }
         }
-        val projectUserResult: MutableList<ProjectUserResult> = mutableListOf()
-        projectMemberships.map { e -> projectUserResult.add(ProjectUserResult(UserResult(e.user, encodeTempImageId(e.user.id)), e)) }
-        return projectUserResult
+        val userIds = projectMemberships.map { it.userId }
+        val userMembershipMap = projectMemberships.groupBy { it.userId }
+        val userInProject = users.findByIds(userIds)
+        val usersResult = usersToDto(userInProject, principal)
+        val projectUserResults: MutableList<ProjectUserResult> = mutableListOf()
+        usersResult.map { e -> projectUserResults.add(ProjectUserResult(e, userMembershipMap[e.id]!![0])) }
+        return projectUserResults
     }
 
 
