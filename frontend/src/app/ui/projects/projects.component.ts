@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiCallService, AuthService, User } from '../../service';
 import { ProjectApi, PageProjectResultJson, ProjectResultJson } from '../../api';
@@ -19,6 +19,7 @@ export class ProjectsComponent implements OnInit {
     pagerNext: 'glyphicon glyphicon-forward'
   };
   projects: PageProjectResultJson;
+  expanded = {};
   loading = true;
   refresh = true;
   cu = false;
@@ -31,10 +32,11 @@ export class ProjectsComponent implements OnInit {
   limit = 25;
   rows: ProjectResultJson[] = [];
   totalElements = 0;
-  filter= new Subject<string>();
+  filter = new Subject<string>();
   projectFilter: string = '';
   private allProjects: boolean = false;
   private user: User;
+  @ViewChild('projectDataTable') table: any;
 
   constructor(
     private router: Router,
@@ -51,8 +53,8 @@ export class ProjectsComponent implements OnInit {
       .subscribe(user => {
         this.user = user;
       });
-    this.filter.debounceTime(300).do(term  =>
-    this.getProjects(this.offset, this.limit, this.sortprop, this.asc, term)).subscribe(result => {}, error => {});
+    this.filter.debounceTime(300).do(term =>
+      this.getProjects(this.offset, this.limit, this.sortprop, this.asc, term)).subscribe(result => { }, error => { });
   }
 
   getProjects(page?: number, size?: number, order?: string, asc?: boolean, filter?: string): void {
@@ -130,5 +132,10 @@ export class ProjectsComponent implements OnInit {
   finishCreateUpdate() {
     this.cu = false;
     this.getProjects();
+  }
+
+
+  toggleExpandRow(row: any) {
+    this.table.toggleExpandRow(row);
   }
 }
