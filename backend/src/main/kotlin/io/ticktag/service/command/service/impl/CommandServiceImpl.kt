@@ -50,7 +50,7 @@ open class CommandServiceImpl(
         for ((index, command) in commands.withIndex()) {
             when (command) {
                 is Command.Assign -> {
-                    val assignUser = users.findByUsername(command.user)
+                    val assignUser = users.findByUsernameAndStatusEnabled(command.user)
                     val assignTag = assignmentTags.findByNormalizedNameAndProjectId(nn.normalize(command.tag), ticket.project.id)
                     if (assignUser != null && assignTag != null) {
                         tryCommand(errors, index) {

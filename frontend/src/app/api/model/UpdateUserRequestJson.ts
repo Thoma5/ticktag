@@ -36,6 +36,10 @@ export interface UpdateUserRequestJson {
 
     role?: UpdateUserRequestJson.RoleEnum;
 
+    image?: string;
+
+    disabled?: boolean;
+
 }
 export namespace UpdateUserRequestJson {
     export enum RoleEnum {

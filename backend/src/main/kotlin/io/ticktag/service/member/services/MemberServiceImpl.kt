@@ -4,6 +4,7 @@ import io.ticktag.TicktagService
 import io.ticktag.persistence.member.MemberRepository
 import io.ticktag.persistence.member.entity.Member
 import io.ticktag.persistence.member.entity.MemberKey
+import io.ticktag.persistence.member.entity.ProjectRole
 import io.ticktag.persistence.project.ProjectRepository
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.AuthExpr
@@ -13,6 +14,7 @@ import io.ticktag.service.member.dto.CreateMember
 import io.ticktag.service.member.dto.MemberResult
 import io.ticktag.service.member.dto.UpdateMember
 import org.springframework.security.access.prepost.PreAuthorize
+import java.time.Instant
 import java.util.*
 import javax.inject.Inject
 
@@ -32,9 +34,10 @@ open class MemberServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.ADMIN)
     override fun createMember(userId: UUID, projectId: UUID, createMember: CreateMember): MemberResult {
+        //since this is admin only, even disabled users and disabled projects should be usable
         val user = users.findOne(userId) ?: throw NotFoundException()
         val project = projects.findOne(projectId) ?: throw NotFoundException()
-        val member = Member.create(user, project, createMember.role, Date())
+        val member = Member.create(user, project, createMember.role, Instant.now())
         members.insert(member)
         return MemberResult(member)
     }
@@ -44,7 +47,7 @@ open class MemberServiceImpl @Inject constructor(
         val user = users.findOne(userId) ?: throw NotFoundException()
         val project = projects.findOne(projectId) ?: throw NotFoundException()
         val memberToDelete = members.findOne(MemberKey.create(user, project)) ?: throw NotFoundException()
-        members.delete(memberToDelete)
+        memberToDelete.role = ProjectRole.NONE
     }
 
     @PreAuthorize(AuthExpr.ADMIN)

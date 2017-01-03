@@ -25,8 +25,39 @@
 
 import * as models from './models';
 
-export interface CountJson {
-    count: number;
+export interface ProjectUserResultJson {
+    disabled: boolean;
 
+    id: string;
+
+    imageId: string;
+
+    joinDate: number;
+
+    mail?: string;
+
+    name: string;
+
+    projectId: string;
+
+    projectRole: ProjectUserResultJson.ProjectRoleEnum;
+
+    role: ProjectUserResultJson.RoleEnum;
+
+    username: string;
+
+}
+export namespace ProjectUserResultJson {
+    export enum ProjectRoleEnum {
+        NONE = <any> 'NONE',
+        OBSERVER = <any> 'OBSERVER',
+        USER = <any> 'USER',
+        ADMIN = <any> 'ADMIN'
+    }
+    export enum RoleEnum {
+        USER = <any> 'USER',
+        OBSERVER = <any> 'OBSERVER',
+        ADMIN = <any> 'ADMIN'
+    }
 }
 

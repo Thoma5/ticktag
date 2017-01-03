@@ -16,9 +16,14 @@ import { WhoamiComponent } from './ui/whoami/whoami.component';
 import { HomeComponent } from './ui/home/home.component';
 import { Ng2Webstorage } from 'ng2-webstorage/dist/app';
 import { UsersComponent } from './ui/users/users.component';
-import { UserCreateComponent } from './ui/users/user-create.component';
+import { UserCreateComponent } from './ui/users/create/user-create.component';
+import { UserUpdateComponent } from './ui/users/update/user-update.component';
 import { ProjectsComponent } from './ui/projects/projects.component';
-import { ProjectCreateComponent } from './ui/projects/project-create.component';
+import { ProjectCreateComponent } from './ui/projects/create/project-create.component';
+import { ProjectUpdateComponent } from './ui/projects/update/project-update.component';
+import { ProjectUsersComponent } from './ui/projects/user/project-users.component';
+import { MemberAddComponent } from './ui/projects/user/add/member-add.component';
+import { MemberUpdateComponent } from './ui/projects/user/update/member-update.component';
 import {
   ProjectApi, AuthApi, UserApi, AssignmenttagApi, CommentsApi, MemberApi,
   TimecategoryApi, TicketApi, TickettagApi, TickettaggroupApi, GetApi,
@@ -88,7 +93,7 @@ import { BurnDownChartComponent } from './ui/burn-down-chart/burn-down-chart.com
 import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { TicketCreateComponent } from './ui/ticket-detail/ticket-create/ticket-create.component';
-
+import { ImagePickerComponent } from './util/image-picker/image-picker.component';
 @NgModule({
   imports: [
     BrowserModule,
@@ -111,8 +116,13 @@ import { TicketCreateComponent } from './ui/ticket-detail/ticket-create/ticket-c
     WhoamiComponent,
     UsersComponent,
     UserCreateComponent,
+    UserUpdateComponent,
     ProjectsComponent,
     ProjectCreateComponent,
+    ProjectUpdateComponent,
+    ProjectUsersComponent,
+    MemberAddComponent,
+    MemberUpdateComponent,
     TicketOverviewComponent,
     TicketDetailComponent,
     TicketSidebarComponent,
@@ -169,6 +179,7 @@ import { TicketCreateComponent } from './ui/ticket-detail/ticket-create/ticket-c
     LoadingComponent,
     SpinnerComponent,
     UserImageComponent,
+    ImagePickerComponent,
   ],
   providers: [
     ProjectApi,

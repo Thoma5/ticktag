@@ -1,0 +1,18 @@
+ @import '../../../../style/constants.scss';
+  .row {
+    margin-top: $small-gap;
+    position: relative;
+    }
+    
+  textarea {
+    resize: none;
+    }
+  * .btn {
+    border-radius: 0;
+  }   
+  small{
+    color: gray;
+  }
+  .form-group{
+    margin-bottom: 0;
+  }

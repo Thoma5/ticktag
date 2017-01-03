@@ -2,8 +2,6 @@ package io.ticktag.persistence.user.entity
 
 import io.ticktag.persistence.member.entity.Member
 import io.ticktag.persistence.ticket.entity.*
-import org.hibernate.annotations.LazyToOne
-import org.hibernate.annotations.LazyToOneOption
 import java.util.*
 import javax.persistence.*
 
@@ -32,6 +30,7 @@ open class User protected constructor() {
             u.events = mutableListOf()
             u.userAddedEvents = mutableListOf()
             u.userRemovedEvents = mutableListOf()
+            u.disabled = false
             return u
         }
 
@@ -61,6 +60,10 @@ open class User protected constructor() {
 
     @Column(name = "current_token", nullable = false)
     lateinit open var currentToken: UUID
+
+    @Column(name = "disabled", nullable = false)
+    open var disabled: Boolean = false
+
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, optional = true)
     open var image: UserImage? = null

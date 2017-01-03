@@ -57,9 +57,6 @@ open class TicketAssignmentServiceImpl @Inject constructor(
         if (!assignmentTags.findByProjectId(ticket.project.id).contains(assignmentTag)) throw NotFoundException()
         val user = users.findOne(userId) ?: throw NotFoundException()
         val member = members.findByUserIdAndProjectId(userId, ticket.project.id) ?: throw NotFoundException()
-        if (member.role == ProjectRole.OBSERVER) {
-            throw TicktagValidationException(listOf(ValidationError("member.role", ValidationErrorDetail.Other("notpermitted"))))
-        }
         var ticketAssignment: AssignedTicketUser?
         ticketAssignment = null
         if (receiveIfExists) {
@@ -67,6 +64,9 @@ open class TicketAssignmentServiceImpl @Inject constructor(
         }
         if (ticketAssignment != null) {
             return TicketAssignmentResult(ticketAssignment)
+        }
+        if (member.role == ProjectRole.OBSERVER || member.role == ProjectRole.NONE) {
+            throw TicktagValidationException(listOf(ValidationError("member.role", ValidationErrorDetail.Other("notpermitted"))))
         }
         ticketAssignment = AssignedTicketUser.create(ticket, assignmentTag, user)
         ticketAssignments.insert(ticketAssignment)

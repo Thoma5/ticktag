@@ -1,0 +1,64 @@
+.btn-file {
+    position: relative;
+    border-radius: 0;
+    overflow: hidden;
+    width: 8em;
+}
+imagepicker {
+    height: 48px;
+}
+img {
+    border: 1px solid lightgray
+}
+.show-icon {
+    position: relative;
+    width: 48px;
+    float: left;
+}
+div.show-icon:hover label
+  {
+  display: block;
+  }
+
+div.show-icon label {
+    width: 48px;
+    height: 48px;
+    color: white;
+    font-size: 32px;
+    background-color:rgba(0,0,0,0.5);
+    position:absolute;
+    top:0;
+    bottom: 0;
+    left:0;
+    display:none;
+}
+div.show-icon.portrait label {
+    border-radius: 24px;
+}
+div.show-icon label span{
+    left: 6px;
+    top: 6px;
+}
+div {
+    padding-left: 0;
+    padding-right: 0;
+}
+#imagePickBtn{
+    position: relative;
+    margin-left: 54px;
+}
+.filter-error-label {
+  color: #BF360C;
+  margin: 0.5em 0 0 0;
+  padding-left: 0;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  height: 1.5em;
+  max-height: 1.5em;
+}
+.filter-error-card {
+  margin-top: 2em;
+  padding: 0 0.5em 0 0.5em;
+  background-color: #FFCCBC;
+}

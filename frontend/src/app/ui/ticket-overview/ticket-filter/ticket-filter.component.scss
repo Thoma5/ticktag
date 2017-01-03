@@ -45,10 +45,12 @@ select {
   padding: 0.2em 0 0.2em 0;
 }
 
+* {
+    vertical-align: middle !important;
+}
 .dropdown-menu form {
   margin: 0.5em 0.5em 0.5em 0.5em;
 }
-
 .dropdown-menu {
    overflow: auto;
    max-height: 600px;
