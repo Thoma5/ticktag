@@ -173,9 +173,7 @@ open class UserServiceImpl @Inject constructor(
         val userMembershipMap = projectMemberships.groupBy { it.userId }
         val userInProject = users.findByIds(userIds)
         val usersResult = usersToDto(userInProject, principal)
-        val projectUserResults: MutableList<ProjectUserResult> = mutableListOf()
-        usersResult.map { e -> projectUserResults.add(ProjectUserResult(e, userMembershipMap[e.id]!![0])) }
-        return projectUserResults
+        return usersResult.map { ProjectUserResult(it, userMembershipMap[it.id]!![0]) }
     }
 
 
