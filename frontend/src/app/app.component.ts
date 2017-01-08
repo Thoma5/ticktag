@@ -21,7 +21,7 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
   private user: User;
   private directTicketLinkEvent: (eventObject: JQueryEventObject) => any;
   private loadingProject: boolean = false;
-  private project: ProjectResultJson | undefined = undefined;
+  private project: ProjectResultJson | null = null;
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(
@@ -52,19 +52,21 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
       .filter(e => e instanceof NavigationStart)
       .map(e => e.url)
       .map(url => projectIdFromUrl(url))
-      .distinct()
+      .distinctUntilChanged()
       .switchMap(projectId => {
+        console.log(projectId);
         this.loadingProject = true;
         if (projectId != null) {
-          // TODO quality error handling
+          // TODO do we need better error handling here?
           return this.loadProject(projectId)
             .catch((err: any) => {
               console.log('Error loading project');
               console.dir(err);
               return Observable.empty<ProjectResultJson>();
-            });
+            })
+            .delay(2000);
         } else {
-          return Observable.of(undefined);
+          return Observable.of(null);
         }
       })
       .subscribe(project => {
@@ -240,7 +242,7 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
   }
 }
 
-function projectIdFromUrl(url: string): string | undefined {
+function projectIdFromUrl(url: string): string | null {
   // Better solutions are very welcome
   let re = /^.*\/project\/(.*?)\/.*$/g;
   let matches = re.exec(url);
@@ -248,7 +250,7 @@ function projectIdFromUrl(url: string): string | undefined {
     return matches[1];
   }
 
-  return undefined;
+  return null;
 }
 
 function statusGroup(statusCode: number) {

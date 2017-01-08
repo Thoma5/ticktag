@@ -13,7 +13,7 @@ export class SidebarComponent {
   @Input()
   user: User;
   @Input()
-  project: ProjectResultJson | undefined;
+  project: ProjectResultJson | null;
   @Input()
   loadingProject: boolean;
 
