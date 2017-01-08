@@ -437,16 +437,16 @@ VALUES ('00000000-0007-0000-0000-000000000003', '00000000-0002-0000-0000-0000000
 
 --Time
 
-INSERT INTO public.logged_time (id, comment_id, category_id, time)
+INSERT INTO public.logged_time (id, comment_id, category_id, time, canceled)
 VALUES ('00000000-0008-0000-0000-000000000001', '00000000-0004-0000-0000-000000000008',
-        '00000000-0007-0000-0000-000000000001', 10);
+        '00000000-0007-0000-0000-000000000001', 10, false);
 
 
-INSERT INTO public.logged_time (id, comment_id, category_id, time)
+INSERT INTO public.logged_time (id, comment_id, category_id, time, canceled)
 VALUES ('00000000-0008-0000-0000-000000000002', '00000000-0004-0000-0000-000000000008',
-        '00000000-0007-0000-0000-000000000002', 20);
+        '00000000-0007-0000-0000-000000000002', 20, false);
 
-INSERT INTO public.logged_time (id, comment_id, category_id, time)
+INSERT INTO public.logged_time (id, comment_id, category_id, time, canceled)
 VALUES ('00000000-0008-0000-0000-000000000003', '00000000-0004-0000-0000-000000000008',
-        '00000000-0007-0000-0000-000000000003', 30);
+        '00000000-0007-0000-0000-000000000003', 30, false);
 COMMIT;

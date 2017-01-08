@@ -606,22 +606,22 @@ VALUES ('00000000-0007-0000-0000-000000000108', '00000000-0002-0000-0000-0000000
 
 --Time
 
-INSERT INTO public.logged_time (id, comment_id, category_id, time)
+INSERT INTO public.logged_time (id, comment_id, category_id, time, canceled)
 VALUES ('00000000-0008-0000-0000-000000000001', '00000000-0004-0000-0000-000000000008',
-        '00000000-0007-0000-0000-000000000001', 10);
+        '00000000-0007-0000-0000-000000000001', 10, false);
 
 
-INSERT INTO public.logged_time (id, comment_id, category_id, time)
+INSERT INTO public.logged_time (id, comment_id, category_id, time, canceled)
 VALUES ('00000000-0008-0000-0000-000000000002', '00000000-0004-0000-0000-000000000008',
-        '00000000-0007-0000-0000-000000000002', 20);
+        '00000000-0007-0000-0000-000000000002', 20, false);
 
-INSERT INTO public.logged_time (id, comment_id, category_id, time)
+INSERT INTO public.logged_time (id, comment_id, category_id, time, canceled)
 VALUES ('00000000-0008-0000-0000-000000000003', '00000000-0004-0000-0000-000000000008',
-        '00000000-0007-0000-0000-000000000003', 30);
+        '00000000-0007-0000-0000-000000000003', 30, false);
 
 
-INSERT INTO public.logged_time (id, comment_id, category_id, time) VALUES ('bc193a47-8230-4140-a242-cf19f1773741', '00000000-0004-0000-0000-000000000002', '00000000-0007-0000-0000-000000000001', 20000000000);
-INSERT INTO public.logged_time (id, comment_id, category_id, time) VALUES ('5e74280a-2827-4f9d-8c18-d558e7add243', '00000000-0004-0000-0000-000000000003', '00000000-0007-0000-0000-000000000001', 11000000000);
-INSERT INTO public.logged_time (id, comment_id, category_id, time) VALUES ('5edcbbcb-c169-4f02-957c-05ae61bbae4a', '00000000-0004-0000-0000-000000000004', '00000000-0007-0000-0000-000000000001', 20000000000);
-INSERT INTO public.logged_time (id, comment_id, category_id, time) VALUES ('b79e6c7a-194f-4e33-bc16-4996fef7238c', '00000000-0004-0000-0000-000000000005', '00000000-0007-0000-0000-000000000001', 20000000000);
+INSERT INTO public.logged_time (id, comment_id, category_id, time, canceled) VALUES ('bc193a47-8230-4140-a242-cf19f1773741', '00000000-0004-0000-0000-000000000002', '00000000-0007-0000-0000-000000000001', 20000000000, false);
+INSERT INTO public.logged_time (id, comment_id, category_id, time, canceled) VALUES ('5e74280a-2827-4f9d-8c18-d558e7add243', '00000000-0004-0000-0000-000000000003', '00000000-0007-0000-0000-000000000001', 11000000000, false);
+INSERT INTO public.logged_time (id, comment_id, category_id, time, canceled) VALUES ('5edcbbcb-c169-4f02-957c-05ae61bbae4a', '00000000-0004-0000-0000-000000000004', '00000000-0007-0000-0000-000000000001', 20000000000, false);
+INSERT INTO public.logged_time (id, comment_id, category_id, time, canceled) VALUES ('b79e6c7a-194f-4e33-bc16-4996fef7238c', '00000000-0004-0000-0000-000000000005', '00000000-0007-0000-0000-000000000001', 20000000000, false);
 COMMIT;
