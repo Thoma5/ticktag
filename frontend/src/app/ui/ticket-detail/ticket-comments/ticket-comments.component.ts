@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { TicketDetail, TicketDetailAssTag, TicketDetailComment, TicketDetailAssignment } from '../ticket-detail';
 import * as imm from 'immutable';
 
@@ -15,6 +15,10 @@ type Comment = {
 export class TicketCommentsComponent implements OnChanges {
   @Input() ticket: TicketDetail;
   @Input() allAssignmentTags: imm.List<TicketDetailAssTag>;
+  @Input() transientTimes: imm.Map<string, boolean>;
+
+  @Output() readonly undoTime = new EventEmitter<string>();
+  @Output() readonly redoTime = new EventEmitter<string>();
 
   private showAll: Boolean = false;
   private comments: imm.List<Comment>;

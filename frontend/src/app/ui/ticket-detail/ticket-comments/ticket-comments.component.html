@@ -4,7 +4,14 @@
   </a>
   <div *ngFor="let comment of commentsToDisplay()">
     <div class='comment-wrapper'>
-      <tt-ticket-comment [comment]='comment.comment' [userTags]='comment.userTags' [projectId]="ticket.projectId"></tt-ticket-comment>
+      <tt-ticket-comment
+        [comment]='comment.comment'
+        [userTags]='comment.userTags'
+        [projectId]="ticket.projectId"
+        [transientTimes]="transientTimes"
+        (undoTime)="undoTime.emit($event)"
+        (redoTime)="redoTime.emit($event)"
+      ></tt-ticket-comment>
     </div>
   </div>
 </div>

@@ -27,7 +27,7 @@ import { MemberUpdateComponent } from './ui/projects/user/update/member-update.c
 import {
   ProjectApi, AuthApi, UserApi, AssignmenttagApi, CommentsApi, MemberApi,
   TimecategoryApi, TicketApi, TickettagApi, TickettaggroupApi, GetApi,
-  TicketuserrelationApi, TickettagrelationApi
+  TicketuserrelationApi, TickettagrelationApi, LoggedtimeApi
 } from './api';
 import { TicketDetailComponent } from './ui/ticket-detail/ticket-detail.component';
 import { TicketSidebarComponent } from './ui/ticket-detail/ticket-sidebar/ticket-sidebar.component';
@@ -196,6 +196,7 @@ import { ImagePickerComponent } from './util/image-picker/image-picker.component
     TicketeventApi,
     TicketuserrelationApi,
     TickettagrelationApi,
+    LoggedtimeApi,
 
     ApiCallService,
     AuthService,

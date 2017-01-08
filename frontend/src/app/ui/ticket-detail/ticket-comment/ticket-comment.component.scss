@@ -42,6 +42,20 @@
     strong {
         font-weight: bold;
     }
+
+    a.action {
+        @extend %edit-a;
+    }
+
+    .canceled {
+        text-decoration: line-through;
+    }
+
+    .spinner {
+        width: 1em;
+        height: 1em;
+        display: inline-block;
+    }
 }
 
 .bottom-info {

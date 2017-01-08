@@ -5,7 +5,6 @@ import io.ticktag.integrationtests.restinterface.ApiBaseTest
 import io.ticktag.restinterface.loggedtime.controller.LoggedTimeController
 import io.ticktag.restinterface.loggedtime.schema.CreateLoggedTimeJson
 import io.ticktag.restinterface.loggedtime.schema.UpdateLoggedTimeJson
-import io.ticktag.service.NotFoundException
 import org.junit.Test
 import org.springframework.security.access.AccessDeniedException
 import java.time.Duration
@@ -44,7 +43,7 @@ class LoggedTimeApiTest : ApiBaseTest() {
             val duration = Duration.ofDays(2)
             val categoryId = UUID.fromString("00000000-0007-0000-0000-000000000002")
             val loggTimeId = UUID.fromString("00000000-0008-0000-0000-000000000001")
-            val req = UpdateLoggedTimeJson(duration, categoryId)
+            val req = UpdateLoggedTimeJson(duration, categoryId, false)
             val result = loggedTimeController.updateLoggedTime(req = req, id = loggTimeId)
             assertEquals(result.time,(duration))
             assertEquals(result.categoryId,(categoryId))
@@ -55,7 +54,7 @@ class LoggedTimeApiTest : ApiBaseTest() {
     fun `listLoggTime positiv`() {
         withUser(ADMIN_ID) { principal ->
             val commentId = UUID.fromString("00000000-0003-0000-0000-000000000006")
-            val result = loggedTimeController.getLoggedTimesForComment(commentId)
+            loggedTimeController.getLoggedTimesForComment(commentId)
         }
     }
 
@@ -65,20 +64,10 @@ class LoggedTimeApiTest : ApiBaseTest() {
             val userId = UUID.fromString("660f2968-aa46-4870-bcc5-a3805366cff2")
             val projectId = UUID.fromString("00000000-0002-0000-0000-000000000001")
             val categoryId = UUID.fromString("00000000-0007-0000-0000-000000000001")
-            val result = loggedTimeController.getLoggedTimesForProjectAndUserAndCategory(projectId = projectId,
+            loggedTimeController.getLoggedTimesForProjectAndUserAndCategory(projectId = projectId,
                     userId = userId, categoryId = categoryId)
         }
     }
-
-    @Test(expected = NotFoundException::class)
-    fun `deleteLoggTime positiv`() {
-        withUser(ADMIN_ID) { principal ->
-            val loggTimeId = UUID.fromString("00000000-0008-0000-0000-000000000001")
-            loggedTimeController.deleteLoggedTime(loggTimeId)
-            loggedTimeController.getLoggedTimesForId(loggTimeId)
-        }
-    }
-
 
     @Test(expected = AccessDeniedException::class)
     fun `createLoggTime negativ permission`() {
@@ -89,7 +78,7 @@ class LoggedTimeApiTest : ApiBaseTest() {
             val req = CreateLoggedTimeJson(duration, commentId,
                     categoryId)
 
-            val result = loggedTimeController.createLoggedTime(req = req)
+            loggedTimeController.createLoggedTime(req = req)
 
         }
     }
@@ -100,8 +89,8 @@ class LoggedTimeApiTest : ApiBaseTest() {
             val duration = Duration.ofDays(2)
             val categoryId = UUID.fromString("00000000-0007-0000-0000-000000000002")
             val loggTimeId = UUID.fromString("00000000-0008-0000-0000-000000000001")
-            val req = UpdateLoggedTimeJson(duration, categoryId)
-            val result = loggedTimeController.updateLoggedTime(req = req, id = loggTimeId)
+            val req = UpdateLoggedTimeJson(duration, categoryId, false)
+            loggedTimeController.updateLoggedTime(req = req, id = loggTimeId)
 
         }
     }
@@ -110,7 +99,7 @@ class LoggedTimeApiTest : ApiBaseTest() {
     fun `listLoggTime  negativ permission`() {
         withoutUser { ->
             val commentId = UUID.fromString("00000000-0003-0000-0000-000000000006")
-            val result = loggedTimeController.getLoggedTimesForComment(commentId)
+            loggedTimeController.getLoggedTimesForComment(commentId)
         }
     }
 
@@ -120,17 +109,8 @@ class LoggedTimeApiTest : ApiBaseTest() {
             val userId = UUID.fromString("660f2968-aa46-4870-bcc5-a3805366cff2")
             val projectId = UUID.fromString("00000000-0002-0000-0000-000000000001")
             val categoryId = UUID.fromString("00000000-0007-0000-0000-000000000001")
-            val result = loggedTimeController.getLoggedTimesForProjectAndUserAndCategory(projectId = projectId,
+            loggedTimeController.getLoggedTimesForProjectAndUserAndCategory(projectId = projectId,
                     userId = userId, categoryId = categoryId)
         }
     }
-
-    @Test(expected = AccessDeniedException::class)
-    fun `deleteLoggTime  negativ permission`() {
-        withoutUser { ->
-            val loggTimeId = UUID.fromString("00000000-0008-0000-0000-000000000001")
-            loggedTimeController.deleteLoggedTime(loggTimeId)
-        }
-    }
-
 }
