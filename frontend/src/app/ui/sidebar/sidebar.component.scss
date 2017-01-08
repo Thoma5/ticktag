@@ -1,3 +1,9 @@
+ @import '../../../style/constants.scss';
+
+ $project-picker-height: 6rem;
+ $project-picker-content-height: 3rem;
+ $project-picker-padding: ($project-picker-height - $project-picker-content-height) / 2;
+
 .component {
   height: 100%;
   width: 100%;
@@ -8,33 +14,109 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: white;
+
+  a {
+     width: 100%;
+     text-align: left;
+     color: white !important;
+  }
 }
 
 .loading {
-  width: 2em;
-  height: 2em;
+  height: $project-picker-height;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+
+  .spinner-wrapper {
+    width: 2em;
+    height: 2em;
+  }
 }
 
 .nav-top-block{
-  text-align: center;
-  font-weight: bold;
-  font-size: 2em;
-  color: white;
+  width: 100%;
   margin-top: 2rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.project-present {
+  width: 100%;
+  height: 100%;
+}
+
+.project-picker {
+  height: $project-picker-height;
+  width: 100%;
+  padding-top: $project-picker-padding;
+  padding-bottom: $project-picker-padding;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  color: white;
+  font-weight: bold;
+  font-size: 1.5em;
+  overflow: hidden;
+  display: block;
+
+  .project-none {
+    width: 100%;
+    height: $project-picker-content-height;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .project-present {
+    height: $project-picker-content-height;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+
+    .project-icon {
+      flex-basis: $project-picker-content-height;
+      height: $project-picker-content-height;
+      flex-grow: 0;
+      flex-shrink: 0;
+      border-radius: 50%;
+      position: relative;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+
+    .project-name {
+      width: 100%;
+      margin-left: 1rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
 }
 
 .navadmin-block {
   width: 100%;
+  margin-top: 2rem;
 }
 
 
 .project-links {
   width: 100%;
   margin-top: 2rem;
-}
-
-
-div a {
-  color: white;
-  text-align: left
 }
