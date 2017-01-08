@@ -1,0 +1,37 @@
+<div class="component">
+  <div class="nav-top-block">
+    <div *ngIf="loadingProject">
+      Loading...
+    </div>
+    <div *ngIf="!loadingProject">
+      <div *ngIf="project != undefined">
+        {{ project.name }}
+      </div>
+      <div *ngIf="project == undefined">
+        No project selected
+      </div>
+    </div>
+  </div>
+  <div class="navadmin-block">
+    <div>
+      <a md-button [routerLink]="['']"><span class="glyphicon glyphicon-home"></span> Home</a>
+    </div>
+    <div>
+      <a md-button *ngIf="isAdmin" [routerLink]="['users']"><span class="glyphicon glyphicon-user"></span> Users</a>
+    </div>
+    <div>
+      <a md-button [routerLink]="['projects']"><span class="glyphicon glyphicon-th-list"></span> Projects</a>
+    </div>
+    <div>
+      <a md-button [routerLink]="['whoami']"><span class="glyphicon glyphicon-user"></span> Whoami</a>
+    </div>
+  </div>
+  <div *ngIf="project != undefined" class="project-links">
+    <div>
+      <a md-button [routerLink]="['project', project.id, 'tickets']">Tickets</a>
+    </div>
+    <div>
+      <a md-button [routerLink]="['project', project.id, 'burndown']">Burndown</a>
+    </div>
+  </div>
+</div>

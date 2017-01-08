@@ -60,7 +60,7 @@ open class ProjectServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.ADMIN_OR_SELF)
-    override fun listUserProjects(userId: UUID, name: String, disabled: Boolean, pageable: Pageable): Page<ProjectResult> {
+    override fun listUserProjects(@P("userId") userId: UUID, name: String, disabled: Boolean, pageable: Pageable): Page<ProjectResult> {
         val page = projects.findByMembersUserIdAndMembersRoleNotAndNameContainingIgnoreCaseAndDisabledIs(userId, ProjectRole.NONE, name, disabled,pageable)
         val content = page.content.map(::ProjectResult)
         return PageImpl(content, pageable, page.totalElements)
