@@ -1,7 +1,6 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { User } from '../../service';
 import { ProjectResultJson } from '../../api';
-import { Router } from '@angular/router';
 import * as _ from 'lodash';
 
 @Component({

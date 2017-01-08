@@ -54,7 +54,6 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
       .map(url => projectIdFromUrl(url))
       .distinctUntilChanged()
       .switchMap(projectId => {
-        console.log(projectId);
         this.loadingProject = true;
         if (projectId != null) {
           // TODO do we need better error handling here?
