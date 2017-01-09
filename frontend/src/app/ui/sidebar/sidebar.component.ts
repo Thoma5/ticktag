@@ -25,6 +25,14 @@ export class SidebarComponent {
     return _.includes(this.user.authorities, 'ADMIN');
   }
 
+  get otherProjects(): imm.List<ProjectResultJson> {
+    if (this.project == null) {
+      return this.projects;
+    } else {
+      return this.projects.filter(p => p.id !== this.project.id).toList();
+    }
+  }
+
   onProjectClick() {
     this.showingSelection = !this.showingSelection;
   }

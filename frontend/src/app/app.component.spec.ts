@@ -9,6 +9,7 @@ import {Injectable} from '@angular/core';
 import {MaterialModule} from '@angular/material';
 import {Overlay, OverlayRenderer} from 'angular2-modal';
 import {Modal} from 'angular2-modal/plugins/bootstrap';
+import { SidebarComponent } from './ui/sidebar/sidebar.component';
 
 @Injectable()
 class MockAuthService extends AuthService {
@@ -34,7 +35,8 @@ describe('App', () => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, MaterialModule.forRoot()],
       declarations: [AppComponent],
-      providers: [provideRoutes([]), {provide: AuthService, useClass: MockAuthService}, ApiCallService, Overlay, Modal, OverlayRenderer],
+      providers: [provideRoutes([]), {provide: AuthService, useClass: MockAuthService},
+      ApiCallService, Overlay, Modal, OverlayRenderer, SidebarComponent],
     });
   });
 

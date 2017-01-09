@@ -23,7 +23,11 @@
     </a>
   </div>
   <div *ngIf="showingSelection" class="project-selection-block">
-    <div class="selection-item">TODO</div>
+    <div *ngFor="let project of otherProjects" class="selection-item">
+      <a md-button [routerLink]="['project', project.id, 'tickets']" class='selection-button'>
+        {{ project.name }}
+      </a>
+    </div>
   </div>
   <div class="navadmin-block">
     <div>

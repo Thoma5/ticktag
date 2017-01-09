@@ -110,6 +110,19 @@
   }
 }
 
+.project-selection-block {
+  width: 100%;
+
+  .selection-item {
+    width: 100%;
+
+    .selection-button {
+      width: 100%;
+      text-align: left;
+    }
+  }
+}
+
 .navadmin-block {
   width: 100%;
   margin-top: 2rem;

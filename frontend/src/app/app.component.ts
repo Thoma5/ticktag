@@ -2,12 +2,13 @@ import { Component, OnInit, ViewContainerRef, OnDestroy, NgZone } from '@angular
 import { Location } from '@angular/common';
 import '../style/app.scss';
 import { AuthService, ApiCallService, User, ErrorHandler } from './service';
-import { ProjectApi, ProjectResultJson } from './api';
+import { ProjectApi, ProjectResultJson, PageProjectResultJson } from './api';
 import { Router, ActivatedRoute, NavigationStart } from '@angular/router';
 import { Overlay } from 'angular2-modal';
 import { Modal } from 'angular2-modal/plugins/bootstrap';
 import { Response } from '@angular/http';
 import * as $ from 'jquery';
+import * as imm from 'immutable';
 import { Observable } from 'rxjs';
 
 
@@ -22,6 +23,7 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
   private directTicketLinkEvent: (eventObject: JQueryEventObject) => any;
   private loadingProject: boolean = false;
   private project: ProjectResultJson | null = null;
+  private userProjects: imm.List<ProjectResultJson> | null = null;
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(
@@ -43,11 +45,19 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
 
 
   ngOnInit(): void {
-    this.user = this.authService.user;
-    this.authService.observeUser()
-      .subscribe(user => {
-        this.user = user;
+    Observable.concat(Observable.of(this.authService.user), this.authService.observeUser())
+      .flatMap(u => {
+        if (u == null) {
+          return Observable.of([null, null]);
+        } else {
+          return this.loadUserProjects(u.id).map(prs => [u, prs]);
+        }
+      })
+      .subscribe(userAndProjects => {
+        this.user = userAndProjects[0];
+        this.userProjects = userAndProjects[1];
       });
+
     this.router.events
       .filter(e => e instanceof NavigationStart)
       .map(e => e.url)
@@ -94,6 +104,12 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
 
   loadProject(id: string): Observable<ProjectResultJson> {
     return this.apiCallService.callNoError(p => this.projectApi.getProjectUsingGETWithHttpInfo(id, p));
+  }
+
+  loadUserProjects(userId: string): Observable<imm.List<ProjectResultJson>> {
+    return this.apiCallService
+    .callNoError(p => this.projectApi.listProjectsUsingGETWithHttpInfo(0, 10, 'NAME', true, null, false, false, p))
+      .map((p: PageProjectResultJson) => imm.List(p.content));
   }
 
   logout(): void {

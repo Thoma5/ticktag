@@ -31,16 +31,22 @@ export class LoginComponent {
       .callNoError<LoginResultJson>(h => this.authApi.loginUsingPOSTWithHttpInfo(req, h))
       .flatMap(result => {
         if (result.token === '') {
-          return Observable.of({token: '', authorities: new Array<string>()});
+          return Observable.of(null);
         } else {
           // Note that the AuthService as no user set yet.
           return this.apiCallService
             .callNoError<WhoamiResultJson>(h => this.authApi.whoamiUsingGETWithHttpInfo(h), {'X-Authorization': result.token})
-            .map(x => ({token: result.token, authorities: x.authorities.slice()}));
+            .map(x => {
+              return {
+                  id: x.id,
+                  token: result.token,
+                  authorities: x.authorities.slice()
+                };
+            });
         }
       })
       .subscribe(result => {
-        if (result.token === '') {
+        if (result == null) {
           // TODO make this nice :)
           window.alert('Wrong username or password!');
         } else {
