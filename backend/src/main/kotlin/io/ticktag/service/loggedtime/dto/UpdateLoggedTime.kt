@@ -6,4 +6,5 @@ import java.util.*
 
 
 data class UpdateLoggedTime(@field:PositiveDuration val time: Duration?,
-                            val categoryId: UUID?)
+                            val categoryId: UUID?,
+                            val canceled: Boolean?)

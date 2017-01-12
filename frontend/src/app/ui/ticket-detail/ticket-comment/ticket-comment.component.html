@@ -14,9 +14,14 @@
         <tt-markdown-textview-read [content]='comment.text' [commands]="true" [projectId]="projectId"></tt-markdown-textview-read>
     </div>
     <div class="time-info">
-        <p *ngFor="let loggedTime of comment.loggedTimes">
-            This comment logged <strong>{{ loggedTime.time | ttHumanizeDuration }}</strong> in the category <strong>{{ loggedTime.category.name }}</strong>.
-        </p>
+        <div *ngFor="let loggedTime of comment.loggedTimes">
+            <span [class]="loggedTime.canceled ? 'canceled' : ''">This comment logged <strong>{{ loggedTime.time | ttHumanizeDuration }}</strong> in the category <strong>{{ loggedTime.category.name }}</strong>.</span>
+            <div class="spinner" *ngIf="transientTimes.has(loggedTime.id)"><tt-spinner></tt-spinner></div>
+            <span *ngIf="!transientTimes.has(loggedTime.id)">
+                <a *ngIf="!loggedTime.canceled" class="action" href="javascript:void(0);" (click)="this.undoTime.emit(loggedTime.id)">Undo</a>
+                <a *ngIf="loggedTime.canceled" class="action" href="javascript:void(0);" (click)="this.redoTime.emit(loggedTime.id)">Redo</a>
+            </span>
+        </div>
     </div>
     <p class="bottom-info">
         Created on {{ comment.createTime | ttFormatMoment }}

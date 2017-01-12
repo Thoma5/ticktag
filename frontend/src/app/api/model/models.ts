@@ -38,7 +38,6 @@ export * from './TicketTagResultJson';
 export * from './TicketUserRelationResultJson';
 export * from './TimeCategoryJson';
 export * from './UpdateAssignmentRequestJson';
-export * from './UpdateCommentRequestJson';
 export * from './UpdateLoggedTimeJson';
 export * from './UpdateMemberRequestJson';
 export * from './UpdateNotnullValueJsonboolean';

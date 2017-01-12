@@ -73,10 +73,15 @@ open class LoggedTimeServiceImpl @Inject constructor(
 
         val timeChanged = updateLoggedTime.time != null && loggedTime.time != updateLoggedTime.time
         val categoryChanged = updateLoggedTime.categoryId != null && loggedTime.category != timeCategorys.findOne(updateLoggedTime.categoryId)
-        if (timeChanged || categoryChanged) {
+        val canceledChanged = updateLoggedTime.canceled != null && loggedTime.canceled != updateLoggedTime.canceled
+        if (timeChanged || categoryChanged || canceledChanged) {
             val category = timeCategorys.findOne(updateLoggedTime.categoryId ?: loggedTime.category.id) ?: throw NotFoundException()
-            ticketEvents.insert(TicketEventLoggedTimeRemoved.create(loggedTime.comment.ticket, loggedTime.comment.user, loggedTime.comment, loggedTime.category, loggedTime.time))
-            ticketEvents.insert(TicketEventLoggedTimeAdded.create(loggedTime.comment.ticket, loggedTime.comment.user, loggedTime.comment, category, updateLoggedTime.time ?: loggedTime.time))
+            if (!loggedTime.canceled) {
+                ticketEvents.insert(TicketEventLoggedTimeRemoved.create(loggedTime.comment.ticket, loggedTime.comment.user, loggedTime.comment, loggedTime.category, loggedTime.time))
+            }
+            if (!(updateLoggedTime.canceled ?: loggedTime.canceled)) {
+                ticketEvents.insert(TicketEventLoggedTimeAdded.create(loggedTime.comment.ticket, loggedTime.comment.user, loggedTime.comment, category, updateLoggedTime.time ?: loggedTime.time))
+            }
         }
 
         if (updateLoggedTime.time != null) {
@@ -87,13 +92,11 @@ open class LoggedTimeServiceImpl @Inject constructor(
             val category = timeCategorys.findOne(updateLoggedTime.categoryId) ?: throw NotFoundException()
             loggedTime.category = category
         }
-        return LoggedTimeResult(loggedTime)
-    }
 
-    @PreAuthorize(AuthExpr.EDIT_TIME_LOG)
-    override fun deleteLoggedTime(@P("authLoggedTimeId") loggedTimeId: UUID) {
-        val loggedTimeToDelete = loggedTimes.findOne(loggedTimeId) ?: throw NotFoundException()
-        loggedTimes.delete(loggedTimeToDelete)
-        ticketEvents.insert(TicketEventLoggedTimeRemoved.create(loggedTimeToDelete.comment.ticket, loggedTimeToDelete.comment.user, loggedTimeToDelete.comment, loggedTimeToDelete.category, loggedTimeToDelete.time))
+        if (updateLoggedTime.canceled != null) {
+            loggedTime.canceled = updateLoggedTime.canceled
+        }
+
+        return LoggedTimeResult(loggedTime)
     }
 }

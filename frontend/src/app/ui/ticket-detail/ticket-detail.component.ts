@@ -14,6 +14,7 @@ import {
 import { Observable, Subject } from 'rxjs';
 import { TicketEventResultJson } from '../../api/model/TicketEventResultJson';
 import { TicketeventApi } from '../../api/api/TicketeventApi';
+import { LoggedtimeApi } from '../../api/api/LoggedtimeApi';
 import {
   TicketDetail, TicketDetailTag, TicketDetailAssTag, TicketDetailComment,
   TicketDetailUser, TicketDetailTimeCategory, TicketDetailTransientUser,
@@ -64,6 +65,7 @@ export class TicketDetailComponent implements OnInit {
   private creatingComment = false;
   private commentResetEventObservable = new Subject<string>();
   private transientSubtickets = imm.Map<string, TicketDetailRelated>();
+  private transientTimes = imm.Map<string, boolean>();
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(private route: ActivatedRoute,
@@ -78,6 +80,7 @@ export class TicketDetailComponent implements OnInit {
     private ticketEventApi: TicketeventApi,
     private ticketAssignmentApi: TicketuserrelationApi,
     private ticketTagRelationApi: TickettagrelationApi,
+    private loggedTimeApi: LoggedtimeApi,
     private modal: Modal) {
   }
 
@@ -300,6 +303,19 @@ export class TicketDetailComponent implements OnInit {
     });
   }
 
+  onUndoRedoTime(id: string, canceled: boolean) {
+    this.transientTimes = this.transientTimes.set(id, canceled);
+    let updateObs = this.apiCallService
+      .callNoError<void>(p => this.loggedTimeApi.updateLoggedTimeUsingPUTWithHttpInfo({ canceled: canceled }, id, p))
+      .flatMap(result => this
+        .refresh(this.ticketDetail.projectId, this.ticketDetail.number)
+        .map(() => result));
+    this.queue.push(updateObs)
+      .subscribe(() => {
+        this.transientTimes = this.transientTimes.delete(id);
+      });
+  }
+
   private updateTicket(req: UpdateTicketRequestJson, onFinish: () => void): void {
     let updateObs = this.apiCallService
       .call<void>(p => this.ticketApi.updateTicketUsingPUTWithHttpInfo(req, this.ticketDetail.id, p))
@@ -367,7 +383,7 @@ export class TicketDetailComponent implements OnInit {
       this.transientTicket,
       this.transientSubtickets,
       this.relatedProgresses.get(this.currentTicketJson.id),
-      );
+    );
   }
 
   private error(result: ApiCallResult<void|{}>): void {
