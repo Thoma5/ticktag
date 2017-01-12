@@ -2,22 +2,22 @@ BEGIN;
 
 --########################################## USERS ###################################################################
 --####################################################################################################################
-INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token) VALUES
+INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, disabled) VALUES
   ('00000000-0001-0000-0000-000000000101', 'admit', 'admin@ticktag.a', 'Admiral Admin',
-   '$2a$10$mTEkiQq2Wo./aqfekJHPk.5sG8JLWqWYbtMODwk9xQwQp0GtkCiM.', 'ADMIN', '00000000-0001-0000-0000-abcdef123641'); --aaaa
-INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token) VALUES
+   '$2a$10$mTEkiQq2Wo./aqfekJHPk.5sG8JLWqWYbtMODwk9xQwQp0GtkCiM.', 'ADMIN', '00000000-0001-0000-0000-abcdef123641', FALSE); --aaaa
+INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, disabled) VALUES
   ('00000000-0001-0000-0000-000000000102', 'obelix', 'observer@ticktag.a', 'Obelix Observer',
-   '$2a$10$Ydzo0FR5x8ZweeaeIQS2gevmLqsZuS37.bWRYy.f.u62NG00MAOcS', 'OBSERVER', '00000000-0001-0000-2343-abcdef123641'); --bbbb
-INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token) VALUES
+   '$2a$10$Ydzo0FR5x8ZweeaeIQS2gevmLqsZuS37.bWRYy.f.u62NG00MAOcS', 'OBSERVER', '00000000-0001-0000-2343-abcdef123641', FALSE); --bbbb
+INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, disabled) VALUES
   ('00000000-0001-0000-0000-000000000103', 'userla', 'user1@ticktag.a', 'Ursula User',
-   '$2a$10$OgvbSbiDxizgC/6K3dhVwO8iY6.QFS6f2PvE1AyJS1Vmo6Rnb3Gve', 'USER', '00000000-0001-8676-0000-abcdef123641'); --cccc
+   '$2a$10$OgvbSbiDxizgC/6K3dhVwO8iY6.QFS6f2PvE1AyJS1Vmo6Rnb3Gve', 'USER', '00000000-0001-8676-0000-abcdef123641', FALSE); --cccc
 --######################################## PROJECT ###################################################################
 --####################################################################################################################
 INSERT INTO "project" VALUES
-  ('00000000-0002-0000-0000-000000000101', 'Project One', 'Incredible Stuff ', '2016-07-03 08:49:05', NULL),
-  ('00000000-0002-0000-0000-000000000102', 'Project Two', 'Amazing Too', '2016-08-26 21:57:39', NULL),
-  ('00000000-0002-0000-0000-000000000103', 'Project Three', 'Quite Astonishing', '2016-01-17 16:00:33', NULL),
-  ('00000000-0002-0000-0000-000000000104', 'Project Four', 'Pretty Boring', '2016-01-17 16:00:33', NULL);
+  ('00000000-0002-0000-0000-000000000101', 'Project One', 'Incredible Stuff ', '2016-07-03 08:49:05', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000102', 'Project Two', 'Amazing Too', '2016-08-26 21:57:39', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000103', 'Project Three', 'Quite Astonishing', '2016-01-17 16:00:33', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000104', 'Project Four', 'Pretty Boring', '2016-01-17 16:00:33', NULL, NULL, FALSE);
 --######################################## MEMBERS ###################################################################
 --####################################################################################################################
 INSERT INTO "member" VALUES

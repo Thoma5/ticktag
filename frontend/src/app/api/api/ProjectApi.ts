@@ -101,12 +101,13 @@ export class ProjectApi {
     }
 
     /**
-     * getProjectsCount
+     * listProjectMembers
      * 
-     * @param all all
+     * @param id id
+     * @param disabled disabled
      */
-    public getProjectsCountUsingGET(all?: boolean, extraHttpRequestParams?: any): Observable<models.CountJson> {
-        return this.getProjectsCountUsingGETWithHttpInfo(all, extraHttpRequestParams)
+    public listProjectMembersUsingGET(id: string, disabled?: boolean, extraHttpRequestParams?: any): Observable<Array<models.ProjectUserResultJson>> {
+        return this.listProjectMembersUsingGETWithHttpInfo(id, disabled, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -117,12 +118,11 @@ export class ProjectApi {
     }
 
     /**
-     * listProjectUsers
+     * listProjectRoles
      * 
-     * @param id id
      */
-    public listProjectUsersUsingGET(id: string, extraHttpRequestParams?: any): Observable<Array<models.UserResultJson>> {
-        return this.listProjectUsersUsingGETWithHttpInfo(id, extraHttpRequestParams)
+    public listProjectRolesUsingGET(extraHttpRequestParams?: any): Observable<Array<models.ProjectRoleResultJson>> {
+        return this.listProjectRolesUsingGETWithHttpInfo(extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -141,9 +141,10 @@ export class ProjectApi {
      * @param asc asc
      * @param name name
      * @param all all
+     * @param disabled disabled
      */
-    public listProjectsUsingGET(page?: number, size?: number, order?: string, asc?: boolean, name?: string, all?: boolean, extraHttpRequestParams?: any): Observable<models.PageProjectResultJson> {
-        return this.listProjectsUsingGETWithHttpInfo(page, size, order, asc, name, all, extraHttpRequestParams)
+    public listProjectsUsingGET(page?: number, size?: number, order?: string, asc?: boolean, name?: string, all?: boolean, disabled?: boolean, extraHttpRequestParams?: any): Observable<models.PageProjectResultJson> {
+        return this.listProjectsUsingGETWithHttpInfo(page, size, order, asc, name, all, disabled, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -262,17 +263,22 @@ export class ProjectApi {
     }
 
     /**
-     * getProjectsCount
+     * listProjectMembers
      * 
-     * @param all all
+     * @param id id
+     * @param disabled disabled
      */
-    public getProjectsCountUsingGETWithHttpInfo(all?: boolean, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/project/count`;
+    public listProjectMembersUsingGETWithHttpInfo(id: string, disabled?: boolean, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/project/${id}/members`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        if (all !== undefined) {
-            queryParameters.set('all', <any>all);
+        // verify required parameter 'id' is not null or undefined
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling listProjectMembersUsingGET.');
+        }
+        if (disabled !== undefined) {
+            queryParameters.set('disabled', <any>disabled);
         }
 
 
@@ -305,19 +311,14 @@ export class ProjectApi {
     }
 
     /**
-     * listProjectUsers
+     * listProjectRoles
      * 
-     * @param id id
      */
-    public listProjectUsersUsingGETWithHttpInfo(id: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/project/${id}/users`;
+    public listProjectRolesUsingGETWithHttpInfo(extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/project/roles`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'id' is not null or undefined
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling listProjectUsersUsingGET.');
-        }
 
 
         // to determine the Content-Type header
@@ -357,8 +358,9 @@ export class ProjectApi {
      * @param asc asc
      * @param name name
      * @param all all
+     * @param disabled disabled
      */
-    public listProjectsUsingGETWithHttpInfo(page?: number, size?: number, order?: string, asc?: boolean, name?: string, all?: boolean, extraHttpRequestParams?: any): Observable<Response> {
+    public listProjectsUsingGETWithHttpInfo(page?: number, size?: number, order?: string, asc?: boolean, name?: string, all?: boolean, disabled?: boolean, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/project`;
 
         let queryParameters = new URLSearchParams();
@@ -380,6 +382,9 @@ export class ProjectApi {
         }
         if (all !== undefined) {
             queryParameters.set('all', <any>all);
+        }
+        if (disabled !== undefined) {
+            queryParameters.set('disabled', <any>disabled);
         }
 
 

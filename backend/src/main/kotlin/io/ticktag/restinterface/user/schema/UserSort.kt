@@ -9,4 +9,6 @@ enum class UserSort(val order: Sort.Order) {
     NAME_DESC(Sort.Order(Sort.Direction.DESC, "name")),
     MAIL_ASC(Sort.Order(Sort.Direction.ASC, "mail")),
     MAIL_DESC(Sort.Order(Sort.Direction.DESC, "mail")),
+    ROLE_ASC(Sort.Order(Sort.Direction.ASC, "role")),
+    ROLE_DESC(Sort.Order(Sort.Direction.DESC, "role"));
 }

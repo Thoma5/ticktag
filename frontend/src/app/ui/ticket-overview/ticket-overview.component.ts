@@ -135,7 +135,7 @@ export class TicketOverviewComponent implements OnInit {
       .callNoError<TicketTagResultJson[]>(p => this.ticketTagsApi.listTicketTagsUsingGETWithHttpInfo(null, this.projectId, p))
       .map(tts => idListToMap(tts).map(tt => new TicketOverviewTag(tt)).toMap());
     let projectUsersObs = this.apiCallService
-      .callNoError<UserResultJson[]>(p => this.projectApi.listProjectUsersUsingGETWithHttpInfo(this.projectId, p))
+      .callNoError<UserResultJson[]>(p => this.projectApi.listProjectMembersUsingGETWithHttpInfo(this.projectId, undefined, p))
       .map(users => idListToMap(users).map(user => new TicketOverviewUser(user)).toMap());
     let timeCategoriesObs = this.apiCallService
       .callNoError<TimeCategoryJson[]>(p => this.timeCategoryApi.listProjectTimeCategoriesUsingGETWithHttpInfo(this.projectId, p))

@@ -31,6 +31,7 @@ export interface CreateMemberRequestJson {
 }
 export namespace CreateMemberRequestJson {
     export enum ProjectRoleEnum {
+        NONE = <any> 'NONE',
         OBSERVER = <any> 'OBSERVER',
         USER = <any> 'USER',
         ADMIN = <any> 'ADMIN'

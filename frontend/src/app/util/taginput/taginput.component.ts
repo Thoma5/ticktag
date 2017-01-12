@@ -75,6 +75,8 @@ export class TaginputComponent implements OnChanges {
         if (ev.key === 'Enter') {
           this.onAdd(input.value);
           input.value = '';
+        } else if (ev.key === 'Escape') {
+          this.editing = false;
         }
       });
       input.addEventListener('blur', () => {
@@ -82,6 +84,9 @@ export class TaginputComponent implements OnChanges {
       });
       input.addEventListener('input', () => {
         this.lastEditedText = input.value;
+      });
+      input.addEventListener('awesomplete-select', (ev: any) => {
+        this.lastEditedText = ev.text;
       });
       result.open();
     });

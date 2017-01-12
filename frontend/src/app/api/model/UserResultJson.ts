@@ -26,6 +26,8 @@
 import * as models from './models';
 
 export interface UserResultJson {
+    disabled: boolean;
+
     id: string;
 
     imageId: string;

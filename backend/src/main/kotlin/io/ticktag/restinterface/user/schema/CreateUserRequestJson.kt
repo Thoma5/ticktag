@@ -7,5 +7,6 @@ data class CreateUserRequestJson(
         val username: String,
         val name: String,
         val password: String,
-        val role: Role
+        val role: Role,
+        val image: String?
 )

@@ -11,7 +11,8 @@ data class UserResult(
         val name: String,
         val currentToken: UUID,
         val role: Role,
-        val imageId: TempImageId
+        val imageId: TempImageId,
+        val disabled: Boolean
 ) {
-    constructor(u: User, imageId: TempImageId) : this(id = u.id, mail = u.mail, name = u.name, currentToken = u.currentToken, role = u.role, username = u.username, imageId = imageId)
+    constructor(u: User, imageId: TempImageId) : this(id = u.id, mail = u.mail, name = u.name, currentToken = u.currentToken, role = u.role, username = u.username, imageId = imageId, disabled = u.disabled)
 }

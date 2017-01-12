@@ -1,0 +1,34 @@
+.datatable.material {
+  background: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  border: 1px solid lightgray;
+}
+
+.datatable .datatable-body-cell {
+  -webkit-user-select: initial !important;
+  -moz-user-select: initial !important;
+  -ms-user-select: initial !important;
+  -o-user-select: initial !important;
+  user-select: initial !important;
+}
+
+.datatable .datatable-header {
+  background: #F5F5F5;
+}
+
+.datatable .datatable-header-cell {
+  background: #F5F5F5;
+  .datatable-header-cell-label {
+    font-weight: 550;
+  }
+}
+
+strong {
+  font-weight: 600;
+}
+
+.datatable-row-detail {
+  width: 100%;
+}

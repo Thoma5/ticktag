@@ -4,8 +4,8 @@ from datetime import datetime, timedelta
 from uuid import UUID
 from faker import Factory
 
-USER_COUNT = 100
-TICKET_COUNT = 1000
+USER_COUNT = 50
+TICKET_COUNT = 500
 PASSWORD_HASH = bcrypt.hashpw(b"password", bcrypt.gensalt(prefix=b"2a")).decode("ASCII")
 TICKET_TAGS = (
     ((("Bug", "c23b22"), ("Feature", "77dd77"), ("Idea", "fdfd96")), 0.9, "Type"),
@@ -102,16 +102,18 @@ class User:
         self.password_hash = PASSWORD_HASH
         self.role = "USER"
         self.current_token = random_uuid()
+        self.disabled = False
 
     def insert(self):
-        return """insert into public.user values ({}, {}, {}, {}, {}, {}, {});""".format(
+        return """insert into public.user values ({}, {}, {}, {}, {}, {}, {}, {});""".format(
                 sql(self.id),
                 sql(self.username),
                 sql(self.mail),
                 sql(self.name),
                 sql(self.password_hash),
                 sql(self.role),
-                sql(self.current_token))
+                sql(self.current_token),
+                sql(self.disabled))
 
 class Project:
     def __init__(self):
@@ -119,17 +121,20 @@ class Project:
         self.name = "Big Project"
         self.description = faker.sentence()
         self.time = random_datetime(False)
+        self.disabled = False
     
     def insert(self):
         return """
             insert into public.project
-            values ({}, {}, {}, {}, {})
+            values ({}, {}, {}, {}, {}, {}, {})
         ;""".format(
             sql(self.id),
             sql(self.name),
             sql(self.description),
             sql(self.time),
-            sql(None))
+            sql(None),
+            sql(None),
+            sql(self.disabled))
 
 class TicketTag:
     def __init__(self, group, tag, order):

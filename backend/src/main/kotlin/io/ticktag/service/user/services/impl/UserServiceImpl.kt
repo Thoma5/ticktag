@@ -2,16 +2,24 @@ package io.ticktag.service.user.services.impl
 
 import io.ticktag.ApplicationProperties
 import io.ticktag.TicktagService
+import io.ticktag.library.base64ImageDecoder.Base64ImageDecoder
 import io.ticktag.library.hashing.HashingLibrary
+import io.ticktag.persistence.member.MemberRepository
+import io.ticktag.persistence.member.entity.Member
+import io.ticktag.persistence.member.entity.ProjectRole
 import io.ticktag.persistence.project.ProjectRepository
 import io.ticktag.persistence.project.entity.Project
+import io.ticktag.persistence.user.UserImageRepository
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.persistence.user.entity.Role
 import io.ticktag.persistence.user.entity.User
+import io.ticktag.persistence.user.entity.UserImage
 import io.ticktag.service.*
 import io.ticktag.service.user.dto.*
 import io.ticktag.service.user.services.UserService
 import org.apache.commons.codec.binary.Hex
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.access.method.P
@@ -37,13 +45,17 @@ import javax.validation.Valid
 @TicktagService
 open class UserServiceImpl @Inject constructor(
         private val users: UserRepository,
+        private val userimages: UserImageRepository,
+        private val members: MemberRepository,
         private val projects: ProjectRepository,
         private val hashing: HashingLibrary,
         private val props: ApplicationProperties,
+        private val base64ImageDecoder: Base64ImageDecoder,
         private val clock: Clock
 ) : UserService {
     companion object {
         val IMAGE_ID_VALID_DURATION: Duration = Duration.ofDays(1)
+        val MAX_IMAGE_SIZE: Int = 512000 //Byte
     }
 
     // Authorization is performed via the temp image ids which are kept secret and expire
@@ -74,12 +86,13 @@ open class UserServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listUsersFuzzy(@P("authProjectId") projectId: UUID, query: String, pageable: Pageable, principal: Principal): List<UserResult> {
-        return usersToDto(users.findByProjectIdAndFuzzy(projectId, query, query, query, pageable), principal)
+        return usersToDto(users.findByProjectIdAndFuzzyAndStatusEnabled(projectId, query, query, query, pageable), principal)
     }
 
     @PreAuthorize(AuthExpr.ANONYMOUS)
     override fun checkPassword(mail: String, password: String): UserResult? {
         val user = users.findByMailIgnoreCase(mail) ?: return null
+        if (user.disabled) return null
         if (hashing.checkPassword(password, user.passwordHash)) {
             // This is the only function that may bypass the userToDto function
             // We just checked the password so we can return all the information
@@ -103,6 +116,20 @@ open class UserServiceImpl @Inject constructor(
         val passwordHash = hashing.hashPassword(createUser.password)
         val user = User.create(mail, passwordHash, name, createUser.username, createUser.role, UUID.randomUUID())
         users.insert(user)
+        if (createUser.image != null) {
+            var image: ByteArray? = null
+            if (createUser.image.isNotEmpty()) {
+                image = base64ImageDecoder.decode(createUser.image).image
+                if (image.size > MAX_IMAGE_SIZE) throw TicktagValidationException(listOf(ValidationError("createUser.image", ValidationErrorDetail.Other("maxsize" + MAX_IMAGE_SIZE / 1000 + "KB"))))
+            }
+            var userimage = userimages.findOne(user.id)
+            if (userimage == null && image != null) {
+                userimage = UserImage.create(user.id, image)
+                userimages.insert(userimage)
+            } else if (userimage != null && image != null) {
+                userimage.image = image
+            }
+        }
 
         return userToDto(user, principal)
     }
@@ -113,18 +140,44 @@ open class UserServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.ADMIN) // TODO should probably be more granular
-    override fun listUsers(principal: Principal): List<UserResult> {
-        return usersToDto(users.findAll(), principal)
+    override fun listUsers(query: String, role: Role?, disabled: Boolean?, principal: Principal, pageable: Pageable): Page<UserResult> {
+        val page: Page<User>
+        val q = "%" + query.replace("_", "\\_", false).replace("%", "\\%", false).toLowerCase() + "%"
+        if (role == null) {
+            if (disabled == null) {
+                page = users.findByNameContainingIgnoreCaseOrUsernameContainingIgnoreCaseOrMailContainingIgnoreCase(query, query, query, pageable)
+            } else page = users.findAllByStatusAndQuery(q, disabled, pageable)
+        } else {
+            if (disabled == null) {
+                page = users.findAllByRoleAndQuery(q, role, pageable)
+            } else page = users.findAllByRoleAndStatusAndQuery(q, disabled, role, pageable)
+        }
+        val content = usersToDto(page.content, principal)
+        return PageImpl(content, pageable, page.totalElements)
     }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
-    override fun listUsersInProject(@P("authProjectId") projectId: UUID, principal: Principal): List<UserResult> {
-        projects.findOne(projectId) ?: throw NotFoundException()
-        return usersToDto(users.findInProject(projectId), principal)
+    override fun listProjectUsers(@P("authProjectId") projectId: UUID, disabled: Boolean?, principal: Principal): List<ProjectUserResult> {
+        val project = projects.findOne(projectId) ?: throw NotFoundException()
+        val projectMemberships: List<Member>
+        if (disabled == null) {
+            projectMemberships = members.findByProject(project) ?: throw NotFoundException()
+        } else {
+            if (disabled) {
+                projectMemberships = members.findByProjectAndUserDisabledIsAndRoleIs(project, disabled, ProjectRole.NONE) ?: throw NotFoundException()
+            } else {
+                projectMemberships = members.findByProjectAndUserDisabledIsAndRoleNot(project, disabled, ProjectRole.NONE) ?: throw NotFoundException()
+            }
+        }
+        val userIds = projectMemberships.map { it.userId }
+        val userMembershipMap = projectMemberships.groupBy { it.userId }
+        val userInProject = users.findByIds(userIds)
+        val usersResult = usersToDto(userInProject, principal)
+        return usersResult.map { ProjectUserResult(it, userMembershipMap[it.id]!![0]) }
     }
 
 
-    @PreAuthorize(AuthExpr.ADMIN) // TODO should probably be more granular
+    @PreAuthorize(AuthExpr.ADMIN) // TODO should probably be- more granular
     override fun listRoles(): List<RoleResult> {
         return Role.values().map(::RoleResult)
     }
@@ -151,14 +204,50 @@ open class UserServiceImpl @Inject constructor(
             user.name = updateUser.name
         }
 
+        if (updateUser.disabled != null) {
+            if (!principal.isId(id)) { //effectively just usable from the admin since user (self) has no access in this state
+                user.disabled = updateUser.disabled
+                user.currentToken = UUID.randomUUID()
+            } else if (principal.isId(id) && updateUser.disabled != user.disabled) {
+                throw TicktagValidationException(listOf(ValidationError("updateUser.disabled", ValidationErrorDetail.Other("notpermitted"))))
+            }
+        }
+
         if (updateUser.role != null) {
-            if (principal.hasRole(AuthExpr.ROLE_GLOBAL_ADMIN)) {  //Only Admins can change user roles!
+            if (principal.hasRole(AuthExpr.ROLE_GLOBAL_ADMIN) && !principal.isId(id)) {  //Only Admins can change user roles!
                 user.role = updateUser.role
-            } else {
+            } else if (principal.isId(id) && updateUser.role != user.role) {
                 throw TicktagValidationException(listOf(ValidationError("updateUser.role", ValidationErrorDetail.Other("notpermitted"))))
             }
         }
+        if (updateUser.image != null) {
+            var image: ByteArray? = null
+            if (updateUser.image.isNotEmpty()) {
+                image = base64ImageDecoder.decode(updateUser.image).image
+                if (image.size > MAX_IMAGE_SIZE) throw TicktagValidationException(listOf(ValidationError("updateUser.image", ValidationErrorDetail.Other("maxsize" + MAX_IMAGE_SIZE + "Bytes"))))
+            }
+
+            var userimage = userimages.findOne(user.id)
+            if (userimage == null && image != null) {
+                userimage = UserImage.create(user.id, image)
+                userimages.insert(userimage)
+            } else if (userimage != null && image != null) {
+                userimage.image = image
+            } else if (userimage != null && image == null) {
+                userimages.delete(userimage)
+            }
+        }
         return userToDto(user, principal)
+    }
+
+    @PreAuthorize(AuthExpr.ADMIN)
+    override fun deleteUser(id: UUID, principal: Principal) {
+        if (principal.isId(id)) throw TicktagValidationException(listOf(ValidationError("deleteUser", ValidationErrorDetail.Other("notpermitted"))))
+        val userToDelete = users.findOne(id) ?: throw NotFoundException()
+        val memberships = members.findByUserAndRoleNot(userToDelete, ProjectRole.NONE) ?: throw NotFoundException()
+        memberships.map { m -> m.role = ProjectRole.NONE }
+        userToDelete.currentToken = UUID.randomUUID()
+        userToDelete.disabled = true
     }
 
     private fun usersToDto(us: List<User>, principal: Principal): List<UserResult> {
@@ -195,9 +284,9 @@ open class UserServiceImpl @Inject constructor(
 
     private fun generateDefaultImagePng(user: User): ByteArray {
         val hash = ByteBuffer.wrap(MessageDigest.getInstance("SHA-1").digest(user.username.toByteArray()))
-        val alpha = intToDouble(hash.getInt(0), 0.0, Math.PI)
-        val hue0 = intToDouble(hash.getInt(4), 0.0, 1.0).toFloat()
-        val hue1 = intToDouble(hash.getInt(8), 0.0, 1.0).toFloat()
+        val hue = intToDouble(hash.getInt(0), 0.0, 1.0).toFloat()
+        val saturation = intToDouble(hash.getInt(4), 0.25, 0.6).toFloat()
+        val brightness = intToDouble(hash.getInt(8), 0.8, 1.0).toFloat()
         val letter = "${user.username[0].toUpperCase()}"
 
         val image = BufferedImage(128, 128, BufferedImage.TYPE_INT_RGB)
@@ -205,11 +294,10 @@ open class UserServiceImpl @Inject constructor(
 
         g.scale(image.width.toDouble(), image.height.toDouble())
         g.translate(0.5, 0.5)
-        g.rotate(alpha)
-        g.color = Color.getHSBColor(hue0, 0.5f, 1.0f)
+        g.color = Color.getHSBColor(hue, saturation, brightness)
         g.fill(Rectangle2D.Double(-2.0, -2.0, 4.0, 4.0))
-        g.color = Color.getHSBColor(hue1, 0.5f, 1.0f)
-        g.fill(Rectangle2D.Double(0.0, -2.0, 2.0, 4.0))
+        //g.color = Color.getHSBColor(hue1, 0.5f, 1.0f)
+        //g.fill(Rectangle2D.Double(0.0, -2.0, 2.0, 4.0))
 
         g.transform = AffineTransform()
         val font = Font("Arial", Font.PLAIN, 72)

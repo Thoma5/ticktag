@@ -22,7 +22,7 @@ import 'bootstrap-timepicker/css/bootstrap-timepicker.min.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import '@swimlane/ngx-datatable/release/datatable.css';
 import '@swimlane/ngx-datatable/release/material.css';
-import '@angular/material/core/theming/prebuilt/deeppurple-amber.css';
+import '@angular/material/core/theming/prebuilt/indigo-pink.css';
 import 'font-awesome/css/font-awesome.css';
 import 'github-markdown-css/github-markdown.css';
 import 'codemirror/lib/codemirror.css';

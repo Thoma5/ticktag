@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS "user" (
   "name"          TEXT NOT NULL,
   "password_hash" TEXT NOT NULL,
   "role"          TEXT NOT NULL,
-  "current_token" UUID NOT NULL
+  "current_token" UUID NOT NULL,
+  "disabled"      BOOLEAN
 );
 CREATE INDEX ON "user" (upper("mail"));
 
@@ -17,11 +18,13 @@ CREATE TABLE IF NOT EXISTS "user_image" (
 );
 
 CREATE TABLE IF NOT EXISTS "project" (
-  "id"            UUID PRIMARY KEY,
-  "name"          TEXT      NOT NULL,
-  "description"   TEXT      NOT NULL,
-  "creation_date" TIMESTAMP NOT NULL,
-  "icon"          BYTEA
+  "id"             UUID PRIMARY KEY,
+  "name"           TEXT      NOT NULL,
+  "description"    TEXT      NOT NULL,
+  "creation_date"  TIMESTAMP NOT NULL,
+  "icon_mime_info" TEXT,
+  "icon"           BYTEA,
+  "disabled"       BOOLEAN   NOT NULL
 );
 CREATE TABLE IF NOT EXISTS "member" (
   "u_id"         UUID      NOT NULL REFERENCES "user",

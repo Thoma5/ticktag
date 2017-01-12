@@ -23,7 +23,8 @@ class UserServiceTest : ServiceBaseTest() {
 
         withUser(id) { principal ->
             val tokenBefore = userService.getUser(id, principal).currentToken
-            this.userService.updateUser(principal, id, UpdateUser(role = null, oldPassword = null, password = "abc", mail = null, name = null))
+            val image : String? = null
+            this.userService.updateUser(principal, id, UpdateUser(role = null, oldPassword = null, password = "Pa\$\$w0rd", mail = null, name = null, image = image, disabled = null))
 
             val tokenNow = this.userService.getUser(id, principal).currentToken
             assertNotEquals(tokenBefore, tokenNow)

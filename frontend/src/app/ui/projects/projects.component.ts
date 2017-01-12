@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiCallService, AuthService, User } from '../../service';
 import { ProjectApi, PageProjectResultJson, ProjectResultJson } from '../../api';
+import { Subject } from 'rxjs/Subject';
+
 @Component({
   selector: 'tt-projects',
   templateUrl: './projects.component.html',
   styleUrls: ['./project.component.scss']
 })
 export class ProjectsComponent implements OnInit {
-  projects: PageProjectResultJson;
-
   iconsCss = {
     sortAscending: 'glyphicon glyphicon-chevron-down',
     sortDescending: 'glyphicon glyphicon-chevron-up',
@@ -18,21 +18,26 @@ export class ProjectsComponent implements OnInit {
     pagerPrevious: 'glyphicon glyphicon-backward',
     pagerNext: 'glyphicon glyphicon-forward'
   };
+  projects: PageProjectResultJson;
+  expanded = {};
   loading = true;
   refresh = true;
+  cu = false;
+  disabled = false;
+  mode = '';
+  toUpdateProject: PageProjectResultJson = undefined;
   asc = true;
   sortprop = 'NAME';
   offset = 0;
-  limit = 15;
+  limit = 25;
   rows: ProjectResultJson[] = [];
   totalElements = 0;
-  filter: string = '';
+  filter = new Subject<string>();
+  projectFilter: string = '';
   private allProjects: boolean = false;
   private user: User;
+  @ViewChild('projectDataTable') table: any;
 
-
-
-  // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(
     private router: Router,
     private projectApi: ProjectApi,
@@ -46,15 +51,21 @@ export class ProjectsComponent implements OnInit {
     this.user = this.authService.user;
     this.authService.observeUser()
       .subscribe(user => {
-        console.log(user);
         this.user = user;
       });
+    this.filter.debounceTime(300).do(term =>
+      this.getProjects(this.offset, this.limit, this.sortprop, this.asc, term)).subscribe(result => { }, error => { });
   }
 
-  getProjects(page?: number, size?: number, order?: string, asc?: boolean, name?: string): void {
+  getProjects(page?: number, size?: number, order?: string, asc?: boolean, filter?: string): void {
+    if (filter === undefined) {
+      filter = this.projectFilter;
+    } else {
+      this.projectFilter = filter;
+    }
     this.apiCallService
       .callNoError<PageProjectResultJson>(h => this.projectApi
-      .listProjectsUsingGETWithHttpInfo(page, size, order, asc, name, this.allProjects, h))
+        .listProjectsUsingGETWithHttpInfo(page, size, order, asc, filter ? filter : '', this.allProjects, this.disabled, h))
       .subscribe(projects => {
         this.refresh = true;
         this.projects = projects;
@@ -73,7 +84,6 @@ export class ProjectsComponent implements OnInit {
 
   onPage(event: any) {
     this.refresh = true;
-    console.log('Page Event', event);
     this.limit = event.limit;
     this.offset = event.offset;
     this.getProjects(event.offset, event.limit, this.sortprop, this.asc, undefined);
@@ -82,18 +92,14 @@ export class ProjectsComponent implements OnInit {
 
   onSort(event: any) {
     this.refresh = true;
-    console.log('Sort Event', event);
     this.asc = event.sorts[0].dir === 'asc' ? true : false;
     this.sortprop = event.sorts[0].prop === 'name' ? 'NAME' : 'CREATION_DATE';
     this.getProjects(this.offset, this.limit, this.sortprop, this.asc, undefined);
   }
 
   updateFilter(event: any) {
-    this.filter = event.target.value;
-
-    // filter our data
+    this.filter.next(event.target.value);
     this.offset = 0;
-    this.getProjects(this.offset, this.limit, this.sortprop, this.asc, this.filter);
   }
 
   activate(event: any) {
@@ -105,10 +111,31 @@ export class ProjectsComponent implements OnInit {
   onDeleteClicked(id: string) {
     this.apiCallService
       .call<ProjectResultJson>(h => this.projectApi.deleteProjectUsingDELETEWithHttpInfo(id, h))
-      .subscribe( param => {
+      .subscribe(param => {
         this.refresh = true;
         this.getProjects(this.offset, this.limit, this.sortprop, this.asc, undefined);
       }
       );
+  }
+  onStartCreate() {
+    this.mode = 'Create';
+    this.cu = true;
+  }
+  onStartUpdate(project: ProjectResultJson) {
+    this.toUpdateProject = project;
+    this.cu = true;
+    this.mode = 'Update';
+  }
+  onStopCreate() {
+    this.cu = false;
+  }
+  finishCreateUpdate() {
+    this.cu = false;
+    this.getProjects();
+  }
+
+
+  toggleExpandRow(row: any) {
+    this.table.toggleExpandRow(row);
   }
 }
