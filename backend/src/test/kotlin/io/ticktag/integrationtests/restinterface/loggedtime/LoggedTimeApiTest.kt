@@ -51,6 +51,16 @@ class LoggedTimeApiTest : ApiBaseTest() {
     }
 
     @Test
+    fun `updateLoggTime canceled`() {
+        withUser(ADMIN_ID) { principal ->
+            val loggTimeId = UUID.fromString("00000000-0008-0000-0000-000000000001")
+            val req = UpdateLoggedTimeJson(null, null, true)
+            val result = loggedTimeController.updateLoggedTime(req = req, id = loggTimeId)
+            assertEquals(true, result.canceled)
+        }
+    }
+
+    @Test
     fun `listLoggTime positiv`() {
         withUser(ADMIN_ID) { principal ->
             val commentId = UUID.fromString("00000000-0003-0000-0000-000000000006")
