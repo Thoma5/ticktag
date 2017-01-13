@@ -3,6 +3,9 @@
  $project-picker-height: 6rem;
  $project-picker-content-height: 3rem;
  $project-picker-padding: ($project-picker-height - $project-picker-content-height) / 2;
+ $project-picker-row-height: 4rem;
+ $project-picker-row-content-height: 2rem;
+ $project-picker-row-padding: ($project-picker-row-height - $project-picker-row-content-height) / 2;
 
 .component {
   height: 100%;
@@ -112,13 +115,55 @@
 
 .project-selection-block {
   width: 100%;
+  transform-origin: top;
+  //transition: max-height 200ms linear;
+  overflow: hidden;
 
-  .selection-item {
+  &.collapsed {
+    animation: shrink .2s ease-in-out forwards;
+  }
+
+  &.expanded {
+    animation: grow .2s ease-in-out forwards;
+  }
+
+  .selection-button {
     width: 100%;
+    height: $project-picker-row-height;
+    padding-top: $project-picker-row-padding;
+    padding-bottom: $project-picker-row-padding;
 
-    .selection-button {
+    .selection-item {
+      height: $project-picker-row-content-height;
       width: 100%;
-      text-align: left;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center;
+
+      .small-project-icon {
+        flex-basis: $project-picker-row-content-height;
+        height: $project-picker-row-content-height;
+        flex-grow: 0;
+        flex-shrink: 0;
+        border-radius: 50%;
+        position: relative;
+        overflow: hidden;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+        }
+      }
+
+      .small-project-name {
+        width: 100%;
+        margin-left: 1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
   }
 }
@@ -132,4 +177,37 @@
 .project-links {
   width: 100%;
   margin-top: 2rem;
+}
+
+@keyframes grow {
+  0% {
+    height: 0;
+    opacity: 0;
+  }
+  1% {
+    height: auto;
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  100% {
+    height: auto;
+    transform: scaleY(1);
+  }
+}
+
+@keyframes shrink {
+  0% {
+    height: auto;
+    opacity: 1;
+    transform: scaleY(1);
+  }
+  99% {
+    height: auto;
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  100% {
+    height: 0;
+    opacity: 0;
+  }
 }

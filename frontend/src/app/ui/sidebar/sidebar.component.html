@@ -22,12 +22,17 @@
       </div>
     </a>
   </div>
-  <div *ngIf="showingSelection" class="project-selection-block">
-    <div *ngFor="let project of otherProjects" class="selection-item">
-      <a md-button [routerLink]="['project', project.id, 'tickets']" class='selection-button'>
-        {{ project.name }}
-      </a>
-    </div>
+  <div class="project-selection-block" [class.expanded]="showingSelection" [class.collapsed]="!showingSelection">
+    <a *ngFor="let project of otherProjects" md-button [routerLink]="['project', project.id, 'tickets']" class='selection-button'>
+      <div class="selection-item">
+        <div *ngIf="project.icon != null" class="small-project-icon">
+          <img src="{{project.icon}}">
+        </div>
+        <div class="small-project-name">
+          {{ project.name }}
+        </div>
+      </div>
+    </a>
   </div>
   <div class="navadmin-block">
     <div>
