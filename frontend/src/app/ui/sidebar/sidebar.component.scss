@@ -181,6 +181,18 @@
   margin-top: 2rem;
 }
 
+.link-icon {
+  width: 10%;
+  text-align: center;
+  position: relative;
+}
+
+.link-text {
+  width: 90%;
+  text-align: left;
+  position: relative;
+}
+
 @keyframes grow {
   0% {
     height: 0;

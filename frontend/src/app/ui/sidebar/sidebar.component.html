@@ -36,24 +36,36 @@
   </div>
   <div class="navadmin-block">
     <div>
-      <a md-button [routerLink]="['']"><span class="glyphicon glyphicon-home"></span> Home</a>
+      <a md-button [routerLink]="['']">
+        <i class='link-icon fa fa-home'></i>
+        <span class='link-text'>Home</span>
+      </a>
     </div>
     <div>
-      <a md-button *ngIf="isAdmin" [routerLink]="['users']"><span class="glyphicon glyphicon-user"></span> Users</a>
+      <a md-button *ngIf="isAdmin" [routerLink]="['users']">
+        <i class='link-icon fa fa-user'></i>
+        <span class='link-text'>Users</span>
+      </a>
     </div>
     <div>
-      <a md-button [routerLink]="['projects']"><span class="glyphicon glyphicon-th-list"></span> Projects</a>
-    </div>
-    <div>
-      <a md-button [routerLink]="['whoami']"><span class="glyphicon glyphicon-user"></span> Whoami</a>
+      <a md-button [routerLink]="['projects']">
+        <i class='link-icon fa fa-th-list'></i>
+        <span class='link-text'>Projects</span>
+      </a>
     </div>
   </div>
   <div *ngIf="project != null" class="project-links">
     <div>
-      <a md-button [routerLink]="['project', project.id, 'tickets']">Tickets</a>
+      <a md-button [routerLink]="['project', project.id, 'tickets']">
+        <i class='link-icon fa fa-ticket'></i>
+        <span class='link-text'>Tickets</span>
+      </a>
     </div>
     <div>
-      <a md-button [routerLink]="['project', project.id, 'burndown']">Burndown</a>
+      <a md-button [routerLink]="['project', project.id, 'burndown']">
+        <i class='link-icon fa fa-area-chart'></i>
+        <span class='link-text'>Burndown</span>
+      </a>
     </div>
   </div>
 </div>
