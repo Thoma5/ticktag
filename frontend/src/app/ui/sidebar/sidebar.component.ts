@@ -19,7 +19,11 @@ export class SidebarComponent {
   @Input()
   projects: imm.List<ProjectResultJson>;
 
-  showingSelection: boolean = false;
+  private _showingSelection = false;
+
+  get showingSelection(): boolean {
+    return this._showingSelection && !this.loadingProject;
+  }
 
   get isAdmin(): boolean {
     return _.includes(this.user.authorities, 'ADMIN');
@@ -34,6 +38,6 @@ export class SidebarComponent {
   }
 
   onProjectClick() {
-    this.showingSelection = !this.showingSelection;
+    this._showingSelection = !this._showingSelection;
   }
 }

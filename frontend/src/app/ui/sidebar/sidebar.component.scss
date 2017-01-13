@@ -116,14 +116,16 @@
 .project-selection-block {
   width: 100%;
   transform-origin: top;
-  //transition: max-height 200ms linear;
   overflow: hidden;
+  display: none;
 
   &.collapsed {
+    display: block;
     animation: shrink .2s ease-in-out forwards;
   }
 
   &.expanded {
+    display: block;
     animation: grow .2s ease-in-out forwards;
   }
 
