@@ -94,6 +94,8 @@ import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { TicketCreateComponent } from './ui/ticket-detail/ticket-create/ticket-create.component';
 import { ImagePickerComponent } from './util/image-picker/image-picker.component';
+import { SidebarComponent } from './ui/sidebar/sidebar.component';
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -167,6 +169,7 @@ import { ImagePickerComponent } from './util/image-picker/image-picker.component
     ProgressBarComponent,
     BurnDownChartComponent,
     TicketCreateComponent,
+    SidebarComponent,
 
     HumanizeDurationPipe,
     FormatMomentPipe,
