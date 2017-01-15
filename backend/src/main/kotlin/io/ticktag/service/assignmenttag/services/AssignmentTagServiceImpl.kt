@@ -66,6 +66,13 @@ open class AssignmentTagServiceImpl @Inject constructor(
         return AssignmentTagResult(assignmentTag)
     }
 
+    @PreAuthorize(AuthExpr.EDIT_ASSIGNMENTTAG)
+    override fun deleteAssignmentTag(@P("authAssignmentTagId") id: UUID) {
+        val assignmentTag = assignmentTags.findOne(id) ?: throw NotFoundException()
+        assignmentTag.normalizedName = ""
+        assignmentTag.disabled = true
+    }
+
     /** No server side search
     @PreAuthorize(AuthExpr.PROJECT_USER)
     override fun searchAssignmentTags(@P("authProjectId") pid: UUID, name: String): List<AssignmentTagResult> {

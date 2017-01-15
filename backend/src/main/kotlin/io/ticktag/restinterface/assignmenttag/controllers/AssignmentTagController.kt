@@ -45,6 +45,12 @@ open class AssignmentTagController @Inject constructor(
         return assignmentTagService.listAssignmentTags(req).map(::AssignmentTagResultJson)
     }
 
+    @DeleteMapping(value = "{id}")
+    open fun deleteAssignmentTag(
+            @PathVariable id: UUID) {
+        assignmentTagService.deleteAssignmentTag(id)
+    }
+
     /** No search function server side
 
     @GetMapping(value = "project/{projectId}/search/{name}")
