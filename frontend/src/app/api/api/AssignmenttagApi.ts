@@ -85,6 +85,22 @@ export class AssignmenttagApi {
     }
 
     /**
+     * deleteAssignmentTag
+     * 
+     * @param id id
+     */
+    public deleteAssignmentTagUsingDELETE(id: string, extraHttpRequestParams?: any): Observable<{}> {
+        return this.deleteAssignmentTagUsingDELETEWithHttpInfo(id, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
      * getAssignmentTag
      * 
      * @param id id
@@ -169,6 +185,50 @@ export class AssignmenttagApi {
             method: RequestMethod.Post,
             headers: headers,
             body: req == null ? '' : JSON.stringify(req), // https://github.com/angular/angular/issues/10612
+            search: queryParameters
+        });
+        
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * deleteAssignmentTag
+     * 
+     * @param id id
+     */
+    public deleteAssignmentTagUsingDELETEWithHttpInfo(id: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/assignmenttag/${id}`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'id' is not null or undefined
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling deleteAssignmentTagUsingDELETE.');
+        }
+
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json'
+        ];
+        
+            
+
+
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Delete,
+            headers: headers,
             search: queryParameters
         });
         

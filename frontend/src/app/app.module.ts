@@ -95,6 +95,9 @@ import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { TicketCreateComponent } from './ui/ticket-detail/ticket-create/ticket-create.component';
 import { ImagePickerComponent } from './util/image-picker/image-picker.component';
 import { SidebarComponent } from './ui/sidebar/sidebar.component';
+import {AssignmentTagsComponent} from './ui/assignment-tags/assignment-tags.component';
+import {AssignmentTagCreateComponent} from './ui/assignment-tags/create/assignment-tag-create.component';
+import {AssignmentTagUpdateComponent} from './ui/assignment-tags/update/assignment-tag-update.component';
 
 @NgModule({
   imports: [
@@ -170,6 +173,9 @@ import { SidebarComponent } from './ui/sidebar/sidebar.component';
     BurnDownChartComponent,
     TicketCreateComponent,
     SidebarComponent,
+    AssignmentTagsComponent,
+    AssignmentTagCreateComponent,
+    AssignmentTagUpdateComponent,
 
     HumanizeDurationPipe,
     FormatMomentPipe,
