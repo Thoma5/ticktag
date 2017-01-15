@@ -30,3 +30,4 @@ import 'codemirror/addon/hint/show-hint.css';
 import 'codemirror/addon/display/placeholder.js';
 import 'awesomplete/awesomplete.css';
 import 'hammerjs/hammer.js';
+import 'dragula/dist/dragula.css';

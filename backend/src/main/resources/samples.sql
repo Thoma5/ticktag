@@ -1,4 +1,20 @@
 BEGIN;
+DELETE FROM "ticket_event_comment_text_changed";
+DELETE FROM "ticket_event_current_estimated_time_changed";
+DELETE FROM "ticket_event_due_date_changed";
+DELETE FROM "ticket_event_initial_estimated_time_changed";
+DELETE FROM "ticket_event_logged_time_added";
+DELETE FROM "ticket_event_logged_time_removed";
+DELETE FROM "ticket_event_mention_added";
+DELETE FROM "ticket_event_parent_changed";
+DELETE FROM "ticket_event_state_changed";
+DELETE FROM "ticket_event_story_points_changed";
+DELETE FROM "ticket_event_tag_added";
+DELETE FROM "ticket_event_tag_removed";
+DELETE FROM "ticket_event_title_changed";
+DELETE FROM "ticket_event_user_added";
+DELETE FROM "ticket_event_user_removed";
+DELETE FROM "ticket_event";
 
 UPDATE "ticket" SET "description_comment_id" = NULL;
 UPDATE "ticket_tag_group" SET "default_ticket_tag_id" = NULL;
@@ -486,10 +502,8 @@ WHERE id = '00000000-0009-0000-0000-000000000002';
 
 --TICKET TAG TICKET
 INSERT INTO public.assigned_ticket_tag (ticket_id, ticket_tag_id) VALUES ('00000000-0003-0000-0000-000000000002', '00000000-0005-0000-0000-000000000001');
-INSERT INTO public.assigned_ticket_tag (ticket_id, ticket_tag_id) VALUES ('00000000-0003-0000-0000-000000000003', '00000000-0005-0000-0000-000000000001');
 INSERT INTO public.assigned_ticket_tag (ticket_id, ticket_tag_id) VALUES ('00000000-0003-0000-0000-000000000003', '00000000-0005-0000-0000-000000000002');
 INSERT INTO public.assigned_ticket_tag (ticket_id, ticket_tag_id) VALUES ('00000000-0003-0000-0000-000000000001', '00000000-0005-0000-0000-000000000001');
-INSERT INTO public.assigned_ticket_tag (ticket_id, ticket_tag_id) VALUES ('00000000-0003-0000-0000-000000000001', '00000000-0005-0000-0000-000000000003');
 INSERT INTO public.assigned_ticket_tag (ticket_id, ticket_tag_id) VALUES ('00000000-0003-0000-0000-000000000004', '00000000-0005-0000-0000-000000000001');
 INSERT INTO public.assigned_ticket_tag (ticket_id, ticket_tag_id) VALUES ('00000000-0003-0000-0000-000000000006', '00000000-0005-0000-0000-000000000001');
 INSERT INTO public.assigned_ticket_tag (ticket_id, ticket_tag_id) VALUES ('00000000-0003-0000-0000-000000000006', '00000000-0005-0000-0001-000000000002');
