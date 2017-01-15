@@ -25,7 +25,7 @@ open class AssignmentTagServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listAssignmentTags(@P("authProjectId") projectId: UUID): List<AssignmentTagResult> {
-        return assignmentTags.findByProjectId(projectId).map(::AssignmentTagResult)
+        return assignmentTags.findByProjectIdAndDisabled(projectId, false).map(::AssignmentTagResult)
     }
 
     @PreAuthorize(AuthExpr.READ_ASSIGNMENTTAG)

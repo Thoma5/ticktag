@@ -54,7 +54,7 @@ open class TicketAssignmentServiceImpl @Inject constructor(
         val userSelf = users.findOne(principal.id) ?: throw NotFoundException()
         val ticket = tickets.findOne(ticketId) ?: throw NotFoundException()
         val assignmentTag = assignmentTags.findOne(tagId) ?: throw NotFoundException()
-        if (!assignmentTags.findByProjectId(ticket.project.id).contains(assignmentTag)) throw NotFoundException()
+        if (!assignmentTags.findByProjectIdAndDisabled(ticket.project.id, false).contains(assignmentTag)) throw NotFoundException()
         val user = users.findOne(userId) ?: throw NotFoundException()
         val member = members.findByUserIdAndProjectId(userId, ticket.project.id) ?: throw NotFoundException()
         var ticketAssignment: AssignedTicketUser?

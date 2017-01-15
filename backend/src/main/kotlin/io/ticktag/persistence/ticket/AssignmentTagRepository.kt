@@ -7,7 +7,7 @@ import java.util.*
 
 @TicktagRepository
 interface AssignmentTagRepository : TicktagCrudRepository<AssignmentTag, UUID> {
-    fun findByProjectId(projectId: UUID): List<AssignmentTag>
+    fun findByProjectIdAndDisabled(projectId: UUID, disabled: Boolean): List<AssignmentTag>
 
     //No server side search function
     //fun findByProjectIdAndNameLikeIgnoreCase(projectId: UUID, name: String): List<AssignmentTag>

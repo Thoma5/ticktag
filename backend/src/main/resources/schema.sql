@@ -98,7 +98,8 @@ CREATE TABLE IF NOT EXISTS "assignment_tag" (
   "project_id"      UUID REFERENCES "project",
   "name"            TEXT NOT NULL,
   "normalized_name" TEXT NOT NULL,
-  "color"           TEXT NOT NULL -- RRGGBB
+  "color"           TEXT NOT NULL, -- RRGGBB
+  "disabled"         BOOLEAN NOT NULL DEFAULT FALSE
 );
 CREATE INDEX ON "assignment_tag" ("project_id");
 
