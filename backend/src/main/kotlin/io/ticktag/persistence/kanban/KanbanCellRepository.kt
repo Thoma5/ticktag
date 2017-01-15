@@ -15,7 +15,7 @@ interface KanbanCellRepository : TicktagCrudRepository<KanbanCell, UUID> {
             "FROM TicketTag tag join tag.tickets t left outer join t.kanbanCells as k " +
             "WHERE tag.id = :tagId and (k is null OR  k.tag.id = :tagId) "+
             "ORDER BY k.order")
-    fun findByTicketTagId(@Param("tagId") tagId: UUID,pageable: Pageable): List<Ticket>
+    fun findByTicketTagId(@Param("tagId") tagId: UUID): List<Ticket>
 
 
 

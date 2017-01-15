@@ -169,7 +169,7 @@ export class KanbanBoardDetailComponent implements OnInit {
       .map(tts => idListToMap(tts).map(tt => new KanbanDetailTag(tt)).toMap());
 
     let projectUsersObs = this.apiCallService
-      .callNoError<UserResultJson[]>(p => this.projectApi.listProjectMembersUsingGETWithHttpInfo(projectId, p))
+      .callNoError<UserResultJson[]>(p => this.projectApi.listProjectMembersUsingGETWithHttpInfo(projectId, undefined, p))
       .map(users => idListToMap(users).map(user => new TicketOverviewUser(user)).toMap());
 
 

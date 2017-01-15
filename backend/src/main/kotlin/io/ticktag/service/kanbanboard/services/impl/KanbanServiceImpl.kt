@@ -53,12 +53,11 @@ open class KanbanServiceImpl @Inject constructor(
         val columns = ticketTagRepository.findByTicketTagGroupIdOrderByOrderAsc(kanbanBoardId)
         val result = emptyList<KanbanColumnResult>().toMutableList()
         val filter = TicketFilter(columns.first().ticketTagGroup.project.id, numbers, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open, parent)
-        val filteredTickets = ticketRepository.findAll(filter)
-        val ascOrder = Sort.Direction.ASC
-        val sortOrder = Sort.Order(ascOrder, "order")
-        val pageRequest = PageRequest(0, 50, Sort(sortOrder))
+
+        val pageRequest = PageRequest(0, 40)
+        val filteredTickets = ticketRepository.findAll(filter,pageRequest)
         for (column in columns) {
-            var lastSort = kanbanCellRepository.findByTicketTagId(column.id, pageRequest).toMutableList()
+            var lastSort = kanbanCellRepository.findByTicketTagId(column.id).toMutableList()
             lastSort = lastSort.filter { t -> filteredTickets.contains(t) }.toMutableList()
 
             result.add(KanbanColumnResult(column, lastSort.map { it.id }))
@@ -75,11 +74,8 @@ open class KanbanServiceImpl @Inject constructor(
         for (subticket in ticket.subTickets) {
             ticketTagRelationService.createOrGetIfExistsTicketTagRelation(subticket.id, tagId, principal)
         }
-        val ascOrder = Sort.Direction.ASC
-        val sortOrder = Sort.Order(ascOrder, "order")
-        val pageRequest = PageRequest(0, 50, Sort(sortOrder))
 
-        val lastSort = kanbanCellRepository.findByTicketTagId(tagId, pageRequest)
+        val lastSort = kanbanCellRepository.findByTicketTagId(tagId)
         val newSort = lastSort.filter { !ticket.subTickets.contains(it) }.toMutableList()
         newSort.addAll(newSort.indexOf(ticket) + 1, ticket.subTickets)
         var i = 0
@@ -100,10 +96,8 @@ open class KanbanServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.READ_TICKET_TAG)
     override fun updateKanbanBoard(column: UpdateKanbanColumn, principal: Principal,@P("authTicketTagId") id: UUID) {
-        val ascOrder = Sort.Direction.ASC
-        val pageRequest = PageRequest(0, 50)
 
-        val lastSort = kanbanCellRepository.findByTicketTagId(column.id, pageRequest).toMutableList()
+        val lastSort = kanbanCellRepository.findByTicketTagId(column.id).toMutableList()
         val ticket = ticketRepository.findOne(column.ticketIdToUpdate) ?: throw NotFoundException()
         lastSort.remove(ticket)
         val indexOfTicket = column.ticketIds.indexOf(column.ticketIdToUpdate)
