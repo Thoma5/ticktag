@@ -28,7 +28,7 @@ import { MemberUpdateComponent } from './ui/projects/user/update/member-update.c
 import {
   ProjectApi, AuthApi, UserApi, AssignmenttagApi, CommentsApi, MemberApi,
   TimecategoryApi, TicketApi, TickettagApi, TickettaggroupApi, GetApi,
-  TicketuserrelationApi, TickettagrelationApi
+  TicketuserrelationApi, TickettagrelationApi, LoggedtimeApi
 } from './api';
 import { TicketDetailComponent } from './ui/ticket-detail/ticket-detail.component';
 import { TicketSidebarComponent } from './ui/ticket-detail/ticket-sidebar/ticket-sidebar.component';
@@ -100,6 +100,7 @@ import { ChartsModule } from 'ng2-charts/ng2-charts';
 
 import { TicketCreateComponent } from './ui/ticket-detail/ticket-create/ticket-create.component';
 import { ImagePickerComponent } from './util/image-picker/image-picker.component';
+import { SidebarComponent } from './ui/sidebar/sidebar.component';
 
 @NgModule({
   imports: [
@@ -175,6 +176,7 @@ import { ImagePickerComponent } from './util/image-picker/image-picker.component
     ProgressBarComponent,
     BurnDownChartComponent,
     TicketCreateComponent,
+    SidebarComponent,
 
     HumanizeDurationPipe,
     FormatMomentPipe,
@@ -210,7 +212,7 @@ import { ImagePickerComponent } from './util/image-picker/image-picker.component
     TicketuserrelationApi,
     TickettagrelationApi,
     BoardApi,
-
+    LoggedtimeApi,
     ApiCallService,
     AuthService,
     MarkdownService,

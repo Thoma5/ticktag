@@ -1,11 +1,10 @@
-package io.ticktag.restinterface.comment
+package io.ticktag.integrationtests.restinterface.comment
 
 import io.ticktag.*
 import io.ticktag.integrationtests.restinterface.ApiBaseTest
 import io.ticktag.restinterface.comment.controllers.CommentController
 import io.ticktag.restinterface.comment.schema.CommandJson
 import io.ticktag.restinterface.comment.schema.CreateCommentRequestJson
-import io.ticktag.restinterface.comment.schema.UpdateCommentRequestJson
 import io.ticktag.restinterface.loggedtime.controller.LoggedTimeController
 import io.ticktag.restinterface.ticket.controllers.TicketController
 import io.ticktag.restinterface.ticketuserrelation.schema.TicketUserRelationResultJson
@@ -32,17 +31,6 @@ class CommentApiTest : ApiBaseTest() {
     }
 
     @Test
-    fun `updateComment should update a comment`() {
-        withUser(ADMIN_ID) { ->
-
-            commentController.updateComment(UpdateCommentRequestJson("test", null, null), COMMENTS_PROJECT1_TICKET1[0])
-
-            val comment = commentController.getComment(COMMENTS_PROJECT1_TICKET1[0])
-            assertThat(comment.text, `is`("test"))
-        }
-    }
-
-    @Test
     fun `getComment should find a comment`() {
         withUser(ADMIN_ID) { ->
 
@@ -53,37 +41,10 @@ class CommentApiTest : ApiBaseTest() {
     }
 
     @Test(expected = NotFoundException::class)
-    fun `deleteComment should delete a comment`() {
-        withUser(ADMIN_ID) { ->
-
-            commentController.deleteComment(COMMENTS_PROJECT1_TICKET1[0])
-
-            commentController.getComment(COMMENTS_PROJECT1_TICKET1[0])
-        }
-    }
-
-
-    @Test(expected = NotFoundException::class)
-    fun `updateComment should 404 if the comment does not exist`() {
-        withUser(ADMIN_ID) { ->
-
-            commentController.updateComment(UpdateCommentRequestJson("test", null, null), UUID(-1, -1))
-        }
-    }
-
-    @Test(expected = NotFoundException::class)
     fun `getComment should 404 if the commend does not exist`() {
         withUser(ADMIN_ID) { ->
 
             commentController.getComment(UUID(-1, -1))
-        }
-    }
-
-    @Test(expected = NotFoundException::class)
-    fun `deleteComment should 404 if the comment does not exist`() {
-        withUser(ADMIN_ID) { ->
-
-            commentController.deleteComment(UUID(-1, -1))
         }
     }
 
@@ -109,7 +70,7 @@ class CommentApiTest : ApiBaseTest() {
 
             val comment = commentController.getComment(id)
             assertThat(comment.loggedTimeIds.size, `is`(1))
-            val time = loggedTimeController.getLoggedTimesForId(comment.loggedTimeIds[0])
+            loggedTimeController.getLoggedTimesForId(comment.loggedTimeIds[0])
         }
     }
 
@@ -215,7 +176,7 @@ class CommentApiTest : ApiBaseTest() {
             val id = createCommentCmd(principal, CommandJson("est", -1234, null, null, null, null))
 
             commentController.getComment(id)
-            val ticket = ticketController.getTicket(TEST_TICKET)
+            ticketController.getTicket(TEST_TICKET)
         }
     }
 

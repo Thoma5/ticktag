@@ -27,6 +27,7 @@ describe('Auth Service', () => {
 
   it('should return previously set value', inject([AuthService], (auth: AuthService) => {
     let u: User = {
+      id: 'id',
       token: 'token',
       authorities: ['USER']
     };

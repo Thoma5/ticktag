@@ -40,7 +40,6 @@ export * from './TicketTagResultJson';
 export * from './TicketUserRelationResultJson';
 export * from './TimeCategoryJson';
 export * from './UpdateAssignmentRequestJson';
-export * from './UpdateCommentRequestJson';
 export * from './UpdateKanbanColumnJson';
 export * from './UpdateLoggedTimeJson';
 export * from './UpdateMemberRequestJson';

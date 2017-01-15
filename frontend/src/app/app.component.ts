@@ -2,11 +2,14 @@ import { Component, OnInit, ViewContainerRef, OnDestroy, NgZone } from '@angular
 import { Location } from '@angular/common';
 import '../style/app.scss';
 import { AuthService, ApiCallService, User, ErrorHandler } from './service';
-import { Router } from '@angular/router';
+import { ProjectApi, ProjectResultJson, PageProjectResultJson } from './api';
+import { Router, ActivatedRoute, NavigationStart } from '@angular/router';
 import { Overlay } from 'angular2-modal';
 import { Modal } from 'angular2-modal/plugins/bootstrap';
 import { Response } from '@angular/http';
 import * as $ from 'jquery';
+import * as imm from 'immutable';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -18,9 +21,13 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
   private title: string;
   private user: User;
   private directTicketLinkEvent: (eventObject: JQueryEventObject) => any;
+  private loadingProject: boolean = false;
+  private project: ProjectResultJson | null = null;
+  private userProjects: imm.List<ProjectResultJson> | null = null;
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(
+    private route: ActivatedRoute,
     private authService: AuthService,
     private modal: Modal,
     private overlay: Overlay,
@@ -28,7 +35,8 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
     private router: Router,
     private location: Location,
     private zone: NgZone,
-    private apiCallService: ApiCallService) {
+    private apiCallService: ApiCallService,
+    private projectApi: ProjectApi) {
 
     apiCallService.initErrorHandler(this);
     this.title = 'TickTag';
@@ -37,10 +45,42 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
 
 
   ngOnInit(): void {
-    this.user = this.authService.user;
-    this.authService.observeUser()
-      .subscribe(user => {
-        this.user = user;
+    Observable.concat(Observable.of(this.authService.user), this.authService.observeUser())
+      .flatMap(u => {
+        if (u == null) {
+          return Observable.of([null, null]);
+        } else {
+          return this.loadUserProjects(u.id).map(prs => [u, prs]);
+        }
+      })
+      .subscribe(userAndProjects => {
+        this.user = userAndProjects[0];
+        this.userProjects = userAndProjects[1];
+      });
+
+    this.router.events
+      .filter(e => e instanceof NavigationStart)
+      .map(e => e.url)
+      .map(url => projectIdFromUrl(url))
+      .distinctUntilChanged()
+      .switchMap(projectId => {
+        this.loadingProject = true;
+        if (projectId != null) {
+          // TODO do we need better error handling here?
+          return this.loadProject(projectId)
+            .catch((err: any) => {
+              console.log('Error loading project');
+              console.dir(err);
+              return Observable.empty<ProjectResultJson>();
+            })
+            .delay(2000);
+        } else {
+          return Observable.of(null);
+        }
+      })
+      .subscribe(project => {
+        this.project = project;
+        this.loadingProject = false;
       });
 
     $(document).on('click', 'a.grammar-htmlifyCommands', this.directTicketLinkEvent = (e) => {
@@ -60,6 +100,16 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
     if (this.directTicketLinkEvent) {
       $(document).off('click', 'a.grammar-htmlifyCommands', this.directTicketLinkEvent);
     }
+  }
+
+  loadProject(id: string): Observable<ProjectResultJson> {
+    return this.apiCallService.callNoError(p => this.projectApi.getProjectUsingGETWithHttpInfo(id, p));
+  }
+
+  loadUserProjects(userId: string): Observable<imm.List<ProjectResultJson>> {
+    return this.apiCallService
+    .callNoError(p => this.projectApi.listProjectsUsingGETWithHttpInfo(0, 10, 'NAME', true, null, false, false, p))
+      .map((p: PageProjectResultJson) => imm.List(p.content));
   }
 
   logout(): void {
@@ -205,6 +255,17 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
   private clearUser() {
     this.authService.user = null;
   }
+}
+
+function projectIdFromUrl(url: string): string | null {
+  // Better solutions are very welcome
+  let re = /^.*\/project\/(.*?)\/.*$/g;
+  let matches = re.exec(url);
+  if (matches != null && matches.length > 1) {
+    return matches[1];
+  }
+
+  return null;
 }
 
 function statusGroup(statusCode: number) {

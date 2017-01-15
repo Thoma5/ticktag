@@ -27,7 +27,13 @@
         <tabset>
           <tab heading='Comments'>
             <div class='comments-wrapper'>
-                <tt-ticket-comments [ticket]='ticketDetail' [allAssignmentTags]='allAssignmentTags'></tt-ticket-comments>
+                <tt-ticket-comments
+                    [ticket]='ticketDetail'
+                    [allAssignmentTags]='allAssignmentTags'
+                    [transientTimes]="transientTimes"
+                    (undoTime)="onUndoRedoTime($event, true)"
+                    (redoTime)="onUndoRedoTime($event, false)"
+                ></tt-ticket-comments>
                 <tt-ticket-comment-input
                     [allTicketTags]='allTicketTags'
                     [ticket]='ticketDetail'

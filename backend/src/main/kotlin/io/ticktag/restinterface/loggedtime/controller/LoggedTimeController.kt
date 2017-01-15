@@ -52,12 +52,7 @@ open class LoggedTimeController @Inject constructor(
     @PutMapping(value = "/{id}")
     open fun updateLoggedTime(@RequestBody req: UpdateLoggedTimeJson,
                               @RequestParam id: UUID): LoggedTimeResultJson {
-        val newLoggedTime = loggedTimeService.updateLoggedTime(UpdateLoggedTime(req.time, req.categoryId), id)
+        val newLoggedTime = loggedTimeService.updateLoggedTime(UpdateLoggedTime(req.time, req.categoryId, req.canceled), id)
         return LoggedTimeResultJson(newLoggedTime)
-    }
-
-    @DeleteMapping(value = "/{id}")
-    open fun deleteLoggedTime(@RequestParam id: UUID) {
-        loggedTimeService.deleteLoggedTime(id)
     }
 }

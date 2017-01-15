@@ -128,9 +128,10 @@ CREATE INDEX ON "assigned_ticket_user" ("user_id");
 
 CREATE TABLE IF NOT EXISTS "logged_time" (
   "id"          UUID PRIMARY KEY,
-  "comment_id"  UUID   NOT NULL REFERENCES "comment",
-  "category_id" UUID   NOT NULL REFERENCES "time_category",
-  "time"        BIGINT NOT NULL
+  "comment_id"  UUID    NOT NULL REFERENCES "comment",
+  "category_id" UUID    NOT NULL REFERENCES "time_category",
+  "time"        BIGINT  NOT NULL,
+  "canceled"    BOOLEAN NOT NULL
 );
 CREATE INDEX ON "logged_time" ("comment_id");
 CREATE INDEX ON "logged_time" ("category_id");
@@ -295,12 +296,12 @@ CREATE VIEW view_progress AS
             FROM ticket tt
               JOIN comment cc ON cc.ticket_id = tt.id
               JOIN logged_time lt ON lt.comment_id = cc.id
-            WHERE tt.id = t.id OR tt.parent_ticket_id = t.id) :: BIGINT AS total_logged_time,
+            WHERE (tt.id = t.id OR tt.parent_ticket_id = t.id) and not lt.canceled) :: BIGINT AS total_logged_time,
            (SELECT coalesce(sum(lt.time), 0)
             FROM ticket tt
               JOIN comment cc ON cc.ticket_id = tt.id
               JOIN logged_time lt ON lt.comment_id = cc.id
-            WHERE tt.id = t.id) :: BIGINT AS logged_time
+            WHERE tt.id = t.id and not lt.canceled) :: BIGINT AS logged_time
          FROM ticket t
        ) t;
 COMMIT;
