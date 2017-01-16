@@ -1,12 +1,10 @@
 import {Component, Output, EventEmitter, Input} from '@angular/core';
 import {ApiCallService, ApiCallResult} from '../../../service';
-import {CreateUserRequestJson} from '../../../api';
 import {showValidationError} from '../../../util/error';
 import {Modal} from 'angular2-modal/plugins/bootstrap';
 import {CreateAssignmentTagRequestJson} from '../../../api/model/CreateAssignmentTagRequestJson';
 import {AssignmentTagResultJson} from '../../../api/model/AssignmentTagResultJson';
 import {AssignmenttagApi} from '../../../api/api/AssignmenttagApi';
-import RoleEnum = CreateUserRequestJson.RoleEnum;
 
 @Component({
   selector: 'tt-assignment-tag-create',
