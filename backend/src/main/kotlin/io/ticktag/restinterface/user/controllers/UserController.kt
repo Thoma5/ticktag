@@ -2,6 +2,7 @@ package io.ticktag.restinterface.user.controllers
 
 import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
+import io.ticktag.persistence.user.entity.Role
 import io.ticktag.restinterface.user.schema.*
 import io.ticktag.service.Principal
 import io.ticktag.service.user.dto.CreateUser
@@ -9,6 +10,8 @@ import io.ticktag.service.user.dto.TempImageId
 import io.ticktag.service.user.dto.UpdateUser
 import io.ticktag.service.user.services.UserService
 import org.apache.commons.codec.binary.Base64
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.http.CacheControl
@@ -36,7 +39,7 @@ open class UserController @Inject constructor(
     open fun createUser(@RequestBody req: CreateUserRequestJson,
                         @AuthenticationPrincipal principal: Principal
     ): UserResultJson {
-        val create = CreateUser(mail = req.mail, name = req.name, password = req.password, role = req.role, username = req.username)
+        val create = CreateUser(mail = req.mail, name = req.name, password = req.password, role = req.role, username = req.username, image = req.image)
         val user = userService.createUser(create, principal)
         return UserResultJson(user)
     }
@@ -45,8 +48,7 @@ open class UserController @Inject constructor(
     open fun updateUser(@PathVariable(name = "id") id: UUID,
                         @RequestBody req: UpdateUserRequestJson,
                         @AuthenticationPrincipal principal: Principal): UserResultJson {
-        val user = userService.updateUser(principal, id, UpdateUser(mail = req.mail, name = req.name, password = req.password,
-                role = req.role, oldPassword = req.oldPassword))
+        val user = userService.updateUser(principal, id, UpdateUser(mail = req.mail, name = req.name, password = req.password, oldPassword = req.oldPassword, role = req.role, image = req.image, disabled  = req.disabled))
         return UserResultJson(user)
     }
 
@@ -77,10 +79,24 @@ open class UserController @Inject constructor(
 
     // TODO paging, filter, sorting
     @GetMapping
-    open fun listUsers(
-            @AuthenticationPrincipal principal: Principal
-    ): List<UserResultJson> {
-        return userService.listUsers(principal).map(::UserResultJson)
+    open fun listUsers(@RequestParam(name = "page", defaultValue = "0", required = false) pageNumber: Int,
+                        @RequestParam(name = "size", defaultValue = "50", required = false) size: Int,
+                        @RequestParam(name = "order", defaultValue = "NAME_ASC", required = false) order: List<UserSort>,
+                        @RequestParam(name = "query", defaultValue = "", required = false) query: String,
+                        @RequestParam(name = "role", defaultValue = "", required = false) role: Role?,
+                        @RequestParam(name = "disabled", defaultValue = "false", required = false) disabled: Boolean,
+                        @AuthenticationPrincipal principal: Principal
+    ): Page<UserResultJson> {
+        val pageRequest = PageRequest(pageNumber, size, Sort(order.map { it.order }))
+        val page = userService.listUsers(query, role, disabled, principal, pageRequest)
+        val content = page.content.map(::UserResultJson)
+        return PageImpl(content, pageRequest, page.totalElements)
+    }
+
+    @DeleteMapping(value = "/{id}")
+    open fun deleteUser(@PathVariable(name = "id") id: UUID,
+                        @AuthenticationPrincipal principal: Principal) {
+        userService.deleteUser(id, principal)
     }
 
     @GetMapping("/fuzzy")

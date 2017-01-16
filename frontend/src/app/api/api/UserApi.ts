@@ -85,6 +85,22 @@ export class UserApi {
     }
 
     /**
+     * deleteUser
+     * 
+     * @param id id
+     */
+    public deleteUserUsingDELETE(id: string, extraHttpRequestParams?: any): Observable<{}> {
+        return this.deleteUserUsingDELETEWithHttpInfo(id, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
      * getUserByUsername
      * 
      * @param name name
@@ -168,9 +184,15 @@ export class UserApi {
     /**
      * listUsers
      * 
+     * @param page page
+     * @param size size
+     * @param order order
+     * @param query query
+     * @param role role
+     * @param disabled disabled
      */
-    public listUsersUsingGET(extraHttpRequestParams?: any): Observable<Array<models.UserResultJson>> {
-        return this.listUsersUsingGETWithHttpInfo(extraHttpRequestParams)
+    public listUsersUsingGET(page?: number, size?: number, order?: Array<string>, query?: string, role?: string, disabled?: boolean, extraHttpRequestParams?: any): Observable<models.PageUserResultJson> {
+        return this.listUsersUsingGETWithHttpInfo(page, size, order, query, role, disabled, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -233,6 +255,50 @@ export class UserApi {
             method: RequestMethod.Post,
             headers: headers,
             body: req == null ? '' : JSON.stringify(req), // https://github.com/angular/angular/issues/10612
+            search: queryParameters
+        });
+        
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * deleteUser
+     * 
+     * @param id id
+     */
+    public deleteUserUsingDELETEWithHttpInfo(id: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/user/${id}`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'id' is not null or undefined
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling deleteUserUsingDELETE.');
+        }
+
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json'
+        ];
+        
+            
+
+
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Delete,
+            headers: headers,
             search: queryParameters
         });
         
@@ -481,12 +547,36 @@ export class UserApi {
     /**
      * listUsers
      * 
+     * @param page page
+     * @param size size
+     * @param order order
+     * @param query query
+     * @param role role
+     * @param disabled disabled
      */
-    public listUsersUsingGETWithHttpInfo(extraHttpRequestParams?: any): Observable<Response> {
+    public listUsersUsingGETWithHttpInfo(page?: number, size?: number, order?: Array<string>, query?: string, role?: string, disabled?: boolean, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/user`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        if (page !== undefined) {
+            queryParameters.set('page', <any>page);
+        }
+        if (size !== undefined) {
+            queryParameters.set('size', <any>size);
+        }
+        if (order !== undefined) {
+            queryParameters.set('order', <any>order);
+        }
+        if (query !== undefined) {
+            queryParameters.set('query', <any>query);
+        }
+        if (role !== undefined) {
+            queryParameters.set('role', <any>role);
+        }
+        if (disabled !== undefined) {
+            queryParameters.set('disabled', <any>disabled);
+        }
 
 
         // to determine the Content-Type header

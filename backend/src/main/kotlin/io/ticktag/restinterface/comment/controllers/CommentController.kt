@@ -46,17 +46,4 @@ open class CommentController @Inject constructor(
         val comment = commentService.createComment(createComment, principal, req.ticketId)
         return ResponseEntity.ok(CommentResultJson(comment))
     }
-
-    @PutMapping(value = "/{id}")
-    open fun updateComment(@RequestBody req: UpdateCommentRequestJson,
-                           @PathVariable(name = "id") id: UUID): CommentResultJson {
-        val serviceRequest = UpdateComment(req.text, req.mentionedTicketIds, req.loggedTime?.map(::CreateLoggedTime))
-        val serviceResult = commentService.updateComment(updateComment = serviceRequest, commentId = id) ?: throw NotFoundException()
-        return CommentResultJson(serviceResult)
-    }
-
-    @DeleteMapping(value = "/{id}")
-    open fun deleteComment(@PathVariable(name = "id") id: UUID) {
-        commentService.deleteComment(id)
-    }
 }

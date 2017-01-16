@@ -2,89 +2,98 @@
   <div *ngIf="loading" class="loading">
     <tt-loading></tt-loading>
   </div>
-  <div *ngIf="!loading">
-    <div class="overview">
-      <div class="search row">
-      <div class="col-md-12">
-        <tt-ticket-filter [allTicketTags]="allTicketTags" [allUsers]="allProjectUsers" (ticketFilter)="updateFilter($event)">
-          </tt-ticket-filter></div>
+  <div class="card" *ngIf="!loading">
+    <div class="head">
+      <div class="title">
+        Tickets
       </div>
-      <swui-datatable class="material" [rows]="rows" [columns]="columns" [columnMode]="'force'" [headerHeight]="32" [rowHeight]="32"
+    </div>
+    <div class="overview">
+      <div class="aboveTableRow row">
+        <div class="col-md-11">
+          <tt-ticket-filter [allTicketTags]="allTicketTags" [addToQuery]="query" [allUsers]="allProjectUsers" [defaultFilterOpen]="true"
+            (ticketFilter)="updateFilter($event)">
+          </tt-ticket-filter>
+        </div>
+        <div class="col-md-1 aboveTableButtons">
+          <input type="button" class="btn btn-primary button-submit pull-right" value="Add" (click)="onStartCreate()">
+        </div>
+      </div>
+      <ngx-datatable class="material" [rows]="rows" [columns]="columns" [columnMode]="'force'" [headerHeight]="32" [rowHeight]="32"
         [footerHeight]="32" [externalPaging]="true" [count]="totalElements" [offset]="offset" [limit]="limit" [scrollbarH]="true"
-        [scrollbarV]="false" [loadingIndicator]="reloading" [externalSorting]="true" (sort)="onSort($event)" (page)='onPage($event)'
-        [cssClasses]="iconsCss" [selectionType]="'row'" (activate)="activate($event)">
-        <swui-datatable-column name="#" prop="number"  width="48" maxWidth="48" resizeable="false">
-          <template let-row="row" let-value="value" swui-datatable-cell-template>
-            <s *ngIf="!row.open" style="color: grey;">#{{value}}</s><p *ngIf="row.open">#{{value}}</p>
+        [scrollbarV]="false" [loadingIndicator]="reloading" reorderable="false" [externalSorting]="true" (sort)="onSort($event)"
+        (page)='onPage($event)' [cssClasses]="iconsCss" [selectionType]="'row'" (activate)="activate($event)">
+        <ngx-datatable-column name="#" prop="number" width="96" [maxWidth]="128" [draggable]="false" [resizeable]="false">
+          <template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <span style="text-align:center;" *ngIf="row.parentTicketNumber">
+            <a  *ngIf="row.parentTicketOpen" routerLink="/project/{{projectId}}/ticket/{{row.parentTicketNumber}}" tooltip="{{row.parentTicketTitle}}" tooltipPopupDelay="500" tooltipPlacement="right" tooltipTrigger="mouseenter">#{{row.parentTicketNumber}}</a>    
+            <a  *ngIf="!row.parentTicketOpen"routerLink="/project/{{projectId}}/ticket/{{row.parentTicketNumber}}" tooltip="{{row.parentTicketTitle}}" tooltipPopupDelay="500" tooltipPlacement="right" tooltipTrigger="mouseenter"><s style="color: grey;">#{{row.parentTicketNumber}}</s></a> /   
+            </span>
+            <s style="text-align:center;" *ngIf="!row.open"><a routerLink="/project/{{projectId}}/ticket/{{row.number}}" style="color: grey;">#{{value}}</a></s>
+            <span style="text-align:center;" *ngIf="row.open"><a routerLink="/project/{{projectId}}/ticket/{{row.number}}">#{{value}}</a></span>
           </template>
-        </swui-datatable-column>
-        <swui-datatable-column name="Title" minWidth="128" width="256">
-          <template let-row="row" let-value="value" swui-datatable-cell-template>
-            <a routerLink="/project/{{projectId}}/ticket/{{row.number}}"><s  style="color: grey;" *ngIf="!row.open">{{value}}</s><p *ngIf="row.open">{{value}}</p></a>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Title" minWidth="128" width="256" [draggable]="false">
+          <template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <a routerLink="/project/{{projectId}}/ticket/{{row.number}}">
+              <s style="color: grey;" *ngIf="!row.open">{{value}}</s>
+              <span *ngIf="row.open">{{value}}</span>
+            </a>
           </template>
-        </swui-datatable-column>
-        <swui-datatable-column name="Tags"  minWidth="64" width="256" maxWidth="512" sortable="false">
-          <template let-row="row" let-value="value" swui-datatable-cell-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Tags" minWidth="64" width="256" maxWidth="512" [draggable]="false" [sortable]="false">
+          <template let-row="row" let-value="value" ngx-datatable-cell-template>
             <tt-tagview [tags]="value" (clickedTag)="onTagClicked($event)"></tt-tagview>
           </template>
-        </swui-datatable-column>
-        <swui-datatable-column name="Asignees" prop="users" minWidth="128" width="128" maxWidth="128">
-          <template let-row="row" let-value="value" swui-datatable-cell-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Asignees" prop="users" minWidth="128" width="128" maxWidth="128" [draggable]="false" [sortable]="false"
+          [resizeable]="false">
+          <template let-row="row" let-value="value" ngx-datatable-cell-template>
             <div float="left">
-              <tt-assigned-user-overview [users]="value"></tt-assigned-user-overview>
+              <tt-assigned-user-overview [users]="value" (clickedUser)="onUserClicked($event)"></tt-assigned-user-overview>
             </div>
           </template>
-        </swui-datatable-column>
-        <swui-datatable-column name="SP" prop="storyPoints" minWidth="96" width="96" maxWidth="96" resizeable="false">
-          <template let-row="row" let-value="value" swui-datatable-cell-template>
-            {{value}}
+        </ngx-datatable-column>
+        <ngx-datatable-column name="SP" prop="storyPoints" minWidth="96" width="96" maxWidth="96" [draggable]="false" [resizeable]="false">
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Due Date" prop="dueDate" minWidth="128" width="128" maxWidth="128" [draggable]="false" [resizeable]="false">
+          <template let-row="row" let-value="value" ngx-datatable-cell-template>
+            {{value | date: 'yyyy-MM-dd': 'UTC'}}
           </template>
-        </swui-datatable-column>
-        <swui-datatable-column name="Due Date" prop="dueDate" minWidth="128" width="128" maxWidth="128" resizeable="false">
-          <template let-row="row" let-value="value" swui-datatable-cell-template>
-            {{value | date: 'yyyy-MM-dd'}}
-          </template>
-        </swui-datatable-column>
-        <swui-datatable-column name="Progress" minWidth="128" width="128" maxWidth="128">
-          <template let-row="row" let-value="value" swui-datatable-cell-template>
-            <div *ngIf="value !== '' && value <= 1" style="border:solid 0.11em #d3d3d3; margin:0.5em" tooltip="{{value*100 | number : '1.0-0'}}%" tooltipPlacement="bottom" tooltipTrigger="mouseenter">
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Progress" minWidth="128" width="128" [draggable]="false" [resizeable]="false">
+          <template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <div *ngIf="value !== '' && value <= 1" style="border:solid 0.11em #d3d3d3; margin:0.5em" tooltip="{{value*100 | number : '1.0-0'}}%"
+              tooltipPlacement="left" tooltipTrigger="mouseenter">
               <div style="background:linear-gradient(to bottom, #00b7ea 0%,#009ec3 100%);height:0.8em" [style.width]="value*100+'%'"></div>
             </div>
-            <div *ngIf="value !== '' && value > 1" style="border:solid 0.11em #d3d3d3; margin:0.5em" tooltip="{{value*100 | number : '1.0-0'}}%" tooltipPlacement="bottom" tooltipTrigger="mouseenter">
+            <div *ngIf="value !== '' && value > 1" style="border:solid 0.11em #d3d3d3; margin:0.5em" tooltip="{{value*100 | number : '1.0-0'}}%"
+              tooltipPlacement="left" tooltipTrigger="mouseenter">
               <div style="background:linear-gradient(to bottom, #ff3019 0%,#cf0404 100%);height:0.8em" [style.width]="100+'%'"></div>
             </div>
-            <div *ngIf="value === ''" style="margin-left: 3em" tooltip="No estimation!" tooltipPlacement="bottom" tooltipTrigger="mouseenter">
+            <div *ngIf="value === ''" style="margin-left: 3em" tooltip="No estimation!" tooltipPlacement="left" tooltipTrigger="mouseenter">
               -
             </div>
           </template>
-        </swui-datatable-column>
-      </swui-datatable>
-
-      <div class="bottom">
-        <input type="button" class="btn btn-primary button-submit" value="Add" (click)="onStartCreate()">
-      </div>
+        </ngx-datatable-column>
+      </ngx-datatable>
     </div>
-
-    <div *ngIf="creating" class="create-overlay" (click)="onStopCreate()">
-      <div class="create-popup" (click)="$event.stopPropagation()">
-        <div class="head">
-          <h3 class="title">
-            Create Ticket
-          </h3>
-          <button type="button" class="exit" (click)="onStopCreate()">
+    <div *ngIf="creating" class="overlay" (click)="$event.stopPropagation()">
+      <div class="overlay-body" (click)="$event.stopPropagation()">
+        <button type="button" class="exit pull-right" (click)="onStopCreate()">
             <i class='fa fa-times'></i>
           </button>
-        </div>
-        <div class="body">
-          <tt-ticket-create
-            [projectId]="projectId"
-            [allTicketTags]="allTicketTags"
-            [allTimeCategories]="allTimeCategories"
-            [allAssignmentTags]= "allAssignmentTags"
-            (ticketAdd)="onTicketCreate($event)"
-            [working]="createRunning"
-          >
-          </tt-ticket-create>
+        <div class="overlay-content">
+          <div class="head">
+            <h3 class="title">
+              Create Ticket
+            </h3>
+          </div>
+          <div class="body">
+            <tt-ticket-create [projectId]="projectId" [allTicketTags]="allTicketTags" [allTimeCategories]="allTimeCategories" [allAssignmentTags]="allAssignmentTags"
+              (ticketAdd)="onTicketCreate($event)" [working]="createRunning">
+            </tt-ticket-create>
+          </div>
         </div>
       </div>
     </div>

@@ -1,6 +1,63 @@
 @import '../../../../style/constants.scss';
+.filter-error-label {
+  color: #BF360C;
+  margin: 0.5em 0 0 0;
+  padding-left: 0;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  height: 1.5em;
+  max-height: 1.5em;
+}
 
-   
-.input-group-addon{    
-    color: black;
+.filter .form-group {
+  margin-bottom: 0.2em;
+}
+
+.filter-error-card {
+  padding: 0 0.5em 0 0.5em;
+  background-color: #FFCCBC;
+}
+
+b {
+  font-weight: 800;
+}
+
+* .btn,
+input,
+select {
+  border-radius: 0 !important;
+}
+
+.btn {
+  height: 34px;
+}
+
+.tag {
+  @extend %tag;
+  font-size: 0.9em;
+  padding-top: 0.05em;
+  padding-bottom: 0.05em;
+}
+
+.filterHelper {
+  margin: 0.5em 1em 0 1em;
+  padding: 0.2em 0 0.2em 0;
+}
+
+* {
+    vertical-align: middle !important;
+}
+.dropdown-menu form {
+  margin: 0.5em 0.5em 0.5em 0.5em;
+}
+.dropdown-menu {
+   overflow: auto;
+   max-height: 600px;
+   z-index: 9999;
+}
+
+.dropdown-menu select {
+  margin: 0 0 0.8em 0;
+  min-width: 170px;
 }

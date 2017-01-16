@@ -204,11 +204,13 @@ export class TicketDetailLoggedTime {
   readonly id: string;
   readonly category: TicketDetailTimeCategory;
   readonly time: number;
+  readonly canceled: boolean;
 
   constructor(time: LoggedTimeResultJson, cats: imm.Map<string, TicketDetailTimeCategory>) {
     this.id = time.id;
     this.category = cats.get(time.categoryId);  // TODO error handling or dummy time category
     this.time = time.time;
+    this.canceled = time.canceled;
     Object.freeze(this);
   }
 }
@@ -452,10 +454,12 @@ export class TicketDetail {
     this.referenced = imm.Seq(ticket.referencedTicketIds)
       .map(id => relatedTickets.get(id))
       .filter(t => !!t)
+      .sortBy(t => t.number)
       .toList();
     this.referencedBy = imm.Seq(ticket.referencingTicketIds)
       .map(id => relatedTickets.get(id))
       .filter(t => !!t)
+      .sortBy(t => t.number)
       .toList();
     this.progress = relatedProgresses.get(this.id);
     Object.freeze(this);

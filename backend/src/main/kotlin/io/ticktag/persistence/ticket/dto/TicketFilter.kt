@@ -15,11 +15,11 @@ import javax.persistence.criteria.Predicate
 import javax.persistence.criteria.Root
 
 
-data class TicketFilter(val project: UUID, val number: Int?, val title: String?, val tags: List<String>?,
+data class TicketFilter(val project: UUID, val numbers: List<Int>?, val title: String?, val tags: List<String>?,
                         val users: List<String>?, val progressOne: Float?, val progressTwo: Float?,
                         val progressGreater: Boolean?, val dueDateOne: Instant?, val dueDateTwo: Instant?,
                         val dueDateGreater: Boolean?, val storyPointsOne: Int?, val storyPointsTwo: Int?,
-                        val storyPointsGreater: Boolean?, val open: Boolean?) : Specification<Ticket> {
+                        val storyPointsGreater: Boolean?, val open: Boolean?, val parent: Int?) : Specification<Ticket> {
 
 
     val predicates = emptyList<Predicate>().toMutableList()
@@ -28,11 +28,11 @@ data class TicketFilter(val project: UUID, val number: Int?, val title: String?,
 
         predicates.add(cb.equal(root.get<Project>("project").get<UUID>("id"), project))
 
-        if (number != null) {
-            predicates.add(cb.equal(root.get<Int>("number"), number))
+        if (numbers != null) {
+            predicates.add(cb.isTrue(root.get<Int>("number").`in`(numbers)))
         }
         if (title != null) {
-            predicates.add(cb.like(cb.lower(root.get<String>("title")), "%" + title.toLowerCase() + "%"))
+            predicates.add(cb.like(cb.lower(root.get<String>("title")), title.toLowerCase().split(' ').joinToString("%", "%", "%")))
         }
         if (tags != null) {
             val join = root.join<Ticket, TicketTag>("tags")
@@ -47,7 +47,7 @@ data class TicketFilter(val project: UUID, val number: Int?, val title: String?,
             val join = root.join<Ticket, AssignedTicketUser>("assignedTicketUsers")
             val userPath = root.get<User>("assignedTicketUsers")
             query.multiselect(userPath)
-            query.groupBy(root.get<UUID>("id"), join.get<Ticket>("ticket").get<UUID>("id"), root.get<Progress>("totalProgress").get<Float>("totalProgress"))
+            query.groupBy(root.get<UUID>("id"), join.get<Ticket>("ticket").get<UUID>("id"), root.get<Progress>("progress").get<Float>("totalProgress"))
             val tusers = join.get<User>("user").get<String>("username")
             predicates.add(cb.isTrue(tusers.`in`(users)))
         }
@@ -92,6 +92,10 @@ data class TicketFilter(val project: UUID, val number: Int?, val title: String?,
         }
         if (open != null) {
             predicates.add(cb.equal(root.get<Boolean>("open"), open))
+        }
+        if (parent != null) {
+            val isChildOf = cb.equal(root.get<Ticket>("parentTicket").get<Int>("number"), parent)
+            predicates.add(isChildOf)
         }
         return if (predicates.size <= 0) {
             null

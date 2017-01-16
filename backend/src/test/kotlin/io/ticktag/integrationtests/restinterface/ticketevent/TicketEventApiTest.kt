@@ -1,8 +1,6 @@
 package io.ticktag.integrationtests.restinterface.ticketevent
 
 import io.ticktag.integrationtests.restinterface.ApiBaseTest
-import io.ticktag.restinterface.comment.controllers.CommentController
-import io.ticktag.restinterface.comment.schema.UpdateCommentRequestJson
 import io.ticktag.restinterface.loggedtime.controller.LoggedTimeController
 import io.ticktag.restinterface.loggedtime.schema.CreateLoggedTimeJson
 import io.ticktag.restinterface.ticket.controllers.TicketController
@@ -25,7 +23,6 @@ class TicketEventApiTest : ApiBaseTest() {
 
     @Inject lateinit var ticketEventController: TicketEventController
     @Inject lateinit var ticketController: TicketController
-    @Inject lateinit var commentController: CommentController
     @Inject lateinit var loggedTimeController: LoggedTimeController
     @Inject lateinit var ticketAssignmentController: TicketUserRelationController
 
@@ -33,7 +30,6 @@ class TicketEventApiTest : ApiBaseTest() {
     private val parentTicketId = UUID.fromString("00000000-0003-0000-0000-000000000001")
     private val commendId = UUID.fromString("00000000-0004-0000-0000-000000000008")
     private val assignmentTagId = UUID.fromString("00000000-0006-0000-0000-000000000003")
-    private val loggedTimeId = UUID.fromString("00000000-0008-0000-0000-000000000001")
     private val user = UUID.fromString("00000000-0001-0000-0000-000000000001")
 
     @Test
@@ -103,22 +99,6 @@ class TicketEventApiTest : ApiBaseTest() {
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
         }
     }
-
-    @Test
-    fun test_ticketLoggedTimeRemovedShouldAddEvent() {
-        withUser(user) { principal ->
-            val sizeBefore = ticketEventController.listTicketEvents(ticketId).size
-            loggedTimeController.deleteLoggedTime(loggedTimeId)
-
-            ticketController.getTicket(ticketId)
-            Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
-        }
-    }
-
-    //TODO mention added
-
-    //TODO mention removed
-
 
     fun test_parentChangedShouldAddEvent() {
         withUser(user) { principal ->
@@ -230,16 +210,6 @@ class TicketEventApiTest : ApiBaseTest() {
                     UpdateNullableValueJson(ticket.dueDate),
                     UpdateNotnullValueJson(ticket.description),
                     null), ticketId, principal)
-            Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore)
-        }
-    }
-
-    @Test
-    fun test_ticketEventCommentChangedShouldNotAddEvent() {
-        withUser(user) { principal ->
-            val sizeBefore = ticketEventController.listTicketEvents(ticketId).size
-            val comment = commentController.getComment(commendId)
-            commentController.updateComment(UpdateCommentRequestJson(comment.text, comment.mentionedTicketId, null), commendId)
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore)
         }
     }

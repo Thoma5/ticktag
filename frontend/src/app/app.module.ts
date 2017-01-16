@@ -8,6 +8,7 @@ import { routing } from './app.routing';
 
 import { ModalModule } from 'angular2-modal';
 import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
+import { DragulaModule } from 'ng2-dragula';
 
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
 import { AuthService, ApiCallService, MarkdownService, ImagesService } from './service';
@@ -16,13 +17,18 @@ import { WhoamiComponent } from './ui/whoami/whoami.component';
 import { HomeComponent } from './ui/home/home.component';
 import { Ng2Webstorage } from 'ng2-webstorage/dist/app';
 import { UsersComponent } from './ui/users/users.component';
-import { UserCreateComponent } from './ui/users/user-create.component';
+import { UserCreateComponent } from './ui/users/create/user-create.component';
+import { UserUpdateComponent } from './ui/users/update/user-update.component';
 import { ProjectsComponent } from './ui/projects/projects.component';
-import { ProjectCreateComponent } from './ui/projects/project-create.component';
+import { ProjectCreateComponent } from './ui/projects/create/project-create.component';
+import { ProjectUpdateComponent } from './ui/projects/update/project-update.component';
+import { ProjectUsersComponent } from './ui/projects/user/project-users.component';
+import { MemberAddComponent } from './ui/projects/user/add/member-add.component';
+import { MemberUpdateComponent } from './ui/projects/user/update/member-update.component';
 import {
   ProjectApi, AuthApi, UserApi, AssignmenttagApi, CommentsApi, MemberApi,
   TimecategoryApi, TicketApi, TickettagApi, TickettaggroupApi, GetApi,
-  TicketuserrelationApi, TickettagrelationApi
+  TicketuserrelationApi, TickettagrelationApi, LoggedtimeApi
 } from './api';
 import { TicketDetailComponent } from './ui/ticket-detail/ticket-detail.component';
 import { TicketSidebarComponent } from './ui/ticket-detail/ticket-sidebar/ticket-sidebar.component';
@@ -50,7 +56,7 @@ import { SubticketsComponent } from './ui/ticket-detail/subtickets/subtickets.co
 import { SubticketComponent } from './ui/ticket-detail/subticket/subticket.component';
 import { SubticketAddComponent } from './ui/ticket-detail/subticket-add/subticket-add.component';
 import { Ng2BootstrapModule } from 'ng2-bootstrap/ng2-bootstrap';
-import { Angular2DataTableModule } from 'angular2-data-table';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { MaterialModule } from '@angular/material';
 import { HumanizeDurationPipe } from './util/humanize-duration.pipe';
 import { FormatMomentPipe } from './util/format-moment.pipe';
@@ -65,8 +71,8 @@ import { TagViewComponent } from './ui/ticket-overview/tagview/tagview.component
 import { SelectAllDirective } from './util/select-all.directive';
 import { EditButtonComponent } from './util/edit-button/edit-button.component';
 import { LoadingComponent } from './util/loading/loading.component';
-import { TicketOverviewComponent } from'./ui/ticket-overview/ticket-overview.component';
-import { AssignedUserOverviewComponent } from'./ui/ticket-overview/assigned-user/assigned-user-overview.component';
+import { TicketOverviewComponent } from './ui/ticket-overview/ticket-overview.component';
+import { AssignedUserOverviewComponent } from './ui/ticket-overview/assigned-user/assigned-user-overview.component';
 import { SpinnerComponent } from './util/spinner/spinner.component';
 import { CommandTextviewComponent } from './util/command-textview/command-textview.component';
 import { CommandDescriptionComponent } from './util/command-description/command-description.component';
@@ -74,18 +80,28 @@ import { CommandHelpComponent } from './util/command-help/command-help.component
 import { ProgressBarComponent } from './util/progressbar/progressbar.component';
 import { UserImageComponent } from './util/user-image/user-image.component';
 
-import {TicketEventsComponent} from './ui/ticket-detail/ticket-events/ticket-events.component';
-import {TicketEventOldNewComponent} from './ui/ticket-detail/ticket-events/ticket-event-old-new/ticket-event-old-new.component';
-import {TicketeventApi} from './api/api/TicketeventApi';
-import {GroupedTicketEventComponent} from './ui/ticket-detail/ticket-events/grouped-ticket-event/grouped-ticket-event.component';
-import {TicketEventUserComponent} from './ui/ticket-detail/ticket-events/ticket-event-user/ticket-event-user.component';
-import {TicketEventParentChangedComponent}
+import { TicketEventsComponent } from './ui/ticket-detail/ticket-events/ticket-events.component';
+import { TicketEventOldNewComponent } from './ui/ticket-detail/ticket-events/ticket-event-old-new/ticket-event-old-new.component';
+import { TicketeventApi } from './api/api/TicketeventApi';
+import { GroupedTicketEventComponent } from './ui/ticket-detail/ticket-events/grouped-ticket-event/grouped-ticket-event.component';
+import { TicketEventUserComponent } from './ui/ticket-detail/ticket-events/ticket-event-user/ticket-event-user.component';
+import { TicketEventParentChangedComponent }
   from './ui/ticket-detail/ticket-events/ticket-event-parent-ticket-changed/ticket-event-parent-ticket-changed.component';
-import {TicketEventTagComponent} from './ui/ticket-detail/ticket-events/ticket-event-tag/ticket-event-tag.component';
-import {TicketEventOldNewMarkupComponent}
+import { TicketEventTagComponent } from './ui/ticket-detail/ticket-events/ticket-event-tag/ticket-event-tag.component';
+import { TicketEventOldNewMarkupComponent }
   from './ui/ticket-detail/ticket-events/ticket-event-old-new-markup/ticket-event-old-new-markup.component';
+import {KanbanBoardsComponent} from './ui/kanban-boards/kanban-boards.component';
+import {BoardApi} from './api/api/BoardApi';
+import {KanbanBoardDetailComponent} from './ui/kanban-board-detail/kanban-board-detail.component';
+import {KanbanCellComponent} from './ui/kanban-board-detail/kanban-cell/kanban-cell.component';
+import { BurnDownChartComponent } from './ui/burn-down-chart/burn-down-chart.component';
+import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
+import { ChartsModule } from 'ng2-charts/ng2-charts';
+
 import { TicketCreateComponent } from './ui/ticket-detail/ticket-create/ticket-create.component';
 import {TicketEventMentionComponent} from './ui/ticket-detail/ticket-events/ticket-event-mention/ticket-event-mention.component';
+import { ImagePickerComponent } from './util/image-picker/image-picker.component';
+import { SidebarComponent } from './ui/sidebar/sidebar.component';
 
 @NgModule({
   imports: [
@@ -94,11 +110,14 @@ import {TicketEventMentionComponent} from './ui/ticket-detail/ticket-events/tick
     FormsModule,
     Ng2Webstorage,
     routing,
-    Angular2DataTableModule,
+    NgxDatatableModule,
     Ng2BootstrapModule,
     MaterialModule.forRoot(),
     ModalModule.forRoot(),
     BootstrapModalModule,
+    DragulaModule,
+    NKDatetimeModule,
+    ChartsModule
   ],
   declarations: [
     AppComponent,
@@ -107,8 +126,13 @@ import {TicketEventMentionComponent} from './ui/ticket-detail/ticket-events/tick
     WhoamiComponent,
     UsersComponent,
     UserCreateComponent,
+    UserUpdateComponent,
     ProjectsComponent,
     ProjectCreateComponent,
+    ProjectUpdateComponent,
+    ProjectUsersComponent,
+    MemberAddComponent,
+    MemberUpdateComponent,
     TicketOverviewComponent,
     TicketDetailComponent,
     TicketSidebarComponent,
@@ -152,7 +176,9 @@ import {TicketEventMentionComponent} from './ui/ticket-detail/ticket-events/tick
     CommandHelpComponent,
     MarkdownTextviewReadComponent,
     ProgressBarComponent,
+    BurnDownChartComponent,
     TicketCreateComponent,
+    SidebarComponent,
 
     HumanizeDurationPipe,
     FormatMomentPipe,
@@ -164,7 +190,13 @@ import {TicketEventMentionComponent} from './ui/ticket-detail/ticket-events/tick
     SelectAllDirective,
     LoadingComponent,
     SpinnerComponent,
+
+    KanbanBoardsComponent,
+    KanbanBoardDetailComponent,
+    KanbanCellComponent,
     UserImageComponent,
+    ImagePickerComponent,
+
   ],
   providers: [
     ProjectApi,
@@ -181,7 +213,8 @@ import {TicketEventMentionComponent} from './ui/ticket-detail/ticket-events/tick
     TicketeventApi,
     TicketuserrelationApi,
     TickettagrelationApi,
-
+    BoardApi,
+    LoggedtimeApi,
     ApiCallService,
     AuthService,
     MarkdownService,

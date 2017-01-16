@@ -1,0 +1,41 @@
+<div class="card">
+  <div class="head">
+    <div class="title">
+      Assign Users to Project
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="selection">
+        <div *ngIf="selectedUser" class="memberinfo">
+          <div class="image">
+            <button class="deselect pull-right" [disabled]="!selectedUser" (click)="selectedUser = undefined"><i class='fa fa-times'></i></button>
+            <tt-user-image [imageId]="selectedUser.imageId"></tt-user-image>
+          </div>
+          <div class="name">{{selectedUser.name}}</div>
+          <div> as <span class="username">{{selectedUser.username}}</span></div>
+        </div>
+        <div *ngIf="!selectedUser" class="memberinfo">
+          <div class="image">
+            <img width="48" height="48" class="img-circle" src="/img/portraitplaceholder.png" tabindex=0/>
+          </div>
+          <div class="name">Select User</div>
+          <div> from the <span class="username">Table</span></div>
+        </div>
+        <form (ngSubmit)="onSubmit()" #f="ngForm">
+          <div class="form-group">
+            <label for="role">Role *</label>
+            <select class="form-control" name="role" size="1" [(ngModel)]="request.projectRole">
+          <option *ngFor="let role of roles" value="{{role.role}}">{{role.role.charAt(0) + role.role.slice(1).toLowerCase()}}</option>
+        </select>
+          </div>
+          <input type="button" type="submit" [disabled]="!f.form.valid || !selectedUser" class="btn btn-success btn-block" *ngIf="!working"
+            (click)="onSubmit()" value="Assign User">
+        </form>
+      </div>
+    </div>
+    <div class="col-md-9 users">
+      <tt-users [assignedUsers]="assignedUsers" [assignMode]="true" (assignUser)="onAssignUser($event)"></tt-users>
+    </div>
+  </div>
+</div>

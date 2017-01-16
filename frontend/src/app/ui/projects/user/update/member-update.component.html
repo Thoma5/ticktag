@@ -1,0 +1,18 @@
+<div class="memberinfo">
+  <div class="image"><tt-user-image  [imageId]="user.imageId"></tt-user-image></div>
+  <div class="name">{{user.name}}</div> 
+  <div> as <span class="username">{{user.username}}</span></div>
+</div>
+<form (ngSubmit)="onSubmit()" #f="ngForm">
+  <div class="row">
+    <label for="role">Role *</label>
+    <select class="form-control" name="role" size="1" [(ngModel)]="request.projectRole">
+      <option *ngFor="let role of roles" value="{{role.role}}">{{role.role.charAt(0) + role.role.slice(1).toLowerCase()}}</option>
+    </select>
+  </div>
+  <div class="row">
+     <input type="button" class="btn btn-default btn-block" (click)="revert()" value="Revert Changes">
+    <input type="button" type="submit" [disabled]="!f.form.valid" class="btn btn-success btn-block" *ngIf="!working" (click)="onSubmit()"
+      value="Update Member">
+  </div>
+</form>

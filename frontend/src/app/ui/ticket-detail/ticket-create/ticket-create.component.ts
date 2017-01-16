@@ -9,7 +9,7 @@ export type TicketCreateEvent = {
   title: string,
   description: string,
   commands: imm.List<grammar.Cmd>,
-}
+};
 
 @Component({
   selector: 'tt-ticket-create',

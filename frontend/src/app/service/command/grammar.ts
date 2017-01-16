@@ -41,40 +41,40 @@ export type TimeCmd = {
   cmd: 'time',
   minutes: number,
   category: string,
-}
+};
 export type AssignCmd = {
   cmd: 'assign',
   user: string,
   tag: string,
-}
+};
 export type UnassignCmd = {
   cmd: 'unassign',
   user: string,
   tag: string|null,
-}
+};
 export type CloseCmd = {
   cmd: 'close',
-}
+};
 export type ReopenCmd = {
   cmd: 'reopen',
-}
+};
 export type TagCmd = {
   cmd: 'tag',
   tag: string,
-}
+};
 export type UntagCmd = {
   cmd: 'untag',
   tag: string,
-}
+};
 export type EstCmd = {
   cmd: 'est',
   minutes: number,
-}
+};
 export type RefTicketCmd = {
   cmd: 'refTicket',
   ticket: number,
-}
-export type Cmd = TimeCmd | AssignCmd | UnassignCmd | CloseCmd | ReopenCmd | TagCmd | UntagCmd | EstCmd | RefTicketCmd
+};
+export type Cmd = TimeCmd | AssignCmd | UnassignCmd | CloseCmd | ReopenCmd | TagCmd | UntagCmd | EstCmd | RefTicketCmd;
 
 export function extractCommands(string: string): imm.List<Cmd> {
   let result = new Array<Cmd>();

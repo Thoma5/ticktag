@@ -1,79 +1,79 @@
 
 
 BEGIN;
-INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token) VALUES
+INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, disabled) VALUES
   ('00000000-0001-0000-0000-000000000001', 'user_a', 'a@a.a', 'Mr. A',
-   '$2a$10$mTEkiQq2Wo./aqfekJHPk.5sG8JLWqWYbtMODwk9xQwQp0GtkCiM.', 'ADMIN', '00000000-0001-0000-0000-abcdef123641'); --aaaa
-INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token) VALUES
+   '$2a$10$mTEkiQq2Wo./aqfekJHPk.5sG8JLWqWYbtMODwk9xQwQp0GtkCiM.', 'ADMIN', '00000000-0001-0000-0000-abcdef123641', FALSE); --aaaa
+INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, disabled) VALUES
   ('00000000-0001-0000-0000-000000000002', 'user_b', 'b@b.b', 'Berta Berta',
-   '$2a$10$Ydzo0FR5x8ZweeaeIQS2gevmLqsZuS37.bWRYy.f.u62NG00MAOcS', 'USER', '00000000-0001-0000-2343-abcdef123641'); --bbbb
-INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token) VALUES
+   '$2a$10$Ydzo0FR5x8ZweeaeIQS2gevmLqsZuS37.bWRYy.f.u62NG00MAOcS', 'USER', '00000000-0001-0000-2343-abcdef123641', FALSE); --bbbb
+INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, disabled) VALUES
   ('00000000-0001-0000-0000-000000000003', 'user_c', 'c@c.c', 'Gaius Iulius Caesar',
-   '$2a$10$OgvbSbiDxizgC/6K3dhVwO8iY6.QFS6f2PvE1AyJS1Vmo6Rnb3Gve', 'OBSERVER', '00000000-0001-8676-0000-abcdef123641'); --cccc
-INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token) VALUES
+   '$2a$10$OgvbSbiDxizgC/6K3dhVwO8iY6.QFS6f2PvE1AyJS1Vmo6Rnb3Gve', 'OBSERVER', '00000000-0001-8676-0000-abcdef123641', FALSE); --cccc
+INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, disabled) VALUES
   ('00000000-0000-0000-0000-000000000000', 'admin', 'admin@admin.invalid', 'Admin',
-   '$2a$10$dXjkyD704.vNyYWrsmEbrewcMeWIz1fDcjVVuggUyLmExGQQD3RGC', 'ADMIN', '9a030c2e-b2c7-4d98-825b-92c148897f4a');
-INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token) VALUES
+   '$2a$10$dXjkyD704.vNyYWrsmEbrewcMeWIz1fDcjVVuggUyLmExGQQD3RGC', 'ADMIN', '9a030c2e-b2c7-4d98-825b-92c148897f4a', FALSE);
+INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, disabled) VALUES
   ('660f2968-aa46-4870-bcc5-a3805366cff2', 'drasko', 'stefan.draskovits@test.at', 'Stefan Draskovits',
-   '$2a$10$NuX1RqGiFg38qjF75b88J.oWw271xVYhsPvLRxHAQHnS2V9i0nNza', 'ADMIN', '4aa33174-bdf2-4d33-b80f-d7fb8d121923'); --stefan-supersecure
-INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token) VALUES
+   '$2a$10$NuX1RqGiFg38qjF75b88J.oWw271xVYhsPvLRxHAQHnS2V9i0nNza', 'ADMIN', '4aa33174-bdf2-4d33-b80f-d7fb8d121923', FALSE); --stefan-supersecure
+INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, disabled) VALUES
   ('93ef43d9-20b7-461a-b960-2d1e89ba099f', 'heinzl', 'michael.heinzl@test.de', 'Michael Heinzl',
-   '$2a$10$.dLg4Vgt7JrP.564p/tPQOm.TLoy3HieFP1ZpnyWVPkJDYrG6r.Ce', 'OBSERVER', '370f4e86-1ebf-4b70-a113-add96d0905e1'); --michael-supersecure
-INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token) VALUES
+   '$2a$10$.dLg4Vgt7JrP.564p/tPQOm.TLoy3HieFP1ZpnyWVPkJDYrG6r.Ce', 'OBSERVER', '370f4e86-1ebf-4b70-a113-add96d0905e1', FALSE); --michael-supersecure
+INSERT INTO public."user" (id, username, mail, name, password_hash, role, current_token, disabled) VALUES
   ('00000000-0001-0000-0000-000000000004', 'cannot', 'adsf@asdf.ad', 'I Can Nothing the Second',
-   '$2a$10$mTEkiQq2Wo./aqfekJHPk.5sG8JLWqWYbtMODwk9xQwQp0GtkCiM.', 'USER', '4aa33174-0001-4d33-0000-add96d0905e1'); --aaaa
+   '$2a$10$mTEkiQq2Wo./aqfekJHPk.5sG8JLWqWYbtMODwk9xQwQp0GtkCiM.', 'USER', '4aa33174-0001-4d33-0000-add96d0905e1', FALSE); --aaaa
 
 INSERT INTO "project" VALUES
-  ('00000000-0002-0000-0000-000000000001', 'Bitchip', 'Pfizer Consumer Healthcare', '2016-07-03 08:49:05', NULL),
-  ('00000000-0002-0000-0000-000000000002', 'Veribet', 'H E B', '2016-08-26 21:57:39', NULL),
-  ('00000000-0002-0000-0000-000000000003', 'Alpha', 'Major Pharmaceuticals', '2016-01-17 16:00:33', NULL),
-  ('00000000-0002-0000-0000-000000000004', 'Home Ing', 'Publix Super Markets Inc', '2016-03-13 04:21:56', NULL),
-  ('00000000-0002-0000-0000-000000000005', 'Holdlamis', 'Cal Pharma', '2016-01-02 01:03:12', NULL),
-  ('00000000-0002-0000-0000-000000000006', 'Duobam', 'Proficient Rx LP', '2016-09-29 16:27:21', NULL),
-  ('00000000-0002-0000-0000-000000000007', 'Keylex', 'CHANEL PARFUMS BEAUTE', '2015-02-13 09:07:10', NULL),
-  ('00000000-0002-0000-0000-000000000008', 'Prodder', 'Nova Homeopathic Therapeutics, Inc.', '2015-11-25 02:56:38', NULL),
-  ('00000000-0002-0000-0000-000000000009', 'Holdlamis', 'McKesson Corporation', '2016-03-27 12:41:13', NULL),
-  ('00000000-0002-0000-0000-000000000010', 'Asoka', 'Beutlich Pharmaceuticals LLC', '2015-12-11 03:32:52', NULL),
-  ('00000000-0002-0000-0000-000000000011', 'Y-Solowarm', 'Apotheca Company', '2015-01-29 21:31:50', NULL),
-  ('00000000-0002-0000-0000-000000000012', 'Flowdesk', 'REMEDYREPACK INC.', '2015-04-06 14:47:07', NULL),
-  ('00000000-0002-0000-0000-000000000013', 'Asoka', 'Ecolab Inc.', '2016-03-01 03:51:11', NULL),
-  ('00000000-0002-0000-0000-000000000014', 'Domainer', 'Barr Laboratories Inc.', '2016-08-01 04:11:30', NULL),
-  ('00000000-0002-0000-0000-000000000015', 'Bamity', 'CVS Pharmacy', '2016-03-24 17:48:19', NULL),
-  ('00000000-0002-0000-0000-000000000016', 'Otcom', 'Legacy Pharmaceutical Packaging', '2014-11-24 13:49:23', NULL),
-  ('00000000-0002-0000-0000-000000000017', 'Voltsillam', 'STAT Rx USA LLC', '2015-09-27 20:29:49', NULL),
-  ('00000000-0002-0000-0000-000000000018', 'Overhold', 'Physicians Total Care, Inc.', '2016-01-01 00:10:40', NULL),
-  ('00000000-0002-0000-0000-000000000019', 'It', 'Procter & Gamble Manufacturing Company', '2016-04-22 18:36:36', NULL),
-  ('00000000-0002-0000-0000-000000000020', 'Sonsing', 'Bare Escentuals Beauty Inc.', '2016-07-02 06:35:50', NULL),
-  ('00000000-0002-0000-0000-000000000021', 'Lotstring', 'Baxter Healthcare Corporation', '2015-06-07 02:07:32', NULL),
-  ('00000000-0002-0000-0000-000000000022', 'Sonsing', 'ALK-Abello, Inc.', '2015-07-23 03:06:10', NULL),
-  ('00000000-0002-0000-0000-000000000023', 'Biodex', 'Cardinal Health', '2015-10-16 08:39:17', NULL),
-  ('00000000-0002-0000-0000-000000000024', 'Quo Lux', 'Natural Health Supply', '2016-11-05 14:21:54', NULL),
-  ('00000000-0002-0000-0000-000000000025', 'Alpha', 'Nelco Laboratories, Inc.', '2016-01-10 19:14:31', NULL),
-  ('00000000-0002-0000-0000-000000000026', 'Alphazap', 'Bristol-Myers Squibb de Mexico, S. de R.L. de C.V.', '2015-08-19 08:26:39', NULL),
-  ('00000000-0002-0000-0000-000000000027', 'Aerified', 'Migranade Inc.', '2015-11-09 04:50:37', NULL),
-  ('00000000-0002-0000-0000-000000000028', 'Holdlamis', 'Ventura Corporation, LTD', '2015-08-25 19:25:52', NULL),
-  ('00000000-0002-0000-0000-000000000029', 'Toughjoyfax', 'Lake Erie Medical & Surgical Supply DBA Quality Care Products LLC', '2016-03-22 03:15:08', NULL),
-  ('00000000-0002-0000-0000-000000000030', 'Stim', 'REMEDYREPACK INC.', '2014-12-20 11:11:48', NULL),
-  ('00000000-0002-0000-0000-000000000031', 'Matsoft', 'Energizer Personal Care LLC', '2015-11-24 20:48:37', NULL),
-  ('00000000-0002-0000-0000-000000000032', 'Alphazap', 'Sun Pharmaceutical Industries Limited', '2015-01-22 12:35:45', NULL),
-  ('00000000-0002-0000-0000-000000000033', 'Holdlamis', 'Prasco Laboratories', '2015-10-21 11:47:18', NULL),
-  ('00000000-0002-0000-0000-000000000034', 'Hatity', 'Kareway Product, Inc.', '2016-08-07 05:56:37', NULL),
-  ('00000000-0002-0000-0000-000000000035', 'Stringtough', 'West-ward Pharmaceutical Corp', '2016-09-04 11:47:27', NULL),
-  ('00000000-0002-0000-0000-000000000036', 'Toughjoyfax', 'ALK-Abello, Inc.', '2015-03-21 16:50:20', NULL),
-  ('00000000-0002-0000-0000-000000000037', 'Daltfresh', 'Delon Laboratories (1990) Ltd', '2015-08-28 05:23:49', NULL),
-  ('00000000-0002-0000-0000-000000000038', 'Bigtax', 'Cardinal Health', '2016-09-26 17:56:34', NULL),
-  ('00000000-0002-0000-0000-000000000039', 'Lotstring', 'PD-Rx Pharmaceuticals, Inc.', '2016-05-18 13:08:47', NULL),
-  ('00000000-0002-0000-0000-000000000040', 'Latlux', 'Walgreen Company', '2016-09-10 11:20:08', NULL),
-  ('00000000-0002-0000-0000-000000000041', 'Kanlam', 'Kmart Corporation', '2016-11-10 10:23:48', NULL),
-  ('00000000-0002-0000-0000-000000000042', 'Asoka', 'Sandoz Inc', '2015-10-02 14:20:11', NULL),
-  ('00000000-0002-0000-0000-000000000043', 'Bytecard', 'Kinray', '2015-07-22 04:55:46', NULL),
-  ('00000000-0002-0000-0000-000000000044', 'Ronstring', 'A-S Medication Solutions LLC', '2015-07-17 08:58:21', NULL),
-  ('00000000-0002-0000-0000-000000000045', 'Sonsing', 'Lancaster S.A.M.', '2016-02-02 22:33:57', NULL),
-  ('00000000-0002-0000-0000-000000000046', 'Flexidy', 'Natures Way Holding Co', '2015-10-14 03:40:42', NULL),
-  ('00000000-0002-0000-0000-000000000047', 'Bigtax', 'American Sales Company', '2015-03-17 00:05:49', NULL),
-  ('00000000-0002-0000-0000-000000000048', 'Sonair', 'WAL-MART STORES INC', '2016-01-07 18:13:31', NULL),
-  ('00000000-0002-0000-0000-000000000049', 'Home Ing', 'Aurolife Pharma, LLC', '2016-03-27 16:25:32', NULL),
-  ('00000000-0002-0000-0000-000000000050', 'Konklux', 'ALK-Abello, Inc.', '2016-07-17 03:47:25', NULL);
+  ('00000000-0002-0000-0000-000000000001', 'Bitchip', 'Pfizer Consumer Healthcare', '2016-07-03 08:49:05', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000002', 'Veribet', 'H E B', '2016-08-26 21:57:39', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000003', 'Alpha', 'Major Pharmaceuticals', '2016-01-17 16:00:33', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000004', 'Home Ing', 'Publix Super Markets Inc', '2016-03-13 04:21:56', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000005', 'Holdlamis', 'Cal Pharma', '2016-01-02 01:03:12', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000006', 'Duobam', 'Proficient Rx LP', '2016-09-29 16:27:21', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000007', 'Keylex', 'CHANEL PARFUMS BEAUTE', '2015-02-13 09:07:10', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000008', 'Prodder', 'Nova Homeopathic Therapeutics, Inc.', '2015-11-25 02:56:38', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000009', 'Holdlamis', 'McKesson Corporation', '2016-03-27 12:41:13', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000010', 'Asoka', 'Beutlich Pharmaceuticals LLC', '2015-12-11 03:32:52', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000011', 'Y-Solowarm', 'Apotheca Company', '2015-01-29 21:31:50', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000012', 'Flowdesk', 'REMEDYREPACK INC.', '2015-04-06 14:47:07', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000013', 'Asoka', 'Ecolab Inc.', '2016-03-01 03:51:11', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000014', 'Domainer', 'Barr Laboratories Inc.', '2016-08-01 04:11:30', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000015', 'Bamity', 'CVS Pharmacy', '2016-03-24 17:48:19', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000016', 'Otcom', 'Legacy Pharmaceutical Packaging', '2014-11-24 13:49:23', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000017', 'Voltsillam', 'STAT Rx USA LLC', '2015-09-27 20:29:49', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000018', 'Overhold', 'Physicians Total Care, Inc.', '2016-01-01 00:10:40', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000019', 'It', 'Procter & Gamble Manufacturing Company', '2016-04-22 18:36:36', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000020', 'Sonsing', 'Bare Escentuals Beauty Inc.', '2016-07-02 06:35:50', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000021', 'Lotstring', 'Baxter Healthcare Corporation', '2015-06-07 02:07:32', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000022', 'Sonsing', 'ALK-Abello, Inc.', '2015-07-23 03:06:10', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000023', 'Biodex', 'Cardinal Health', '2015-10-16 08:39:17', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000024', 'Quo Lux', 'Natural Health Supply', '2016-11-05 14:21:54', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000025', 'Alpha', 'Nelco Laboratories, Inc.', '2016-01-10 19:14:31', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000026', 'Alphazap', 'Bristol-Myers Squibb de Mexico, S. de R.L. de C.V.', '2015-08-19 08:26:39', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000027', 'Aerified', 'Migranade Inc.', '2015-11-09 04:50:37', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000028', 'Holdlamis', 'Ventura Corporation, LTD', '2015-08-25 19:25:52', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000029', 'Toughjoyfax', 'Lake Erie Medical & Surgical Supply DBA Quality Care Products LLC', '2016-03-22 03:15:08', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000030', 'Stim', 'REMEDYREPACK INC.', '2014-12-20 11:11:48', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000031', 'Matsoft', 'Energizer Personal Care LLC', '2015-11-24 20:48:37', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000032', 'Alphazap', 'Sun Pharmaceutical Industries Limited', '2015-01-22 12:35:45', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000033', 'Holdlamis', 'Prasco Laboratories', '2015-10-21 11:47:18', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000034', 'Hatity', 'Kareway Product, Inc.', '2016-08-07 05:56:37', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000035', 'Stringtough', 'West-ward Pharmaceutical Corp', '2016-09-04 11:47:27', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000036', 'Toughjoyfax', 'ALK-Abello, Inc.', '2015-03-21 16:50:20', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000037', 'Daltfresh', 'Delon Laboratories (1990) Ltd', '2015-08-28 05:23:49', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000038', 'Bigtax', 'Cardinal Health', '2016-09-26 17:56:34', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000039', 'Lotstring', 'PD-Rx Pharmaceuticals, Inc.', '2016-05-18 13:08:47', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000040', 'Latlux', 'Walgreen Company', '2016-09-10 11:20:08', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000041', 'Kanlam', 'Kmart Corporation', '2016-11-10 10:23:48', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000042', 'Asoka', 'Sandoz Inc', '2015-10-02 14:20:11', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000043', 'Bytecard', 'Kinray', '2015-07-22 04:55:46', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000044', 'Ronstring', 'A-S Medication Solutions LLC', '2015-07-17 08:58:21', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000045', 'Sonsing', 'Lancaster S.A.M.', '2016-02-02 22:33:57', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000046', 'Flexidy', 'Natures Way Holding Co', '2015-10-14 03:40:42', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000047', 'Bigtax', 'American Sales Company', '2015-03-17 00:05:49', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000048', 'Sonair', 'WAL-MART STORES INC', '2016-01-07 18:13:31', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000049', 'Home Ing', 'Aurolife Pharma, LLC', '2016-03-27 16:25:32', NULL, NULL, FALSE),
+  ('00000000-0002-0000-0000-000000000050', 'Konklux', 'ALK-Abello, Inc.', '2016-07-17 03:47:25', NULL, NULL, FALSE);
 
 INSERT INTO "member" VALUES
   ('00000000-0001-0000-0000-000000000001', '00000000-0002-0000-0000-000000000001', 'ADMIN',
@@ -437,16 +437,16 @@ VALUES ('00000000-0007-0000-0000-000000000003', '00000000-0002-0000-0000-0000000
 
 --Time
 
-INSERT INTO public.logged_time (id, comment_id, category_id, time)
+INSERT INTO public.logged_time (id, comment_id, category_id, time, canceled)
 VALUES ('00000000-0008-0000-0000-000000000001', '00000000-0004-0000-0000-000000000008',
-        '00000000-0007-0000-0000-000000000001', 10);
+        '00000000-0007-0000-0000-000000000001', 10, false);
 
 
-INSERT INTO public.logged_time (id, comment_id, category_id, time)
+INSERT INTO public.logged_time (id, comment_id, category_id, time, canceled)
 VALUES ('00000000-0008-0000-0000-000000000002', '00000000-0004-0000-0000-000000000008',
-        '00000000-0007-0000-0000-000000000002', 20);
+        '00000000-0007-0000-0000-000000000002', 20, false);
 
-INSERT INTO public.logged_time (id, comment_id, category_id, time)
+INSERT INTO public.logged_time (id, comment_id, category_id, time, canceled)
 VALUES ('00000000-0008-0000-0000-000000000003', '00000000-0004-0000-0000-000000000008',
-        '00000000-0007-0000-0000-000000000003', 30);
+        '00000000-0007-0000-0000-000000000003', 30, false);
 COMMIT;
