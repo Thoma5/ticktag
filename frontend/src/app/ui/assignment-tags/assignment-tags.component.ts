@@ -4,6 +4,7 @@ import {AssignmenttagApi} from '../../api/api/AssignmenttagApi';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AssignmentTagResultJson} from '../../api/model/AssignmentTagResultJson';
 import {Observable} from 'rxjs';
+import { Modal } from 'angular2-modal/plugins/bootstrap';
 
 @Component({
   selector: 'tt-assignment-tags',
@@ -22,7 +23,8 @@ export class AssignmentTagsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private assignmentTagApi: AssignmenttagApi,
-    private apiCallService: ApiCallService) {
+    private apiCallService: ApiCallService,
+    private modal: Modal) {
   }
 
   ngOnInit(): void {
@@ -50,12 +52,26 @@ export class AssignmentTagsComponent implements OnInit {
   }
 
   onDeleteClicked(tag: AssignmentTagResultJson) {
-    this.apiCallService
-      .call<any>(h => this.assignmentTagApi.deleteAssignmentTagUsingDELETEWithHttpInfo(tag.id, h))
-      .subscribe(param => {
-          this.refresh().subscribe();
-        }
-      );
+    this.modal.confirm()
+      .size('sm')
+      .isBlocking(true)
+      .showClose(false)
+      .body('Are you sure you that you want to delete this item?')
+      .okBtn('Delete')
+      .open()
+      .then(a => {
+        a.result.then(result => {
+          // Delete clicked
+          this.apiCallService
+            .call<any>(h => this.assignmentTagApi.deleteAssignmentTagUsingDELETEWithHttpInfo(tag.id, h))
+            .subscribe(param => {
+                this.refresh().subscribe();
+              }
+            );
+        }).catch(result => {
+          // Cancel clicked
+        });
+      });
   }
 
   onStartCreate() {
