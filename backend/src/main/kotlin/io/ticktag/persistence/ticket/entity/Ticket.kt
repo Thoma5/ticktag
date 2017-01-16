@@ -1,5 +1,6 @@
 package io.ticktag.persistence.ticket.entity
 
+import io.ticktag.persistence.kanban.entity.KanbanCell
 import io.ticktag.persistence.project.entity.Project
 import io.ticktag.persistence.user.entity.User
 import java.time.Duration
@@ -132,4 +133,8 @@ open class Ticket protected constructor() {
     @OneToMany(mappedBy = "mentionedTicket")
     lateinit open var mentionRemovedEvents: MutableList<TicketEventMentionRemoved>
         protected set
+
+    @OneToMany(mappedBy = "ticket", cascade = arrayOf(CascadeType.REMOVE))
+    lateinit open var kanbanCells: MutableSet<KanbanCell>
+
 }

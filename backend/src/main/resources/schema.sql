@@ -267,6 +267,14 @@ CREATE TABLE IF NOT EXISTS "ticket_event_logged_time_removed" (
 CREATE INDEX ON "ticket_event_logged_time_removed" ("comment_id");
 CREATE INDEX ON "ticket_event_logged_time_removed" ("time_category_id");
 
+
+CREATE TABLE IF NOT EXISTS "kanban_cell"(
+  "id"             UUID PRIMARY KEY,
+  "ticket_tag_id"  UUID NOT NULL REFERENCES "ticket_tag",
+  "ticket_id"      UUID NOT NULL REFERENCES "ticket",
+  "order"          INTEGER NOT NULL
+);
+
 CREATE VIEW view_progress AS
   SELECT
     t.*,
