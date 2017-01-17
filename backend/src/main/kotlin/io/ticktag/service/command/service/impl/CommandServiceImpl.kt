@@ -126,6 +126,16 @@ open class CommandServiceImpl(
                         failedCommand(errors, index)
                     }
                 }
+                is Command.Sp -> {
+                    tryCommand(errors, index) {
+                        ticketService.updateTicket(UpdateTicket(null, null, UpdateValue(command.sp), null, null, null, null, null), ticket.id, principal)
+                    }
+                }
+                is Command.Due -> {
+                    tryCommand(errors, index) {
+                        ticketService.updateTicket(UpdateTicket(null, null, null, null, null, UpdateValue(command.date), null, null), ticket.id, principal)
+                    }
+                }
                 is Command.RefTicket -> {
                     val refNum = command.ticketNumber
                     val referencedTicket = tickets.findByNumber(command.ticketNumber)
