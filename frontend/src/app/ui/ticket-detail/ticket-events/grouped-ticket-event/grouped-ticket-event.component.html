@@ -106,6 +106,18 @@
           [added]='true'
         ></tt-ticket-event-tag>
       </div>
+      <div *ngSwitchCase='"TicketEventMentionAddedResultJson"'>
+        <tt-ticket-event-mention
+          [ticket]='event.mentionedTicket'
+          [added]='true'
+        ></tt-ticket-event-mention>
+      </div>
+      <div *ngSwitchCase='"TicketEventMentionRemovedResultJson"'>
+        <tt-ticket-event-mention
+          [ticket]='event.mentionedTicket'
+          [added]='false'
+        ></tt-ticket-event-mention>
+      </div>
     </div>
   </div>
   <p class="bottom-info">

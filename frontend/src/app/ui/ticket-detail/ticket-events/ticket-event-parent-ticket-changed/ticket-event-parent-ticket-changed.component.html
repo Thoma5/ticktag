@@ -2,15 +2,15 @@
 <div *ngIf='srcParent'>
   <span class='label label-danger change-label'>From</span>
   <span class="ticket-ref">
-    <span class="number"><a [routerLink]="['/project', srcParent.projectId, 'ticket', srcParent.id]">#{{ srcParent.number }}</a></span>
-    <span class="title"><a [routerLink]="['/project', srcParent.projectId, 'ticket', srcParent.id]">{{ srcParent.title }}</a></span>
+    <span class="number"><a [routerLink]="['/project', srcParent.projectId, 'ticket', srcParent.number]">#{{ srcParent.number }}</a></span>
+    <span class="title"><a [routerLink]="['/project', srcParent.projectId, 'ticket', srcParent.number]">{{ srcParent.title }}</a></span>
   </span>
 </div>
 <div *ngIf='dstParent'>
   <span class='label label-success change-label'>To</span>
   <span class="ticket-ref">
-    <span class="number"><a [routerLink]="['/project', dstParent.projectId, 'ticket', dstParent.id]">#{{ dstParent.number }}</a></span>
-    <span class="title"><a [routerLink]="['/project', dstParent.projectId, 'ticket', dstParent.id]">{{ dstParent.title }}</a></span>
+    <span class="number"><a [routerLink]="['/project', dstParent.projectId, 'ticket', dstParent.number]">#{{ dstParent.number }}</a></span>
+    <span class="title"><a [routerLink]="['/project', dstParent.projectId, 'ticket', dstParent.number]">{{ dstParent.title }}</a></span>
   </span>
 </div>
 
