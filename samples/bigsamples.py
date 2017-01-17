@@ -300,11 +300,12 @@ def create_ticket(project, users, time_cats, tag_groups, assignment_tags, i, par
 
         time = random_logged_time(time_left)
         while time:
-            print("insert into logged_time values ({}, {}, {}, {});".format(
+            print("insert into logged_time values ({}, {}, {}, {}, {});".format(
                 sql(random_uuid()),
                 sql(comment.id),
                 sql(random.choice(time_cats).id),
-                sql(time)))
+                sql(time),
+                sql(False)))
             if not (time_left is None):
                 time_left -= time
             time = random_logged_time(time_left)

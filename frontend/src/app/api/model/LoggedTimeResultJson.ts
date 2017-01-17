@@ -26,6 +26,8 @@
 import * as models from './models';
 
 export interface LoggedTimeResultJson {
+    canceled: boolean;
+
     categoryId: string;
 
     commentId: string;

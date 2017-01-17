@@ -4,6 +4,7 @@ import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.project.schema.*
 import io.ticktag.restinterface.user.schema.ProjectUserResultJson
+import io.ticktag.service.NotFoundException
 import io.ticktag.service.Principal
 import io.ticktag.service.project.dto.CreateProject
 import io.ticktag.service.project.dto.UpdateProject
@@ -73,6 +74,12 @@ open class ProjectController @Inject constructor(
     open fun updateProject(@PathVariable(name = "id") id: UUID,
                            @RequestBody req: UpdateProjectRequestJson): ProjectResultJson {
         val project = projectService.updateProject(id, UpdateProject(req.name, req.description, req.disabled, req.icon))
+        return ProjectResultJson(project)
+    }
+
+    @GetMapping(value = "/{id}")
+    open fun getProject(@PathVariable(name = "id") id: UUID): ProjectResultJson {
+        val project = projectService.getProject(id)?: throw NotFoundException()
         return ProjectResultJson(project)
     }
 

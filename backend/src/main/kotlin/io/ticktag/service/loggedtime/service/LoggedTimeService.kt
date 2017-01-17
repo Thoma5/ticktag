@@ -12,7 +12,6 @@ interface LoggedTimeService {
     fun listLoggedTimeForProjectAndUserAndCategory(projedId: UUID?, userId: UUID?, categoryId: UUID?): List<LoggedTimeResult>
     fun createLoggedTime(createLoggedTime: CreateLoggedTime, commentId: UUID): LoggedTimeResult
     fun updateLoggedTime(updateLoggedTime: UpdateLoggedTime, loggedTimeId: UUID): LoggedTimeResult
-    fun deleteLoggedTime(loggedTimeId: UUID)
     fun getLoggedTime(loggedTimeId: UUID): LoggedTimeResult
     fun getLoggedTimes(ids: List<UUID>, principal: Principal): Map<UUID, LoggedTimeResult>
 }

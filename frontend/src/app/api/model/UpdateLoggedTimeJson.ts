@@ -30,5 +30,7 @@ export interface UpdateLoggedTimeJson {
 
     categoryId?: string;
 
+    canceled?: boolean;
+
 }
 

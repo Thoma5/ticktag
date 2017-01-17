@@ -25,12 +25,20 @@
 
 import * as models from './models';
 
-export interface UpdateCommentRequestJson {
-    text: string;
+export interface KanbanColumnResultJson {
+    color: string;
 
-    mentionedTicketIds?: Array<string>;
+    id: string;
 
-    loggedTime?: Array<models.CreateLoggedTimeJson>;
+    kanbanBoardId: string;
+
+    name: string;
+
+    normalizedName: string;
+
+    order: number;
+
+    ticketIds: Array<string>;
 
 }
 

@@ -180,6 +180,7 @@ class AuthExpr private constructor() {
 
         const val ADMIN_OR_SELF = "principal.hasRole('$ROLE_GLOBAL_ADMIN') || principal.isId(#userId)"
 
+
     }
 }
 

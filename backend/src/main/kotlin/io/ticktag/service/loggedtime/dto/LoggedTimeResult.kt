@@ -8,7 +8,8 @@ data class LoggedTimeResult(
         val id: UUID,
         val time: Duration,
         val commentId: UUID,
-        val categoryId: UUID
+        val categoryId: UUID,
+        val canceled: Boolean
 ) {
-    constructor(l: LoggedTime) : this(id = l.id, time = l.time, commentId = l.comment.id, categoryId = l.category.id)
+    constructor(l: LoggedTime) : this(id = l.id, time = l.time, commentId = l.comment.id, categoryId = l.category.id, canceled = l.canceled)
 }
