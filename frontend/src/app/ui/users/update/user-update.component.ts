@@ -1,9 +1,10 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, ViewContainerRef } from '@angular/core';
 import { ApiCallService, ApiCallResult } from '../../../service';
 import { UserApi, UpdateUserRequestJson, UserResultJson, WhoamiResultJson } from '../../../api';
 import { RoleResultJson } from '../../../api/model/RoleResultJson';
 import { showValidationError } from '../../../util/error';
 import { Modal } from 'angular2-modal/plugins/bootstrap';
+import { Overlay } from 'angular2-modal';
 
 
 @Component({
@@ -37,7 +38,12 @@ export class UserUpdateComponent implements OnInit {
 
   constructor(private apiCallService: ApiCallService,
     private userApi: UserApi,
-    private modal: Modal) { }
+    private modal: Modal,
+    private overlay: Overlay,
+    private vcRef: ViewContainerRef,
+  ) {
+    overlay.defaultViewContainer = vcRef;
+  }
 
   ngOnInit(): void {
     this.defaultImage = (<any>this.userApi).basePath + '/user/image/' + this.user.imageId;
