@@ -21,6 +21,14 @@
  margin-bottom: $small-gap;
 }
 
+.core {
+    @extend %card;
+    position: relative;
+    max-width: 1024px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .subtitle {
   @extend %subtitle;
   margin-bottom: $small-gap;

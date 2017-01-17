@@ -1,52 +1,65 @@
 <div *ngIf="loading" class="loading">
-	  <tt-loading></tt-loading>
-	</div>
-	<h1 class='title'>Ticket Tags</h1>
-   <div class="container">
-            <select class="form-control" id="taggroupfilter" name="TagGroupFilter" size="1" placeholder="Filter tag Groups" ngModel="0" (change)="loadTags()">
-                <option value="0">Select a Tag Group</option>
-                <option *ngFor="let tagGroup of tagGroups" value="{{tagGroup.id}}">{{tagGroup.name}}</option>
-            </select>
-	  <button type="button" class="btn" (click)="onStartCreate()"><span class="glyphicon glyphicon-plus"></span>New Tag Group</button>
-	  <button type="button" class="btn" (click)="onStartCreate()"><span class="glyphicon glyphicon-edit"></span>Edit Tag Group</button>
-	  <button type="button" class="btn btn-danger" (click)="onStartCreate()"><span class="glyphicon glyphicon-trash"></span>Delete Tag Group</button>
+	<tt-loading></tt-loading>
+</div>
+<h1 class='title'>Ticket Tags</h1>
+<tabset>
+	<tab heading='Ticket Tags'>
+		<div class='core'>
+			<button type="button" class="btn btn-primary pull-right" *ngIf="ticketTagGroupId != 'notSelected'" (click)="onStartCreate()"><span class="glyphicon glyphicon-plus"></span>  New Ticket Tag</button>
+			<table class="table ticket-tags">
+				<tr *ngFor='let ticketTag of ticketTags' class="ticket-tag">
+					<td class="tag-wrapper">
+						<span class="tag" [style.backgroundColor]="'#' + ticketTag.color">
+				<span class="name">{{ ticketTag.name }}</span>
+						</span>
+					</td>
+					<td class="group">
+						{{ getTagGroupById(ticketTag.ticketTagGroupId).name }}
+					</td>
+					<td class="actions">
+						<button (click)="onEditClicked(ticketTag)" class="btn btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
+						<button (click)="onDeleteClicked(ticketTag)" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</tab>
+	<tab heading='Tag Groups'>
+		<div class='core'>
+			<div class='sub-header-row row'>
+				<div class="col-sm-6">
+					<select class="form-control" id="taggroupfilter" name="TagGroupFilter" size="1" placeholder="Filter tag Groups" [(ngModel)]="ticketTagGroupId"
+						(change)="setTagGroup()">
+				<option value="notSelected" disabled>Select a Tag Group</option>
+				<option *ngFor="let tagGroup of tagGroups" value="{{tagGroup.id}}">{{tagGroup.name}}</option>
+			</select>
+				</div>
+				<div class="col-sm-2">
+					<button type="button" class="btn btn-primary" (click)="onStartCreate()"><span class="glyphicon glyphicon-plus"></span>  New Tag Group</button>
+				</div>
+				<div class="col-sm-2">
+					<button type="button" class="btn btn-primary" *ngIf="ticketTagGroupId != 'notSelected'" (click)="onStartCreate()"><span class="glyphicon glyphicon-edit"></span>  Edit Tag Group</button>
+				</div>
+			</div>
+		</div>
+	</tab>
+</tabset>
 
-	  <button type="button" class="btn btn-primary pull-right" (click)="onStartCreate()"><span class="glyphicon glyphicon-plus"></span>New Ticket Tag</button>
-	  
-	  <table class="table ticket-tags">
-	    <tr *ngFor='let ticketTag of ticketTags' class="ticket-tag">
-	      <td class="tag-wrapper">
-	        <span class="tag" [style.backgroundColor]="'#' + ticketTag.color">
-	          <span class="name">{{ ticketTag.name }}</span>
-	        </span>
-	      </td>
-	      <td class="actions">
-	        <button (click)="onEditClicked(ticketTag)" class="btn btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
-	        <button (click)="onDeleteClicked(ticketTag)" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
-	      </td>
-	    </tr>
-	  </table>
-	</div>
-	
-	<div *ngIf="cu" class="overlay" (click)="$event.stopPropagation()">
-	  <div class="overlay-body" (click)="$event.stopPropagation()">
-	    <button type="button" class="exit pull-right" (click)="onStopCreate()">
+<div *ngIf="cu" class="overlay" (click)="$event.stopPropagation()">
+	<div class="overlay-body" (click)="$event.stopPropagation()">
+		<button type="button" class="exit pull-right" (click)="onStopCreate()">
 	      <i class='fa fa-times'></i>
 	    </button>
-	    <div class="overlay-content">
-	      <div class="head">
-	        <h3 class="title">
-	          {{mode}} Ticket Tag
-	        </h3>
-	      </div>
-	      <div class="body">
-	        <tt-ticket-tag-create *ngIf="mode === 'Create'" (created)="finishCreateUpdate()" [ticketTagGroupId]="ticketTagGroupId"></tt-ticket-tag-create>
-	        <tt-ticket-tag-update *ngIf="mode === 'Update' && toUpdateTicketTag" [ticketTag]="toUpdateTicketTag" (updated)="finishCreateUpdate()"></tt-ticket-tag-update>
-	      </div>
-	    </div>
-	  </div>
+		<div class="overlay-content">
+			<div class="head">
+				<h3 class="title">
+					{{mode}} Ticket Tag
+				</h3>
+			</div>
+			<div class="body">
+				<tt-ticket-tag-create *ngIf="mode === 'Create'" (created)="finishCreateUpdate()" [ticketTagGroupId]="ticketTagGroupId"></tt-ticket-tag-create>
+				<tt-ticket-tag-update *ngIf="mode === 'Update' && toUpdateTicketTag" [ticketTag]="toUpdateTicketTag" (updated)="finishCreateUpdate()"></tt-ticket-tag-update>
+			</div>
+		</div>
 	</div>
-  
-	<div class="container">
-	  <button type="button" class="btn btn-primary pull-right" (click)="onStartCreate()"><span class="glyphicon glyphicon-plus"></span>New Ticket Tag Group</button>
-	</div>
+</div>

@@ -16,7 +16,7 @@ interface TicketTagRepository : TicktagCrudRepository<TicketTag, UUID> {
 
     @Query("SELECT t from TicketTag t " +
             "JOIN t.ticketTagGroup g JOIN g.project p " +
-            "WHERE p.id = :projectId AND t.disabled = false")
+            "WHERE p.id = :projectId AND t.disabled = false ORDER BY t.order asc")
     fun findByProjectId(@Param("projectId") projectId: UUID): List<TicketTag>
 
     fun findByTicketTagGroupIdAndDisabledOrderByOrderAsc(ticketTagGroupId: UUID, disabled: Boolean): List<TicketTag>
