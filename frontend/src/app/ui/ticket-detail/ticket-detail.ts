@@ -348,6 +348,7 @@ export function newTransientTicketDetailRelated(title: string, description: stri
 }
 
 export class TicketDetail {
+  readonly parentTicket: TicketDetailRelated | undefined;
   readonly comments: imm.List<TicketDetailComment>;
   readonly createTime: number;
   readonly createdBy: TicketDetailUser;
@@ -382,6 +383,7 @@ export class TicketDetail {
       transientSubtickets: imm.Map<string, TicketDetailRelated>,
       progress: TicketDetailProgress,
       ) {
+    this.parentTicket = relatedTickets.get(ticket.parentTicketId);
     this.comments = imm.List(ticket.commentIds)
       .map(cid => comments.get(cid))
       .filter(it => !!it)
