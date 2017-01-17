@@ -70,14 +70,14 @@ open class TicketRepositoryImpl @Inject constructor(private val em: EntityManage
     }
 
     override fun findMentionedTickets(ids: Collection<UUID>): Map<UUID, List<Ticket>> {
-        return em.createQuery("select m.id, t from Ticket t join t.mentioningComments c join c.ticket m where m.id in :ids", Array<Any>::class.java)
+        return em.createQuery("select distinct m.id, t from Ticket t join t.mentioningComments c join c.ticket m where m.id in :ids", Array<Any>::class.java)
                 .setParameter("ids", ids.nullIfEmpty())
                 .resultList
                 .groupBy( { it[0] as UUID}, { it[1] as Ticket })
     }
 
     override fun findMentioningTickets(ids: Collection<UUID>): Map<UUID, List<Ticket>> {
-        return em.createQuery("select t.id, m from Ticket t join t.mentioningComments c join c.ticket m where t.id in :ids", Array<Any>::class.java)
+        return em.createQuery("select distinct t.id, m from Ticket t join t.mentioningComments c join c.ticket m where t.id in :ids", Array<Any>::class.java)
                 .setParameter("ids", ids.nullIfEmpty())
                 .resultList
                 .groupBy( { it[0] as UUID}, { it[1] as Ticket })

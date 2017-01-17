@@ -45,6 +45,7 @@ class TicketEventApiTest : ApiBaseTest() {
                     UpdateNullableValueJson(ticket.currentEstimatedTime),
                     UpdateNullableValueJson(ticket.dueDate),
                     UpdateNotnullValueJson("New Description"),
+                    null,
                     null), ticketId, principal)
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
         }
@@ -63,6 +64,7 @@ class TicketEventApiTest : ApiBaseTest() {
                     UpdateNullableValueJson(Duration.ofHours(10)),
                     UpdateNullableValueJson(ticket.dueDate),
                     UpdateNotnullValueJson(ticket.description),
+                    null,
                     null), ticketId, principal)
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
         }
@@ -81,6 +83,7 @@ class TicketEventApiTest : ApiBaseTest() {
                     UpdateNullableValueJson(ticket.currentEstimatedTime),
                     UpdateNullableValueJson(Instant.parse("2017-01-01T16:00:00Z")),
                     UpdateNotnullValueJson(ticket.description),
+                    null,
                     null), ticketId, principal)
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
         }
@@ -112,7 +115,8 @@ class TicketEventApiTest : ApiBaseTest() {
                     UpdateNullableValueJson(ticket.currentEstimatedTime),
                     UpdateNullableValueJson(Instant.parse("2017-01-01T16:00:00Z")),
                     UpdateNotnullValueJson(ticket.description),
-                    UpdateNullableValueJson(parentTicketId)), ticketId, principal)
+                    UpdateNullableValueJson(parentTicketId),
+                    null), ticketId, principal)
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
         }
     }
@@ -130,6 +134,7 @@ class TicketEventApiTest : ApiBaseTest() {
                     UpdateNullableValueJson(ticket.currentEstimatedTime),
                     UpdateNullableValueJson(ticket.dueDate),
                     UpdateNotnullValueJson(ticket.description),
+                    null,
                     null), ticketId, principal)
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
         }
@@ -148,6 +153,7 @@ class TicketEventApiTest : ApiBaseTest() {
                     UpdateNullableValueJson(ticket.currentEstimatedTime),
                     UpdateNullableValueJson(ticket.dueDate),
                     UpdateNotnullValueJson(ticket.description),
+                    null,
                     null), ticketId, principal)
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
         }
@@ -166,6 +172,7 @@ class TicketEventApiTest : ApiBaseTest() {
                     UpdateNullableValueJson(ticket.currentEstimatedTime),
                     UpdateNullableValueJson(ticket.dueDate),
                     UpdateNotnullValueJson(ticket.description),
+                    null,
                     null), ticketId, principal)
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore + 1)
         }
@@ -209,6 +216,7 @@ class TicketEventApiTest : ApiBaseTest() {
                     UpdateNullableValueJson(ticket.currentEstimatedTime),
                     UpdateNullableValueJson(ticket.dueDate),
                     UpdateNotnullValueJson(ticket.description),
+                    null,
                     null), ticketId, principal)
             Assert.assertEquals(ticketEventController.listTicketEvents(ticketId).size, sizeBefore)
         }

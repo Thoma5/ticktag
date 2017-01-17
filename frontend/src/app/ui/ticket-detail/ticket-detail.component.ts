@@ -28,6 +28,7 @@ import { idListToMap } from '../../util/listmaputils';
 import * as imm from 'immutable';
 import { CommandTextviewSaveEvent } from '../../util/command-textview/command-textview.component';
 import { showValidationError } from '../../util/error';
+import { Cmd } from '../../service/command/grammar';
 
 @Component({
   selector: 'tt-ticket-detail',
@@ -109,10 +110,10 @@ export class TicketDetailComponent implements OnInit {
     });
   }
 
-  onDescriptionChange(val: string): void {
-    this.transientTicket.description = val;
+  onDescriptionChange(change: {text: string, commands: imm.List<Cmd>}): void {
+    this.transientTicket.description = change.text;
     this.newTicketDetail();
-    this.updateTicket({ description: { value: val } }, () => {
+    this.updateTicket({ description: { value: change.text }, commands: change.commands.toArray() }, () => {
       this.transientTicket.description = undefined;
       this.newTicketDetail();
     });

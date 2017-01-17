@@ -47,6 +47,10 @@ open class CommandServiceImpl(
 
         val ticket = comment.ticket
 
+        // Commands always reset all references tickets, because referenced tickets are delcarative, while all other
+        // commands are not. Yes this is ugly.
+        comment.mentionedTickets.clear()
+
         for ((index, command) in commands.withIndex()) {
             when (command) {
                 is Command.Assign -> {
@@ -83,12 +87,12 @@ open class CommandServiceImpl(
                 }
                 is Command.Close -> {
                     tryCommand(errors, index) {
-                        ticketService.updateTicket(UpdateTicket(null, UpdateValue(false), null, null, null, null, null, null), ticket.id, principal)
+                        ticketService.updateTicket(UpdateTicket(null, UpdateValue(false), null, null, null, null, null, null, null), ticket.id, principal)
                     }
                 }
                 is Command.Reopen -> {
                     tryCommand(errors, index) {
-                        ticketService.updateTicket(UpdateTicket(null, UpdateValue(true), null, null, null, null, null, null), ticket.id, principal)
+                        ticketService.updateTicket(UpdateTicket(null, UpdateValue(true), null, null, null, null, null, null, null), ticket.id, principal)
                     }
                 }
                 is Command.Tag -> {
@@ -113,7 +117,7 @@ open class CommandServiceImpl(
                 }
                 is Command.Est -> {
                     tryCommand(errors, index) {
-                        ticketService.updateTicket(UpdateTicket(null, null, null, null, UpdateValue(command.duration), null, null, null), ticket.id, principal)
+                        ticketService.updateTicket(UpdateTicket(null, null, null, null, UpdateValue(command.duration), null, null, null, null), ticket.id, principal)
                     }
                 }
                 is Command.Time -> {
@@ -128,12 +132,12 @@ open class CommandServiceImpl(
                 }
                 is Command.Sp -> {
                     tryCommand(errors, index) {
-                        ticketService.updateTicket(UpdateTicket(null, null, UpdateValue(command.sp), null, null, null, null, null), ticket.id, principal)
+                        ticketService.updateTicket(UpdateTicket(null, null, UpdateValue(command.sp), null, null, null, null, null, null), ticket.id, principal)
                     }
                 }
                 is Command.Due -> {
                     tryCommand(errors, index) {
-                        ticketService.updateTicket(UpdateTicket(null, null, null, null, null, UpdateValue(command.date), null, null), ticket.id, principal)
+                        ticketService.updateTicket(UpdateTicket(null, null, null, null, null, UpdateValue(command.date), null, null, null), ticket.id, principal)
                     }
                 }
                 is Command.RefTicket -> {

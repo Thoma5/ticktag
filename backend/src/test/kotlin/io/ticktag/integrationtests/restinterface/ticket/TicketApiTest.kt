@@ -184,7 +184,7 @@ class TicketApiTest : ApiBaseTest() {
                     PROJECT_NO_MEMBERS_ID, emptyList(), emptyList(), emptyList(), null, emptyList())
             val subSubBody = ticketController.createTicket(reqSubSub, principal).body!!
 
-            val updateSubSub = UpdateTicketRequestJson(null, null, null, null, null, null, null, UpdateNullableValueJson(subId))
+            val updateSubSub = UpdateTicketRequestJson(null, null, null, null, null, null, null, UpdateNullableValueJson(subId), null)
             val ex = assertFailsWith(TicktagValidationException::class, { ticketController.updateTicket(updateSubSub, subSubBody.id, principal) })
 
             assertThat(ex.errors.size, `is`(1))
@@ -211,7 +211,7 @@ class TicketApiTest : ApiBaseTest() {
             val parentBody = ticketController.createTicket(reqParent, principal).body!!
             val subBody = ticketController.createTicket(reqSub, principal).body!!
 
-            val updateSub = UpdateTicketRequestJson(null, null, null, null, null, null, null, UpdateNullableValueJson(parentBody.id))
+            val updateSub = UpdateTicketRequestJson(null, null, null, null, null, null, null, UpdateNullableValueJson(parentBody.id), null)
             val ex = assertFailsWith(TicktagValidationException::class, { ticketController.updateTicket(updateSub, subBody.id, principal) })
 
             assertThat(ex.errors.size, `is`(1))
@@ -233,7 +233,7 @@ class TicketApiTest : ApiBaseTest() {
                     PROJECT_AOU_AUO_ID, emptyList(), emptyList(), emptyList(), null, emptyList())
             val ticket = ticketController.createTicket(create, p).body!!
 
-            val req = UpdateTicketRequestJson(null, null, null, null, UpdateNullableValueJson(Duration.ofDays(2)), null, null, null)
+            val req = UpdateTicketRequestJson(null, null, null, null, UpdateNullableValueJson(Duration.ofDays(2)), null, null, null, null)
             val result = ticketController.updateTicket(req, ticket.id, p)
 
             assertNull(result.initialEstimatedTime)
@@ -248,7 +248,7 @@ class TicketApiTest : ApiBaseTest() {
                     PROJECT_AOU_AUO_ID, emptyList(), emptyList(), emptyList(), null, emptyList())
             val ticket = ticketController.createTicket(create, p).body!!
 
-            val req = UpdateTicketRequestJson(null, null, null, UpdateNullableValueJson(Duration.ofDays(2)), null, null, null, null)
+            val req = UpdateTicketRequestJson(null, null, null, UpdateNullableValueJson(Duration.ofDays(2)), null, null, null, null, null)
             val result = ticketController.updateTicket(req, ticket.id, p)
 
             assertEquals(result.initialEstimatedTime, req.initialEstimatedTime!!.value)
@@ -263,7 +263,7 @@ class TicketApiTest : ApiBaseTest() {
                     PROJECT_AOU_AUO_ID, emptyList(), emptyList(), emptyList(), null, emptyList())
             val ticket = ticketController.createTicket(create, p).body!!
 
-            val req = UpdateTicketRequestJson(null, null, null, null, UpdateNullableValueJson(Duration.ofDays(2)), null, null, null)
+            val req = UpdateTicketRequestJson(null, null, null, null, UpdateNullableValueJson(Duration.ofDays(2)), null, null, null, null)
             val result = ticketController.updateTicket(req, ticket.id, p)
 
             assertEquals(result.initialEstimatedTime, create.initialEstimatedTime)
@@ -337,6 +337,7 @@ class TicketApiTest : ApiBaseTest() {
                     UpdateNullableValueJson(Duration.ofDays(2)),
                     UpdateNullableValueJson(now),
                     UpdateNotnullValueJson("description"),
+                    null,
                     null)
             val result = ticketController.updateTicket(req, UUID.fromString("00000000-0003-0000-0000-000000000001"), principal)
             assertEquals(result.title, "ticket")

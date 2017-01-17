@@ -4,13 +4,10 @@ import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.comment.schema.CommentResultJson
 import io.ticktag.restinterface.comment.schema.CreateCommentRequestJson
-import io.ticktag.restinterface.comment.schema.UpdateCommentRequestJson
 import io.ticktag.service.NotFoundException
 import io.ticktag.service.Principal
 import io.ticktag.service.comment.dto.CreateComment
-import io.ticktag.service.comment.dto.UpdateComment
 import io.ticktag.service.comment.service.CommentService
-import io.ticktag.service.loggedtime.dto.CreateLoggedTime
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
