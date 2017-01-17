@@ -18,6 +18,7 @@ open class TicketTag protected constructor() {
             o.tickets = mutableListOf()
             o.tagAddedEvents = mutableListOf()
             o.tagRemovedEvents = mutableListOf()
+            o.disabled = false
             return o
         }
 
@@ -40,6 +41,9 @@ open class TicketTag protected constructor() {
 
     @Column(name = "order", nullable = false)
     open var order: Int = -1
+
+    @Column(name = "disabled", nullable = false)
+    open var disabled: Boolean = false
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "ticket_tag_group_id", referencedColumnName = "id", nullable = false)
