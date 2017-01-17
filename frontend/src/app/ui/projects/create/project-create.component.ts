@@ -1,8 +1,9 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, ViewContainerRef } from '@angular/core';
 import { ApiCallService, ApiCallResult } from '../../../service';
 import { ProjectApi, CreateProjectRequestJson, ProjectResultJson } from '../../../api';
 import { showValidationError } from '../../../util/error';
 import { Modal } from 'angular2-modal/plugins/bootstrap';
+import { Overlay } from 'angular2-modal';
 
 @Component({
   selector: 'tt-project-create',
@@ -21,9 +22,15 @@ export class ProjectCreateComponent {
   @Output() readonly created = new EventEmitter<ProjectResultJson>();
 
   // TODO make readonly once Intellij supports readonly properties in ctr
-  constructor(private apiCallService: ApiCallService,
+  constructor(
+    private apiCallService: ApiCallService,
     private projectApi: ProjectApi,
-    private modal: Modal) { }
+    private modal: Modal,
+    private overlay: Overlay,
+    private vcRef: ViewContainerRef,
+  ) {
+    overlay.defaultViewContainer = vcRef;
+  }
 
   onSubmit(): void {
     this.working = true;
@@ -49,7 +56,7 @@ export class ProjectCreateComponent {
     this.request.icon = image ? image.split(',')[1] : undefined;
   }
 
-  private error(result: ApiCallResult<void|{}>): void {
+  private error(result: ApiCallResult<void | {}>): void {
     showValidationError(this.modal, result);
   }
 }

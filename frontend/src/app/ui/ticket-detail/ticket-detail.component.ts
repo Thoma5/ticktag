@@ -1,7 +1,8 @@
 const uuidV4 = require('uuid/v4');
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Modal } from 'angular2-modal/plugins/bootstrap';
+import { Overlay } from 'angular2-modal';
 import { ApiCallService, ApiCallResult } from '../../service';
 import { TaskQueue } from '../../util/task-queue';
 import {
@@ -78,7 +79,11 @@ export class TicketDetailComponent implements OnInit {
     private ticketEventApi: TicketeventApi,
     private ticketAssignmentApi: TicketuserrelationApi,
     private ticketTagRelationApi: TickettagrelationApi,
-    private modal: Modal) {
+    private modal: Modal,
+    private overlay: Overlay,
+    private vcRef: ViewContainerRef,
+    ) {
+    overlay.defaultViewContainer = vcRef;
   }
 
   ngOnInit(): void {

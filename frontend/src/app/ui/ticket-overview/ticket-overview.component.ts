@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Modal } from 'angular2-modal/plugins/bootstrap';
+import { Overlay } from 'angular2-modal';
 import { ApiCallService } from '../../service';
 import {
   TicketApi, TicketOverviewResultJson, PageTicketOverviewResultJson, AssignmenttagApi,
@@ -69,7 +70,11 @@ export class TicketOverviewComponent implements OnInit {
     private ticketAssignmentApi: TicketuserrelationApi,
     private ticketTagRelationApi: TickettagrelationApi,
     private timeCategoryApi: TimecategoryApi,
-    private modal: Modal) {
+    private modal: Modal,
+    private overlay: Overlay,
+    private vcRef: ViewContainerRef,
+    ) {
+    overlay.defaultViewContainer = vcRef;
   }
 
   private newTicketOverview(
