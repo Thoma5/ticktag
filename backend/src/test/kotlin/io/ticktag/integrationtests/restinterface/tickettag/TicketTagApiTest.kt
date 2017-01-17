@@ -102,7 +102,7 @@ class TicketTagApiTest : ApiBaseTest() {
         withUser(LOCAL_USER_ID) { ->
             ticketTagController.deleteTicketTag(ticketTagToDeleteId)
             val tag = ticketTagRepo.findOne(ticketTagToDeleteId)
-            if (tag != null) Assert.fail()
+            if (tag == null || !tag.disabled) Assert.fail()
         }
     }
 
