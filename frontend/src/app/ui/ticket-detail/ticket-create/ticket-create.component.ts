@@ -9,6 +9,7 @@ export type TicketCreateEvent = {
   title: string,
   description: string,
   commands: imm.List<grammar.Cmd>,
+  navigate: boolean
 };
 
 @Component({
@@ -31,12 +32,13 @@ export class TicketCreateComponent {
   description: CommandTextviewSaveEvent = this.getEmptyDescription();
   title: string = '';
 
-  onSubmit() {
+  onSubmit(navigate: boolean) {
     this.ticketAdd.emit({
       projectId: this.projectId,
       title: this.title,
       description: this.description.text,
-      commands: this.description.commands
+      commands: this.description.commands,
+      navigate: navigate
     });
   }
 
