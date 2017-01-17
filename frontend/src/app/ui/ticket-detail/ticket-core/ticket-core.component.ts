@@ -57,6 +57,7 @@ export class TicketCoreComponent implements OnChanges {
   @Input() number: number;
   @Input() creator: TicketDetailUser;
   @Input() createTime: number;
+  @Input() parentTicket: TicketDetail | undefined;
   @Input() allTicketTags: imm.Map<string, TicketDetailTag>;
   @Input() allTimeCategories: imm.Map<string, TicketDetailTimeCategory>;
   @Input() allAssignmentTags: imm.Map<string, TicketDetailAssTag>;

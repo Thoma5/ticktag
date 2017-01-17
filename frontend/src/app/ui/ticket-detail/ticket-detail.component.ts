@@ -482,6 +482,10 @@ export class TicketDetailComponent implements OnInit {
         wantedTicketIds.push(...ticket.referencedTicketIds);
         // And tickets that reference this ticket
         wantedTicketIds.push(...ticket.referencingTicketIds);
+        // And our parent
+        if (ticket.parentTicketId != null) {
+          wantedTicketIds.push(ticket.parentTicketId);
+        }
 
         // We need users, comments and parent tickets from events
         events.forEach(event => {
