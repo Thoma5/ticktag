@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiCallService } from '../../service';
 import { TickettagApi } from '../../api/api/TickettagApi';
+import { TickettaggroupApi } from '../../api/api/TickettaggroupApi';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TicketTagResultJson } from '../../api/model/TicketTagResultJson';
+import { TicketTagGroupResultJson } from '../../api/model/TicketTagGroupResultJson';
+
 import { Observable } from 'rxjs';
 
 @Component({
@@ -17,12 +20,14 @@ export class TicketTagsComponent implements OnInit {
     cu = false;
     mode = '';
     toUpdatetTcketTag: TicketTagResultJson = undefined;
+    tagGroups: TicketTagGroupResultJson[] = [];
     private ticketTags: TicketTagResultJson[] = [];
 
     constructor(
         private router: Router,
         private route: ActivatedRoute,
         private ticketTagApi: TickettagApi,
+        private ticketTagGroupApi: TickettaggroupApi,
         private apiCallService: ApiCallService) {
     }
 
@@ -37,14 +42,19 @@ export class TicketTagsComponent implements OnInit {
                 this.loading = false;
             });
     }
+
+    public loadTags() {
+        console.log("hallo");
+    }
+
     private refresh(): Observable<void> {
-        let assignmentTags = this.apiCallService
-            .callNoError<TicketTagResultJson[]>(h => this.ticketTagApi
-                .listTicketTagsUsingGETWithHttpInfo(this.ticketTagGroupId, h));
+        let tagGroups = this.apiCallService
+            .callNoError<TicketTagGroupResultJson[]>(h => this.ticketTagGroupApi
+                .listTicketTagGroupsUsingGETWithHttpInfo(this.projectId, h));
         return Observable
-            .zip(assignmentTags)
+            .zip(tagGroups)
             .do(tuple => {
-                this.ticketTags = tuple[0];
+                this.tagGroups = tuple[0];
             })
             .map(it => undefined)
             .catch(err => Observable.empty<void>());
