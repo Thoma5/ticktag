@@ -13,7 +13,6 @@ import java.util.*
 
 enum class Scope {
     INTERNAL,
-    ANONYMOUS,
     REGULAR
 }
 
@@ -29,12 +28,7 @@ data class Principal(
 ) {
     companion object {
         val INTERNAL = Principal(UUID(-1, -1), null, Scope.INTERNAL, null, null, null, null, null)
-        val ANONYMOUS = Principal(UUID(-1, -1), null, Scope.ANONYMOUS, null, null, null, null, null)
     }
-
-    fun isInternal(): Boolean = scope == Scope.INTERNAL
-
-    fun isAnonymous(): Boolean = scope == Scope.ANONYMOUS
 
     fun isId(otherId: UUID?): Boolean {
 
