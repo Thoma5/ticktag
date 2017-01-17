@@ -1,0 +1,54 @@
+ @import '../../../style/constants.scss';
+
+.loading {
+  @extend %loading
+}
+
+.tag {
+  @extend %tag;
+}
+
+.tag-wrapper {
+
+}
+
+ .actions {
+
+ }
+
+.title {
+ @extend %title;
+ margin-bottom: $small-gap;
+}
+
+.subtitle {
+  @extend %subtitle;
+  margin-bottom: $small-gap;
+}
+
+.assignment-tags {
+ margin-top: 50px;
+}
+
+.container {
+  width: 70%;
+  min-width: 500px;
+  display: inline-block;
+}
+
+.assignment-tag {
+  margin-bottom: $internal-gap;
+}
+
+ .no-scroll {
+   overflow: hidden;
+ }
+
+ * .btn {
+   border-radius: 0;
+ }
+
+ .overlay {
+   @extend %overlay;
+ }
+

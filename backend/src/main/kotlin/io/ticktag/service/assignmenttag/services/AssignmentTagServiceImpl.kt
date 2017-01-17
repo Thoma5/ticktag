@@ -25,7 +25,7 @@ open class AssignmentTagServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listAssignmentTags(@P("authProjectId") projectId: UUID): List<AssignmentTagResult> {
-        return assignmentTags.findByProjectId(projectId).map(::AssignmentTagResult)
+        return assignmentTags.findByProjectIdAndDisabled(projectId, false).map(::AssignmentTagResult)
     }
 
     @PreAuthorize(AuthExpr.READ_ASSIGNMENTTAG)
@@ -64,6 +64,13 @@ open class AssignmentTagServiceImpl @Inject constructor(
             assignmentTag.color = updateAssignmentTag.color
         }
         return AssignmentTagResult(assignmentTag)
+    }
+
+    @PreAuthorize(AuthExpr.EDIT_ASSIGNMENTTAG)
+    override fun deleteAssignmentTag(@P("authAssignmentTagId") id: UUID) {
+        val assignmentTag = assignmentTags.findOne(id) ?: throw NotFoundException()
+        assignmentTag.normalizedName = ""
+        assignmentTag.disabled = true
     }
 
     /** No server side search

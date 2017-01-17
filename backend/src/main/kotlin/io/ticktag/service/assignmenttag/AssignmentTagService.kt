@@ -11,4 +11,5 @@ interface AssignmentTagService {
     fun getAssignmentTag(id: UUID): AssignmentTagResult
     fun updateAssignmentTag(id: UUID, updateAssignmentTag: UpdateAssignmentTag): AssignmentTagResult
     fun listAssignmentTags(projectId: UUID): List<AssignmentTagResult>
+    fun deleteAssignmentTag(id: UUID)
 }
