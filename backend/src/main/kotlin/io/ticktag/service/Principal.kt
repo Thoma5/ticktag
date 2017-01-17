@@ -30,6 +30,8 @@ data class Principal(
         val INTERNAL = Principal(UUID(-1, -1), null, Scope.INTERNAL, null, null, null, null, null)
     }
 
+    fun isInternal(): Boolean = scope == Scope.INTERNAL
+
     fun isId(otherId: UUID?): Boolean {
 
         return this.id == otherId ?: return false
