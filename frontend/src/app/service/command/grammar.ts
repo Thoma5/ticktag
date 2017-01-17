@@ -23,18 +23,20 @@ export const CLOSE_CMD_REGEX = r(String.raw`close`);
 export const REOPEN_CMD_REGEX = r(String.raw`reopen`);
 export const TAG_CMD_REGEX = r(String.raw`-?tag:${TAG_REGEX}`);
 export const EST_CMD_REGEX = r(String.raw`est:${TIME_REGEX}`);
+export const SP_CMD_REGEX = r(String.raw`sp:[0-9]+`);
+export const DUE_CMD_REGEX = r(String.raw`due:[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}`);
 
 export const COMMAND_REGEX = r(
   String.raw`!(?:` +
   String.raw`${TIME_CMD_REGEX}|${ASSIGN_CMD_REGEX}|${UNASSIGN_CMD_REGEX}|` +
   String.raw`${CLOSE_CMD_REGEX}|${REOPEN_CMD_REGEX}|${TAG_CMD_REGEX}|` +
-  String.raw`${EST_CMD_REGEX}` +
+  String.raw`${EST_CMD_REGEX}|${SP_CMD_REGEX}|${DUE_CMD_REGEX}` +
   String.raw`)`
 );
 export const TICKET_REF_REGEX = r(String.raw`#[0-9]+`);
 export const EXPR_REGEX = r(String.raw`${SEPERATOR_FRONT_REGEX}(${COMMAND_REGEX}|${TICKET_REF_REGEX})(?=${SEPERATOR_BACK_REGEX})`);
 
-export const COMMAND_STRINGS = ['time', 'assign', '-assign', 'close', 'reopen', 'tag', '-tag', 'est'];
+export const COMMAND_STRINGS = ['time', 'assign', '-assign', 'close', 'reopen', 'tag', '-tag', 'est', 'sp', 'due'];
 
 // TypeScript discriminated union over the `cmd` field.
 export type TimeCmd = {
@@ -70,11 +72,19 @@ export type EstCmd = {
   cmd: 'est',
   minutes: number,
 };
+export type SpCmd = {
+  cmd: 'sp',
+  number: number,
+};
+export type DueCmd = {
+  cmd: 'due',
+  date: number,
+};
 export type RefTicketCmd = {
   cmd: 'refTicket',
   ticket: number,
 };
-export type Cmd = TimeCmd | AssignCmd | UnassignCmd | CloseCmd | ReopenCmd | TagCmd | UntagCmd | EstCmd | RefTicketCmd;
+export type Cmd = TimeCmd | AssignCmd | UnassignCmd | CloseCmd | ReopenCmd | TagCmd | UntagCmd | EstCmd | SpCmd | DueCmd | RefTicketCmd;
 
 export function extractCommands(string: string): imm.List<Cmd> {
   let result = new Array<Cmd>();
@@ -124,6 +134,19 @@ export function extractCommands(string: string): imm.List<Cmd> {
       result.push({
         cmd: 'est',
         minutes: parseTime(time),
+      });
+    } else if (command.startsWith('!sp:')) {
+      let sp = parseInt(command.substr(4), 10);
+      result.push({
+        cmd: 'sp',
+        number: sp,
+      });
+    } else if (command.startsWith('!due:')) {
+      let [year, month, day] = command.substr(5).split('-').map(s => parseInt(s, 10));
+      let date = new Date(year, month - 1, day);
+      result.push({
+        cmd: 'due',
+        date: date.getTime(),
       });
     } else if (command[0] === '#') {
       result.push({

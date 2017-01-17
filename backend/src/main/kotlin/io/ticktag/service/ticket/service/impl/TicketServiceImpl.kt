@@ -106,7 +106,7 @@ open class TicketServiceImpl @Inject constructor(
                                         storyPointsOne: Int?,
                                         storyPointsTwo: Int?,
                                         storyPointsGreater: Boolean?,
-                                        ticketOpen: Boolean?,
+                                        open: Boolean?,
                                         parent: Int?): List<TicketStoryPointResult> {
         if (progressOne?.isNaN() ?: false || progressOne?.isInfinite() ?: false) {
             throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueProgressOne"))))
@@ -150,7 +150,6 @@ open class TicketServiceImpl @Inject constructor(
         return toResultDtos(tickets.findByIds(permittedIds)).associateBy { it.id }
     }
 
-    //TODO: Reference: Mentions, Tags
     @PreAuthorize(AuthExpr.PROJECT_USER)
     override fun createTicket(@Valid createTicket: CreateTicket, principal: Principal, @P("authProjectId") projectId: UUID): TicketResult {
 
@@ -270,6 +269,9 @@ open class TicketServiceImpl @Inject constructor(
             if (ticket.descriptionComment.text != updateTicket.description.value)
                 ticketEvents.insert(TicketEventCommentTextChanged.create(ticket, user, ticket.descriptionComment, ticket.descriptionComment.text, updateTicket.description.value))
             ticket.descriptionComment.text = updateTicket.description.value
+        }
+        if (updateTicket.commands != null) {
+            commandService.applyCommands(ticket.descriptionComment, updateTicket.commands, principal)
         }
 
         return toResultDto(ticket)

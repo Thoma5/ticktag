@@ -2,6 +2,7 @@ package io.ticktag.restinterface.comment.schema
 
 import io.ticktag.service.command.dto.Command
 import java.time.Duration
+import java.time.Instant
 
 data class CommandJson(
         val cmd: String,
@@ -9,7 +10,9 @@ data class CommandJson(
         val category: String?,
         val user: String?,
         val tag: String?,
-        val ticket: Int?
+        val ticket: Int?,
+        val number: Int?,
+        val date: Instant?
 ) {
     fun toCommentCommand(): Command? {
         return when (cmd) {
@@ -21,6 +24,8 @@ data class CommandJson(
             "tag" -> Command.Tag(tag ?: return null)
             "untag" -> Command.Untag(tag ?: return null)
             "est" -> Command.Est(Duration.ofMinutes(minutes ?: return null))
+            "sp" -> Command.Sp(number ?: return null)
+            "due" -> Command.Due(date ?: return null)
             "refTicket" -> Command.RefTicket(ticket ?: return null)
             else -> null
         }

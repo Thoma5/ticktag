@@ -26,7 +26,7 @@ export class TicketCoreComponent implements OnChanges {
 
   @Input() description: string;
   @Input() descriptionTransient = false;
-  @Output() readonly descriptionChange = new EventEmitter<string>();
+  @Output() readonly descriptionChange = new EventEmitter<{text: string, commands: imm.List<Cmd>}>();
 
   @Input() storypoints: number;
   @Input() storypointsTransient = false;
@@ -90,7 +90,10 @@ export class TicketCoreComponent implements OnChanges {
 
   onSaveDescription() {
     this.editingDescription = false;
-    this.descriptionChange.emit(this.currentDescripton);
+    this.descriptionChange.emit({
+      text: this.currentDescripton,
+      commands: this.currentCommands
+    });
   }
 
   onAbortDescription() {

@@ -42,5 +42,7 @@ export interface UpdateTicketRequestJson {
 
     parentTicketId?: models.UpdateNullableValueJsonstring;
 
+    commands?: Array<models.CommandJson>;
+
 }
 
