@@ -60,8 +60,9 @@ open class RestSecurityConfig @Inject constructor(
         http
                 .addFilterBefore(restAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
                 .authorizeRequests()
-                .antMatchers("/webjars/**", "/swagger/**", "/v2/api-docs").permitAll()
-                .antMatchers("/auth/login").permitAll()
+                .antMatchers("/webjars/**", "/swagger/**", "/v2/api-docs").permitAll()  // Swagger UI
+                .antMatchers("/auth/login").permitAll()  // Login request
+                .antMatchers("/user/image/**").permitAll()  // Image requests (uses side channel for auth)
                 .anyRequest().authenticated().and()
                 .logout().disable()
                 .formLogin().disable()
@@ -107,7 +108,7 @@ open class RestSecurityConfigBeans {
                 if (tokenKey != null) {
                     try {
                         val rawToken = tokenService.verifyToken(tokenKey)
-                        if (rawToken != null && rawToken.keyCreationTime - Date.from(Instant.now()).time < 7 * 24 * 60 * 60 * 1000) {
+                        if (rawToken != null && Date.from(Instant.now()).time - rawToken.keyCreationTime < 7 * 24 * 60 * 60 * 1000) {
                             val token = RestAuthToken.fromString(rawToken.extendedInformation)
                             val user = users.findOne(token.userId)
                             if (user != null && user.currentToken == token.currentToken) {
@@ -120,11 +121,6 @@ open class RestSecurityConfigBeans {
                     } catch (ex: Exception) {
                         LOG.info("Got an illegal token (exception was $ex)")
                     }
-                } else {
-                    val principal = Principal.ANONYMOUS
-                    val auth = PreAuthenticatedAuthenticationToken(principal, null, emptySet())
-                    auth.details = WebAuthenticationDetails(request)
-                    SecurityContextHolder.getContext().authentication = auth
                 }
 
                 filterChain.doFilter(request, response)
