@@ -41,6 +41,7 @@ export class TicketTagCreateComponent {
         if (result.isValid) {
           this.request.name = '';
           this.request.color = '';
+          this.request.order = 0;
           this.created.emit(result.result);
         } else {
           this.error(result);

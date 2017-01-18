@@ -6,16 +6,20 @@
 	<tabset>
 		<tab heading='Ticket Tags'>
 			<div class='core'>
-				<button type="button" class="btn btn-primary pull-right" (click)="onStartCreate()"><span class="glyphicon glyphicon-plus"></span>  New Ticket Tag</button>
+				<button type="button" class="btn btn-primary" (click)="onStartCreate()"><span class="glyphicon glyphicon-plus"></span>  New Ticket Tag</button>
 				<table class="table ticket-tags">
+				<tr><th>Name</th><th>Tag Group</th><th>Order</th><th>Update & Delete</th></tr>
 					<tr *ngFor='let ticketTag of ticketTags' class="ticket-tag">
-						<td class="tag-wrapper">
+						<td class="tag-wrapper" (click)="onEditClicked(ticketTag)">
 							<span class="tag" [style.backgroundColor]="'#' + ticketTag.color">
-				<span class="name">{{ ticketTag.name }}</span>
+								<span class="name">{{ ticketTag.name }}</span>
 							</span>
 						</td>
-						<td class="group">
+						<td class="group" (click)="onEditClicked(ticketTag)">
 							{{ getTagGroupById(ticketTag.ticketTagGroupId).name }}
+						</td>
+						<td class="order" (click)="onEditClicked(ticketTag)">
+							{{ ticketTag.order }}
 						</td>
 						<td class="actions">
 							<button (click)="onEditClicked(ticketTag)" class="btn btn-xs"><span class="glyphicon glyphicon-edit"></span></button>

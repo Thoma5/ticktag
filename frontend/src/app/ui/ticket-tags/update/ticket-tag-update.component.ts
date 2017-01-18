@@ -60,6 +60,7 @@ export class TicketTagUpdateComponent implements OnInit {
   revert() {
     this.request.name = this.ticketTag.name;
     this.request.color = '#' + this.ticketTag.color;
+    this.request.order = this.ticketTag.order;
     this.request.ticketTagGroupId = this.ticketTag.ticketTagGroupId;
   }
 

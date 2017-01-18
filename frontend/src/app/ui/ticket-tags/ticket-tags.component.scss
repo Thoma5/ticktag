@@ -1,5 +1,9 @@
  @import '../../../style/constants.scss';
 
+th {
+	font-weight: bold;
+}
+ 
 .loading {
   @extend %loading
 }
@@ -31,7 +35,7 @@
 }
 
 .ticket-tags {
-	margin-top: 50px;
+	margin-top: 25px;
 }
 
 .mt-10{

@@ -7,7 +7,6 @@ import { TicketTagResultJson } from '../../api/model/TicketTagResultJson';
 import { CreateTicketTagGroupRequestJson } from '../../api/model/CreateTicketTagGroupRequestJson';
 import { UpdateTicketTagGroupRequestJson } from '../../api/model/UpdateTicketTagGroupRequestJson';
 import { TicketTagGroupResultJson } from '../../api/model/TicketTagGroupResultJson';
-import * as imm from 'immutable';
 import { Observable } from 'rxjs';
 
 @Component({

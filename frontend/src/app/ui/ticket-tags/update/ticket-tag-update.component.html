@@ -23,7 +23,13 @@
       <span *ngIf="f.controls.color?.touched && !f.controls.color?.valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
     </div>
   </div>
-
+  <div class="row">
+    <label for="order">Order *</label>
+    <div class="form-group" [ngClass]="{'has-error has-feedback': f.controls.order?.touched && ! f.controls.order?.valid}">
+      <input class="form-control" type="number" name="order" [(ngModel)]="request.order" required>
+      <span *ngIf="f.controls.order?.touched && !f.controls.order?.valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
+    </div>
+  </div>
   <div class="row">
     <input type="button" class="btn btn-default btn-block" (click)="revert()" value="Revert Changes">
     <input type="button" type="submit" [disabled]="!f.form.valid || request.password !== confPassword" class="btn btn-success btn-block"
