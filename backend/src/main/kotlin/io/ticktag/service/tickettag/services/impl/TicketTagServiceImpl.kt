@@ -79,6 +79,7 @@ open class TicketTagServiceImpl @Inject constructor(
         if (ticketTag.order != null) {
             ticketTagToUpdate.order = ticketTag.order
         }
+        ticketTagToUpdate.ticketTagGroup =  ticketTagGroups.findOne(ticketTag.ticketTagGroupId) ?: throw NotFoundException()
         return TicketTagResult(ticketTagToUpdate)
     }
 

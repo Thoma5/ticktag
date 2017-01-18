@@ -4,6 +4,7 @@ import { showValidationError } from '../../../util/error';
 import { Modal } from 'angular2-modal/plugins/bootstrap';
 import { CreateTicketTagRequestJson } from '../../../api/model/CreateTicketTagRequestJson';
 import { TicketTagResultJson } from '../../../api/model/TicketTagResultJson';
+import { TicketTagGroupResultJson } from '../../../api/model/TicketTagGroupResultJson';
 import { TickettagApi } from '../../../api/api/TickettagApi';
 
 @Component({
@@ -19,10 +20,9 @@ export class TicketTagCreateComponent {
     color: '',
     order: 0,
     ticketTagGroupId: '',
-
   };
   working = false;
-  @Input() ticketTagGroupId: string;
+  @Input() tagGroups: TicketTagGroupResultJson[];
   @Output() readonly created = new EventEmitter<TicketTagResultJson>();
 
   constructor(
@@ -32,7 +32,7 @@ export class TicketTagCreateComponent {
 
   onSubmit(): void {
     this.working = true;
-    this.request.ticketTagGroupId = this.ticketTagGroupId;
+    this.request.ticketTagGroupId = this.request.ticketTagGroupId;
     this.request.color = this.request.color.substring(1);
     this.apiCallService
       .call<TicketTagResultJson>(h => this.assignmentTagApi.createTicketTagUsingPOSTWithHttpInfo(this.request, h))

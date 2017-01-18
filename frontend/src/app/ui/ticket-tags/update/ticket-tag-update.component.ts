@@ -4,6 +4,7 @@ import { showValidationError } from '../../../util/error';
 import { Modal } from 'angular2-modal/plugins/bootstrap';
 import { UpdateTicketTagRequestJson } from '../../../api/model/UpdateTicketTagRequestJson';
 import { TicketTagResultJson } from '../../../api/model/TicketTagResultJson';
+import { TicketTagGroupResultJson } from '../../../api/model/TicketTagGroupResultJson';
 import { TickettagApi } from '../../../api/api/TickettagApi';
 
 
@@ -17,11 +18,13 @@ export class TicketTagUpdateComponent implements OnInit {
   request: UpdateTicketTagRequestJson = {
     name: undefined,
     color: undefined,
-    order: 0
+    order: 0,
+    ticketTagGroupId: ''
   };
   active: Boolean;
   working = false;
   @Input() ticketTag: TicketTagResultJson;
+  @Input() tagGroups: TicketTagGroupResultJson[];
   @Output() readonly updated = new EventEmitter<TicketTagResultJson>();
 
   constructor(
@@ -44,6 +47,7 @@ export class TicketTagUpdateComponent implements OnInit {
         if (result.isValid) {
           this.request.name = '';
           this.request.color = '';
+          this.request.ticketTagGroupId = '';
           this.updated.emit(result.result);
         } else {
           this.error(result);
@@ -56,6 +60,7 @@ export class TicketTagUpdateComponent implements OnInit {
   revert() {
     this.request.name = this.ticketTag.name;
     this.request.color = '#' + this.ticketTag.color;
+    this.request.ticketTagGroupId = this.ticketTag.ticketTagGroupId;
   }
 
   private error(result: ApiCallResult<void | {}>): void {

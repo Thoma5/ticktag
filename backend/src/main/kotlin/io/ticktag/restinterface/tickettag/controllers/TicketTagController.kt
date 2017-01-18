@@ -29,7 +29,7 @@ open class TicketTagController @Inject constructor(
     open fun updateTicketTag(@PathVariable(name = "id") id: UUID,
                              @RequestBody req: UpdateTicketTagRequestJson
     ): TicketTagResultJson {
-        val ticketTag = ticketTagService.updateTicketTag(id, UpdateTicketTag(req.name, req.color, req.order))
+        val ticketTag = ticketTagService.updateTicketTag(id, UpdateTicketTag(req.name, req.color, req.order, req.ticketTagGroupId))
         return TicketTagResultJson(ticketTag)
     }
 

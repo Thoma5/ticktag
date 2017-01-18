@@ -7,13 +7,16 @@
     </div>
   </div>
   <div class="row">
-    <label for="color">Color *</label>
-    <div class="form-group" [ngClass]="{'has-error has-feedback': f.controls.color?.touched && ! f.controls.color?.valid}">
-      <input class="form-control" type="color" name="color" [(ngModel)]="request.color" required>
-      <span *ngIf="f.controls.color?.touched && !f.controls.color?.valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
+    <label for="taggroup">Tag Group *</label>
+    <div class="form-group" [ngClass]="{'has-error has-feedback': f.controls.taggroup?.touched && ! f.controls.taggroup?.valid}">
+      <select class="form-control" id="taggroup" name="taggroup" size="1" placeholder="Tag Groups" [(ngModel)]="request.ticketTagGroupId"
+        required>
+				<option *ngFor="let tagGroup of tagGroups" value="{{tagGroup.id}}">{{tagGroup.name}}</option>
+			</select>
+      <span *ngIf="f.controls.taggroup?.touched && !f.controls.taggroup?.valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
     </div>
   </div>
-   <div class="row">
+  <div class="row">
     <label for="color">Color *</label>
     <div class="form-group" [ngClass]="{'has-error has-feedback': f.controls.color?.touched && ! f.controls.color?.valid}">
       <input class="form-control" type="color" name="color" [(ngModel)]="request.color" required>

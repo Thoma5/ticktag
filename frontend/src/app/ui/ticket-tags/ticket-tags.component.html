@@ -53,7 +53,7 @@
 						</div>
 						<div class="row">
 							<div class="col-sm-2" *ngIf="ticketTagGroupId != 'notSelected'">
-								<div class="form-group" *ngIf="ticketTagGroupId != 'notSelected'" [ngClass]="{'has-error has-feedback': f.controls.name?.touched && ! f.controls.name?.valid}">
+								<div class="form-group" *ngIf="ticketTagGroupId != 'notSelected'" [ngClass]="{'has-error has-feedback': f.controls.exclusive?.touched && ! f.controls.exclusive?.valid}">
 									<label for="exclusive">Exclusive</label>
 									<input class="form-control" type="checkbox" name="exclusive" [(ngModel)]="currentTagGroup.exclusive" required>
 								</div>
@@ -79,8 +79,8 @@
 				</h3>
 			</div>
 			<div class="body">
-				<tt-ticket-tag-create *ngIf="mode === 'Create'" (created)="finishCreateUpdate()" [ticketTagGroupId]="ticketTagGroupId"></tt-ticket-tag-create>
-				<tt-ticket-tag-update *ngIf="mode === 'Update' && toUpdateTicketTag" [ticketTag]="toUpdateTicketTag" (updated)="finishCreateUpdate()"></tt-ticket-tag-update>
+				<tt-ticket-tag-create *ngIf="mode === 'Create'" (created)="finishCreateUpdate()" [tagGroups]="tagGroups"></tt-ticket-tag-create>
+				<tt-ticket-tag-update *ngIf="mode === 'Update' && toUpdateTicketTag" [tagGroups]="tagGroups" [ticketTag]="toUpdateTicketTag" (updated)="finishCreateUpdate()"></tt-ticket-tag-update>
 			</div>
 		</div>
 	</div>

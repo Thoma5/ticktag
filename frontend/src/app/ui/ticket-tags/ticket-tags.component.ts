@@ -9,7 +9,6 @@ import { UpdateTicketTagGroupRequestJson } from '../../api/model/UpdateTicketTag
 import { TicketTagGroupResultJson } from '../../api/model/TicketTagGroupResultJson';
 import * as imm from 'immutable';
 import { Observable } from 'rxjs';
-import { idListToMap } from '../../util/listmaputils';
 
 @Component({
     selector: 'tt-ticket-tags',
@@ -24,7 +23,6 @@ export class TicketTagsComponent implements OnInit {
     cu = false;
     mode = '';
     toUpdateTicketTag: TicketTagResultJson = undefined;
-    private tagGroupsMap: imm.Map<string, TicketTagGroupResultJson>;
     private tagGroups: TicketTagGroupResultJson[] = [];
     private ticketTags: TicketTagResultJson[] = [];
 
@@ -68,11 +66,12 @@ export class TicketTagsComponent implements OnInit {
     }
 
     setTagGroup(): void {
-        this.currentTagGroup = this.getTagGroupById(this.ticketTagGroupId);
+        let g = this.getTagGroupById(this.ticketTagGroupId);
+        this.currentTagGroup = { id: g.id, name: g.name, projectId: g.projectId, exclusive: g.exclusive, required: g.required };
     }
 
     getTagGroupById(id: string) {
-        return this.tagGroups.find(g => g.id == id);
+        return this.tagGroups.find(g => g.id === id);
     }
 
     onDeleteClicked(tag: TicketTagResultJson) {
@@ -97,12 +96,15 @@ export class TicketTagsComponent implements OnInit {
 
     onNewTagGroupClicked() {
         this.ticketTagGroupId = 'new';
-        this.currentTagGroup = { id: "", name: "", projectId: this.projectId, exclusive: false, required: false };
+        this.currentTagGroup = { id: '', name: '', projectId: this.projectId, exclusive: false, required: false };
     }
 
     onSaveTagGroupClicked() {
-        if (this.ticketTagGroupId == 'new') {
-            let createTagGroup: CreateTicketTagGroupRequestJson = { name: this.currentTagGroup.name, projectId: this.projectId, exclusive: this.currentTagGroup.exclusive };
+        if (this.ticketTagGroupId === 'new') {
+            let createTagGroup: CreateTicketTagGroupRequestJson = {
+                name: this.currentTagGroup.name,
+                projectId: this.projectId, exclusive: this.currentTagGroup.exclusive
+            };
             this.apiCallService
                 .call<TicketTagGroupResultJson>(h => this.ticketTagGroupApi
                     .createTicketTagGroupUsingPOSTWithHttpInfo(createTagGroup, h))
@@ -113,7 +115,10 @@ export class TicketTagsComponent implements OnInit {
                 undefined,
                 () => { this.finishCreateUpdate(); });
         } else {
-            let updateTagGroup: UpdateTicketTagGroupRequestJson = { name: this.currentTagGroup.name, exclusive: this.currentTagGroup.exclusive };
+            let updateTagGroup: UpdateTicketTagGroupRequestJson = {
+                name: this.currentTagGroup.name,
+                exclusive: this.currentTagGroup.exclusive
+            };
             this.apiCallService
                 .call<TicketTagGroupResultJson>(h => this.ticketTagGroupApi
                     .updateTicketTagGroupUsingPUTWithHttpInfo(this.currentTagGroup.id, updateTagGroup, h))
