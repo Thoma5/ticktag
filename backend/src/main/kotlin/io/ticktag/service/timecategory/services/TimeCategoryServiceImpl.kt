@@ -31,7 +31,7 @@ open class TimeCategoryServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listProjectTimeCategories(@P("authProjectId") projectId: UUID): List<TimeCategoryResult> {
-        return timeCategories.findByProjectId(projectId).map(::TimeCategoryResult)
+        return timeCategories.findByProjectIdAndDisabled(projectId, false).map(::TimeCategoryResult)
     }
 
     @PreAuthorize(AuthExpr.PROJECT_ADMIN)
@@ -51,7 +51,8 @@ open class TimeCategoryServiceImpl @Inject constructor(
     @PreAuthorize(AuthExpr.WRITE_TIMECATEGORY)
     override fun deleteTimeCategory(@P("authTimeCategoryId") id: UUID) {
         val timeCategoryToDelete = timeCategories.findOne(id) ?: throw NotFoundException()
-        timeCategories.delete(timeCategoryToDelete)
+        timeCategoryToDelete.normalizedName = ""
+        timeCategoryToDelete.disabled = true
     }
 
     @PreAuthorize(AuthExpr.WRITE_TIMECATEGORY)
