@@ -13,6 +13,13 @@
       <span *ngIf="f.controls.color?.touched && !f.controls.color?.valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
     </div>
   </div>
+   <div class="row">
+    <label for="color">Color *</label>
+    <div class="form-group" [ngClass]="{'has-error has-feedback': f.controls.color?.touched && ! f.controls.color?.valid}">
+      <input class="form-control" type="color" name="color" [(ngModel)]="request.color" required>
+      <span *ngIf="f.controls.color?.touched && !f.controls.color?.valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
+    </div>
+  </div>
   <div class="row">
     <input type="button" type="submit" [disabled]="!f.form.valid" class="btn btn-success btn-block" *ngIf="!working" (click)="onSubmit()"
       value="Create Ticket Tag">

@@ -23,10 +23,6 @@
 
 .core {
     @extend %card;
-    position: relative;
-    max-width: 1024px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .subtitle {
@@ -34,14 +30,17 @@
   margin-bottom: $small-gap;
 }
 
-.assignment-tags {
- margin-top: 50px;
+.ticket-tags {
+	margin-top: 50px;
 }
 
-.container {
-  width: 70%;
-  min-width: 500px;
-  display: inline-block;
+.mt-10{
+	margin-top: 10px;
+}
+
+.box {
+    position: relative;
+	max-width: 600px;
 }
 
 .ticket-tag {
@@ -54,7 +53,7 @@
 
  * .btn {
    border-radius: 0;
- }
+}
 
  .overlay {
    @extend %overlay;
