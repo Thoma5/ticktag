@@ -1,0 +1,50 @@
+ @import '../../../style/constants.scss';
+
+.loading {
+  @extend %loading
+}
+
+.tag {
+  @extend %tag;
+}
+
+ .actions {
+
+ }
+
+.title {
+ @extend %title;
+ margin-bottom: $small-gap;
+}
+
+.subtitle {
+  @extend %subtitle;
+  margin-bottom: $small-gap;
+}
+
+.time-categories {
+ margin-top: 50px;
+}
+
+.container {
+  width: 70%;
+  min-width: 500px;
+  display: inline-block;
+}
+
+.time-category {
+  margin-bottom: $internal-gap;
+}
+
+ .no-scroll {
+   overflow: hidden;
+ }
+
+ * .btn {
+   border-radius: 0;
+ }
+
+ .overlay {
+   @extend %overlay;
+ }
+

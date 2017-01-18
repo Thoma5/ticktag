@@ -1,0 +1,39 @@
+<div *ngIf="loading" class="loading">
+  <tt-loading></tt-loading>
+</div>
+<h1 class='title'>Time Categories</h1>
+<div class="container">
+  <button type="button" class="btn btn-primary pull-right" (click)="onStartCreate()"><span class="glyphicon glyphicon-plus"></span> Time Category</button>
+
+  <table class="table time-categories">
+    <tr *ngFor='let timeCategory of timeCategories' class="assignment-tag">
+      <td>
+        <span class="name">{{ timeCategory.name }}</span>
+      </td>
+      <td class="actions">
+        <button (click)="onEditClicked(timeCategory)" class="btn btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
+        <button (click)="onDeleteClicked(timeCategory)" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
+      </td>
+    </tr>
+  </table>
+</div>
+
+
+<div *ngIf="cu" class="overlay" (click)="$event.stopPropagation()">
+  <div class="overlay-body" (click)="$event.stopPropagation()">
+    <button type="button" class="exit pull-right" (click)="onStopCreate()">
+      <i class='fa fa-times'></i>
+    </button>
+    <div class="overlay-content">
+      <div class="head">
+        <h3 class="title">
+          {{mode}} Time Category
+        </h3>
+      </div>
+      <div class="body">
+        <tt-time-category-create *ngIf="mode === 'Create'" (created)="finishCreateUpdate()" [projectId]="projectId"></tt-time-category-create>
+        <tt-time-category-update *ngIf="mode === 'Update' && toUpdateTimeCategory" [timeCategory]="toUpdateTimeCategory" (updated)="finishCreateUpdate()"></tt-time-category-update>
+      </div>
+    </div>
+  </div>
+</div>

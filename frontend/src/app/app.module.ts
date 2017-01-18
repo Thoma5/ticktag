@@ -105,6 +105,9 @@ import { SidebarComponent } from './ui/sidebar/sidebar.component';
 import {AssignmentTagsComponent} from './ui/assignment-tags/assignment-tags.component';
 import {AssignmentTagCreateComponent} from './ui/assignment-tags/create/assignment-tag-create.component';
 import {AssignmentTagUpdateComponent} from './ui/assignment-tags/update/assignment-tag-update.component';
+import {TimeCategoriesComponent} from './ui/time-categories/time-categories.component';
+import {TimeCategoryCreateComponent} from './ui/time-categories/create/time-category-create.component';
+import {TimeCategoryUpdateComponent} from './ui/time-categories/update/time-category-update.component';
 
 @NgModule({
   imports: [
@@ -185,6 +188,9 @@ import {AssignmentTagUpdateComponent} from './ui/assignment-tags/update/assignme
     AssignmentTagsComponent,
     AssignmentTagCreateComponent,
     AssignmentTagUpdateComponent,
+    TimeCategoriesComponent,
+    TimeCategoryCreateComponent,
+    TimeCategoryUpdateComponent,
 
     HumanizeDurationPipe,
     FormatMomentPipe,
