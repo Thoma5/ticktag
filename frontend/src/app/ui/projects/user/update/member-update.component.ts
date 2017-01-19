@@ -8,6 +8,7 @@ import { showValidationError } from '../../../../util/error';
 import { Modal } from 'angular2-modal/plugins/bootstrap';
 import { Overlay } from 'angular2-modal';
 import { RoleResultJson } from '../../../../api/model/RoleResultJson';
+import {AssignmentTagResultJson} from "../../../../api/model/AssignmentTagResultJson";
 
 @Component({
   selector: 'tt-member-update',
@@ -17,11 +18,13 @@ import { RoleResultJson } from '../../../../api/model/RoleResultJson';
 
 export class MemberUpdateComponent implements OnInit {
   request: UpdateMemberRequestJson = {
-    projectRole: undefined
+    projectRole: undefined,
+    defaultAssignmentTagId: null
   };
   working = false;
   @Input() readonly user: ProjectUserResultJson;
   @Input() readonly roles: RoleResultJson[];
+  @Input() readonly assignmentTags: AssignmentTagResultJson[];
   @Output() readonly updated = new EventEmitter<MemberResultJson>();
 
   constructor(private apiCallService: ApiCallService,
@@ -36,6 +39,7 @@ export class MemberUpdateComponent implements OnInit {
 
   ngOnInit(): void {
     this.request.projectRole = this.user.projectRole;
+    this.request.defaultAssignmentTagId = this.user.defaultAssignmentTagId
   }
 
   onSubmit(): void {
@@ -57,6 +61,7 @@ export class MemberUpdateComponent implements OnInit {
 
   revert() {
     this.request.projectRole = this.user.projectRole;
+    this.request.defaultAssignmentTagId = this.user.defaultAssignmentTagId;
   }
 
   private error(result: ApiCallResult<void | {}>): void {

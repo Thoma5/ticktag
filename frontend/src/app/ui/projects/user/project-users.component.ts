@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiCallService, AuthService, User } from '../../../service';
 import { ProjectApi, MemberApi, ProjectUserResultJson, ProjectRoleResultJson} from '../../../api';
+import {AssignmentTagResultJson} from "../../../api/model/AssignmentTagResultJson";
+import {AssignmenttagApi} from "../../../api/api/AssignmenttagApi";
 @Component({
   selector: 'tt-project-users',
   templateUrl: './project-users.component.html',
@@ -28,6 +30,7 @@ export class ProjectUsersComponent implements OnInit {
   filter: string = '';
   private user: User;
   private roles: ProjectRoleResultJson[];
+  private tags: AssignmentTagResultJson[];
   private filterRole= '';
   private cu = false;
   private mode = '';
@@ -39,7 +42,8 @@ export class ProjectUsersComponent implements OnInit {
     private projectApi: ProjectApi,
     private memberApi: MemberApi,
     private apiCallService: ApiCallService,
-    private authService: AuthService) {
+    private authService: AuthService,
+    private assignmentTagApi: AssignmenttagApi) {
   }
 
   ngOnInit(): void {
@@ -54,6 +58,7 @@ export class ProjectUsersComponent implements OnInit {
       .subscribe(result => {});
     this.users = [];
     this.getProjectMembers();
+    this.getAssignmentTags();
     this.user = this.authService.user;
     this.authService.observeUser()
       .subscribe(user => {
@@ -96,6 +101,14 @@ export class ProjectUsersComponent implements OnInit {
       });
   }
 
+  getAssignmentTags(): void {
+    this.apiCallService
+      .callNoError<AssignmentTagResultJson[]>(h => this.assignmentTagApi.listAssignmentTagsUsingGETWithHttpInfo(this.projectId,h))
+      .subscribe(tags => {
+        this.tags = tags;
+      });
+  }
+
   onDisable(userId: string) {
     this.apiCallService
       .callNoError<void>(h => this.memberApi.deleteMemberUsingDELETEWithHttpInfo(userId, this.projectId, h))
@@ -104,7 +117,14 @@ export class ProjectUsersComponent implements OnInit {
         this.updateFilter();
       }, error => {});
   }
-
+  getAssgimentTagForID(id:string) : AssignmentTagResultJson{
+    for (let tag of this.tags ){
+      if (tag.id === id){
+        return tag
+      }
+    }
+    return null
+  }
   onStartAdd() {
     this.mode = 'Add';
     this.cu = true;

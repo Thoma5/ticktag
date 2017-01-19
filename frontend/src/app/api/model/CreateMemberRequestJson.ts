@@ -28,6 +28,8 @@ import * as models from './models';
 export interface CreateMemberRequestJson {
     projectRole: CreateMemberRequestJson.ProjectRoleEnum;
 
+    defaultAssignmentTagId?: string;
+
 }
 export namespace CreateMemberRequestJson {
     export enum ProjectRoleEnum {
