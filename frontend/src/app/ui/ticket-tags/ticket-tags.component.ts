@@ -8,6 +8,7 @@ import { CreateTicketTagGroupRequestJson } from '../../api/model/CreateTicketTag
 import { UpdateTicketTagGroupRequestJson } from '../../api/model/UpdateTicketTagGroupRequestJson';
 import { TicketTagGroupResultJson } from '../../api/model/TicketTagGroupResultJson';
 import { Observable } from 'rxjs';
+import { Modal } from 'angular2-modal/plugins/bootstrap';
 
 @Component({
     selector: 'tt-ticket-tags',
@@ -30,7 +31,8 @@ export class TicketTagsComponent implements OnInit {
         private route: ActivatedRoute,
         private ticketTagApi: TickettagApi,
         private ticketTagGroupApi: TickettaggroupApi,
-        private apiCallService: ApiCallService) {
+        private apiCallService: ApiCallService,
+        private modal: Modal) {
     }
 
     ngOnInit(): void {
@@ -56,7 +58,7 @@ export class TicketTagsComponent implements OnInit {
         return Observable
             .zip(tags, tagGroups)
             .do(tuple => {
-                this.ticketTags = tuple[0];
+                this.ticketTags = tuple[0].filter(t => t.disabled === false);
                 this.tagGroups = tuple[1];
                 this.ticketTagGroupId = 'notSelected';
             })
@@ -74,12 +76,27 @@ export class TicketTagsComponent implements OnInit {
     }
 
     onDeleteClicked(tag: TicketTagResultJson) {
+        this.modal.confirm()
+      .size('sm')
+      .isBlocking(true)
+      .showClose(false)
+      .body('Are you sure you that you want to delete this item?')
+      .okBtn('Delete')
+      .open()
+      .then(a => {
+        a.result.then(result => {
+          // Delete clicked
+      
         this.apiCallService
             .call<any>(h => this.ticketTagApi.deleteTicketTagUsingDELETEWithHttpInfo(tag.id, h))
             .subscribe(param => {
                 this.refresh().subscribe();
             }
             );
+              }).catch(result => {
+          // Cancel clicked
+        });
+      });
     }
 
     onStartCreate() {
