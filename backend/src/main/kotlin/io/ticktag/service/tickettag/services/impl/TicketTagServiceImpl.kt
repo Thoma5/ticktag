@@ -30,7 +30,7 @@ open class TicketTagServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.READ_TICKET_TAG_FOR_GROUP)
     override fun listTicketTagsInGroup(@P("authTicketTagGroupId") ticketTagGroupId: UUID): List<TicketTagResult> {
-        val ticketTags = ticketTags.findByTicketTagGroupIdAndDisabledOrderByOrderAsc(ticketTagGroupId, false)
+        val ticketTags = ticketTags.findByTicketTagGroupIdOrderByOrderAsc(ticketTagGroupId, false)
         return ticketTags.map(::TicketTagResult)
     }
 
