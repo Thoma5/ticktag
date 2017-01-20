@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewContainerRef, OnDestroy, NgZone } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewContainerRef, OnDestroy, NgZone } from '@angular/core';
 import { Location } from '@angular/common';
 import '../style/app.scss';
 import { AuthService, ApiCallService, User, ErrorHandler } from './service';
@@ -18,6 +18,8 @@ import { Observable } from 'rxjs';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
+  @ViewChild('start') sidebar: any;
+  private showLoginButton: boolean;
   private title: string;
   private user: User;
   private directTicketLinkEvent: (eventObject: JQueryEventObject) => any;
@@ -57,6 +59,13 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
         this.user = userAndProjects[0];
         this.userProjects = userAndProjects[1];
       });
+
+    this.router.events
+      .filter(e => e instanceof NavigationStart)
+      .map(e => e.url)
+      .map(url => (url.indexOf("login") < 0) ? this.showLoginButton = true : this.showLoginButton = false )
+      .distinctUntilChanged()
+      .subscribe(result => { });
 
     this.router.events
       .filter(e => e instanceof NavigationStart)
@@ -108,7 +117,7 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
 
   loadUserProjects(userId: string): Observable<imm.List<ProjectResultJson>> {
     return this.apiCallService
-    .callNoError(p => this.projectApi.listProjectsUsingGETWithHttpInfo(0, 10, 'NAME', true, null, false, false, p))
+      .callNoError(p => this.projectApi.listProjectsUsingGETWithHttpInfo(0, 10, 'NAME', true, null, false, false, p))
       .map((p: PageProjectResultJson) => imm.List(p.content));
   }
 
