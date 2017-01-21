@@ -73,7 +73,7 @@ export class TicketOverviewComponent implements OnInit {
     private modal: Modal,
     private overlay: Overlay,
     private vcRef: ViewContainerRef,
-    ) {
+  ) {
     overlay.defaultViewContainer = vcRef;
   }
 
@@ -98,8 +98,8 @@ export class TicketOverviewComponent implements OnInit {
         this.projectId = projectId;
         this.route.queryParams.subscribe(p => {
           this.ticketFilter = new TicketFilter(p['title'] || undefined,
-            p['ticketNumber'] ? (p['ticketNumber']).split(',')  : undefined,
-            p['tag'] ? (p['tag']).split(',')  : undefined,
+            p['ticketNumber'] ? (p['ticketNumber']).split(',') : undefined,
+            p['tag'] ? (p['tag']).split(',') : undefined,
             p['user'] ? (p['user']).split(',') : undefined,
             p['progressOne'] || undefined, p['progressTwo'] || undefined, p['progressGreater'] || undefined,
             p['dueDateOne'] || undefined, p['dueDateTwo'] || undefined, p['dueDateGreater'] || undefined,
@@ -107,13 +107,13 @@ export class TicketOverviewComponent implements OnInit {
             p['open'] || undefined, p['parent'] || undefined);
           this.offset = p['page'] || 0;
           this.query = this.ticketFilter.toTicketFilterString();
-        }, error => {});
+        }, error => { });
         return this.refresh(this.ticketFilter);
-      }, error => {})
+      }, error => { })
       .subscribe(result => {
         this.loading = false;
       });
-    this.filterTerms.debounceTime(900).switchMap(term => this.refresh(term)).subscribe(result => {}, error => {});
+    this.filterTerms.debounceTime(900).switchMap(term => this.refresh(term)).subscribe(result => { }, error => { });
   }
 
   private refresh(ticketFilter?: TicketFilter): Observable<void> {
@@ -149,7 +149,9 @@ export class TicketOverviewComponent implements OnInit {
       .zip(rawTicketObs, assignmentTagsObs, ticketTagsObs, projectUsersObs, timeCategoriesObs)
       .do(
       tuple => {
-        this.query = ''; // It's safe to reset the addToQuery here
+        if (!this.loading) {
+          this.query = ''; // It's safe to reset the addToQuery here
+        }
         this.allAssignmentTags = tuple[1];
         this.allTicketTags = tuple[2];
         this.allProjectUsers = tuple[3];
@@ -175,7 +177,7 @@ export class TicketOverviewComponent implements OnInit {
   onPage(event: any) {
     this.limit = event.limit;
     this.offset = event.offset;
-    this.refresh().subscribe(result => {}, error => {});
+    this.refresh().subscribe(result => { }, error => { });
   }
 
   onSort(event: any) {
@@ -190,7 +192,7 @@ export class TicketOverviewComponent implements OnInit {
     } else if (event.sorts[0].prop === 'progress') {
       this.sortprop = ['PROGRESS_' + event.sorts[0].dir.toUpperCase()];
     }
-    this.refresh().subscribe(result => {}, error => {});
+    this.refresh().subscribe(result => { }, error => { });
   }
 
   updateFilter(event: TicketFilter) {
@@ -241,12 +243,12 @@ export class TicketOverviewComponent implements OnInit {
     obs
       .do(() => this.createRunning = false)
       .subscribe(result => {
-      if (!result.isValid) {
-        showValidationError(this.modal, result);
-      } else {
-        this.creating = false;
-        this.refresh().subscribe();
-      }
-    }, error => {});
+        if (!result.isValid) {
+          showValidationError(this.modal, result);
+        } else {
+          this.creating = false;
+          this.refresh().subscribe();
+        }
+      }, error => { });
   }
 }
