@@ -1,0 +1,91 @@
+<div *ngIf="loading" class="loading">
+	<tt-loading></tt-loading>
+</div>
+<h1 class='title'>Ticket Tags</h1>
+<div class="box">
+	<tabset>
+		<tab heading='Ticket Tags'>
+			<div class='core'>
+				<button type="button" class="btn btn-primary" (click)="onStartCreate()"><span class="glyphicon glyphicon-plus"></span>  New Ticket Tag</button>
+				<table class="table ticket-tags">
+				<tr><th>Name</th><th>Tag Group</th><th>Order</th><th>Update & Delete</th></tr>
+					<tr *ngFor='let ticketTag of ticketTags' class="ticket-tag">
+						<td class="tag-wrapper" (click)="onEditClicked(ticketTag)">
+							<span class="tag" [style.backgroundColor]="'#' + ticketTag.color">
+								<span class="name">{{ ticketTag.name }}</span>
+							</span>
+						</td>
+						<td class="group" (click)="onEditClicked(ticketTag)">
+							{{ getTagGroupById(ticketTag.ticketTagGroupId).name }}
+						</td>
+						<td class="order" (click)="onEditClicked(ticketTag)">
+							{{ ticketTag.order }}
+						</td>
+						<td class="actions">
+							<button (click)="onEditClicked(ticketTag)" class="btn btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
+							<button (click)="onDeleteClicked(ticketTag)" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</tab>
+		<tab heading='Tag Groups'>
+			<div class='core'>
+				<div class='sub-header-row row'>
+					<div class="col-sm-6">
+						<select class="form-control" id="taggroupfilter" name="TagGroupFilter" size="1" placeholder="Filter tag Groups" [(ngModel)]="ticketTagGroupId"
+							(change)="setTagGroup()">
+				<option value="notSelected" disabled>Select a Tag Group</option>
+				<option *ngFor="let tagGroup of tagGroups" value="{{tagGroup.id}}">{{tagGroup.name}}</option>
+			</select>
+					</div>
+					<div class="col-sm-2">
+						<button type="button" class="btn btn-primary" (click)="onNewTagGroupClicked()"><span class="glyphicon glyphicon-plus"></span>  New Tag Group</button>
+					</div>
+					<div class="col-sm-2">
+					</div>
+				</div>
+				<div class="body">
+					<form (ngSubmit)="onSubmit()" #f="ngForm">
+						<div class="row mt-10">
+							<div class="col-sm-6" *ngIf="ticketTagGroupId != 'notSelected'">
+								<div class="form-group" [ngClass]="{'has-error has-feedback': f.controls.name?.touched && ! f.controls.name?.valid}">
+									<label for="name">Name *</label>
+									<input class="form-control" type="text" name="name" minlength="1" [(ngModel)]="currentTagGroup.name" required>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-2" *ngIf="ticketTagGroupId != 'notSelected'">
+								<div class="form-group" *ngIf="ticketTagGroupId != 'notSelected'" [ngClass]="{'has-error has-feedback': f.controls.exclusive?.touched && ! f.controls.exclusive?.valid}">
+									<label for="exclusive">Exclusive</label>
+									<input class="form-control" type="checkbox" name="exclusive" [(ngModel)]="currentTagGroup.exclusive" required>
+								</div>
+							</div>
+						</div>
+						<button type="button" class="btn btn-primary" *ngIf="ticketTagGroupId != 'notSelected'" (click)="onSaveTagGroupClicked()"><span class="glyphicon glyphicon-edit"></span>  Save Tag Group</button>
+					</form>
+				</div>
+			</div>
+		</tab>
+	</tabset>
+</div>
+
+<div *ngIf="cu" class="overlay" (click)="$event.stopPropagation()">
+	<div class="overlay-body" (click)="$event.stopPropagation()">
+		<button type="button" class="exit pull-right" (click)="onStopCreate()">
+	      <i class='fa fa-times'></i>
+	    </button>
+		<div class="overlay-content">
+			<div class="head">
+				<h3 class="title">
+					{{mode}} Ticket Tag
+				</h3>
+			</div>
+			<div class="body">
+				<tt-ticket-tag-create *ngIf="mode === 'Create'" (created)="finishCreateUpdate()" [tagGroups]="tagGroups"></tt-ticket-tag-create>
+				<tt-ticket-tag-update *ngIf="mode === 'Update' && toUpdateTicketTag" [tagGroups]="tagGroups" [ticketTag]="toUpdateTicketTag" (updated)="finishCreateUpdate()"></tt-ticket-tag-update>
+			</div>
+		</div>
+	</div>
+</div>

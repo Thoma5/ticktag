@@ -28,6 +28,8 @@ import * as models from './models';
 export interface TicketTagResultJson {
     color: string;
 
+    disabled: boolean;
+
     id: string;
 
     name: string;
