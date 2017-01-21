@@ -173,6 +173,7 @@ INSERT INTO "member" VALUES
   ('00000000-0001-0000-0000-000000000103', '00000000-0002-0000-0000-000000000103', 'USER',
    to_date('2016-10-13', 'YYYY-MM-DD'));
 -- END all role/project role permutations DO NOT ALTER
+INSERT INTO public.member (u_id, p_id, project_role, join_date, default_assignment_tag_id) VALUES ('660f2968-aa46-4870-bcc5-a3805366cff2', '00000000-0002-0000-0000-000000000001', 'ADMIN', '2017-01-21 09:46:44.501000', null);
 
 --TICKETS
 
