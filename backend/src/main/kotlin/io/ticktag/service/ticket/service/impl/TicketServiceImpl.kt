@@ -206,6 +206,9 @@ open class TicketServiceImpl @Inject constructor(
         // Execute commands
         commandService.applyCommands(newComment, createTicket.commands, principal)
 
+        //Save open Date in Events
+        ticketEvents.insert(TicketEventStateChanged.create(newTicket, user, false, true))
+
         // Neither EM nor UPDATECASCADE can reload the ticket
         val ticketResult = toResultDto(newTicket)
                 .copy(subTicketIds = newSubs, ticketAssignments = ticketAssignmentList)
