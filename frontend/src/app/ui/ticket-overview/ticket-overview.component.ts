@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Modal } from 'angular2-modal/plugins/bootstrap';
@@ -46,6 +46,8 @@ export class TicketOverviewComponent implements OnInit {
   totalElements = 0;
   query: string;
   rows: TicketOverview[] = [];
+  subTickets: TicketOverview[];
+  notAllSubtickets: boolean;
   iconsCss = {
     sortAscending: 'glyphicon glyphicon-chevron-down',
     sortDescending: 'glyphicon glyphicon-chevron-up',
@@ -54,7 +56,7 @@ export class TicketOverviewComponent implements OnInit {
     pagerPrevious: 'glyphicon glyphicon-backward',
     pagerNext: 'glyphicon glyphicon-forward'
   };
-
+  @ViewChild('ticketDataTable') table: any;
   creating = false;
   createRunning = false;
 
@@ -193,6 +195,26 @@ export class TicketOverviewComponent implements OnInit {
       this.sortprop = ['PROGRESS_' + event.sorts[0].dir.toUpperCase()];
     }
     this.refresh().subscribe(result => { }, error => { });
+  }
+  // unused, however keep it inside, since the tablecomponent will be able to view it in a proper way
+  getSubTickets(parentNumber: number) {
+    this.subTickets = [];
+    let maxSubTickets = 30;  // 30 is enough for an overview, however a hint is provided that there are more
+    this.apiCallService
+      .callNoError<PageTicketOverviewResultJson>(p => this.ticketApi
+        .listTicketsUsingGETWithHttpInfo(this.projectId, ['NUMBER_ASC'],
+        undefined, undefined, undefined, undefined,
+        undefined, undefined, undefined,
+        undefined, undefined, undefined,
+        undefined, undefined, undefined,
+        undefined, parentNumber, 0, maxSubTickets, p))
+      .subscribe(result => {
+        result.content
+          .forEach(ticket => this.subTickets.push(this.newTicketOverview(ticket, this.allProjectUsers))
+          );
+        this.notAllSubtickets = result.totalElements > maxSubTickets;
+
+      }, error => { });
   }
 
   updateFilter(event: TicketFilter) {

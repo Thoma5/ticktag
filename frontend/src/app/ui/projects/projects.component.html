@@ -16,10 +16,10 @@
     <div *ngIf="user && (user.authorities.indexOf('ADMIN') >= 0)" class="col-lg-2"><button type="button" class="btn btn-primary pull-right" (click)="onStartCreate()"><span class="glyphicon glyphicon-plus"></span> Add Project</button></div>
   </div>
   <ngx-datatable #projectDataTable class="material expandable" [rows]="rows" [columns]="columns" [columnMode]="'force'" [headerHeight]="32"
-    [footerHeight]="32" [rowHeight]="32" [detailRowHeight]="80" [externalPaging]="true" [count]="totalElements" [offset]="offset"
+    [footerHeight]="32" [rowHeight]="32" [externalPaging]="true" [count]="totalElements" [offset]="offset"
     [limit]="limit" [scrollbarH]="true" [scrollbarV]="false" [loadingIndicator]="refresh" [externalSorting]="true" (sort)="onSort($event)"
     (page)='onPage($event)' [cssClasses]="iconsCss" [selectionType]="'row'" (activate)="activate($event)">
-    <ngx-datatable-row-detail>
+    <ngx-datatable-row-detail [rowHeight]="80">
       <template let-row="row" ngx-datatable-row-detail-template>
         <div style="padding-left:4.2em;">
           <div><strong>Description</strong></div>
