@@ -16,7 +16,7 @@
           </tt-ticket-filter>
         </div>
         <div class="col-md-1 aboveTableButtons">
-          <input type="button" class="btn btn-primary button-submit pull-right" value="Add" (click)="onStartCreate()">
+          <button type="button" class="btn btn-primary button-submit pull-right" (click)="onStartCreate()"><span class="glyphicon glyphicon-plus"></span> Add Ticket</button>
         </div>
       </div>
       <ngx-datatable class="material" [rows]="rows" [columns]="columns" [columnMode]="'force'" [headerHeight]="32" [rowHeight]="32"

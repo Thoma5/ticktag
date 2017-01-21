@@ -29,7 +29,7 @@
     </a>
   </div>
   <div class="project-selection-block" [class.expanded]="showingSelection" [class.collapsed]="!showingSelection">
-    <a *ngFor="let project of otherProjects" md-button [routerLink]="['/project', project.id, 'tickets']" class='selection-button'>
+    <a *ngFor="let project of otherProjects" md-button [routerLink]="['/project', project.id, 'tickets']" [queryParams]="{open: 'true'}" class='selection-button'>
       <div class="selection-item">
         <div *ngIf="project.icon != null" class="small-project-icon">
           <img src="{{project.icon}}">
@@ -42,7 +42,7 @@
   </div>
   <div *ngIf="project != null" class="project-links">
     <div>
-      <a md-button [routerLink]="['/project', project.id, 'tickets']">
+      <a md-button [routerLink]="['/project', project.id, 'tickets']"  [queryParams]="{open: 'true'}">
         <i class='link-icon fa fa-ticket'></i>
         <span class='link-text'>Tickets</span>
       </a>

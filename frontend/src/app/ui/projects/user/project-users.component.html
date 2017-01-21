@@ -57,7 +57,7 @@
       </ngx-datatable-column>
       <ngx-datatable-column name="Actions" width="128" [resizeable]="false" [sortable]="false" *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0))">
         <template let-row="row" ngx-datatable-cell-template>
-          <button (click)="onStartUpdate(row)" class="btn btn-xs"><i class="glyphicon glyphicon-edit" tooltip="Edit Membership"
+          <button (click)="onStartUpdate(row)" class="btn btn-xs"><i class="fa fa-edit" tooltip="Edit Membership"
               tooltipPopupDelay="500" tooltipPlacement="left" tooltipTrigger="mouseenter"></i></button>
           <button (click)="onDisable(row.id)" class="btn btn-xs btn-danger" tooltip="Disable Member" tooltipPopupDelay="500" tooltipPlacement="left"
             tooltipTrigger="mouseenter"><i class='fa fa-times'></i></button>

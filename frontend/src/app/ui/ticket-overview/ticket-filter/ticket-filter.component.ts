@@ -27,7 +27,7 @@ export type CommentTextviewSaveEvent = {
 export class TicketFilterComponent implements OnInit, OnChanges {
     @Input() allUsers: imm.Map<string, TicketOverviewUser>;
     @Input() allTicketTags: imm.Map<string, TicketOverviewTag>;
-    @Input() defaultFilterOpen: boolean = false;
+    @Input() defaultFilterOpen: boolean = false; // whether the filter bar is open or not
     @Input() disabledFilterHelper: string = '';
     @Input() addToQuery: string = '';
     @Input() hideErrorBox = false;
