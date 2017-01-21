@@ -255,7 +255,7 @@ export class TicketDetailTag implements Tag {
   readonly normalizedName: string;
   readonly order: number;
   readonly color: string;
-  readonly disabled: boolean
+  readonly disabled: boolean;
 
   constructor(tag: TicketTagResultJson) {
     this.id = tag.id;
