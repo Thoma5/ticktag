@@ -52,6 +52,7 @@ export class TicketFilterComponent implements OnInit, OnChanges {
     public spPickOne: number;
     public spPickTwo: number;
     public dateMode: string = '< Smaller Than';
+    public parentNumber: number = -1;
 
     constructor(myElement: ElementRef, overlay: Overlay, vcRef: ViewContainerRef, public modal: Modal) {
         this.elementRef = myElement;
@@ -63,7 +64,7 @@ export class TicketFilterComponent implements OnInit, OnChanges {
             if (propName === 'addToQuery') {
                 let chng = changes[propName];
                 let cur = chng.currentValue;
-                if (cur !== '') {
+                if (cur !== '' && (this.query === undefined || this.query.indexOf(cur) < 0)) {
                     this.query = this.query + ' ' + cur;
                     this.filter(this.query);
                 }
@@ -81,7 +82,11 @@ export class TicketFilterComponent implements OnInit, OnChanges {
     }
 
     inputChanged(query: string): void {
-        this.searchTerms.next(query);
+        if ( query === '' ) {
+            this.filter(''); // is ignored if not done this way
+        } else {
+            this.searchTerms.next(query);
+        }
     }
 
 
@@ -258,6 +263,8 @@ export class TicketFilterComponent implements OnInit, OnChanges {
                         let tempParentNr = parseInt(command[1], 10);
                         if (tempParentNr === tempParentNr) {
                             parentNumber = tempParentNr;
+                        } else if (command[1] === 'none') {
+                            parentNumber = -1;
                         } else {
                             this.generateErrorAndMessage('invalid command', command[0], command[1]);
                             return;
@@ -333,11 +340,11 @@ export class TicketFilterComponent implements OnInit, OnChanges {
         // Split query at ' ', remove all elements in this array containing !parent and rejoin the array with ' ' to a string. 
         // Then add the new !parent command  
         this.query = this.query.split(' ').filter(e => e.indexOf('!parent') < 0).join(' ')
-            + (parentNumber === undefined ? '' : ' !parent:' + parentNumber);
+            + (parentNumber === undefined ? '' : ' !parent:' + (parentNumber < 0 ? 'none' : parentNumber));
         this.filter(this.query);
     }
 
-    datePickerOneSelection() { // TODO: fix Localtime/UTC
+    datePickerOneSelection() {
         let m = moment(this.datePickOneDate);
         this.datePickOne = m.local().format('YYYY-MM-DD');
     }
@@ -356,6 +363,14 @@ export class TicketFilterComponent implements OnInit, OnChanges {
     checkSPFormInvalid(spMode: string): boolean {
         return (this.spPickOne === undefined || this.spPickOne === null) ||
             spMode === '- Between' && (this.spPickTwo === undefined || this.spPickTwo === null);
+    }
+
+    setParentOnly(value: string) {
+        if (value === 'Subticket of') {
+            this.parentNumber = undefined;
+        } else {
+            this.parentNumber = -1;
+        }
     }
 }
 

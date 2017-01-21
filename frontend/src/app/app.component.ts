@@ -63,7 +63,7 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
     this.router.events
       .filter(e => e instanceof NavigationStart)
       .map(e => e.url)
-      .map(url => (url.indexOf("login") < 0) ? this.showLoginButton = true : this.showLoginButton = false )
+      .map(url => (url.indexOf('login') < 0) ? this.showLoginButton = true : this.showLoginButton = false )
       .distinctUntilChanged()
       .subscribe(result => { });
 

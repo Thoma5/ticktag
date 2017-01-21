@@ -133,22 +133,23 @@ export class TicketOverviewComponent implements OnInit {
         ticketFilter.dueDateOne, ticketFilter.dueDateTwo, ticketFilter.dueDateGreater,
         ticketFilter.storyPointsOne, ticketFilter.storyPointsTwo, ticketFilter.storyPointsGreater,
         ticketFilter.open, ticketFilter.parentNumber, this.offset, this.limit, p));
-    let assignmentTagsObs = this.apiCallService
+    let assignmentTagsObs = this.allAssignmentTags ? Observable.of(this.allAssignmentTags) : this.apiCallService
       .callNoError<AssignmentTagResultJson[]>(p => this.assigmentTagsApi.listAssignmentTagsUsingGETWithHttpInfo(this.projectId, p))
       .map(ats => idListToMap(ats).map(at => new TicketOverviewAssTag(at, 0)).toMap());
-    let ticketTagsObs = this.apiCallService
+    let ticketTagsObs = this.allTicketTags ? Observable.of(this.allTicketTags) : this.apiCallService
       .callNoError<TicketTagResultJson[]>(p => this.ticketTagsApi.listTicketTagsUsingGETWithHttpInfo(null, this.projectId, p))
       .map(tts => idListToMap(tts).map(tt => new TicketOverviewTag(tt)).toMap());
-    let projectUsersObs = this.apiCallService
+    let projectUsersObs = this.allProjectUsers ? Observable.of(this.allProjectUsers) : this.apiCallService
       .callNoError<UserResultJson[]>(p => this.projectApi.listProjectMembersUsingGETWithHttpInfo(this.projectId, undefined, p))
       .map(users => idListToMap(users).map(user => new TicketOverviewUser(user)).toMap());
-    let timeCategoriesObs = this.apiCallService
+    let timeCategoriesObs = this.allTimeCategories ? Observable.of(this.allTimeCategories) : this.apiCallService
       .callNoError<TimeCategoryJson[]>(p => this.timeCategoryApi.listProjectTimeCategoriesUsingGETWithHttpInfo(this.projectId, p))
       .map(tcs => idListToMap(tcs).map(tc => new TicketOverviewTimeCategory(tc)).toMap());
     return Observable
       .zip(rawTicketObs, assignmentTagsObs, ticketTagsObs, projectUsersObs, timeCategoriesObs)
       .do(
       tuple => {
+        this.query = ''; // It's safe to reset the addToQuery here
         this.allAssignmentTags = tuple[1];
         this.allTicketTags = tuple[2];
         this.allProjectUsers = tuple[3];
