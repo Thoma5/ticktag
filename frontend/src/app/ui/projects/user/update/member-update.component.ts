@@ -8,7 +8,7 @@ import { showValidationError } from '../../../../util/error';
 import { Modal } from 'angular2-modal/plugins/bootstrap';
 import { Overlay } from 'angular2-modal';
 import { RoleResultJson } from '../../../../api/model/RoleResultJson';
-import {AssignmentTagResultJson} from "../../../../api/model/AssignmentTagResultJson";
+import {AssignmentTagResultJson} from '../../../../api/model/AssignmentTagResultJson';
 
 @Component({
   selector: 'tt-member-update',
@@ -39,7 +39,7 @@ export class MemberUpdateComponent implements OnInit {
 
   ngOnInit(): void {
     this.request.projectRole = this.user.projectRole;
-    this.request.defaultAssignmentTagId = this.user.defaultAssignmentTagId
+    this.request.defaultAssignmentTagId = this.user.defaultAssignmentTagId;
   }
 
   onSubmit(): void {

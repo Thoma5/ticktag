@@ -1,12 +1,10 @@
-import {Component, Input, EventEmitter, Output, OnChanges, SimpleChanges, ElementRef, OnInit} from '@angular/core';
+import {Component, Input, EventEmitter, Output, OnChanges, SimpleChanges, ElementRef} from '@angular/core';
 import { Router } from '@angular/router';
 import { UserApi, UserResultJson } from '../../../api';
 import { ApiCallService } from '../../../service';
 import { using } from '../../../util/using';
 import * as imm from 'immutable';
 import { TicketDetail, TicketDetailAssTag, TicketDetailUser } from '../ticket-detail';
-import {MemberApi} from "../../../api/api/MemberApi";
-import {MemberResultJson} from "../../../api/model/MemberResultJson";
 
 const Awesomplete = require('awesomplete/awesomplete');
 
