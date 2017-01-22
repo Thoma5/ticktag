@@ -5,7 +5,7 @@
     <div *ngIf="!loading" class="content row">
         <div class='core'>
             <div class='header-row'>
-                <h1 class='title'>Burn Down Chart</h1>
+                <h1 class='title'>Burndown Chart</h1>
             </div>
             <div class='sub-header-row row'>
                 <div class='col-md-8'>
@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class='chart'>
-                <canvas baseChart width="800" height="400" 
+                <canvas baseChart width="800" height="600" 
                     [datasets]="lineChartData" 
                     [labels]="lineChartLabels" 
                     [options]="lineChartOptions"

@@ -4,54 +4,60 @@
       <div class="input-group">
         <span class="input-group-btn">
           <button class="btn btn-default" [ngClass]="{'btn-danger': error===true}" (click)="filterHelper=!filterHelper">
-            <i class="glyphicon glyphicon-filter" ></i></button>
+            <i class="fa fa-filter"></i></button>
         </span>
         <input #filterInput type="text" class="form-control" [(ngModel)]=query (input)="inputChanged(filterInput.value)">
       </div>
       <i [ngClass]="{'glyphicon glyphicon-remove form-control-feedback filter-error': error===true}"></i>
     </div>
   </div>
-  <md-card *ngIf="error &&!hideErrorBox" class="col-md-5 filter-error-card">
+  <md-card *ngIf="error && !hideErrorBox" class="col-md-5 filter-error-card">
     <label tooltip="{{errorMsg}}" tooltipPlacement="bottom" tooltipTrigger="mouseenter" class="control-label filter-error-label"
-      for="filterInput"><i class="glyphicon glyphicon-warning-sign"></i><b> Errors: </b>{{errorMsg}}</label>
+      for="filterInput"><i class="fa fa-warning" ></i><b> Errors: </b>{{errorMsg}}</label>
   </md-card>
 </div>
 <div *ngIf="filterHelper" class="row">
   <div class="filterHelper">
     <div *ngIf="disabledFilterHelper.indexOf('status') < 0" class="btn-group" dropdown keyboardNav="true">
       <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default btn-sm" dropdownToggle>
-        <i class="glyphicon glyphicon-ok" ></i> Status <span class="caret"></span>
+        <i class="fa fa-check" ></i>  Status <span class="caret"></span>
     </button>
       <ul dropdownMenu role="menu" aria-labelledby="single-button">
         <li role="menuitem">
-          <a (click)="pickStatus(true)" class="dropdown-item"> <i class="glyphicon glyphicon-unchecked"></i> Open</a>
+          <a (click)="pickStatus(true)" class="dropdown-item"> <i class="fa fa-square-o"></i> Open</a>
         </li>
         <li role="menuitem">
-          <a (click)="pickStatus(false)" class="dropdown-item"> <i class="glyphicon glyphicon-check"></i> Closed</a>
+          <a (click)="pickStatus(false)" class="dropdown-item"> <i class="fa fa-check-square-o"></i> Closed</a>
         </li>
-        <li role="menuitem"><a (click)="pickStatus(undefined)" class="dropdown-item"><i class="glyphicon glyphicon-collapse-down" ></i> All</a></li>
+        <li role="menuitem"><a (click)="pickStatus(undefined)" class="dropdown-item"><i class="fa fa-plus-square-o"></i> All</a></li>
       </ul>
     </div>
-     <div *ngIf="disabledFilterHelper.indexOf('parent') < 0" class="btn-group" dropdown keyboardNav="true">
+    <div *ngIf="disabledFilterHelper.indexOf('parent') < 0" class="btn-group" dropdown keyboardNav="true" autoClose="outsideClick">
       <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default btn-sm" dropdownToggle>
-        <i class="glyphicon glyphicon-align-left" ></i> Subtickets of <span class="caret"></span>
+        <i class="fa fa-sitemap" ></i> Hierarchy <span class="caret"></span>
     </button>
       <ul dropdownMenu role="menu" aria-labelledby="single-button">
         <form #f="ngForm">
-          <div class="form-group">
-            <label>Parent Ticket Number:</label>
+          <div class="divider dropdown-divider"></div>
+          <select #stMode class="form-control" id="sel1" (change)="setParentOnly(stMode.value)">
+              <option>Parents Only</option>
+              <option>Subticket of</option>
+            </select>
+          <div class="form-group" *ngIf="stMode.value === 'Subticket of'">
+            <label>Parent Number::</label>
             <div class="form-group">
               <input [(ngModel)]=parentNumber name="parentNumberInput" type="number" pattern="^[0-9]+$" class="form-control" placeholder="0"
                 required>
             </div>
           </div>
-          <button type="submit" [disabled]="!f.form.valid" class="btn btn-success" (click)="pickParent(parentNumber)">Select</button>
+          <div class="divider dropdown-divider"></div>
+          <button type="submit" [disabled]="!f.form.valid || parentOnly" class="btn btn-success" (click)="pickParent(parentNumber)">Select</button>
         </form>
       </ul>
     </div>
     <div *ngIf="disabledFilterHelper.indexOf('#') < 0" class="btn-group" dropdown keyboardNav="true" autoClose="outsideClick">
       <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default btn-sm" dropdownToggle>
-        <b># </b>Number<span class="caret"></span>
+        <i class="fa fa-hashtag" ></i> Number<span class="caret"></span>
     </button>
       <div class="dropdown-menu" dropdownMenu role="menu" aria-labelledby="simple-btn-keyboard-nav">
         <form #f="ngForm">
@@ -68,7 +74,7 @@
     </div>
     <div *ngIf="disabledFilterHelper.indexOf('tag') < 0" class="btn-group" dropdown keyboardNav="true">
       <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default  btn-sm" dropdownToggle>
-        <i class="glyphicon glyphicon-tag" ></i> Tags <span class="caret"></span>
+         <i class="fa fa-tags" ></i>  Tags <span class="caret"></span>
     </button>
       <ul class="dropdown-menu" dropdownMenu role="menu" aria-labelledby="simple-btn-keyboard-nav">
         <li role="menuitem" *ngFor="let tag of tags">
@@ -80,10 +86,10 @@
           </a>
         </li>
       </ul>
-    </div>    
+    </div>
     <div *ngIf="disabledFilterHelper.indexOf('user') < 0" class="btn-group" dropdown keyboardNav="true">
       <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default btn-sm" dropdownToggle>
-        <i class="glyphicon glyphicon-user"></i> Assignees <span class="caret"></span>
+        <i class="fa fa-users" ></i>  Assignees <span class="caret"></span>
     </button>
       <ul class="dropdown-menu" dropdownMenu role="menu" aria-labelledby="simple-btn-keyboard-nav">
         <li role="menuitem" *ngFor="let user of assignees"><a (click)="pickUser(user.username)" class="dropdown-item">{{user.name}} ({{user.username}})</a></li>
@@ -91,7 +97,7 @@
     </div>
     <div *ngIf="disabledFilterHelper.indexOf('sp') < 0" class="btn-group" dropdown keyboardNav="true" autoClose="outsideClick">
       <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default  btn-sm" dropdownToggle>
-        <i class="glyphicon glyphicon-scale" ></i> Story Points <span class="caret"></span>
+         <i class="fa fa-balance-scale" ></i>  Story Points <span class="caret"></span>
     </button>
       <div class="dropdown-menu" dropdownMenu role="menu" aria-labelledby="simple-btn-keyboard-nav">
         <form>
@@ -122,7 +128,7 @@
     </div>
     <div *ngIf="disabledFilterHelper.indexOf('dueDate') < 0" class="btn-group" dropdown keyboardNav="true" autoClose="outsideClick">
       <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default  btn-sm" dropdownToggle>
-        <i class="glyphicon glyphicon-calendar" ></i> Due Date <span class="caret"></span>
+         <i class="fa fa-calendar" ></i>  Due Date <span class="caret"></span>
     </button>
       <div class="dropdown-menu dd-datepicker" dropdownMenu role="menu" aria-labelledby="simple-btn-keyboard-nav">
         <form>
@@ -134,7 +140,7 @@
                 <input [(ngModel)]="datePickOne" name="datePickOne" type="text" class="form-control" placeholder="YYYY-MM-DD">
                 <span class="input-group-btn">
                   <button class="btn btn-default" (click)="datePickOneActive = !datePickOneActive">
-                  <i class="glyphicon glyphicon-calendar" ></i></button>                    
+                   <i class="fa fa-calendar" ></i> </button>                    
                 </span>
               </div>
             </div>
@@ -148,7 +154,7 @@
                 <input [(ngModel)]="datePickTwo" name="datePickTwo" type="text" class="form-control" placeholder="YYYY-MM-DD">
                 <span class="input-group-btn">
                   <button class="btn btn-default"  (click)="datePickTwoActive = !datePickTwoActive">
-                  <i class="glyphicon glyphicon-calendar" ></i></button>                    
+                  <i class="fa fa-calendar"></i></button>                    
                 </span>
               </div>
             </div>
@@ -171,7 +177,7 @@
     </div>
     <div *ngIf="disabledFilterHelper.indexOf('progress') < 0" class="btn-group" dropdown keyboardNav="true" autoClose="outsideClick">
       <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default btn-sm" dropdownToggle>
-        <b>%</b> Progress <span class="caret"></span>
+         <i class="fa fa-percent" ></i>  Progress <span class="caret"></span>
     </button>
       <div class="dropdown-menu" dropdownMenu role="menu" aria-labelledby="simple-btn-keyboard-nav">
         <form>
