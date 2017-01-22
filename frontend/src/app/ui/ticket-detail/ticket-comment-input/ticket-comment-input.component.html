@@ -1,4 +1,4 @@
-<div class='comment-input'>
+<div class='comment-input' id='comment-input'>
     <tt-command-textview
         [initialContent]="'Comment text...'"
         [projectId]="ticket.projectId"
@@ -8,6 +8,7 @@
         [allTimeCategories]="allTimeCategories"
         [allAssignmentTags]="allAssignmentTags"
         [resetEventObservable]='resetEventObservable'
+		[hasShortcut]="true"
         (contentChange)="this.content = $event"
         (save)="onSubmit()"
     >
