@@ -90,7 +90,8 @@ export class UserProfileComponent implements OnInit {
       result => {
         if (result.isValid) {
           this.updated.emit(result.result);
-          this.login();
+          if (this.request.password)
+            this.login();
           this.revert();
         } else {
           this.error(result);
