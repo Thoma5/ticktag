@@ -1,5 +1,27 @@
 BEGIN;
 
+
+CREATE TABLE IF NOT EXISTS "project" (
+  "id"             UUID PRIMARY KEY,
+  "name"           TEXT      NOT NULL,
+  "description"    TEXT      NOT NULL,
+  "creation_date"  TIMESTAMP NOT NULL,
+  "icon_mime_info" TEXT,
+  "icon"           BYTEA,
+  "disabled"       BOOLEAN   NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS "assignment_tag" (
+  "id"              UUID PRIMARY KEY,
+  "project_id"      UUID REFERENCES "project",
+  "name"            TEXT NOT NULL,
+  "normalized_name" TEXT NOT NULL,
+  "color"           TEXT NOT NULL, -- RRGGBB
+  "disabled"         BOOLEAN NOT NULL DEFAULT FALSE
+);
+CREATE INDEX ON "assignment_tag" ("project_id");
+
+
 CREATE TABLE IF NOT EXISTS "user" (
   "id"            UUID PRIMARY KEY,
   "username"      TEXT NOT NULL,
@@ -17,20 +39,12 @@ CREATE TABLE IF NOT EXISTS "user_image" (
   "image"   BYTEA NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS "project" (
-  "id"             UUID PRIMARY KEY,
-  "name"           TEXT      NOT NULL,
-  "description"    TEXT      NOT NULL,
-  "creation_date"  TIMESTAMP NOT NULL,
-  "icon_mime_info" TEXT,
-  "icon"           BYTEA,
-  "disabled"       BOOLEAN   NOT NULL
-);
 CREATE TABLE IF NOT EXISTS "member" (
   "u_id"         UUID      NOT NULL REFERENCES "user",
   "p_id"         UUID      NOT NULL REFERENCES "project",
   "project_role" TEXT      NOT NULL,
   "join_date"    TIMESTAMP NOT NULL,
+  "default_assignment_tag_id" UUID REFERENCES "assignment_tag",
   PRIMARY KEY (u_id, p_id)
 );
 CREATE INDEX ON "member" ("p_id");
@@ -94,15 +108,6 @@ CREATE INDEX ON "ticket_tag" ("ticket_tag_group_id");
 ALTER TABLE "ticket_tag_group"
   ADD FOREIGN KEY ("default_ticket_tag_id") REFERENCES "ticket_tag";
 
-CREATE TABLE IF NOT EXISTS "assignment_tag" (
-  "id"              UUID PRIMARY KEY,
-  "project_id"      UUID REFERENCES "project",
-  "name"            TEXT NOT NULL,
-  "normalized_name" TEXT NOT NULL,
-  "color"           TEXT NOT NULL, -- RRGGBB
-  "disabled"         BOOLEAN NOT NULL DEFAULT FALSE
-);
-CREATE INDEX ON "assignment_tag" ("project_id");
 
 CREATE TABLE IF NOT EXISTS "time_category" (
   "id"              UUID PRIMARY KEY,

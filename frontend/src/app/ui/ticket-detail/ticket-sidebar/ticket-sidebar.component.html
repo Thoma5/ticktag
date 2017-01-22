@@ -8,6 +8,7 @@
                 [allTags]="allAssignmentTags"
                 (tagAdd)="onTagAdd(a.user.id, $event)"
                 (tagRemove)="onTagRemove(a.user.id, $event)"
+                [projectId]="ticket.projectId"
             ></tt-assigned-user>
         </div>
         <div class="add-assigned-user">

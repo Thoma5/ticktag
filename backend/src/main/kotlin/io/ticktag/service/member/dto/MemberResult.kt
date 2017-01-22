@@ -9,7 +9,8 @@ data class MemberResult(
         val userId: UUID,
         val projectId: UUID,
         val joinDate: Instant,
-        val projectRole: ProjectRole
+        val projectRole: ProjectRole,
+        val defaultAssignmentTagId: UUID?
 ) {
-    constructor(m: Member) : this(userId = m.user.id, projectId = m.project.id, joinDate = m.joinDate, projectRole = m.role)
+    constructor(m: Member) : this(userId = m.user.id, projectId = m.project.id, joinDate = m.joinDate, projectRole = m.role, defaultAssignmentTagId = m.defaultAssignmentTag?.id)
 }
