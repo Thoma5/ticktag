@@ -1,10 +1,10 @@
-import { Component, Input, Output, EventEmitter, OnInit, ViewContainerRef } from '@angular/core';
-import { ApiCallService, ApiCallResult } from '../../service';
-import { AuthApi, UserApi, UpdateUserRequestJson, UserResultJson, WhoamiResultJson } from '../../api';
-import { RoleResultJson } from '../../api/model/RoleResultJson';
+import { Component, Output, EventEmitter, OnInit, ViewContainerRef } from '@angular/core';
+import { ApiCallService, AuthService, ApiCallResult } from '../../service';
+import { AuthApi, UserApi, UpdateUserRequestJson, UserResultJson, WhoamiResultJson, LoginResultJson } from '../../api';
 import { showValidationError } from '../../util/error';
 import { Modal } from 'angular2-modal/plugins/bootstrap';
 import { Overlay } from 'angular2-modal';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -38,6 +38,7 @@ export class UserProfileComponent implements OnInit {
   constructor(private apiCallService: ApiCallService,
     private userApi: UserApi,
     private authApi: AuthApi,
+    private authService: AuthService,
     private modal: Modal,
     private overlay: Overlay,
     private vcRef: ViewContainerRef,
@@ -67,7 +68,7 @@ export class UserProfileComponent implements OnInit {
         .size('sm')
         .showClose(true)
         .title('Error')
-        .body("Please enter your old password")
+        .body('Please enter your old password')
         .open();
       return;
     }
@@ -76,7 +77,7 @@ export class UserProfileComponent implements OnInit {
         .size('sm')
         .showClose(true)
         .title('Error')
-        .body("Password Length must at least be 8 characters")
+        .body('Password Length must at least be 8 characters')
         .open();
       return;
     }
@@ -89,6 +90,8 @@ export class UserProfileComponent implements OnInit {
       result => {
         if (result.isValid) {
           this.updated.emit(result.result);
+          this.login();
+          this.revert();
         } else {
           this.error(result);
         }
@@ -128,5 +131,37 @@ export class UserProfileComponent implements OnInit {
 
   private error(result: ApiCallResult<void | {}>): void {
     showValidationError(this.modal, result);
+  }
+
+  private login() {
+    this.authService.user = null;
+    let req = {
+      email: this.request.mail,
+      password: this.request.password,
+    };
+
+    this.apiCallService
+      .callNoError<LoginResultJson>(h => this.authApi.loginUsingPOSTWithHttpInfo(req, h))
+      .flatMap(result => {
+        if (result.token === '') {
+          return Observable.of(null);
+        } else {
+          // Note that the AuthService as no user set yet.
+          return this.apiCallService
+            .callNoError<WhoamiResultJson>(h => this.authApi.whoamiUsingGETWithHttpInfo(h), { 'X-Authorization': result.token })
+            .map(x => {
+              return {
+                id: x.id,
+                token: result.token,
+                authorities: x.authorities.slice()
+              };
+            });
+        }
+      })
+      .subscribe(result => {
+        if (result !== null) {
+          this.authService.user = result;
+        }
+      });
   }
 }
