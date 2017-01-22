@@ -276,34 +276,38 @@ CREATE TABLE IF NOT EXISTS "kanban_cell"(
   "order"          INTEGER NOT NULL
 );
 
-CREATE VIEW view_progress AS
-  SELECT
-    t.*,
-    CASE WHEN t.total_initial_estimated_time = 0
-      THEN NULL
-    ELSE t.total_logged_time :: REAL / t.total_initial_estimated_time :: REAL END AS total_initial_progress,
-    CASE WHEN t.total_current_estimated_time = 0
-      THEN NULL
-    ELSE t.total_logged_time :: REAL / t.total_current_estimated_time :: REAL END AS total_progress
-  FROM (
-         SELECT
-           t.id                                                         AS ticket_id,
-           (SELECT coalesce(sum(tt.initial_estimated_time), 0)
-            FROM ticket tt
-            WHERE tt.id = t.id OR tt.parent_ticket_id = t.id) :: BIGINT AS total_initial_estimated_time,
-           (SELECT coalesce(sum(tt.current_estimated_time), 0)
-            FROM ticket tt
-            WHERE tt.id = t.id OR tt.parent_ticket_id = t.id) :: BIGINT AS total_current_estimated_time,
-           (SELECT coalesce(sum(lt.time), 0)
-            FROM ticket tt
-              JOIN comment cc ON cc.ticket_id = tt.id
-              JOIN logged_time lt ON lt.comment_id = cc.id
-            WHERE (tt.id = t.id OR tt.parent_ticket_id = t.id) and not lt.canceled) :: BIGINT AS total_logged_time,
-           (SELECT coalesce(sum(lt.time), 0)
-            FROM ticket tt
-              JOIN comment cc ON cc.ticket_id = tt.id
-              JOIN logged_time lt ON lt.comment_id = cc.id
-            WHERE tt.id = t.id and not lt.canceled) :: BIGINT AS logged_time
-         FROM ticket t
-       ) t;
+CREATE OR REPLACE VIEW public.view_progress AS
+  SELECT t.ticket_id,
+    t.total_initial_estimated_time,
+    t.total_current_estimated_time,
+    LEAST(t.total_logged_time,t.total_current_estimated_time) AS total_logged_time,
+    t.logged_time,
+    CASE
+    WHEN t.total_initial_estimated_time = 0 THEN NULL::real
+    ELSE t.total_logged_time::real / t.total_initial_estimated_time::real
+    END AS total_initial_progress,
+    CASE
+    WHEN t.total_current_estimated_time = 0 THEN NULL::real
+    WHEN NOT t.open THEN 1::real
+    ELSE t.total_logged_time::real / t.total_current_estimated_time::real
+    END AS total_progress
+  FROM ( SELECT t_1.id AS ticket_id,
+           t_1.open,
+                (( SELECT COALESCE(sum(tt.initial_estimated_time), 0::numeric) AS "coalesce"
+                   FROM ticket tt
+                   WHERE tt.id = t_1.id OR tt.parent_ticket_id = t_1.id))::bigint AS total_initial_estimated_time,
+                (( SELECT COALESCE(sum(tt.current_estimated_time), 0::numeric) AS "coalesce"
+                   FROM ticket tt
+                   WHERE tt.id = t_1.id OR tt.parent_ticket_id = t_1.id))::bigint AS total_current_estimated_time,
+                (( SELECT COALESCE(sum(lt."time"), 0::numeric) AS "coalesce"
+                   FROM ticket tt
+                     JOIN comment cc ON cc.ticket_id = tt.id
+                     JOIN logged_time lt ON lt.comment_id = cc.id
+                   WHERE (tt.id = t_1.id OR tt.parent_ticket_id = t_1.id) AND NOT lt.canceled))::bigint AS total_logged_time,
+                (( SELECT COALESCE(sum(lt."time"), 0::numeric) AS "coalesce"
+                   FROM ticket tt
+                     JOIN comment cc ON cc.ticket_id = tt.id
+                     JOIN logged_time lt ON lt.comment_id = cc.id
+                   WHERE tt.id = t_1.id AND NOT lt.canceled))::bigint AS logged_time
+         FROM ticket t_1) t;
 COMMIT;
