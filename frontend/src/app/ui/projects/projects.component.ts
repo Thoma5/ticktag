@@ -134,8 +134,7 @@ export class ProjectsComponent implements OnInit {
     this.getProjects();
   }
 
-
   toggleExpandRow(row: any) {
-    this.table.toggleExpandRow(row);
+    this.table.rowDetail.toggleExpandRow(row);
   }
 }

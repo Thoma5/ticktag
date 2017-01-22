@@ -94,7 +94,12 @@ data class TicketFilter(val project: UUID, val numbers: List<Int>?, val title: S
             predicates.add(cb.equal(root.get<Boolean>("open"), open))
         }
         if (parent != null) {
-            val isChildOf = cb.equal(root.get<Ticket>("parentTicket").get<Int>("number"), parent)
+            val isChildOf: Predicate
+            if (parent < 0) {
+                isChildOf = cb.isNull(root.get<Ticket>("parentTicket"))
+            } else {
+                isChildOf = cb.equal(root.get<Ticket>("parentTicket").get<Int>("number"), parent)
+            }
             predicates.add(isChildOf)
         }
         return if (predicates.size <= 0) {

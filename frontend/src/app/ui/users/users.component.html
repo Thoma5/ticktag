@@ -66,9 +66,9 @@
         <ngx-datatable-column name="Actions" width="128" [resizeable]="false" [sortable]="false" *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0)) && !assignMode">
           <template let-row="row" ngx-datatable-cell-template>
             <button (click)="onStartUpdate(row)" class="btn btn-xs" tooltip="Edit User" tooltipPopupDelay="500" tooltipPlacement="left"
-              tooltipTrigger="mouseenter"><span class="glyphicon glyphicon-edit"></span></button>
+              tooltipTrigger="mouseenter"><i class='fa fa-edit'></i></button>
             <button [disabled]="me && me.id === row.id" (click)="onDeleteClicked(row.id)" class="btn btn-xs btn-danger" tooltip="Disable User"
-              tooltipPopupDelay="500" tooltipPlacement="left" tooltipTrigger="mouseenter"><span class="glyphicon glyphicon-trash"></span></button>
+              tooltipPopupDelay="500" tooltipPlacement="left" tooltipTrigger="mouseenter"><i class='fa fa-trash-o'></i></button>
           </template>
         </ngx-datatable-column>
       </ngx-datatable>

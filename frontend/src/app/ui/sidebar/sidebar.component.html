@@ -17,13 +17,19 @@
           {{ project.name }}
         </div>
       </div>
-      <div *ngIf="project == null" class="project-none">
-        <span>No project</span>
+      <div *ngIf="project == null" class="project-present">
+        <div class="project-icon">
+          <img src="/img/TickTag128px.png">
+        </div>
+        <div class="project-none">
+          TickTag 
+          <i class="fa fa-sort-down"></i>
+        </div>
       </div>
     </a>
   </div>
   <div class="project-selection-block" [class.expanded]="showingSelection" [class.collapsed]="!showingSelection">
-    <a *ngFor="let project of otherProjects" md-button [routerLink]="['/project', project.id, 'tickets']" class='selection-button'>
+    <a *ngFor="let project of otherProjects" md-button [routerLink]="['/project', project.id, 'tickets']" [queryParams]="{open: 'true'}" class='selection-button'>
       <div class="selection-item">
         <div *ngIf="project.icon != null" class="small-project-icon">
           <img src="{{project.icon}}">
@@ -34,23 +40,9 @@
       </div>
     </a>
   </div>
-  <div class="navadmin-block">
-    <div>
-      <a md-button *ngIf="isAdmin" [routerLink]="['/users']">
-        <i class='link-icon fa fa-user'></i>
-        <span class='link-text'>Users</span>
-      </a>
-    </div>
-    <div>
-      <a md-button [routerLink]="['/projects']">
-        <i class='link-icon fa fa-th-list'></i>
-        <span class='link-text'>Projects</span>
-      </a>
-    </div>
-  </div>
   <div *ngIf="project != null" class="project-links">
     <div>
-      <a md-button [routerLink]="['/project', project.id, 'tickets']">
+      <a md-button [routerLink]="['/project', project.id, 'tickets']"  [queryParams]="{open: 'true'}">
         <i class='link-icon fa fa-ticket'></i>
         <span class='link-text'>Tickets</span>
       </a>
@@ -65,6 +57,28 @@
       <a md-button [routerLink]="['/project', project.id, 'boards']">
         <i class='link-icon fa fa-th-large'></i>
         <span class='link-text'>Kanban</span>
+      </a>
+    </div>
+     <div>
+      <a md-button [routerLink]="['/project', project.id, 'users']">
+        <i class='link-icon fa fa-users'></i>
+        <span class='link-text'>Project Users</span>
+      </a>
+    </div>
+  </div>
+    <div class="navadmin-block">
+    <div>
+      <a md-button *ngIf="isAdmin" [routerLink]="['/users']">
+        <i class='link-icon fa fa-users'></i>
+        <span *ngIf="project == null" class='link-text'>Users</span>
+        <span *ngIf="project != null" class='link-text'>All Users</span>
+      </a>
+    </div>
+    <div>
+      <a md-button [routerLink]="['/projects']">
+        <i class='link-icon fa fa-th-list'></i>        
+        <span *ngIf="project == null" class='link-text'>Projects</span>
+        <span *ngIf="project != null" class='link-text'>Other Projects</span>
       </a>
     </div>
   </div>
