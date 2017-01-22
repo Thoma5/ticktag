@@ -322,9 +322,9 @@ export class TicketDetailComponent implements OnInit {
       });
   }
 
-  private scrollToCommentInput(event: KeyboardEvent) {
-    if (event.altKey && event.key == 'c') {
-      const element = document.querySelector("#comment-input");
+  scrollToCommentInput(event: KeyboardEvent) {
+    if (event.altKey && event.key === 'c') {
+      const element = document.querySelector('#comment-input');
       if (element) {
         element.scrollIntoView(element);
       }

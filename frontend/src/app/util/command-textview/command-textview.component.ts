@@ -121,11 +121,10 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
         }
     }
 
-    private scrollToCommentInput(event: KeyboardEvent) {
-        if (this.hasShortcut && event.altKey && event.key == 'c') {
+    scrollToCommentInput(event: KeyboardEvent) {
+        if (this.hasShortcut && event.altKey && event.key === 'c') {
             this.instance.scrollIntoView(this.instance);
             this.instance.focus();
-
         }
     }
 
