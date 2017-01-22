@@ -8,7 +8,12 @@
 			<div class='core'>
 				<button type="button" class="btn btn-primary" (click)="onStartCreate()"><span class="glyphicon glyphicon-plus"></span>  New Ticket Tag</button>
 				<table class="table ticket-tags">
-				<tr><th>Name</th><th>Tag Group</th><th>Order</th><th>Update & Delete</th></tr>
+					<tr>
+						<th>Name</th>
+						<th>Tag Group</th>
+						<th>Order</th>
+						<th>Update & Delete</th>
+					</tr>
 					<tr *ngFor='let ticketTag of ticketTags' class="ticket-tag">
 						<td class="tag-wrapper" (click)="onEditClicked(ticketTag)">
 							<span class="tag" [style.backgroundColor]="'#' + ticketTag.color">
@@ -84,7 +89,8 @@
 			</div>
 			<div class="body">
 				<tt-ticket-tag-create *ngIf="mode === 'Create'" (created)="finishCreateUpdate()" [tagGroups]="tagGroups"></tt-ticket-tag-create>
-				<tt-ticket-tag-update *ngIf="mode === 'Update' && toUpdateTicketTag" [tagGroups]="tagGroups" [ticketTag]="toUpdateTicketTag" (updated)="finishCreateUpdate()"></tt-ticket-tag-update>
+				<tt-ticket-tag-update *ngIf="mode === 'Update' && toUpdateTicketTag" [tagGroups]="tagGroups" [ticketTag]="toUpdateTicketTag"
+					(updated)="finishCreateUpdate()"></tt-ticket-tag-update>
 			</div>
 		</div>
 	</div>

@@ -65,6 +65,12 @@
         <span class='link-text'>Project Users</span>
       </a>
     </div>
+	 <div>
+      <a *ngIf="isAdmin"  md-button [routerLink]="['/project', project.id, 'tickettags']">
+        <i class='link-icon fa fa-tag'></i>
+        <span class='link-text'>Ticket Tags</span>
+      </a>
+    </div>
   </div>
     <div class="navadmin-block">
     <div>
@@ -81,5 +87,13 @@
         <span *ngIf="project != null" class='link-text'>Other Projects</span>
       </a>
     </div>
+  </div>
+  <div class="user-block">
+  <div>
+    <a md-button [routerLink]="['/profile']">
+        <i class='link-icon fa fa-user'></i>
+        <span class='link-text'>My Profile</span>
+      </a>
+  </div>
   </div>
 </div>

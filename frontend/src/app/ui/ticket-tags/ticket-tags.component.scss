@@ -12,14 +12,6 @@ th {
   @extend %tag;
 }
 
-.tag-wrapper {
-
-}
-
- .actions {
-
- }
-
 .title {
  @extend %title;
  margin-bottom: $small-gap;
@@ -43,7 +35,7 @@ th {
 }
 
 .box {
-    position: relative;
+  position: relative;
 	max-width: 600px;
 }
 

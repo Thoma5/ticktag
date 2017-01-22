@@ -13,12 +13,15 @@ import { KanbanBoardDetailComponent } from './ui/kanban-board-detail/kanban-boar
 import { BurnDownChartComponent } from './ui/burn-down-chart/burn-down-chart.component';
 import { AssignmentTagsComponent } from './ui/assignment-tags/assignment-tags.component';
 import { TicketTagsComponent } from './ui/ticket-tags/ticket-tags.component';
+import { UserProfileComponent } from './ui/user-profile/user-profile.component';
+
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'whoami', component: WhoamiComponent },
   { path: 'users', component: UsersComponent },
+  { path: 'profile', component: UserProfileComponent },
   { path: 'projects', component: ProjectsComponent },
   { path: 'project/:projectId/users', component: ProjectUsersComponent },
   { path: 'project/:projectId/users/add', component: MemberAddComponent },

@@ -99,7 +99,7 @@ import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 
 import { TicketCreateComponent } from './ui/ticket-detail/ticket-create/ticket-create.component';
-import {TicketEventMentionComponent} from './ui/ticket-detail/ticket-events/ticket-event-mention/ticket-event-mention.component';
+import { TicketEventMentionComponent } from './ui/ticket-detail/ticket-events/ticket-event-mention/ticket-event-mention.component';
 import { ImagePickerComponent } from './util/image-picker/image-picker.component';
 import { SidebarComponent } from './ui/sidebar/sidebar.component';
 import { AssignmentTagsComponent } from './ui/assignment-tags/assignment-tags.component';
@@ -108,6 +108,7 @@ import { AssignmentTagUpdateComponent } from './ui/assignment-tags/update/assign
 import { TicketTagsComponent } from './ui/ticket-tags/ticket-tags.component';
 import { TicketTagCreateComponent } from './ui/ticket-tags/create/ticket-tag-create.component';
 import { TicketTagUpdateComponent } from './ui/ticket-tags/update/ticket-tag-update.component';
+import { UserProfileComponent } from './ui/user-profile/user-profile.component';
 
 @NgModule({
   imports: [
@@ -191,6 +192,8 @@ import { TicketTagUpdateComponent } from './ui/ticket-tags/update/ticket-tag-upd
     TicketTagsComponent,
     TicketTagUpdateComponent,
     TicketTagCreateComponent,
+    UserProfileComponent,
+
     HumanizeDurationPipe,
     FormatMomentPipe,
     MarkdownToHtmlPipe,
