@@ -26,6 +26,8 @@
 import * as models from './models';
 
 export interface MemberResultJson {
+    defaultAssignmentTagId?: string;
+
     joinDate: number;
 
     projectId: string;

@@ -28,6 +28,8 @@ import * as models from './models';
 export interface UpdateMemberRequestJson {
     projectRole?: UpdateMemberRequestJson.ProjectRoleEnum;
 
+    defaultAssignmentTagId?: string;
+
 }
 export namespace UpdateMemberRequestJson {
     export enum ProjectRoleEnum {
