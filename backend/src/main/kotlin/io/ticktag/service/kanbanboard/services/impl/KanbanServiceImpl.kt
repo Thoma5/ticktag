@@ -50,7 +50,7 @@ open class KanbanServiceImpl @Inject constructor(
                              open: Boolean?,
                              parent: Int?): List<KanbanColumnResult> {
 
-        val columns = ticketTagRepository.findByTicketTagGroupIdOrderByOrderAsc(kanbanBoardId,false)
+        val columns = ticketTagRepository.findByTicketTagGroupIdOrderByOrderAsc(kanbanBoardId)
         val result = emptyList<KanbanColumnResult>().toMutableList()
         val filter = TicketFilter(columns.first().ticketTagGroup.project.id, numbers, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open, parent)
 
