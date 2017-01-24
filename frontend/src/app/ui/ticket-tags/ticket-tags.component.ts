@@ -76,27 +76,27 @@ export class TicketTagsComponent implements OnInit {
     }
 
     onDeleteClicked(tag: TicketTagResultJson) {
-        this.modal.confirm()
-            .size('sm')
-            .isBlocking(true)
-            .showClose(false)
-            .body('Are you sure you that you want to delete this item?')
-            .okBtn('Delete')
-            .open()
-            .then(a => {
-                a.result.then(result => {
-                    // Delete clicked
-
-                    this.apiCallService
-                        .call<any>(h => this.ticketTagApi.deleteTicketTagUsingDELETEWithHttpInfo(tag.id, h))
-                        .subscribe(param => {
-                            this.refresh().subscribe();
-                        }
-                        );
-                }).catch(result => {
-                    // Cancel clicked
-                });
-            });
+        /*     this.modal.confirm()
+                 .size('sm')
+                 .isBlocking(true)
+                 .showClose(false)
+                 .body('Are you sure you that you want to delete this item?')
+                 .okBtn('Delete')
+                 .open()
+                 .then(a => {
+                     a.result.then(result => {
+                         // Delete clicked
+     */
+        this.apiCallService
+            .call<any>(h => this.ticketTagApi.deleteTicketTagUsingDELETEWithHttpInfo(tag.id, h))
+            .subscribe(param => {
+                this.refresh().subscribe();
+            }
+            );
+        /*      }).catch(result => {
+                  // Cancel clicked
+              });
+          });*/
     }
 
     onStartCreate() {

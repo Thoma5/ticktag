@@ -130,7 +130,7 @@ export class BurnDownChartComponent implements OnInit {
             .do(() => { this.loading = true; })
             .switchMap(params => {
                 this.projectId = params['projectId'];
-                if(this.query.length===0){
+                if (this.query.length === 0) {
                     this.refresh();
                 }
                 return this.loadData(this.projectId);
