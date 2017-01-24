@@ -17,13 +17,13 @@ open class Base64ImageDecoder {
         try {
             img = Base64.getDecoder().decode(b64img)
         } catch (e: IllegalArgumentException) {
-            throw TicktagValidationException(listOf(ValidationError("image", ValidationErrorDetail.Other("invalid"))))
+            throw TicktagValidationException(listOf(ValidationError("image", ValidationErrorDetail.Other("invalidValue"))))
         }
         var mimeType : String? = ""
         BufferedInputStream(ByteArrayInputStream(img)).use {
             mimeType = URLConnection.guessContentTypeFromStream(it)
             if(mimeType != null && !listOf("image/png", "image/gif", "image/jpeg").contains(mimeType as String)){
-                throw TicktagValidationException(listOf(ValidationError("image", ValidationErrorDetail.Other("invalidformat"))))
+                throw TicktagValidationException(listOf(ValidationError("image", ValidationErrorDetail.Other("invalidFormat"))))
             }
         }
         return Image(img , (mimeType?:""))

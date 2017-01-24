@@ -75,16 +75,16 @@ open class TicketServiceImpl @Inject constructor(
                                      parent: Int?,
                                      pageable: Pageable): Page<TicketOverviewResult> {
         if (progressOne?.isNaN() ?: false || progressOne?.isInfinite() ?: false) {
-            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueProgressOne"))))
+            throw TicktagValidationException(listOf(ValidationError("listTickets.ProgressOne", ValidationErrorDetail.Other("invalidValue"))))
         }
         if (progressTwo?.isNaN() ?: false || progressTwo?.isInfinite() ?: false) {
-            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueProgressTwo"))))
+            throw TicktagValidationException(listOf(ValidationError("listTickets.ProgressTwo", ValidationErrorDetail.Other("invalidValue"))))
         }
         if (tags?.contains("") ?: false) {
-            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueInTags"))))
+            throw TicktagValidationException(listOf(ValidationError("listTickets.Tags", ValidationErrorDetail.Other("invalidValue"))))
         }
         if (users?.contains("") ?: false) {
-            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueInTags"))))
+            throw TicktagValidationException(listOf(ValidationError("listTickets.Tags", ValidationErrorDetail.Other("invalidValue"))))
         }
         val filter = TicketFilter(project, if (numbers?.size == 0) null else numbers, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open, parent)
         val page = tickets.findAll(filter, pageable)
@@ -109,16 +109,16 @@ open class TicketServiceImpl @Inject constructor(
                                         open: Boolean?,
                                         parent: Int?): List<TicketStoryPointResult> {
         if (progressOne?.isNaN() ?: false || progressOne?.isInfinite() ?: false) {
-            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueProgressOne"))))
+            throw TicktagValidationException(listOf(ValidationError("listTickets.ProgressOne", ValidationErrorDetail.Other("invalidValue"))))
         }
         if (progressTwo?.isNaN() ?: false || progressTwo?.isInfinite() ?: false) {
-            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueProgressTwo"))))
+            throw TicktagValidationException(listOf(ValidationError("listTickets.ProgressTwo", ValidationErrorDetail.Other("invalidValue"))))
         }
         if (tags?.contains("") ?: false) {
-            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueInTags"))))
+            throw TicktagValidationException(listOf(ValidationError("listTickets.Tags", ValidationErrorDetail.Other("invalidValue"))))
         }
         if (users?.contains("") ?: false) {
-            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueInUsers"))))
+            throw TicktagValidationException(listOf(ValidationError("listTickets.Users", ValidationErrorDetail.Other("invalidValue"))))
         }
         val filter = TicketFilter(project, if (numbers?.size == 0) null else numbers, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, null, parent)
         val ticketResult = tickets.findAll(filter)
