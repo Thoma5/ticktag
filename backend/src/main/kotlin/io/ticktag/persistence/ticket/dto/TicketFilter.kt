@@ -9,14 +9,11 @@ import io.ticktag.persistence.user.entity.User
 import org.springframework.data.jpa.domain.Specification
 import java.time.Instant
 import java.util.*
-import javax.persistence.criteria.CriteriaBuilder
-import javax.persistence.criteria.CriteriaQuery
-import javax.persistence.criteria.Predicate
-import javax.persistence.criteria.Root
+import javax.persistence.criteria.*
 
 
 data class TicketFilter(val project: UUID, val numbers: List<Int>?, val title: String?, val tags: List<String>?,
-                        val users: List<String>?, val progressOne: Float?, val progressTwo: Float?,
+                        val users: List<String?>?, val progressOne: Float?, val progressTwo: Float?,
                         val progressGreater: Boolean?, val dueDateOne: Instant?, val dueDateTwo: Instant?,
                         val dueDateGreater: Boolean?, val storyPointsOne: Int?, val storyPointsTwo: Int?,
                         val storyPointsGreater: Boolean?, val open: Boolean?, val parent: Int?) : Specification<Ticket> {
@@ -44,12 +41,17 @@ data class TicketFilter(val project: UUID, val numbers: List<Int>?, val title: S
             predicates.add(cb.isTrue(ttags.`in`(tags)))
         }
         if (users != null) {
-            val join = root.join<Ticket, AssignedTicketUser>("assignedTicketUsers")
+            val join = root.join<Ticket, AssignedTicketUser>("assignedTicketUsers", JoinType.LEFT)
             val userPath = root.get<User>("assignedTicketUsers")
             query.multiselect(userPath)
             query.groupBy(root.get<UUID>("id"), join.get<Ticket>("ticket").get<UUID>("id"), root.get<Progress>("progress").get<Float>("totalProgress"))
             val tusers = join.get<User>("user").get<String>("username")
-            predicates.add(cb.isTrue(tusers.`in`(users)))
+            if(!users.contains("none")){
+                predicates.add(cb.isTrue(tusers.`in`(users)))
+            }
+            else {
+                predicates.add(cb.isNull(join.get<User>("user")))
+            }
         }
         if (progressOne != null) {
             if (progressTwo != null) {

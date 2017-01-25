@@ -19,6 +19,6 @@ interface TicketTagRepository : TicktagCrudRepository<TicketTag, UUID> {
             "WHERE p.id = :projectId ORDER BY t.order asc")
     fun findByProjectId(@Param("projectId") projectId: UUID): List<TicketTag>
 
-    fun findByTicketTagGroupIdOrderByOrderAsc(ticketTagGroupId: UUID): List<TicketTag>
+    fun findByTicketTagGroupIdAndDisabledIsOrderByOrderAsc(ticketTagGroupId: UUID, disabled: Boolean): List<TicketTag>
 
 }

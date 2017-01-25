@@ -107,6 +107,9 @@ open class UserServiceImpl @Inject constructor(
         if (users.findByMailIgnoreCase(createUser.mail) != null) {
             throw TicktagValidationException(listOf(ValidationError("createUser.mail", ValidationErrorDetail.Other("inuse"))))
         }
+        if (createUser.username.equals("me") || createUser.username.equals("none")) {
+            throw TicktagValidationException(listOf(ValidationError("createUser.username", ValidationErrorDetail.Other("notallowed"))))
+        }
         if (users.findByUsername(createUser.username) != null) {
             throw TicktagValidationException(listOf(ValidationError("createUser.username", ValidationErrorDetail.Other("inuse"))))
         }

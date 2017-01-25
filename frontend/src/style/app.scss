@@ -11,9 +11,8 @@ html, body {
     color: $font-color;
 }
 
-/* Background pattern from subtlepatterns.com */
 body {
-    background-image: url('../public/img/background.jpg')
+    background: rgba(230, 230, 230, 1);
 }
 
 html {
@@ -24,11 +23,10 @@ html {
 datepicker .well-sm {
     padding: 0px !important;
     border-color: white !important;
-    border-radius: 0 !important;
     background-color: white !important;
     margin-bottom: 0px;
     .btn {
-        border-radius: 0px;
+      @extend %btn;
     }
 }
 datepicker th {
@@ -70,8 +68,4 @@ md-sidenav-layout {
 // Reset the background color so we can use our own
 .CodeMirror {
   background-color: transparent !important;
-}
-
-.form-control, .input-group-addon{
-    border-radius: 0px !important;
 }
