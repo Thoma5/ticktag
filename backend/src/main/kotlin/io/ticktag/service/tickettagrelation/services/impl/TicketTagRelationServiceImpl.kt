@@ -8,9 +8,7 @@ import io.ticktag.persistence.ticket.entity.TicketEventTagAdded
 import io.ticktag.persistence.ticket.entity.TicketEventTagRemoved
 import io.ticktag.persistence.tickettag.TicketTagRepository
 import io.ticktag.persistence.user.UserRepository
-import io.ticktag.service.AuthExpr
-import io.ticktag.service.NotFoundException
-import io.ticktag.service.Principal
+import io.ticktag.service.*
 import io.ticktag.service.tickettagrelation.dto.TicketTagRelationResult
 import io.ticktag.service.tickettagrelation.services.TicketTagRelationService
 import org.springframework.security.access.method.P
@@ -38,6 +36,11 @@ open class TicketTagRelationServiceImpl(
     override fun createOrGetIfExistsTicketTagRelation(@P("authTicketId") ticketId: UUID, tagId: UUID, principal: Principal): TicketTagRelationResult {
         val ticket = tickets.findOne(ticketId) ?: throw NotFoundException()
         val tag = tags.findOne(tagId) ?: throw NotFoundException()
+
+        if(tag.disabled)
+            throw TicktagValidationException(listOf(ValidationError("tag", ValidationErrorDetail.Other("tagDisabled"))))
+
+
         val user = users.findOne(principal.id) ?: throw NotFoundException()
 
         if (tag.ticketTagGroup.project.id != ticket.project.id) {

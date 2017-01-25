@@ -57,7 +57,10 @@ function mapError(error: ValidationErrorJson): String {
         errorMsg = 'The format for the field "' + error.field + '" is not valid. Please enter another value!';
         break;
       }
-
+       case 'tagDisabled': {
+        errorMsg = 'The seleced Tag is disabled. Please select another tag!';
+        break;
+      }
       default: {
         errorMsg = 'other ' + error.otherInfo.name;
       }

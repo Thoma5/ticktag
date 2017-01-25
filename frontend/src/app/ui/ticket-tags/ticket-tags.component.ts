@@ -1,8 +1,8 @@
-import { Component, Output, EventEmitter, OnInit, ViewContainerRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, ViewContainerRef } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ApiCallService } from '../../service';
 import { TickettagApi } from '../../api/api/TickettagApi';
 import { TickettaggroupApi } from '../../api/api/TickettaggroupApi';
-import { ActivatedRoute, Router } from '@angular/router';
 import { TicketTagResultJson } from '../../api/model/TicketTagResultJson';
 import { CreateTicketTagGroupRequestJson } from '../../api/model/CreateTicketTagGroupRequestJson';
 import { UpdateTicketTagGroupRequestJson } from '../../api/model/UpdateTicketTagGroupRequestJson';
@@ -33,7 +33,11 @@ export class TicketTagsComponent implements OnInit {
         private ticketTagApi: TickettagApi,
         private ticketTagGroupApi: TickettaggroupApi,
         private apiCallService: ApiCallService,
-        private modal: Modal) {
+        private modal: Modal,
+        private overlay: Overlay,
+        private vcRef: ViewContainerRef,
+    ) {
+        overlay.defaultViewContainer = vcRef;
     }
 
     ngOnInit(): void {
@@ -87,7 +91,6 @@ export class TicketTagsComponent implements OnInit {
             .then(a => {
                 a.result.then(result => {
                     // Delete clicked
-
                     this.apiCallService
                         .call<any>(h => this.ticketTagApi.deleteTicketTagUsingDELETEWithHttpInfo(tag.id, h))
                         .subscribe(param => {
