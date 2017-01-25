@@ -37,7 +37,7 @@ open class ProjectServiceImpl @Inject constructor(
         var iconMimeInfo: String? = null
         if (project.icon != null) {
             val tempImg = base64ImageDecoder.decode(project.icon)
-            if (tempImg.image.size > MAX_IMAGE_SIZE) throw TicktagValidationException(listOf(ValidationError("project.icon", ValidationErrorDetail.Other("maxsize"+ MAX_IMAGE_SIZE + "KB"))))
+            if (tempImg.image.size > MAX_IMAGE_SIZE) throw TicktagValidationException(listOf(ValidationError("project.icon", ValidationErrorDetail.Other("maxsize"))))
             icon = tempImg.image
             iconMimeInfo = tempImg.mimeType
         }
@@ -90,7 +90,7 @@ open class ProjectServiceImpl @Inject constructor(
                 projectToUpdate.icon = null
             } else {
                 val tempImg = base64ImageDecoder.decode(project.icon)
-                if (tempImg.image.size > MAX_IMAGE_SIZE) throw TicktagValidationException(listOf(ValidationError("project.icon", ValidationErrorDetail.Other("maxsize"+ MAX_IMAGE_SIZE + "KB"))))
+                if (tempImg.image.size > MAX_IMAGE_SIZE) throw TicktagValidationException(listOf(ValidationError("project.icon", ValidationErrorDetail.Other("maxsize"))))
                 val icon= tempImg.image
                 val iconMimeInfo= tempImg.mimeType
                 projectToUpdate.iconMimeInfo = iconMimeInfo

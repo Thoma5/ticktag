@@ -130,10 +130,13 @@ export class BurnDownChartComponent implements OnInit {
             .do(() => { this.loading = true; })
             .switchMap(params => {
                 this.projectId = params['projectId'];
-                this.refresh();
+                if (this.query.length === 0) {
+                    this.refresh();
+                }
                 return this.loadData(this.projectId);
+
             })
-            .subscribe(() => {});
+            .subscribe(() => { });
     }
 
     public handleFromDateChange(dateFrom: Date) {
@@ -190,7 +193,7 @@ export class BurnDownChartComponent implements OnInit {
 
     private getStoryPointPerTicket(uuid: string): number {
         let ticket = this.tickets.get(uuid);
-        return ticket ? ticket.storyPoints : undefined ;
+        return ticket ? ticket.storyPoints : undefined;
     }
 
     private loadData(projectId: string) {

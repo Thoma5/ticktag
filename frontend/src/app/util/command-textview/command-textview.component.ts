@@ -26,25 +26,25 @@ export type CommandTextviewSaveEvent = {
 };
 
 export type CommandTextviewTicketTag = {
-  normalizedName: string,
+    normalizedName: string,
 };
 
 export type CommandTextviewUser = {
-  username: string,
-  name: string,
-  mail: string,
+    username: string,
+    name: string,
+    mail: string,
 };
 
 export type CommandTextViewUserAssignment = {
-  tag: CommandTextviewAssignmentTag,
+    tag: CommandTextviewAssignmentTag,
 };
 
 export type CommandTextviewTimeCategory = {
-  normalizedName: string,
+    normalizedName: string,
 };
 
 export type CommandTextviewAssignmentTag = {
-  normalizedName: string,
+    normalizedName: string,
 };
 
 @Component({
@@ -62,6 +62,7 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
     @Input() allAssignmentTags: imm.Map<string, CommandTextviewAssignmentTag>;
     @Input() resetEventObservable: Observable<string> | null = null;
     @Input() noCommands: boolean = false;
+    @Input() hasShortcut: boolean = false;
 
     @Output() readonly contentChange = new EventEmitter<CommandTextviewSaveEvent>();
     @Output() readonly save = new EventEmitter<void>();
@@ -89,9 +90,9 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
             lineWrapping: true,
             autofocus: false,
             extraKeys: {
-              Tab: false,
-              'Shift-Tab': false,
-              'Ctrl-Enter': () => this.save.emit(),
+                Tab: false,
+                'Shift-Tab': false,
+                'Ctrl-Enter': () => this.save.emit(),
             },
         });
         this.instance.on('changes', () => {
@@ -106,9 +107,9 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-      if ('resetEventObservable' in changes) {
-        this.resubscribeResetEvent();
-      }
+        if ('resetEventObservable' in changes) {
+            this.resubscribeResetEvent();
+        }
     }
 
     ngOnDestroy(): void {
@@ -116,34 +117,41 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
         this.refreshTimeout = null;
         this.instance.toTextArea();
         if (this.resetEventSubscription != null) {
-          this.resetEventSubscription.unsubscribe();
+            this.resetEventSubscription.unsubscribe();
+        }
+    }
+
+    scrollToCommentInput(event: KeyboardEvent) {
+        if (this.hasShortcut && event.altKey && event.key === 'c') {
+            this.instance.scrollIntoView(this.instance);
+            this.instance.focus();
         }
     }
 
     private resubscribeResetEvent() {
-      if (this.resetEventSubscription != null) {
-        this.resetEventSubscription.unsubscribe();
-      }
-      if (this.resetEventObservable != null) {
-        this.resetEventSubscription = this.resetEventObservable.subscribe(val => {
-          if (this.instance != null) {
-            this.instance.setValue(val);
-          }
-        });
-      }
+        if (this.resetEventSubscription != null) {
+            this.resetEventSubscription.unsubscribe();
+        }
+        if (this.resetEventObservable != null) {
+            this.resetEventSubscription = this.resetEventObservable.subscribe(val => {
+                if (this.instance != null) {
+                    this.instance.setValue(val);
+                }
+            });
+        }
     }
 
     private processChanges(): void {
-      this.updateCommands();
-      this.showHints();
-      this.emitChange();
+        this.updateCommands();
+        this.showHints();
+        this.emitChange();
     }
 
     private emitChange(): void {
-      this.contentChange.emit({
-          commands: this.commands,
-          text: this.content,
-      });
+        this.contentChange.emit({
+            commands: this.commands,
+            text: this.content,
+        });
     }
 
     private updateCommands() {
@@ -154,15 +162,15 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
     }
 
     private showHints() {
-        let cursor: {line: number, ch: number} = this.instance.getCursor();
-        let text: string = this.instance.getRange({line: cursor.line, ch: 0}, cursor);
+        let cursor: { line: number, ch: number } = this.instance.getCursor();
+        let text: string = this.instance.getRange({ line: cursor.line, ch: 0 }, cursor);
 
         let isCommand = new RegExp(String.raw`${grammar.SEPERATOR_FRONT_REGEX}(![a-z-]{0,10})$`, 'ui').exec(text);
         if (!this.noCommands && isCommand) {
             this.instance.showHint({
                 hint: () => ({
                     list: COMMAND_COMPLETIONS,
-                    from: {line: cursor.line, ch: cursor.ch - isCommand[1].length},
+                    from: { line: cursor.line, ch: cursor.ch - isCommand[1].length },
                     to: cursor,
                     selectedHint: Math.max(0, COMMAND_COMPLETIONS.findIndex(c => c.toLowerCase().startsWith(isCommand[1].toLowerCase()))),
                 }),
@@ -187,7 +195,7 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
                                 text: `${ticket.number} `,
                                 displayText: `#${ticket.number}: ${ticket.title}`,
                             })),
-                            from: {line: cursor.line, ch: cursor.ch - isTicket[1].length},
+                            from: { line: cursor.line, ch: cursor.ch - isTicket[1].length },
                             to: cursor,
                             selectedHint: Math.max(0, tickets.findIndex(ticket => ('' + ticket.number).startsWith(isTicket[1]))),
                         }))
@@ -210,7 +218,7 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
             this.instance.showHint({
                 hint: () => ({
                     list: tags.map(tt => tt.normalizedName + ' '),
-                    from: {line: cursor.line, ch: cursor.ch - isAddRemoveTag[2].length},
+                    from: { line: cursor.line, ch: cursor.ch - isAddRemoveTag[2].length },
                     to: cursor,
                     selectedHint: Math.max(0, tags.findIndex(tt => tt.normalizedName.startsWith(isAddRemoveTag[2].toLowerCase()))),
                 }),
@@ -231,7 +239,7 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
             this.instance.showHint({
                 hint: () => ({
                     list: cats.map(cat => cat.normalizedName + ' '),
-                    from: {line: cursor.line, ch: cursor.ch - isTimeTag[1].length},
+                    from: { line: cursor.line, ch: cursor.ch - isTimeTag[1].length },
                     to: cursor,
                     selectedHint: Math.max(0, cats.findIndex(cat => cat.normalizedName.startsWith(isTimeTag[1].toLowerCase()))),
                 }),
@@ -256,7 +264,7 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
                                 text: user.username + '@',
                                 displayText: `${user.username} (${user.name} <${user.mail}>)`,
                             })),
-                            from: {line: cursor.line, ch: cursor.ch - isAssign[1].length},
+                            from: { line: cursor.line, ch: cursor.ch - isAssign[1].length },
                             to: cursor,
                             selectedHint: Math.max(0, users.findIndex(user => user.username.startsWith(isAssign[1].toLowerCase()))),
                         }))
@@ -280,7 +288,7 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
             this.instance.showHint({
                 hint: () => ({
                     list: tags.map(tag => tag.normalizedName + ' '),
-                    from: {line: cursor.line, ch: cursor.ch - isAssignTag[1].length},
+                    from: { line: cursor.line, ch: cursor.ch - isAssignTag[1].length },
                     to: cursor,
                     selectedHint: Math.max(0, tags.findIndex(tag => tag.normalizedName.startsWith(isAssignTag[1].toLowerCase()))),
                 }),
@@ -306,7 +314,7 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
             this.instance.showHint({
                 hint: () => ({
                     list: aus,
-                    from: {line: cursor.line, ch: cursor.ch - isUnassign[1].length},
+                    from: { line: cursor.line, ch: cursor.ch - isUnassign[1].length },
                     to: cursor,
                     selectedHint: Math.max(0, aus.findIndex(au => au.text.startsWith(isUnassign[1].toLowerCase()))),
                 }),

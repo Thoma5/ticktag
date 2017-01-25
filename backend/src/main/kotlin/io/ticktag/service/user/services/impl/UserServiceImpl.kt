@@ -123,7 +123,7 @@ open class UserServiceImpl @Inject constructor(
             var image: ByteArray? = null
             if (createUser.image.isNotEmpty()) {
                 image = base64ImageDecoder.decode(createUser.image).image
-                if (image.size > MAX_IMAGE_SIZE) throw TicktagValidationException(listOf(ValidationError("createUser.image", ValidationErrorDetail.Other("maxsize" + MAX_IMAGE_SIZE / 1000 + "KB"))))
+                if (image.size > MAX_IMAGE_SIZE) throw TicktagValidationException(listOf(ValidationError("createUser.image", ValidationErrorDetail.Other("maxsize"))))
             }
             var userimage = userimages.findOne(user.id)
             if (userimage == null && image != null) {
@@ -227,7 +227,7 @@ open class UserServiceImpl @Inject constructor(
             var image: ByteArray? = null
             if (updateUser.image.isNotEmpty()) {
                 image = base64ImageDecoder.decode(updateUser.image).image
-                if (image.size > MAX_IMAGE_SIZE) throw TicktagValidationException(listOf(ValidationError("updateUser.image", ValidationErrorDetail.Other("maxsize" + MAX_IMAGE_SIZE + "Bytes"))))
+                if (image.size > MAX_IMAGE_SIZE) throw TicktagValidationException(listOf(ValidationError("updateUser.image", ValidationErrorDetail.Other("maxsize"))))
             }
 
             var userimage = userimages.findOne(user.id)
