@@ -46,8 +46,7 @@
             <tt-tagview [tags]="value" (clickedTag)="onTagClicked($event)"></tt-tagview>
           </template>
         </ngx-datatable-column>
-        <ngx-datatable-column name="Asignees" prop="users" minWidth="128" width="128" maxWidth="128" [draggable]="false" [sortable]="false"
-          [resizeable]="false">
+        <ngx-datatable-column name="Asignees" prop="users" minWidth="128" width="128" [draggable]="false" [sortable]="false">
           <template let-row="row" let-value="value" ngx-datatable-cell-template>
             <div float="left">
               <tt-assigned-user-overview [users]="value" (clickedUser)="onUserClicked($event)"></tt-assigned-user-overview>
@@ -61,7 +60,7 @@
             {{value | date: 'yyyy-MM-dd': 'UTC'}}
           </template>
         </ngx-datatable-column>
-        <ngx-datatable-column name="Progress" minWidth="128" width="128" [draggable]="false" [resizeable]="false">
+        <ngx-datatable-column name="Progress" minWidth="128" width="128" maxWidth="128" [draggable]="false" [resizeable]="false">
           <template let-row="row" let-value="value" ngx-datatable-cell-template>
             <div *ngIf="value !== '' && value <= 1" style="border:solid 0.11em #d3d3d3; margin:0.5em" tooltip="{{value*100 | number : '1.0-0'}}%"
               tooltipPlacement="left" tooltipTrigger="mouseenter">

@@ -47,7 +47,9 @@ $fast-transition: 75ms ease-in-out;
     transition: color $fast-transition;
   }
 }
-
+%btn {
+  border-radius: 0.2em;
+}
 // Layout card
 %card {
   background: $card-background;

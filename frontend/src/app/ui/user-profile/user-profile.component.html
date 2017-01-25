@@ -7,7 +7,6 @@
     <form (ngSubmit)="onSubmit()" #f="ngForm">
       <div class="row">
         <div class="btn pull-right" id="imagePickerCol">
-          <label for="imagepicker">Image</label>
           <tt-image-picker [portrait]="true" [defaultImage]="storedImageLink" (image)="setImage($event)" name="imagepicker"></tt-image-picker>
         </div>
       </div>

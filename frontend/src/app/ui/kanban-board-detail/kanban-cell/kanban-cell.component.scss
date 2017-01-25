@@ -3,6 +3,7 @@
 
 .ticket {
   @extend %card;
+  padding-top: 0.5em;
   margin-bottom: $small-gap;
   position: relative;
 }
@@ -10,7 +11,7 @@
 .tag {
   @extend %tag;
   margin-right: $internal-gap;
-  margin-left: 0px;
+  margin-left: 0;
 }
 
 .tags {
@@ -21,10 +22,9 @@
 }
 
 .ticket-ref .number {
+  margin-top: 0;
+  margin-left: 0;
   font-weight: bold;
-}
-
-.ticket-ref .title {
 }
 
 .storypoints {

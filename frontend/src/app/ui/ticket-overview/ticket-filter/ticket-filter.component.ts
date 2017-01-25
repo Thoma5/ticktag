@@ -10,6 +10,7 @@ import {
     TicketOverviewTag,
     TicketOverviewUser
 } from '../../ticket-overview/ticket-overview';
+import { AuthService, User } from '../../../service';
 import { TicketFilter } from './ticket-filter';
 import * as moment from 'moment';
 
@@ -53,9 +54,12 @@ export class TicketFilterComponent implements OnInit, OnChanges {
     public spPickTwo: number;
     public dateMode: string = '< Smaller Than';
     public parentNumber: number = -1;
+    private user: User;
+    private authService: AuthService;
 
-    constructor(myElement: ElementRef, overlay: Overlay, vcRef: ViewContainerRef, public modal: Modal) {
+    constructor(myElement: ElementRef, authService: AuthService, overlay: Overlay, vcRef: ViewContainerRef, public modal: Modal) {
         this.elementRef = myElement;
+        this.authService = authService;
         overlay.defaultViewContainer = vcRef;
     }
 
@@ -76,13 +80,18 @@ export class TicketFilterComponent implements OnInit, OnChanges {
         this.tags = this.allTicketTags.toList();
         this.assignees = this.allUsers.toList();
         this.filterHelper = this.defaultFilterOpen;
+        this.user = this.authService.user;
+        this.authService.observeUser()
+            .subscribe(user => {
+                this.user = user;
+            });
         this.searchTerms
             .distinctUntilChanged()
             .subscribe(term => this.filter(term), error => { });
     }
 
     inputChanged(query: string): void {
-        if ( query === '' ) {
+        if (query === '') {
             this.filter(''); // is ignored if not done this way
         } else {
             this.searchTerms.next(query);
@@ -146,7 +155,11 @@ export class TicketFilterComponent implements OnInit, OnChanges {
                         });
                     } else if (command[0].indexOf('!user') === 0) {
                         command[1].split(',').forEach(t => {
-                            users.push(t);
+                            if (users.length > 0 && t === 'none' || users.length > 0 && users.indexOf('none') >= 0 ) {
+                                this.generateErrorAndMessage('Either unassigned or assigned:', command[0], command[1]);
+                            } else {
+                                users.push(t);
+                            }
                         });
                     } else if (command[0].indexOf('!progress') === 0) {
                         if (progressOne !== undefined) {
@@ -303,11 +316,18 @@ export class TicketFilterComponent implements OnInit, OnChanges {
         this.filter(this.query);
     }
     pickUser(username: string) {
-        this.query = this.query + ' !user:' + username;
+        if (username === 'me') {
+            let user = this.allUsers.findEntry(e => e.id === this.user.id);
+            username = user.pop().username;
+        }
+        if (username === 'none') {
+            this.query = this.query.split(' ').filter(e => e.indexOf('!user') < 0).join(' ') + ' !user:' + username;
+        } else {
+            this.query = this.query.split(' ').filter(e => e.indexOf('!user:none') < 0).join(' ') + ' !user:' + username;
+        }
         this.filter(this.query);
     }
     pickSP(op: string) {
-        console.log();
         // Split query at ' ', remove all elements in this array containing !sp and rejoin the array with ' ' to a string. 
         // Then add the new !sp command  
         this.query = this.query.split(' ').filter(e => e.indexOf('!sp') < 0).join(' ') + ' !sp:' + ((op === '-' || op === '=') ? '' : op)

@@ -11,7 +11,7 @@
  }
  
  * .btn {
-   border-radius: 0;
+    @extend %btn;
  }
  
  small {
