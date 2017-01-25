@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiCallService } from '../../service';
 import { TickettagApi } from '../../api/api/TickettagApi';

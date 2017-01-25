@@ -33,37 +33,37 @@ function mapError(error: ValidationErrorJson): String {
       error.field = error.field.split('.')[1];
     }
     switch (error.otherInfo.name) {
-      case 'inuse': {
+      case 'inuse':
         errorMsg = 'The value for the field "' + error.field + '" is already in use. Please enter another value!';
         break;
-      }
-      case 'notpermitted': {
+
+      case 'notpermitted':
         errorMsg = 'You are not permitted to use the selected value for the field "' + error.field + '". Please enter another value!';
         break;
-      }
-      case 'maxsize': {
+
+      case 'maxsize':
         errorMsg = 'The uploaded file for the field "' + error.field + '" is too big. Please choose another file!';
         break;
-      }
-      case 'passwordincorrect': {
+
+      case 'passwordincorrect':
         errorMsg = 'The password is not correct. Please try again!';
         break;
-      }
-      case 'invalidValue': {
+
+      case 'invalidValue':
         errorMsg = 'The value for the field "' + error.field + '" is not valid. Please enter another value!';
         break;
-      }
-      case 'invalidFormat': {
+
+      case 'invalidFormat':
         errorMsg = 'The format for the field "' + error.field + '" is not valid. Please enter another value!';
         break;
-      }
-       case 'tagDisabled': {
+
+      case 'tagDisabled':
         errorMsg = 'The seleced Tag is disabled. Please select another tag!';
         break;
-      }
-      default: {
+
+      default:
         errorMsg = 'other ' + error.otherInfo.name;
-      }
+
     }
   }
   return errorMsg;
