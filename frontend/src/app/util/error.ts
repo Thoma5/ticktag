@@ -23,7 +23,7 @@ export function showValidationError(modal: Modal, result: ApiCallResult<void | {
 }
 
 function mapError(error: ValidationErrorJson): String {
-  var errorMsg = '';
+  let errorMsg = '';
   if (error.type === 'size') {
     errorMsg = 'size (' + error.sizeInfo.min + ', ' + error.sizeInfo.max + ')';
   } else if (error.type === 'pattern') {
