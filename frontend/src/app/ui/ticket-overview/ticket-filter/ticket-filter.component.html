@@ -76,7 +76,7 @@
       <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default  btn-sm" dropdownToggle>
          <i class="fa fa-tags" ></i>  Tags <span class="caret"></span>
     </button>
-      <ul class="dropdown-menu" dropdownMenu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+      <ul class="dropdown-menu noselect" dropdownMenu role="menu" aria-labelledby="simple-btn-keyboard-nav">
         <li role="menuitem" *ngFor="let tag of tags">
           <a (click)="pickTag(tag.normalizedName)" class="dropdown-item">
             <div class="tag" [style.backgroundColor]="'#' + tag.color">
@@ -91,7 +91,9 @@
       <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default btn-sm" dropdownToggle>
         <i class="fa fa-users" ></i>  Assignees <span class="caret"></span>
     </button>
-      <ul class="dropdown-menu" dropdownMenu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+      <ul class="dropdown-menu noselect" dropdownMenu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+        <li role="menuitem"><a (click)="pickUser('none')" class="dropdown-item">Unassigned Tickets</a></li>
+        <li role="menuitem"><a (click)="pickUser('me')" class="dropdown-item">Me</a></li>
         <li role="menuitem" *ngFor="let user of assignees"><a (click)="pickUser(user.username)" class="dropdown-item">{{user.name}} ({{user.username}})</a></li>
       </ul>
     </div>

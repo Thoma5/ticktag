@@ -1,57 +1,58 @@
  @import '../../../style/constants.scss';
-
-th {
-	font-weight: bold;
-}
+ th {
+   font-weight: bold;
+ }
  
-.loading {
-  @extend %loading
-}
-
-.tag {
-  @extend %tag;
-}
-
-.title {
- @extend %title;
- margin-bottom: $small-gap;
-}
-
-.core {
-    @extend %card;
-}
-
-.subtitle {
-  @extend %subtitle;
-  margin-bottom: $small-gap;
-}
-
-.ticket-tags {
-	margin-top: 25px;
-}
-
-.mt-10{
-	margin-top: 10px;
-}
-
-.box {
-  position: relative;
-	max-width: 600px;
-}
-
-.ticket-tag {
-  margin-bottom: $internal-gap;
-}
-
+ .loading {
+   @extend %loading
+ }
+ 
+ .tag {
+   @extend %tag;
+ }
+ 
+ .title {
+   @extend %title;
+   margin-bottom: $small-gap;
+ }
+ 
+ .core {
+   @extend %card;
+ }
+ 
+ .subtitle {
+   @extend %subtitle;
+   margin-bottom: $small-gap;
+ }
+ 
+ .ticket-tags {
+   margin-top: 25px;
+ }
+ 
+ .mt-10 {
+   margin-top: 10px;
+ }
+ 
+ .box {
+ }
+ 
+ .ticket-tag {
+   margin-bottom: $internal-gap;
+ }
+ 
  .no-scroll {
    overflow: hidden;
  }
-
+ 
  * .btn {
-   border-radius: 0;
-}
-
+   @extend %btn;
+ }
+ 
  .overlay {
    @extend %overlay;
  }
-
+ 
+ .card {
+   @extend %card;
+   margin-bottom: 3em;
+ }

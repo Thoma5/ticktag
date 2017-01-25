@@ -7,6 +7,10 @@ md-sidenav {
 
 }
 
+.topbar {
+  background-color: rgba(255,255,255,0.5);
+}
+
 /* Hack into the sidenav so we can expand our own layout to 100% */
 /deep/ md-sidenav > focus-trap > div {
   height: 100%;

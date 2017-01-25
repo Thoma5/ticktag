@@ -6,7 +6,7 @@
   <div *ngIf="!loading">
     <div *ngFor="let board of kanbanBoards">
       <div class='board'>
-        <a [routerLink]="['/project', board.projectId, 'board', board.id]" [queryParams]="{open: 'true'}">{{ board.name }}</a>
+        <a [routerLink]="['/project', board.projectId, 'board', board.id]"  [queryParams]="{open: 'true'}">{{ board.name }}</a>
       </div>
     </div>
   </div>

@@ -3,20 +3,17 @@
     <tt-loading></tt-loading>
   </div>
   <div *ngIf="!loading">
-    <h1 class='title'>{{kanbanBoard.name}}</h1>
-    <tt-ticket-filter [allTicketTags]="allTicketTagsForFilter" [addToQuery]="query" [allUsers]="allProjectUsers" (ticketFilter)="updateFilter($event)">
-    </tt-ticket-filter>
+    <div class="card">
+      <h1 class='title'>{{kanbanBoard.name}} Board</h1>
+      <tt-ticket-filter [allTicketTags]="allTicketTagsForFilter" [addToQuery]="query" [allUsers]="allProjectUsers" (ticketFilter)="updateFilter($event)">
+      </tt-ticket-filter>
+    </div>
     <div class='container'>
       <div *ngFor="let column of kanbanColumns" class='column-container'>
         <div class='column-header' [style.backgroundColor]="'#' + column.color">{{column.name}}</div>
         <div class='ticket-container' id="{{column.id}}" [dragula]='"first-bag"' [dragulaModel]='column.tickets'>
           <div *ngFor="let ticket of column.tickets" id="{{ticket.id}}">
-            <tt-kanban-cell
-              [ticket]="ticket"
-              [tagId]="column.id"
-              (collect)="onCollet($event)"
-              (findSubTickets)="onFindSubTickets($event)"
-            ></tt-kanban-cell>
+            <tt-kanban-cell [ticket]="ticket" [tagId]="column.id" (collect)="onCollet($event)" (findSubTickets)="onFindSubTickets($event)"></tt-kanban-cell>
           </div>
         </div>
       </div>

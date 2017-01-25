@@ -9,9 +9,9 @@
     </tt-sidebar>
   </md-sidenav>
 
-  <div>
+  <div class="topbar">
     <button *ngIf="user" md-button (click)="start.toggle()"><span class="glyphicon glyphicon-menu-hamburger"></span></button>
-    <a md-button align="end" *ngIf="!user  && showLoginButton" [routerLink]="['login']">Login</a>
+    <a md-raised-button color="primary" align="end" *ngIf="!user  && showLoginButton" [routerLink]="['login']">Login</a>
     <a md-button align="end" *ngIf="user" href="" (click)="logout(); $event.preventDefault()">Logout</a>
   </div>
   <main>
