@@ -14,7 +14,8 @@
       <tt-progressbar *ngIf="!transient && showProgress" [showNumbers]="false" [fraction]="loggedTime" [totalValue]="estimatedTime"></tt-progressbar>
     </div>
     <div class='progress-numbers-logged tooltip-container'>
-      <span *ngIf="!transient" [tooltip]="'Logged time'">{{ loggedTime | ttHumanizeDuration }}</span>
+      <span *ngIf="!transient" [tooltip]="'Logged time'"><span *ngIf="loggedTime > estimatedTime">! </span>{{ loggedTime | ttHumanizeDuration }}</span>
+
     </div>
     <div class='progress-numbers-estimated'>
       <span *ngIf="!transient" [tooltip]="'Current estimation'">{{ estimatedTime | ttHumanizeDuration }}</span>
