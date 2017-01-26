@@ -244,6 +244,7 @@ export class TicketOverviewComponent implements OnInit {
   }
 
   onTicketCreate(val: TicketCreateEvent): void {
+    let navigate = val.navigate;
     let obs = this.apiCallService
       .call(p => this.ticketApi.createTicketUsingPOSTWithHttpInfo({
         title: val.title,
@@ -265,12 +266,16 @@ export class TicketOverviewComponent implements OnInit {
     obs
       .do(() => this.createRunning = false)
       .subscribe(result => {
-        if (!result.isValid) {
-          showValidationError(this.modal, result);
-        } else {
-          this.creating = false;
-          this.refresh().subscribe();
+      if (!result.isValid) {
+        showValidationError(this.modal, result);
+      } else {
+        this.creating = false;
+        this.refresh().subscribe();
+        if (navigate) {
+          let ticket: any = result.result;
+          this.router.navigate(['/project', ticket.projectId, 'ticket', ticket.number]);
         }
-      }, error => { });
+      }
+    }, error => {});
   }
 }

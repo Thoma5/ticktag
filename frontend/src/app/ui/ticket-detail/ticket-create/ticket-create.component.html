@@ -13,7 +13,7 @@
           [allTimeCategories]="allTimeCategories"
           [allAssignmentTags]="allAssignmentTags"
           (contentChange)="this.description = $event"
-          (save)="onSubmit()"
+          (save)="onSubmit(false)"
       >
       </tt-command-textview>
     </div>
@@ -26,7 +26,8 @@
         <tt-command-help></tt-command-help>
       </div>
       <div class="buttons">
-        <input type="button" class="btn btn-primary button-submit" value="Save" (click)="onSubmit()">
+        <input type="button" class="btn btn-primary button-submit" value="Save" (click)="onSubmit(false)">
+        <input type="button" class="btn btn-primary button-submit" value="Save and view" (click)="onSubmit(true)">
       </div>
     </div>
   </div>
