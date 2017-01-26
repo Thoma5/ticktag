@@ -281,6 +281,42 @@ CREATE TABLE IF NOT EXISTS "kanban_cell"(
   "order"          INTEGER NOT NULL
 );
 
+CREATE OR REPLACE FUNCTION calcCappedLoggedTime(
+  ticketID UUID )
+  RETURNS bigint AS $$
+DECLARE total bigint;
+  DECLARE initialTime bigint;
+  DECLARE currentTime bigint;
+  DECLARE ticketRow ticket;
+begin
+
+  SELECT COALESCE(sum(lt."time"), 0::numeric) into total
+  FROM ticket tt
+    JOIN comment cc ON cc.ticket_id = tt.id
+    JOIN logged_time lt ON lt.comment_id = cc.id
+  WHERE tt.id = ticketID AND NOT lt.canceled;
+
+  SELECT t.current_estimated_time into currentTime
+  from ticket t
+  where t.id = ticketID;
+
+  SELECT t.current_estimated_time into initialTime
+  from ticket t
+  where t.id = ticketID;
+
+
+  IF currentTime IS NULL  AND initialTime IS NULL THEN
+    RETURN total;
+  END IF;
+  IF COALESCE(currentTime,initialTime) > total THEN
+    RETURN total;
+  ELSE
+    RETURN COALESCE(currentTime,initialTime,0);
+  END IF;
+end;
+$$
+LANGUAGE 'plpgsql';
+
 CREATE OR REPLACE VIEW public.view_progress AS
   SELECT t.ticket_id,
     t.total_initial_estimated_time,
@@ -304,15 +340,17 @@ CREATE OR REPLACE VIEW public.view_progress AS
                 (( SELECT COALESCE(sum(tt.current_estimated_time), 0::numeric) AS "coalesce"
                    FROM ticket tt
                    WHERE tt.id = t_1.id OR tt.parent_ticket_id = t_1.id))::bigint AS total_current_estimated_time,
-                (( SELECT COALESCE(sum(lt."time"), 0::numeric) AS "coalesce"
-                   FROM ticket tt
-                     JOIN comment cc ON cc.ticket_id = tt.id
-                     JOIN logged_time lt ON lt.comment_id = cc.id
-                   WHERE (tt.id = t_1.id OR tt.parent_ticket_id = t_1.id) AND NOT lt.canceled))::bigint AS total_logged_time,
-                (( SELECT COALESCE(sum(lt."time"), 0::numeric) AS "coalesce"
-                   FROM ticket tt
-                     JOIN comment cc ON cc.ticket_id = tt.id
-                     JOIN logged_time lt ON lt.comment_id = cc.id
-                   WHERE tt.id = t_1.id AND NOT lt.canceled))::bigint AS logged_time
+           ((SELECT sum(sub.time)
+             FROM (Select calcCappedLoggedTime(tt.id) as time
+                    FROM ticket tt
+                    WHERE (tt.id = t_1.id OR tt.parent_ticket_id = t_1.id)) as sub
+
+           )) ::bigint AS total_logged_time,
+           (( SELECT COALESCE(sum(lt."time"), 0::numeric) AS "coalesce"
+              FROM ticket tt
+                JOIN comment cc ON cc.ticket_id = tt.id
+                JOIN logged_time lt ON lt.comment_id = cc.id
+              WHERE tt.id = t_1.id AND NOT lt.canceled))::bigint AS logged_time
          FROM ticket t_1) t;
 COMMIT;
+
