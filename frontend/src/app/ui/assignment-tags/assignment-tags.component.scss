@@ -52,3 +52,17 @@
    @extend %overlay;
  }
 
+ .card {
+   @extend %card;
+   margin-bottom: 3em;
+ }
+
+ th {
+   font-weight: bold;
+ }
+
+ .box {
+   max-width: 1000px;
+   margin-left: auto;
+   margin-right: auto;
+ }
