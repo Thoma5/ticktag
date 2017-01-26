@@ -102,6 +102,9 @@ import { TicketCreateComponent } from './ui/ticket-detail/ticket-create/ticket-c
 import { TicketEventMentionComponent } from './ui/ticket-detail/ticket-events/ticket-event-mention/ticket-event-mention.component';
 import { ImagePickerComponent } from './util/image-picker/image-picker.component';
 import { SidebarComponent } from './ui/sidebar/sidebar.component';
+import { TimeCategoriesComponent } from './ui/time-categories/time-categories.component';
+import { TimeCategoryCreateComponent } from './ui/time-categories/create/time-category-create.component';
+import { TimeCategoryUpdateComponent } from './ui/time-categories/update/time-category-update.component';
 import { AssignmentTagsComponent } from './ui/assignment-tags/assignment-tags.component';
 import { AssignmentTagCreateComponent } from './ui/assignment-tags/create/assignment-tag-create.component';
 import { AssignmentTagUpdateComponent } from './ui/assignment-tags/update/assignment-tag-update.component';
@@ -189,6 +192,9 @@ import { UserProfileComponent } from './ui/user-profile/user-profile.component';
     AssignmentTagsComponent,
     AssignmentTagCreateComponent,
     AssignmentTagUpdateComponent,
+    TimeCategoriesComponent,
+    TimeCategoryCreateComponent,
+    TimeCategoryUpdateComponent,
     TicketTagsComponent,
     TicketTagUpdateComponent,
     TicketTagCreateComponent,

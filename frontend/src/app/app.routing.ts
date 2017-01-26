@@ -14,7 +14,7 @@ import { BurnDownChartComponent } from './ui/burn-down-chart/burn-down-chart.com
 import { AssignmentTagsComponent } from './ui/assignment-tags/assignment-tags.component';
 import { TicketTagsComponent } from './ui/ticket-tags/ticket-tags.component';
 import { UserProfileComponent } from './ui/user-profile/user-profile.component';
-
+import { TimeCategoriesComponent } from './ui/time-categories/time-categories.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -30,6 +30,7 @@ const routes: Routes = [
   { path: 'project/:projectId/burndown', component: BurnDownChartComponent },
   { path: 'project/:projectId/assignmenttags', component: AssignmentTagsComponent },
   { path: 'project/:projectId/tickettags', component: TicketTagsComponent },
+  { path: 'project/:projectId/timecategories', component: TimeCategoriesComponent },
   { path: 'project/:projectId/boards', component: KanbanBoardsComponent },
   { path: 'project/:projectId/board/:boardId', component: KanbanBoardDetailComponent }
 ];

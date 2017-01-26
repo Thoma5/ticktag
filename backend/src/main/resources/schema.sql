@@ -113,7 +113,8 @@ CREATE TABLE IF NOT EXISTS "time_category" (
   "id"              UUID PRIMARY KEY,
   "project_id"      UUID REFERENCES "project",
   "name"            TEXT NOT NULL,
-  "normalized_name" TEXT NOT NULL
+  "normalized_name" TEXT NOT NULL,
+  "disabled"        BOOLEAN NOT NULL DEFAULT FALSE
 );
 CREATE INDEX ON "time_category" ("project_id");
 

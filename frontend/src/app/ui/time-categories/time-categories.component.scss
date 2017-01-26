@@ -8,10 +8,6 @@
   @extend %tag;
 }
 
-.tag-wrapper {
-
-}
-
  .actions {
 
  }
@@ -26,7 +22,7 @@
   margin-bottom: $small-gap;
 }
 
-.assignment-tags {
+.time-categories {
  margin-top: 50px;
 }
 
@@ -36,7 +32,7 @@
   display: inline-block;
 }
 
-.assignment-tag {
+.time-category {
   margin-bottom: $internal-gap;
 }
 
