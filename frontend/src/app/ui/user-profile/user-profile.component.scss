@@ -1,0 +1,40 @@
+ @import '../../../style/constants.scss';
+ .row {
+   margin-top: $small-gap;
+   margin-bottom: 0;
+   padding-bottom: 0;
+   position: relative;
+ }
+ 
+ .row .form-group {
+   margin-bottom: 0;
+ }
+ 
+ * .btn {
+   @extend %btn;
+ }
+ 
+ small {
+   color: darkgrey;
+ }
+ 
+ #imagePickerCol {
+   text-align: left;   
+ }
+ 
+ .core {
+   @extend %card;
+   position: relative;
+   max-width: 600px;
+   margin-left: auto;
+   margin-right: auto;
+ }
+ 
+ .title {
+   @extend %title;
+   margin-bottom: $small-gap;
+ }
+ 
+ #imagePickerCol {
+   margin-top: -70px;
+ }

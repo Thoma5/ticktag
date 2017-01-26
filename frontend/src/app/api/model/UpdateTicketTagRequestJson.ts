@@ -32,5 +32,7 @@ export interface UpdateTicketTagRequestJson {
 
     order?: number;
 
+    ticketTagGroupId: string;
+
 }
 

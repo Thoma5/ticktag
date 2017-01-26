@@ -30,7 +30,7 @@ open class TicketTagServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.READ_TICKET_TAG_FOR_GROUP)
     override fun listTicketTagsInGroup(@P("authTicketTagGroupId") ticketTagGroupId: UUID): List<TicketTagResult> {
-        val ticketTags = ticketTags.findByTicketTagGroupIdOrderByOrderAsc(ticketTagGroupId)
+        val ticketTags = ticketTags.findByTicketTagGroupIdAndDisabledIsOrderByOrderAsc(ticketTagGroupId,disabled = false)
         return ticketTags.map(::TicketTagResult)
     }
 
@@ -57,7 +57,8 @@ open class TicketTagServiceImpl @Inject constructor(
     @PreAuthorize(AuthExpr.EDIT_TICKET_TAG)
     override fun deleteTicketTag(@P("authTicketTagId") id: UUID) {
         val ticketTag = ticketTags.findOne(id) ?: throw NotFoundException()
-        ticketTags.delete(ticketTag)
+        ticketTag.normalizedName = ""
+        ticketTag.disabled = true
     }
 
     @PreAuthorize(AuthExpr.EDIT_TICKET_TAG)
@@ -78,6 +79,7 @@ open class TicketTagServiceImpl @Inject constructor(
         if (ticketTag.order != null) {
             ticketTagToUpdate.order = ticketTag.order
         }
+        ticketTagToUpdate.ticketTagGroup =  ticketTagGroups.findOne(ticketTag.ticketTagGroupId) ?: throw NotFoundException()
         return TicketTagResult(ticketTagToUpdate)
     }
 

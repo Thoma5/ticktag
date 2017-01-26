@@ -1,0 +1,69 @@
+<div *ngIf="loading" class='loading'>
+  <tt-loading></tt-loading>
+</div>
+<div *ngIf="!loading" class="content row">
+  <div class='core'>
+       <h1 class='title'>My User Profile</h1>
+    <form (ngSubmit)="onSubmit()" #f="ngForm">
+      <div class="row">
+        <div class="btn pull-right" id="imagePickerCol">
+          <tt-image-picker [portrait]="true" [defaultImage]="storedImageLink" (image)="setImage($event)" name="imagepicker"></tt-image-picker>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <label for="name">Name *</label>
+          <div class="form-group" [ngClass]="{'has-error has-feedback': f.controls.name?.touched && ! f.controls.name?.valid}">
+            <input class="form-control" type="text" name="name" minlength="1" [(ngModel)]="request.name" placeholder="Firstname Lastname"
+              required>
+            <span *ngIf="f.controls.name?.touched && !f.controls.name?.valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <label for="username">Username *</label>
+          <div class="form-group" [ngClass]="{'has-error has-feedback': f.controls.username?.touched && ! f.controls.username?.valid}">
+            <input class="form-control" disabled type="text" name="username" pattern="{{USERNAME_REGEX}}" value="{{username}}" required>
+            <span *ngIf="f.controls.username?.touched && !f.controls.username?.valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <label for="mail">E-Mail *</label>
+          <div class="form-group" [ngClass]="{'has-error has-feedback': f.controls.mail?.touched && ! f.controls.mail?.valid}">
+            <input class="form-control" type="email" pattern="{{MAIL_REGEX}}" #mail name="mail" [(ngModel)]="request.mail" placeholder="mail@example.e"
+              required>
+            <span *ngIf="f.controls.mail?.touched && !f.controls.mail?.valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <label for="password">Change Password</label>
+		   <div class="form-group" [ngClass]="{'has-error has-feedback': f.controls.oldpassword?.touched && ! f.controls.oldpassword?.valid}">
+            <input class="form-control" type="password" minlength="1" name="oldpassword" [(ngModel)]="request.oldPassword" placeholder="Old Password">
+            <span *ngIf="f.controls.oldpassword?.touched && !f.controls.oldpassword?.valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
+          </div>
+          <div class="form-group" [ngClass]="{'has-error has-feedback': f.controls.password?.touched && ! f.controls.password?.valid}">
+            <input class="form-control" type="password" minlength="8" name="password" [(ngModel)]="request.password" placeholder="New Password">
+            <span *ngIf="f.controls.password?.touched && !f.controls.password?.valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
+          </div>
+          <div class="form-group" [ngClass]="{'has-error has-feedback': f.controls.confPassword?.touched && (! f.controls.confPassword?.valid || request.password !== confPassword)}">
+            <input class="form-control" type="password" minlength="8" name="confPassword" [(ngModel)]="confPassword" placeholder="Confirm new Password">
+            <span *ngIf="f.controls.confPassword?.touched && !f.controls.confPassword?.valid && request.password !== confPassword" class="glyphicon glyphicon-remove form-control-feedback"></span>
+          </div>
+          <small>At least 8 characters</small>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <input type="button" class="btn btn-default btn-block" (click)="revert()" value="Revert Changes">
+          <input type="button" [disabled]="!f.form.valid || request.password !== confPassword" class="btn btn-success btn-block"
+            *ngIf="!working" (click)="onSubmit()" value="Update User">
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

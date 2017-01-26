@@ -1,9 +1,9 @@
-import { Component, Input, Output, EventEmitter, OnInit, ViewContainerRef } from '@angular/core';
-import { ApiCallService, ApiCallResult } from '../../../service';
-import { ProjectApi, UpdateProjectRequestJson, ProjectResultJson } from '../../../api';
-import { showValidationError } from '../../../util/error';
-import { Modal } from 'angular2-modal/plugins/bootstrap';
-import { Overlay } from 'angular2-modal';
+import {Component, Input, Output, EventEmitter, OnInit, ViewContainerRef} from '@angular/core';
+import {ApiCallService, ApiCallResult} from '../../../service';
+import {ProjectApi, UpdateProjectRequestJson, ProjectResultJson} from '../../../api';
+import {showValidationError} from '../../../util/error';
+import {Modal} from 'angular2-modal/plugins/bootstrap';
+import {Overlay} from 'angular2-modal';
 
 @Component({
   selector: 'tt-project-update',
@@ -26,11 +26,10 @@ export class ProjectUpdateComponent implements OnInit {
   @Output() readonly updated = new EventEmitter<ProjectResultJson>();
 
   constructor(private apiCallService: ApiCallService,
-    private projectApi: ProjectApi,
-    private modal: Modal,
-    private overlay: Overlay,
-    private vcRef: ViewContainerRef,
-  ) {
+              private projectApi: ProjectApi,
+              private modal: Modal,
+              private overlay: Overlay,
+              private vcRef: ViewContainerRef) {
     overlay.defaultViewContainer = vcRef;
   }
 
@@ -39,23 +38,26 @@ export class ProjectUpdateComponent implements OnInit {
     this.defaultIcon = this.project.icon ? this.project.icon.split(',')[1] : undefined;
     this.revert();
   }
+
   onSubmit(): void {
     this.working = true;
     this.apiCallService
       .call<ProjectResultJson>(h => this.projectApi.updateProjectUsingPUTWithHttpInfo(this.project.id, this.request, h))
       .subscribe(
-      result => {
-        if (result.isValid) {
-          this.request.name = '';
-          this.request.description = '';
-          this.request.icon = '';
-          this.updated.emit(result.result);
-        } else {
-          this.error(result);
-        }
-      },
-      undefined,
-      () => { this.working = false; });
+        result => {
+          if (result.isValid) {
+            this.request.name = '';
+            this.request.description = '';
+            this.request.icon = '';
+            this.updated.emit(result.result);
+          } else {
+            this.error(result);
+          }
+        },
+        undefined,
+        () => {
+          this.working = false;
+        });
   }
 
   setImage(img: string) {
@@ -68,6 +70,7 @@ export class ProjectUpdateComponent implements OnInit {
       this.request.icon = '';
     }
   }
+
   revert() {
     this.request.name = this.project.name;
     this.request.description = this.project.description;

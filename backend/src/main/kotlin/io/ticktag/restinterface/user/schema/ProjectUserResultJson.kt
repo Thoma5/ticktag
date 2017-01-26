@@ -17,7 +17,8 @@ data class ProjectUserResultJson(
         val imageId: String,
         val projectId: UUID,
         val joinDate: Instant,
-        val disabled: Boolean
+        val disabled: Boolean,
+        val defaultAssignmentTagId: UUID?
 ) {
-    constructor(u: ProjectUserResult) : this(id = u.id, name = u.name, mail = u.mail, role = u.role, disabled = u.disabled, username = u.username, imageId = Base64.encodeBase64URLSafeString(u.imageId.data), projectRole = u.projectRole, projectId = u.projectId, joinDate = u.joinDate)
+    constructor(u: ProjectUserResult) : this(id = u.id, name = u.name, mail = u.mail, role = u.role, disabled = u.disabled, username = u.username, imageId = Base64.encodeBase64URLSafeString(u.imageId.data), projectRole = u.projectRole, projectId = u.projectId, joinDate = u.joinDate, defaultAssignmentTagId = u.defaultAssignmentTagId)
 }

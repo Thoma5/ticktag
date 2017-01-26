@@ -86,7 +86,7 @@ export class TicketDetailComponent implements OnInit {
     private modal: Modal,
     private overlay: Overlay,
     private vcRef: ViewContainerRef,
-    ) {
+  ) {
     overlay.defaultViewContainer = vcRef;
   }
 
@@ -115,7 +115,7 @@ export class TicketDetailComponent implements OnInit {
     });
   }
 
-  onDescriptionChange(change: {text: string, commands: imm.List<Cmd>}): void {
+  onDescriptionChange(change: { text: string, commands: imm.List<Cmd> }): void {
     this.transientTicket.description = change.text;
     this.newTicketDetail();
     this.updateTicket({ description: { value: change.text }, commands: change.commands.toArray() }, () => {
@@ -305,7 +305,7 @@ export class TicketDetailComponent implements OnInit {
       } else {
         this.transientSubtickets = this.transientSubtickets.remove(transientId);
       }
-        this.newTicketDetail();
+      this.newTicketDetail();
     });
   }
 
@@ -320,6 +320,15 @@ export class TicketDetailComponent implements OnInit {
       .subscribe(() => {
         this.transientTimes = this.transientTimes.delete(id);
       });
+  }
+
+  scrollToCommentInput(event: KeyboardEvent) {
+    if (event.altKey && event.key === 'c') {
+      const element = document.querySelector('#comment-input');
+      if (element) {
+        element.scrollIntoView(element);
+      }
+    }
   }
 
   private updateTicket(req: UpdateTicketRequestJson, onFinish: () => void): void {
@@ -392,7 +401,7 @@ export class TicketDetailComponent implements OnInit {
     );
   }
 
-  private error(result: ApiCallResult<void|{}>): void {
+  private error(result: ApiCallResult<void | {}>): void {
     showValidationError(this.modal, result);
   }
 
@@ -400,7 +409,7 @@ export class TicketDetailComponent implements OnInit {
     return Observable.defer(() => {
       this.ticketEvents = undefined;
       this.ticketDetail = undefined;
-      this.allTicketTags =  undefined;
+      this.allTicketTags = undefined;
       this.allAssignmentTags = undefined;
       this.allTimeCategories = undefined;
       this.interestingUsers = undefined;
@@ -461,72 +470,76 @@ export class TicketDetailComponent implements OnInit {
       .callNoError<TicketEventResultJson[]>(p => this.ticketEventApi.listTicketEventsUsingGETWithHttpInfo(rawTicket.id, p)));
 
     let getObs = Observable.zip(rawTicketObs, rawCommentObs, rawTicketEventObs).flatMap(tuple => {
-        let [ticket, comments, events] = tuple;
+      let [ticket, comments, events] = tuple;
 
-        // We need all assigned users
-        let wantedUserIds = ticket.ticketUserRelations.map(ta => ta.userId);
-        // And the comment authors
-        comments.forEach(c => {
-          wantedUserIds.push(c.userId);
-        });
-        // And transient users
-        transientUsers.forEach(tu => {
-          wantedUserIds.push(tu.user.id);
-        });
-        // And the person who created it
-        wantedUserIds.push(ticket.createdBy);
+      // We need all assigned users
+      let wantedUserIds = ticket.ticketUserRelations.map(ta => ta.userId);
+      // And the comment authors
+      comments.forEach(c => {
+        wantedUserIds.push(c.userId);
+      });
+      // And transient users
+      transientUsers.forEach(tu => {
+        wantedUserIds.push(tu.user.id);
+      });
+      // And the person who created it
+      wantedUserIds.push(ticket.createdBy);
 
-        // We need the subtickets
-        let wantedTicketIds = ticket.subTicketIds.slice();
-        // And referenced tickets
-        wantedTicketIds.push(...ticket.referencedTicketIds);
-        // And tickets that reference this ticket
-        wantedTicketIds.push(...ticket.referencingTicketIds);
+      // We need the subtickets
+      let wantedTicketIds = ticket.subTicketIds.slice();
+      // And referenced tickets
+      wantedTicketIds.push(...ticket.referencedTicketIds);
+      // And tickets that reference this ticket
+      wantedTicketIds.push(...ticket.referencingTicketIds);
+      // And our parent
+      if (ticket.parentTicketId != null) {
+        wantedTicketIds.push(ticket.parentTicketId);
+      }
 
-        // We need users, comments and parent tickets from events
-        events.forEach(event => {
-          let e: any = event;
-          wantedUserIds.push(e.userId);
-          switch (e.type) {
-            case 'TicketEventParentChangedResultJson':
-              if (e.srcParentId) { wantedTicketIds.push(e.srcParentId); }
-              if (e.dstParentId) { wantedTicketIds.push(e.dstParentId); }
-              break;
-            case 'TicketEventUserAddedResultJson':
-              wantedUserIds.push(e.addedUserId);
-              break;
-            case 'TicketEventUserRemovedResultJson':
-              wantedUserIds.push(e.removedUserId);
-              break;
-            case 'TicketEventMentionAddedResultJson':
-              wantedTicketIds.push(e.mentionedTicketId);
-              break;
-            case 'TicketEventMentionRemovedResultJson':
-              wantedTicketIds.push(e.mentionedTicketId);
-              break;
-          }
-        });
+      // We need users, comments and parent tickets from events
+      events.forEach(event => {
+        let e: any = event;
+        wantedUserIds.push(e.userId);
+        switch (e.type) {
+          case 'TicketEventParentChangedResultJson':
+            if (e.srcParentId) { wantedTicketIds.push(e.srcParentId); }
+            if (e.dstParentId) { wantedTicketIds.push(e.dstParentId); }
+            break;
+          case 'TicketEventUserAddedResultJson':
+            wantedUserIds.push(e.addedUserId);
+            break;
+          case 'TicketEventUserRemovedResultJson':
+            wantedUserIds.push(e.removedUserId);
+            break;
+          case 'TicketEventMentionAddedResultJson':
+            wantedTicketIds.push(e.mentionedTicketId);
+            break;
+          case 'TicketEventMentionRemovedResultJson':
+            wantedTicketIds.push(e.mentionedTicketId);
+            break;
+        }
+      });
 
-        // Tickets needed for progress
-        let wantedStatisticIds = new Array<string>();
-        // The ticket itself
-        wantedStatisticIds.push(ticket.id);
-        // And all subtickets
-        wantedStatisticIds.push(...ticket.subTicketIds);
+      // Tickets needed for progress
+      let wantedStatisticIds = new Array<string>();
+      // The ticket itself
+      wantedStatisticIds.push(ticket.id);
+      // And all subtickets
+      wantedStatisticIds.push(...ticket.subTicketIds);
 
-        let wantedLoggedTimeIds = new Array<string>().concat(...comments.map(c => c.loggedTimeIds));
+      let wantedLoggedTimeIds = new Array<string>().concat(...comments.map(c => c.loggedTimeIds));
 
-        return this.apiCallService
-          .callNoError<GetResultJson>(p => this.getApi.getUsingPOSTWithHttpInfo({
-            userIds: wantedUserIds,
-            ticketIds: wantedTicketIds,
-            ticketIdsForStatistic: wantedStatisticIds,
-            loggedTimeIds: wantedLoggedTimeIds,
-          }, p));
+      return this.apiCallService
+        .callNoError<GetResultJson>(p => this.getApi.getUsingPOSTWithHttpInfo({
+          userIds: wantedUserIds,
+          ticketIds: wantedTicketIds,
+          ticketIdsForStatistic: wantedStatisticIds,
+          loggedTimeIds: wantedLoggedTimeIds,
+        }, p));
     });
 
     return Observable.zip(rawTicketObs, assignmentTagsObs, ticketTagsObs, timeCategoriesObs, rawCommentObs,
-           Observable.zip(rawTicketEventObs, getObs))
+      Observable.zip(rawTicketEventObs, getObs))
       .do(tuple => {
         let [ticket, assignmentTags, ticketTags, timeCategories, comments, [ticketEvents, get]] = tuple;
 

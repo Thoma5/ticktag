@@ -16,7 +16,7 @@
           </tt-ticket-filter>
         </div>
         <div class="col-md-1 aboveTableButtons">
-          <input type="button" class="btn btn-primary button-submit pull-right" value="Add" (click)="onStartCreate()">
+          <button type="button" class="btn btn-primary button-submit pull-right" (click)="onStartCreate()"><span class="glyphicon glyphicon-plus"></span> Add Ticket</button>
         </div>
       </div>
       <ngx-datatable class="material" [rows]="rows" [columns]="columns" [columnMode]="'force'" [headerHeight]="32" [rowHeight]="32"
@@ -46,8 +46,7 @@
             <tt-tagview [tags]="value" (clickedTag)="onTagClicked($event)"></tt-tagview>
           </template>
         </ngx-datatable-column>
-        <ngx-datatable-column name="Asignees" prop="users" minWidth="128" width="128" maxWidth="128" [draggable]="false" [sortable]="false"
-          [resizeable]="false">
+        <ngx-datatable-column name="Asignees" prop="users" minWidth="128" width="128" [draggable]="false" [sortable]="false">
           <template let-row="row" let-value="value" ngx-datatable-cell-template>
             <div float="left">
               <tt-assigned-user-overview [users]="value" (clickedUser)="onUserClicked($event)"></tt-assigned-user-overview>
@@ -61,15 +60,15 @@
             {{value | date: 'yyyy-MM-dd': 'UTC'}}
           </template>
         </ngx-datatable-column>
-        <ngx-datatable-column name="Progress" minWidth="128" width="128" [draggable]="false" [resizeable]="false">
+        <ngx-datatable-column name="Progress" minWidth="128" width="128" maxWidth="128" [draggable]="false" [resizeable]="false">
           <template let-row="row" let-value="value" ngx-datatable-cell-template>
             <div *ngIf="value !== '' && value <= 1" style="border:solid 0.11em #d3d3d3; margin:0.5em" tooltip="{{value*100 | number : '1.0-0'}}%"
               tooltipPlacement="left" tooltipTrigger="mouseenter">
               <div style="background:linear-gradient(to bottom, #00b7ea 0%,#009ec3 100%);height:0.8em" [style.width]="value*100+'%'"></div>
             </div>
-            <div *ngIf="value !== '' && value > 1" style="border:solid 0.11em #d3d3d3; margin:0.5em" tooltip="{{value*100 | number : '1.0-0'}}%"
+            <div *ngIf="value !== '' && value > 1" style="border:solid 0.11em #d3d3d3; margin:0.5em" tooltip="{{100 | number : '1.0-0'}}%"
               tooltipPlacement="left" tooltipTrigger="mouseenter">
-              <div style="background:linear-gradient(to bottom, #ff3019 0%,#cf0404 100%);height:0.8em" [style.width]="100+'%'"></div>
+              <div style="background:linear-gradient(to bottom, #00b7ea 0%,#009ec3 100%);height:0.8em" [style.width]="100+'%'"></div>
             </div>
             <div *ngIf="value === ''" style="margin-left: 3em" tooltip="No estimation!" tooltipPlacement="left" tooltipTrigger="mouseenter">
               -

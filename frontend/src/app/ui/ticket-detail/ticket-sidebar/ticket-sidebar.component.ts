@@ -1,4 +1,4 @@
-import { Component, Input, EventEmitter, Output, OnChanges, SimpleChanges, ElementRef } from '@angular/core';
+import {Component, Input, EventEmitter, Output, OnChanges, SimpleChanges, ElementRef} from '@angular/core';
 import { Router } from '@angular/router';
 import { UserApi, UserResultJson } from '../../../api';
 import { ApiCallService } from '../../../service';
@@ -43,13 +43,13 @@ export class TicketSidebarComponent implements OnChanges {
   private awesomeplete: any = null;
   private input: HTMLInputElement = null;
   private newUserName = '';
-
   constructor(
     private userApi: UserApi,
     private apiCallService: ApiCallService,
     private router: Router,
     private elementRef: ElementRef) {
   }
+
 
   ngOnChanges(changes: SimpleChanges) {
     if ('ticket' in changes || 'allAssignmentTags' in changes) {

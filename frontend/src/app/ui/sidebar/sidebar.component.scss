@@ -1,227 +1,220 @@
  @import '../../../style/constants.scss';
-
  $project-picker-height: 6rem;
  $project-picker-content-height: 3rem;
  $project-picker-padding: ($project-picker-height - $project-picker-content-height) / 2;
  $project-picker-row-height: 4rem;
  $project-picker-row-content-height: 2rem;
  $project-picker-row-padding: ($project-picker-row-height - $project-picker-row-content-height) / 2;
-
-.component {
-  height: 100%;
-  width: 100%;
-  text-align: left;
-  background-color: darkslategrey;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: white;
-
-  a {
+ .component {
+   height: 100%;
+   width: 100%;
+   text-align: left;
+   background-color: #2c3539;
+   position: relative;
+   overflow: hidden;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   color: white;
+   a {
      width: 100%;
      text-align: left;
      color: white !important;
-  }
-}
+     text-decoration: none !important;
+   }
+ }
+ 
+ .loading {
+   height: $project-picker-height;
+   width: 100%;
+   display: flex;
+   flex-direction: row;
+   flex-wrap: nowrap;
+   align-items: center;
+   justify-content: center;
+   .spinner-wrapper {
+     width: 2em;
+     height: 2em;
+   }
+ }
+ 
+ .nav-top-block {
+   width: 100%;
+   margin-top: 2rem;
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+ }
+ 
+ .project-present {
+   width: 100%;
+   height: 100%;
+ }
+ 
+ .project-picker {
+   height: $project-picker-height;
+   width: 100%;
+   padding-top: $project-picker-padding;
+   padding-bottom: $project-picker-padding;
+   padding-left: 1rem;
+   padding-right: 1rem;
+   color: white;
+   font-weight: bold;
+   font-size: 1.5em;
+   overflow: hidden;
+   display: block;
+   .project-none {
+     width: 100%;
+     height: $project-picker-content-height;
+     display: flex;
+     flex-direction: row;
+     align-items: center;
+     justify-content: center;
+     overflow: hidden;
+     text-overflow: ellipsis;
+     white-space: nowrap;
+     i {
+       margin-left: 1em;
+       font-size: 0.5em;
+     }
+   }
+   .project-present {
+     height: $project-picker-content-height;
+     width: 100%;
+     display: flex;
+     flex-direction: row;
+     flex-wrap: nowrap;
+     align-items: center;
+     .project-icon {
+       flex-basis: $project-picker-content-height;
+       height: $project-picker-content-height;
+       flex-grow: 0;
+       flex-shrink: 0;
+       border-radius: 50%;
+       position: relative;
+       overflow: hidden;
+       img {
+         width: 100%;
+         height: 100%;
+         object-fit: contain;
+       }
+     }
+     .project-name {
+       width: 100%;
+       margin-left: 1rem;
+       white-space: nowrap;
+       overflow: hidden;
+       text-overflow: ellipsis;
+     }
+   }
+ }
+ 
+ .project-selection-block {
+   width: 100%;
+   transform-origin: top;
+   overflow: hidden;
+   display: none;
+   &.collapsed {
+     display: block;
+     animation: shrink .2s ease-in-out forwards;
+   }
+   &.expanded {
+     display: block;
+     animation: grow .2s ease-in-out forwards;
+   }
+   .selection-button {
+     width: 100%;
+     height: $project-picker-row-height;
+     padding-top: $project-picker-row-padding;
+     padding-bottom: $project-picker-row-padding;
+     .selection-item {
+       height: $project-picker-row-content-height;
+       width: 100%;
+       display: flex;
+       flex-direction: row;
+       flex-wrap: nowrap;
+       align-items: center;
+       .small-project-icon {
+         flex-basis: $project-picker-row-content-height;
+         height: $project-picker-row-content-height;
+         flex-grow: 0;
+         flex-shrink: 0;
+         border-radius: 50%;
+         position: relative;
+         overflow: hidden;
+         img {
+           width: 100%;
+           height: 100%;
+           object-fit: contain;
+         }
+       }
+       .small-project-name {
+         width: 100%;
+         margin-left: 1rem;
+         white-space: nowrap;
+         overflow: hidden;
+         text-overflow: ellipsis;
+       }
+     }
+   }
+ }
+ 
+ .navadmin-block {
+   width: 100%;
+   margin-top: 2rem;
+ }
 
-.loading {
-  height: $project-picker-height;
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: center;
+ .user-block {
+	  width: 100%;
+	  margin-top: 2rem;
+	}
 
-  .spinner-wrapper {
-    width: 2em;
-    height: 2em;
-  }
-}
-
-.nav-top-block{
-  width: 100%;
-  margin-top: 2rem;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.project-present {
-  width: 100%;
-  height: 100%;
-}
-
-.project-picker {
-  height: $project-picker-height;
-  width: 100%;
-  padding-top: $project-picker-padding;
-  padding-bottom: $project-picker-padding;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  color: white;
-  font-weight: bold;
-  font-size: 1.5em;
-  overflow: hidden;
-  display: block;
-
-  .project-none {
-    width: 100%;
-    height: $project-picker-content-height;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .project-present {
-    height: $project-picker-content-height;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: center;
-
-    .project-icon {
-      flex-basis: $project-picker-content-height;
-      height: $project-picker-content-height;
-      flex-grow: 0;
-      flex-shrink: 0;
-      border-radius: 50%;
-      position: relative;
-      overflow: hidden;
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-      }
-    }
-
-    .project-name {
-      width: 100%;
-      margin-left: 1rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  }
-}
-
-.project-selection-block {
-  width: 100%;
-  transform-origin: top;
-  overflow: hidden;
-  display: none;
-
-  &.collapsed {
-    display: block;
-    animation: shrink .2s ease-in-out forwards;
-  }
-
-  &.expanded {
-    display: block;
-    animation: grow .2s ease-in-out forwards;
-  }
-
-  .selection-button {
-    width: 100%;
-    height: $project-picker-row-height;
-    padding-top: $project-picker-row-padding;
-    padding-bottom: $project-picker-row-padding;
-
-    .selection-item {
-      height: $project-picker-row-content-height;
-      width: 100%;
-      display: flex;
-      flex-direction: row;
-      flex-wrap: nowrap;
-      align-items: center;
-
-      .small-project-icon {
-        flex-basis: $project-picker-row-content-height;
-        height: $project-picker-row-content-height;
-        flex-grow: 0;
-        flex-shrink: 0;
-        border-radius: 50%;
-        position: relative;
-        overflow: hidden;
-
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: contain;
-        }
-      }
-
-      .small-project-name {
-        width: 100%;
-        margin-left: 1rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-    }
-  }
-}
-
-.navadmin-block {
-  width: 100%;
-  margin-top: 2rem;
-}
-
-
-.project-links {
-  width: 100%;
-  margin-top: 2rem;
-}
-
-.link-icon {
-  width: 10%;
-  text-align: center;
-  position: relative;
-}
-
-.link-text {
-  width: 90%;
-  text-align: left;
-  position: relative;
-}
-
-@keyframes grow {
-  0% {
-    height: 0;
-    opacity: 0;
-  }
-  1% {
-    height: auto;
-    opacity: 0;
-    transform: scaleY(0);
-  }
-  100% {
-    height: auto;
-    transform: scaleY(1);
-  }
-}
-
-@keyframes shrink {
-  0% {
-    height: auto;
-    opacity: 1;
-    transform: scaleY(1);
-  }
-  99% {
-    height: auto;
-    opacity: 0;
-    transform: scaleY(0);
-  }
-  100% {
-    height: 0;
-    opacity: 0;
-  }
-}
+ .project-links {
+   width: 100%;
+   margin-top: 2rem;
+ }
+ 
+ .link-icon {
+   width: 10%;
+   text-align: center;
+   position: relative;
+ }
+ 
+ .link-text {
+   width: 90%;
+   text-align: left;
+   position: relative;
+ }
+ 
+ @keyframes grow {
+   0% {
+     height: 0;
+     opacity: 0;
+   }
+   1% {
+     height: auto;
+     opacity: 0;
+     transform: scaleY(0);
+   }
+   100% {
+     height: auto;
+     transform: scaleY(1);
+   }
+ }
+ 
+ @keyframes shrink {
+   0% {
+     height: auto;
+     opacity: 1;
+     transform: scaleY(1);
+   }
+   99% {
+     height: auto;
+     opacity: 0;
+     transform: scaleY(0);
+   }
+   100% {
+     height: 0;
+     opacity: 0;
+   }
+ }

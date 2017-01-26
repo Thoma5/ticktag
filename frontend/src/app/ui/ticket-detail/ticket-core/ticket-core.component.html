@@ -6,6 +6,9 @@
         <div class='header-row'>
             <h3 class='title'>
                 <div class='title-container'>
+                    <span *ngIf='parentTicket != null' class='parent-ticket'>
+                      <a [routerLink]="['/project', ticket.projectId, 'ticket', parentTicket.number]">#{{parentTicket.number}}</a><span class='parent-ticket-divider'>/</span>
+                    </span>
                     <span class='number'>#{{number}}</span>
                     <span class='title-text-wrapper'>
                         <tt-edit-textview-string [content]='title' (contentChange)='titleChange.emit($event)' [transient]="titleTransient"></tt-edit-textview-string>

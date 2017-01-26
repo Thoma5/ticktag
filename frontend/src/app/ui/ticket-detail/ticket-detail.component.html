@@ -17,6 +17,7 @@
                 [creator]='ticketDetail.createdBy'
                 [createTime]='ticketDetail.createTime'
                 [subtickets]='ticketDetail.subtickets' (subticketAdd)='onSubticketAdd($event)'
+                [parentTicket]='ticketDetail.parentTicket'
 
                 [ticket]='ticketDetail'
                 [allTicketTags]='allTicketTags'
@@ -51,6 +52,7 @@
             </div>
           </tab>
         </tabset>
+		<div (window:keydown)="scrollToCommentInput($event)" style="display:none">Add New Comment</div>
       </div>
     </div>
     <div class='right col-md-4'>

@@ -58,35 +58,35 @@ open class TicketServiceImpl @Inject constructor(
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listTicketsOverview(@P("authProjectId") project: UUID,
-                             numbers: List<Int>?,
-                             title: String?,
-                             tags: List<String>?,
-                             users: List<String>?,
-                             progressOne: Float?,
-                             progressTwo: Float?,
-                             progressGreater: Boolean?,
-                             dueDateOne: Instant?,
-                             dueDateTwo: Instant?,
-                             dueDateGreater: Boolean?,
-                             storyPointsOne: Int?,
-                             storyPointsTwo: Int?,
-                             storyPointsGreater: Boolean?,
-                             open: Boolean?,
-                             parent: Int?,
-                             pageable: Pageable): Page<TicketOverviewResult> {
+                                     numbers: List<Int>?,
+                                     title: String?,
+                                     tags: List<String>?,
+                                     users: List<String>?,
+                                     progressOne: Float?,
+                                     progressTwo: Float?,
+                                     progressGreater: Boolean?,
+                                     dueDateOne: Instant?,
+                                     dueDateTwo: Instant?,
+                                     dueDateGreater: Boolean?,
+                                     storyPointsOne: Int?,
+                                     storyPointsTwo: Int?,
+                                     storyPointsGreater: Boolean?,
+                                     open: Boolean?,
+                                     parent: Int?,
+                                     pageable: Pageable): Page<TicketOverviewResult> {
         if (progressOne?.isNaN() ?: false || progressOne?.isInfinite() ?: false) {
-            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueProgressOne"))))
+            throw TicktagValidationException(listOf(ValidationError("listTickets.ProgressOne", ValidationErrorDetail.Other("invalidValue"))))
         }
         if (progressTwo?.isNaN() ?: false || progressTwo?.isInfinite() ?: false) {
-            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueProgressTwo"))))
+            throw TicktagValidationException(listOf(ValidationError("listTickets.ProgressTwo", ValidationErrorDetail.Other("invalidValue"))))
         }
         if (tags?.contains("") ?: false) {
-            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueInTags"))))
+            throw TicktagValidationException(listOf(ValidationError("listTickets.Tags", ValidationErrorDetail.Other("invalidValue"))))
         }
         if (users?.contains("") ?: false) {
-            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueInTags"))))
+            throw TicktagValidationException(listOf(ValidationError("listTickets.Tags", ValidationErrorDetail.Other("invalidValue"))))
         }
-        val filter = TicketFilter(project, if (numbers?.size == 0) null else  numbers, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open, parent)
+        val filter = TicketFilter(project, if (numbers?.size == 0) null else numbers, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open, parent)
         val page = tickets.findAll(filter, pageable)
         val content = page.content.map(::TicketOverviewResult)
         return PageImpl(content, pageable, page.totalElements)
@@ -109,18 +109,18 @@ open class TicketServiceImpl @Inject constructor(
                                         open: Boolean?,
                                         parent: Int?): List<TicketStoryPointResult> {
         if (progressOne?.isNaN() ?: false || progressOne?.isInfinite() ?: false) {
-            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueProgressOne"))))
+            throw TicktagValidationException(listOf(ValidationError("listTickets.ProgressOne", ValidationErrorDetail.Other("invalidValue"))))
         }
         if (progressTwo?.isNaN() ?: false || progressTwo?.isInfinite() ?: false) {
-            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueProgressTwo"))))
+            throw TicktagValidationException(listOf(ValidationError("listTickets.ProgressTwo", ValidationErrorDetail.Other("invalidValue"))))
         }
         if (tags?.contains("") ?: false) {
-            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueInTags"))))
+            throw TicktagValidationException(listOf(ValidationError("listTickets.Tags", ValidationErrorDetail.Other("invalidValue"))))
         }
         if (users?.contains("") ?: false) {
-            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueInUsers"))))
+            throw TicktagValidationException(listOf(ValidationError("listTickets.Users", ValidationErrorDetail.Other("invalidValue"))))
         }
-        val filter = TicketFilter(project, if (numbers?.size == 0) null else  numbers, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater,null, parent)
+        val filter = TicketFilter(project, if (numbers?.size == 0) null else numbers, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, null, parent)
         val ticketResult = tickets.findAll(filter)
         return ticketResult.map { t -> TicketStoryPointResult(t.id, t.open, t.storyPoints) }
     }
@@ -206,6 +206,9 @@ open class TicketServiceImpl @Inject constructor(
         // Execute commands
         commandService.applyCommands(newComment, createTicket.commands, principal)
 
+        //Save open Date in Events
+        ticketEvents.insert(TicketEventStateChanged.create(newTicket, user, false, true))
+
         // Neither EM nor UPDATECASCADE can reload the ticket
         val ticketResult = toResultDto(newTicket)
                 .copy(subTicketIds = newSubs, ticketAssignments = ticketAssignmentList)
@@ -264,6 +267,20 @@ open class TicketServiceImpl @Inject constructor(
                 ticketEvents.insert(TicketEventParentChanged.create(ticket, user, ticket.parentTicket, parentTicket))
             ticket.parentTicket = parentTicket
         }
+
+        //Close Parent Ticket if it has no estimated time and all sub tickets are closed
+        if (!ticket.open && ticket.parentTicket != null) {
+            val parentTicket = ticket.parentTicket ?: throw NotFoundException()
+            if (parentTicket.open && parentTicket.currentEstimatedTime == null) {
+                val subtickets = tickets.findSubticketsByTicketIds(listOf(parentTicket.id)).get(parentTicket.id).orEmpty()
+                val closeParent = subtickets.none { it.id != ticketId && it.open }
+                if (closeParent) {
+                    var updateParentTicket = UpdateTicket(open = UpdateValue(false), commands = null, currentEstimatedTime = null, description = null, dueDate = null, initialEstimatedTime = null, parentTicket = null, storyPoints = null, title = null)
+                    updateTicket(updateParentTicket, parentTicket.id, principal)
+                }
+            }
+        }
+
         //Comment
         if (updateTicket.description != null) {
             if (ticket.descriptionComment.text != updateTicket.description.value)

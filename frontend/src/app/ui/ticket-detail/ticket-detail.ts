@@ -287,6 +287,7 @@ export class TicketDetailTag implements Tag {
   readonly normalizedName: string;
   readonly order: number;
   readonly color: string;
+  readonly disabled: boolean;
 
   constructor(tag: TicketTagResultJson) {
     this.id = tag.id;
@@ -294,6 +295,7 @@ export class TicketDetailTag implements Tag {
     this.normalizedName = tag.normalizedName;
     this.order = tag.order;
     this.color = tag.color;
+    this.disabled = tag.disabled;
     Object.freeze(this);
   }
 }
@@ -348,6 +350,7 @@ export function newTransientTicketDetailRelated(title: string, description: stri
 }
 
 export class TicketDetail {
+  readonly parentTicket: TicketDetailRelated | undefined;
   readonly comments: imm.List<TicketDetailComment>;
   readonly createTime: number;
   readonly createdBy: TicketDetailUser;
@@ -382,6 +385,7 @@ export class TicketDetail {
       transientSubtickets: imm.Map<string, TicketDetailRelated>,
       progress: TicketDetailProgress,
       ) {
+    this.parentTicket = relatedTickets.get(ticket.parentTicketId);
     this.comments = imm.List(ticket.commentIds)
       .map(cid => comments.get(cid))
       .filter(it => !!it)

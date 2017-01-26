@@ -26,11 +26,11 @@ b {
 * .btn,
 input,
 select {
-  border-radius: 0 !important;
+  @extend %btn;
 }
 
 .btn {
-  height: 34px;
+  @extend %btn;
 }
 
 .tag {
@@ -46,18 +46,40 @@ select {
 }
 
 * {
-    vertical-align: middle !important;
+  vertical-align: middle !important;
 }
+
 .dropdown-menu form {
   margin: 0.5em 0.5em 0.5em 0.5em;
 }
+
 .dropdown-menu {
-   overflow: auto;
-   max-height: 600px;
-   z-index: 9999;
+  overflow: auto;
+  max-height: 30em;
+  z-index: 9999;
 }
 
 .dropdown-menu select {
   margin: 0 0 0.8em 0;
   min-width: 170px;
+}
+
+.noselect {
+  a:hover {
+    background-color: dodgerblue;
+  }
+  cursor: pointer;
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  -webkit-user-select: none;
+  /* Safari*/
+  -khtml-user-select: none;
+  /* Konqueror */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
 }

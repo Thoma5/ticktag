@@ -1,0 +1,27 @@
+ @import '../../../style/constants.scss';
+ .row {
+  margin-top: $small-gap;
+  position: relative;
+    }
+.card{
+  @extend %card;
+  margin-bottom: 3em;
+}
+h1{
+  font-size: 1.5em;
+  font-weight: 700;
+  text-align: center;
+}
+h2{
+  font-size: 1.2em;
+  font-weight: 600;
+  text-align: center;
+}
+.centeredImage{
+  display: block;
+  margin-left: auto;
+  margin-right:auto;
+}
+* .btn{
+  @extend %btn;
+}

@@ -65,15 +65,19 @@ export class TicketFilter {
             list.push('!sp:' + this.storyPointsOne);
         }
         if (this.open !== undefined) { list.push('!open:' + this.open); }
-        if (this.parentNumber !== undefined) { list.push('!parent:' + this.parentNumber); }
-        return list.join(' ');
+        if (this.parentNumber !== undefined) { list.push('!parent:' + ((this.parentNumber < 0) ? 'none' : this.parentNumber)); }
+        let joinedList = list.join(' ');
+        if (joinedList.length > 0 && joinedList.charAt(0) === ' ') {
+            joinedList = joinedList.substring(1);
+        }
+        return joinedList;
     }
     toTicketFilterURLString(): string {
         let list: string[] = [];
-        if (this.title) { list.push('title=' + this.title); }
+        if (this.title) { list.push('title=' + encodeURIComponent(this.title)); }
         if (this.ticketNumbers) { list.push('ticketNumber=' + this.ticketNumbers); }
-        if (this.tags) { list.push('tag=' + this.tags); }
-        if (this.users) { list.push('user=' + this.users); }
+        if (this.tags) { list.push('tag=' + this.tags.map(e => encodeURIComponent(e))); }
+        if (this.users) { list.push('user=' + this.users.map(e => encodeURIComponent(e))); }
         if (this.progressOne && this.progressTwo) {
             list.push('progressOne=' + this.progressOne);
             list.push('progressTwo=' + this.progressTwo);

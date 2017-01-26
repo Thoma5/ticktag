@@ -1,14 +1,13 @@
+ @import '../../../style/constants.scss';
+
 .btn-file {
+    @extend %btn;
     position: relative;
-    border-radius: 0;
     overflow: hidden;
     width: 8em;
 }
 imagepicker {
     height: 48px;
-}
-img {
-    border: 1px solid lightgray
 }
 .show-icon {
     position: relative;
