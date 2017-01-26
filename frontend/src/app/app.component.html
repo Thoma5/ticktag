@@ -1,5 +1,5 @@
 <md-sidenav-layout fullscreen>
-  <md-sidenav #start opened mode="side">
+  <md-sidenav #start [opened]="user" mode="side">
     <tt-sidebar *ngIf="user"
       [user]="user"
       [project]="project"
@@ -9,9 +9,9 @@
     </tt-sidebar>
   </md-sidenav>
 
-  <div>
-    <button md-button (click)="start.toggle()"><span class="glyphicon glyphicon-menu-hamburger"></span></button>
-    <a md-button align="end" *ngIf="!user" [routerLink]="['login']">Login</a>
+  <div class="topbar">
+    <button *ngIf="user" md-button (click)="start.toggle()"><span class="glyphicon glyphicon-menu-hamburger"></span></button>
+    <a md-raised-button color="primary" align="end" *ngIf="!user  && showLoginButton" [routerLink]="['login']">Login</a>
     <a md-button align="end" *ngIf="user" href="" (click)="logout(); $event.preventDefault()">Logout</a>
   </div>
   <main>

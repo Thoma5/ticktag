@@ -41,6 +41,18 @@
     flex-direction: row;
     flex-wrap: nowrap;
 
+    .parent-ticket {
+      a {
+        color: $font-color-secondary;
+      }
+
+      .parent-ticket-divider {
+        color: $font-color-secondary;
+        margin-left: $internal-gap / 2;
+        margin-right: $internal-gap / 2;
+      }
+    }
+
     .title-text-wrapper {
         margin-left: $internal-gap;
     }

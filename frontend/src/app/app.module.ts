@@ -90,24 +90,28 @@ import { TicketEventParentChangedComponent }
 import { TicketEventTagComponent } from './ui/ticket-detail/ticket-events/ticket-event-tag/ticket-event-tag.component';
 import { TicketEventOldNewMarkupComponent }
   from './ui/ticket-detail/ticket-events/ticket-event-old-new-markup/ticket-event-old-new-markup.component';
-import {KanbanBoardsComponent} from './ui/kanban-boards/kanban-boards.component';
-import {BoardApi} from './api/api/BoardApi';
-import {KanbanBoardDetailComponent} from './ui/kanban-board-detail/kanban-board-detail.component';
-import {KanbanCellComponent} from './ui/kanban-board-detail/kanban-cell/kanban-cell.component';
+import { KanbanBoardsComponent } from './ui/kanban-boards/kanban-boards.component';
+import { BoardApi } from './api/api/BoardApi';
+import { KanbanBoardDetailComponent } from './ui/kanban-board-detail/kanban-board-detail.component';
+import { KanbanCellComponent } from './ui/kanban-board-detail/kanban-cell/kanban-cell.component';
 import { BurnDownChartComponent } from './ui/burn-down-chart/burn-down-chart.component';
 import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 
 import { TicketCreateComponent } from './ui/ticket-detail/ticket-create/ticket-create.component';
-import {TicketEventMentionComponent} from './ui/ticket-detail/ticket-events/ticket-event-mention/ticket-event-mention.component';
+import { TicketEventMentionComponent } from './ui/ticket-detail/ticket-events/ticket-event-mention/ticket-event-mention.component';
 import { ImagePickerComponent } from './util/image-picker/image-picker.component';
 import { SidebarComponent } from './ui/sidebar/sidebar.component';
-import {AssignmentTagsComponent} from './ui/assignment-tags/assignment-tags.component';
-import {AssignmentTagCreateComponent} from './ui/assignment-tags/create/assignment-tag-create.component';
-import {AssignmentTagUpdateComponent} from './ui/assignment-tags/update/assignment-tag-update.component';
-import {TimeCategoriesComponent} from './ui/time-categories/time-categories.component';
-import {TimeCategoryCreateComponent} from './ui/time-categories/create/time-category-create.component';
-import {TimeCategoryUpdateComponent} from './ui/time-categories/update/time-category-update.component';
+import { TimeCategoriesComponent } from './ui/time-categories/time-categories.component';
+import { TimeCategoryCreateComponent } from './ui/time-categories/create/time-category-create.component';
+import { TimeCategoryUpdateComponent } from './ui/time-categories/update/time-category-update.component';
+import { AssignmentTagsComponent } from './ui/assignment-tags/assignment-tags.component';
+import { AssignmentTagCreateComponent } from './ui/assignment-tags/create/assignment-tag-create.component';
+import { AssignmentTagUpdateComponent } from './ui/assignment-tags/update/assignment-tag-update.component';
+import { TicketTagsComponent } from './ui/ticket-tags/ticket-tags.component';
+import { TicketTagCreateComponent } from './ui/ticket-tags/create/ticket-tag-create.component';
+import { TicketTagUpdateComponent } from './ui/ticket-tags/update/ticket-tag-update.component';
+import { UserProfileComponent } from './ui/user-profile/user-profile.component';
 
 @NgModule({
   imports: [
@@ -191,6 +195,10 @@ import {TimeCategoryUpdateComponent} from './ui/time-categories/update/time-cate
     TimeCategoriesComponent,
     TimeCategoryCreateComponent,
     TimeCategoryUpdateComponent,
+    TicketTagsComponent,
+    TicketTagUpdateComponent,
+    TicketTagCreateComponent,
+    UserProfileComponent,
 
     HumanizeDurationPipe,
     FormatMomentPipe,

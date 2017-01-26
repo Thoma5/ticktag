@@ -19,6 +19,7 @@ import RoleEnum = CreateMemberRequestJson.ProjectRoleEnum;
 export class MemberAddComponent implements OnInit {
   request: CreateMemberRequestJson = {
     projectRole: RoleEnum.USER,
+    defaultAssignmentTagId: null
   };
   private loading = true;
   private selectedUser: UserResultJson;

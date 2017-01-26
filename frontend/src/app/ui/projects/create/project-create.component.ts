@@ -1,9 +1,9 @@
-import { Component, Output, EventEmitter, ViewContainerRef } from '@angular/core';
-import { ApiCallService, ApiCallResult } from '../../../service';
-import { ProjectApi, CreateProjectRequestJson, ProjectResultJson } from '../../../api';
-import { showValidationError } from '../../../util/error';
-import { Modal } from 'angular2-modal/plugins/bootstrap';
-import { Overlay } from 'angular2-modal';
+import {Component, Output, EventEmitter, ViewContainerRef} from '@angular/core';
+import {ApiCallService, ApiCallResult} from '../../../service';
+import {ProjectApi, CreateProjectRequestJson, ProjectResultJson} from '../../../api';
+import {showValidationError} from '../../../util/error';
+import {Modal} from 'angular2-modal/plugins/bootstrap';
+import {Overlay} from 'angular2-modal';
 
 @Component({
   selector: 'tt-project-create',
@@ -22,13 +22,11 @@ export class ProjectCreateComponent {
   @Output() readonly created = new EventEmitter<ProjectResultJson>();
 
   // TODO make readonly once Intellij supports readonly properties in ctr
-  constructor(
-    private apiCallService: ApiCallService,
-    private projectApi: ProjectApi,
-    private modal: Modal,
-    private overlay: Overlay,
-    private vcRef: ViewContainerRef,
-  ) {
+  constructor(private apiCallService: ApiCallService,
+              private projectApi: ProjectApi,
+              private modal: Modal,
+              private overlay: Overlay,
+              private vcRef: ViewContainerRef) {
     overlay.defaultViewContainer = vcRef;
   }
 
@@ -37,18 +35,20 @@ export class ProjectCreateComponent {
     this.apiCallService
       .call<ProjectResultJson>(h => this.projectApi.createProjectUsingPOSTWithHttpInfo(this.request, h))
       .subscribe(
-      result => {
-        if (result.isValid) {
-          this.request.name = '';
-          this.request.description = '';
-          this.request.icon = undefined;
-          this.created.emit(result.result);
-        } else {
-          this.error(result);
-        }
-      },
-      undefined,
-      () => { this.working = false; });
+        result => {
+          if (result.isValid) {
+            this.request.name = '';
+            this.request.description = '';
+            this.request.icon = undefined;
+            this.created.emit(result.result);
+          } else {
+            this.error(result);
+          }
+        },
+        undefined,
+        () => {
+          this.working = false;
+        });
   }
 
   setImage(image: string) {

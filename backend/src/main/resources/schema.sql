@@ -1,5 +1,27 @@
 BEGIN;
 
+
+CREATE TABLE IF NOT EXISTS "project" (
+  "id"             UUID PRIMARY KEY,
+  "name"           TEXT      NOT NULL,
+  "description"    TEXT      NOT NULL,
+  "creation_date"  TIMESTAMP NOT NULL,
+  "icon_mime_info" TEXT,
+  "icon"           BYTEA,
+  "disabled"       BOOLEAN   NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS "assignment_tag" (
+  "id"              UUID PRIMARY KEY,
+  "project_id"      UUID REFERENCES "project",
+  "name"            TEXT NOT NULL,
+  "normalized_name" TEXT NOT NULL,
+  "color"           TEXT NOT NULL, -- RRGGBB
+  "disabled"         BOOLEAN NOT NULL DEFAULT FALSE
+);
+CREATE INDEX ON "assignment_tag" ("project_id");
+
+
 CREATE TABLE IF NOT EXISTS "user" (
   "id"            UUID PRIMARY KEY,
   "username"      TEXT NOT NULL,
@@ -17,20 +39,12 @@ CREATE TABLE IF NOT EXISTS "user_image" (
   "image"   BYTEA NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS "project" (
-  "id"             UUID PRIMARY KEY,
-  "name"           TEXT      NOT NULL,
-  "description"    TEXT      NOT NULL,
-  "creation_date"  TIMESTAMP NOT NULL,
-  "icon_mime_info" TEXT,
-  "icon"           BYTEA,
-  "disabled"       BOOLEAN   NOT NULL
-);
 CREATE TABLE IF NOT EXISTS "member" (
   "u_id"         UUID      NOT NULL REFERENCES "user",
   "p_id"         UUID      NOT NULL REFERENCES "project",
   "project_role" TEXT      NOT NULL,
   "join_date"    TIMESTAMP NOT NULL,
+  "default_assignment_tag_id" UUID REFERENCES "assignment_tag",
   PRIMARY KEY (u_id, p_id)
 );
 CREATE INDEX ON "member" ("p_id");
@@ -85,7 +99,8 @@ CREATE TABLE IF NOT EXISTS "ticket_tag" (
   "name"                TEXT    NOT NULL,
   "normalized_name"     TEXT    NOT NULL,
   "color"               TEXT    NOT NULL, -- RRGGBB
-  "order"               INTEGER NOT NULL
+  "order"               INTEGER NOT NULL,
+  "disabled"            BOOLEAN NOT NULL DEFAULT FALSE
 );
 CREATE INDEX ON "ticket_tag" ("ticket_tag_group_id");
 
@@ -93,15 +108,6 @@ CREATE INDEX ON "ticket_tag" ("ticket_tag_group_id");
 ALTER TABLE "ticket_tag_group"
   ADD FOREIGN KEY ("default_ticket_tag_id") REFERENCES "ticket_tag";
 
-CREATE TABLE IF NOT EXISTS "assignment_tag" (
-  "id"              UUID PRIMARY KEY,
-  "project_id"      UUID REFERENCES "project",
-  "name"            TEXT NOT NULL,
-  "normalized_name" TEXT NOT NULL,
-  "color"           TEXT NOT NULL, -- RRGGBB
-  "disabled"         BOOLEAN NOT NULL DEFAULT FALSE
-);
-CREATE INDEX ON "assignment_tag" ("project_id");
 
 CREATE TABLE IF NOT EXISTS "time_category" (
   "id"              UUID PRIMARY KEY,
@@ -276,34 +282,38 @@ CREATE TABLE IF NOT EXISTS "kanban_cell"(
   "order"          INTEGER NOT NULL
 );
 
-CREATE VIEW view_progress AS
-  SELECT
-    t.*,
-    CASE WHEN t.total_initial_estimated_time = 0
-      THEN NULL
-    ELSE t.total_logged_time :: REAL / t.total_initial_estimated_time :: REAL END AS total_initial_progress,
-    CASE WHEN t.total_current_estimated_time = 0
-      THEN NULL
-    ELSE t.total_logged_time :: REAL / t.total_current_estimated_time :: REAL END AS total_progress
-  FROM (
-         SELECT
-           t.id                                                         AS ticket_id,
-           (SELECT coalesce(sum(tt.initial_estimated_time), 0)
-            FROM ticket tt
-            WHERE tt.id = t.id OR tt.parent_ticket_id = t.id) :: BIGINT AS total_initial_estimated_time,
-           (SELECT coalesce(sum(tt.current_estimated_time), 0)
-            FROM ticket tt
-            WHERE tt.id = t.id OR tt.parent_ticket_id = t.id) :: BIGINT AS total_current_estimated_time,
-           (SELECT coalesce(sum(lt.time), 0)
-            FROM ticket tt
-              JOIN comment cc ON cc.ticket_id = tt.id
-              JOIN logged_time lt ON lt.comment_id = cc.id
-            WHERE (tt.id = t.id OR tt.parent_ticket_id = t.id) and not lt.canceled) :: BIGINT AS total_logged_time,
-           (SELECT coalesce(sum(lt.time), 0)
-            FROM ticket tt
-              JOIN comment cc ON cc.ticket_id = tt.id
-              JOIN logged_time lt ON lt.comment_id = cc.id
-            WHERE tt.id = t.id and not lt.canceled) :: BIGINT AS logged_time
-         FROM ticket t
-       ) t;
+CREATE OR REPLACE VIEW public.view_progress AS
+  SELECT t.ticket_id,
+    t.total_initial_estimated_time,
+    t.total_current_estimated_time,
+    LEAST(t.total_logged_time,t.total_current_estimated_time) AS total_logged_time,
+    t.logged_time,
+    CASE
+    WHEN t.total_initial_estimated_time = 0 THEN NULL::real
+    ELSE t.total_logged_time::real / t.total_initial_estimated_time::real
+    END AS total_initial_progress,
+    CASE
+    WHEN t.total_current_estimated_time = 0 THEN NULL::real
+    WHEN NOT t.open THEN 1::real
+    ELSE t.total_logged_time::real / t.total_current_estimated_time::real
+    END AS total_progress
+  FROM ( SELECT t_1.id AS ticket_id,
+           t_1.open,
+                (( SELECT COALESCE(sum(tt.initial_estimated_time), 0::numeric) AS "coalesce"
+                   FROM ticket tt
+                   WHERE tt.id = t_1.id OR tt.parent_ticket_id = t_1.id))::bigint AS total_initial_estimated_time,
+                (( SELECT COALESCE(sum(tt.current_estimated_time), 0::numeric) AS "coalesce"
+                   FROM ticket tt
+                   WHERE tt.id = t_1.id OR tt.parent_ticket_id = t_1.id))::bigint AS total_current_estimated_time,
+                (( SELECT COALESCE(sum(lt."time"), 0::numeric) AS "coalesce"
+                   FROM ticket tt
+                     JOIN comment cc ON cc.ticket_id = tt.id
+                     JOIN logged_time lt ON lt.comment_id = cc.id
+                   WHERE (tt.id = t_1.id OR tt.parent_ticket_id = t_1.id) AND NOT lt.canceled))::bigint AS total_logged_time,
+                (( SELECT COALESCE(sum(lt."time"), 0::numeric) AS "coalesce"
+                   FROM ticket tt
+                     JOIN comment cc ON cc.ticket_id = tt.id
+                     JOIN logged_time lt ON lt.comment_id = cc.id
+                   WHERE tt.id = t_1.id AND NOT lt.canceled))::bigint AS logged_time
+         FROM ticket t_1) t;
 COMMIT;

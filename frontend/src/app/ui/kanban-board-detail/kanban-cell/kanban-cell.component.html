@@ -1,29 +1,24 @@
 <div class='ticket'>
-  <span class='storypoints'>{{ticket.storyPoints}}</span>
-  <span class="ticket-ref">
-    <span class="number"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.number]">#{{ ticket.number }} </a></span>
-    <span class="title"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.number]">{{ ticket.title }}</a></span>
-  </span>
+  <div class="row ticket-ref">
+    <span class="col-md-1 number"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.number]">#{{ ticket.number }} </a></span>
+    <span  tooltip="Storypoints" tooltipPlacement="bottom" tooltipTrigger="mouseenter" class='storypoints'>{{ticket.storyPoints}}</span>
+  </div>
+   <span><a class="title" [routerLink]="['/project', ticket.projectId, 'ticket', ticket.number]">{{ ticket.title }}</a></span>
   <div class='tags'>
-    <div *ngFor="let tag of ticket.tags" class="tag" [style.backgroundColor]="'#' + tag.color">
-      <span class="name">{{ tag.name }}</span>
-    </div>
+    <tt-tagview [tags]="ticket.tags"></tt-tagview>
   </div>
   <div class='users'>
     <span *ngFor="let user of ticket.users">
       <div class="user-icon">
-        <tt-user-image [imageId]="user.imageId"></tt-user-image>
+        <tt-user-image tooltip="{{user.username}}" tooltipTrigger="mouseenter" tooltipPlacement="bottom" [imageId]="user.imageId"></tt-user-image>
       </div>
     </span>
   </div>
   <div class='status-progress'>
-    <tt-progressbar *ngIf="!hasSubtickets()"
-      class="custom-progress-bar"
-      [showNumbers]="true"
-      [fraction]="ticket.progress.totalLoggedTime"
+    <tt-progressbar *ngIf="!hasSubtickets()" class="custom-progress-bar" [showNumbers]="true" [fraction]="ticket.progress.totalLoggedTime"
       [totalValue]="ticket.progress.currentEstimatedTime">
-    </tt-progressbar>
-    <input *ngIf="hasSubtickets()" type="button" class="btn btn-primary btn-sm" value="Collect" (click)="onSubmit()">
-    <input *ngIf="hasSubtickets()" type="button" class="btn btn-primary btn-sm" value="Filter" (click)="onFindSubtickets()">
+      </tt-progressbar>
+      <input *ngIf="hasSubtickets()" type="button" class="btn btn-primary btn-sm" value="Collect" (click)="onSubmit()">
+      <input *ngIf="hasSubtickets()" type="button" class="btn btn-primary btn-sm" value="Filter" (click)="onFindSubtickets()">
   </div>
 </div>

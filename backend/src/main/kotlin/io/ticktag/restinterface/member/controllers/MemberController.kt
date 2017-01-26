@@ -31,7 +31,7 @@ open class MemberController @Inject constructor(
             @PathVariable userId: UUID,
             @PathVariable projectId: UUID,
             @RequestBody req: CreateMemberRequestJson): MemberResultJson {
-        val member = memberService.createMember(userId, projectId, CreateMember(req.projectRole))
+        val member = memberService.createMember(userId, projectId, CreateMember(req.projectRole,req.defaultAssignmentTagId))
         return MemberResultJson(member)
     }
 
@@ -47,7 +47,7 @@ open class MemberController @Inject constructor(
             @PathVariable userId: UUID,
             @PathVariable projectId: UUID,
             @RequestBody req: UpdateMemberRequestJson): MemberResultJson {
-        val member = memberService.updateMember(userId, projectId, UpdateMember(req.projectRole))
+        val member = memberService.updateMember(userId, projectId, UpdateMember(req.projectRole,req.defaultAssignmentTagId))
         return MemberResultJson(member)
     }
 }

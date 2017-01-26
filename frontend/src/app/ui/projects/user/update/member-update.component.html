@@ -1,6 +1,6 @@
 <div class="memberinfo">
   <div class="image"><tt-user-image  [imageId]="user.imageId"></tt-user-image></div>
-  <div class="name">{{user.name}}</div> 
+  <div class="name">{{user.name}}</div>
   <div> as <span class="username">{{user.username}}</span></div>
 </div>
 <form (ngSubmit)="onSubmit()" #f="ngForm">
@@ -8,6 +8,12 @@
     <label for="role">Role *</label>
     <select class="form-control" name="role" size="1" [(ngModel)]="request.projectRole">
       <option *ngFor="let role of roles" value="{{role.role}}">{{role.role.charAt(0) + role.role.slice(1).toLowerCase()}}</option>
+    </select>
+  </div>
+  <div class="row">
+    <label for="assignmentTag">Default Assignment Tag *</label>
+    <select class="form-control" name="assignmentTag" size="1" [(ngModel)]="request.defaultAssignmentTagId">
+      <option *ngFor="let tag of assignmentTags" value="{{tag.id}}">{{tag.name}}</option>
     </select>
   </div>
   <div class="row">

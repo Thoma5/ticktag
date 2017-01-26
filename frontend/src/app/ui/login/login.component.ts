@@ -8,6 +8,7 @@ import {AuthService, ApiCallService} from '../../service';
 @Component({
   selector: 'tt-login',
   templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
   private email: string;

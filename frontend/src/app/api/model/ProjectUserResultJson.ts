@@ -26,6 +26,8 @@
 import * as models from './models';
 
 export interface ProjectUserResultJson {
+    defaultAssignmentTagId?: string;
+
     disabled: boolean;
 
     id: string;

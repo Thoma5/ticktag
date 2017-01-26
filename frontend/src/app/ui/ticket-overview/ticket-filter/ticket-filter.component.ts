@@ -10,6 +10,7 @@ import {
     TicketOverviewTag,
     TicketOverviewUser
 } from '../../ticket-overview/ticket-overview';
+import { AuthService, User } from '../../../service';
 import { TicketFilter } from './ticket-filter';
 import * as moment from 'moment';
 
@@ -27,7 +28,7 @@ export type CommentTextviewSaveEvent = {
 export class TicketFilterComponent implements OnInit, OnChanges {
     @Input() allUsers: imm.Map<string, TicketOverviewUser>;
     @Input() allTicketTags: imm.Map<string, TicketOverviewTag>;
-    @Input() defaultFilterOpen: boolean = false;
+    @Input() defaultFilterOpen: boolean = false; // whether the filter bar is open or not
     @Input() disabledFilterHelper: string = '';
     @Input() addToQuery: string = '';
     @Input() hideErrorBox = false;
@@ -52,9 +53,13 @@ export class TicketFilterComponent implements OnInit, OnChanges {
     public spPickOne: number;
     public spPickTwo: number;
     public dateMode: string = '< Smaller Than';
+    public parentNumber: number = -1;
+    private user: User;
+    private authService: AuthService;
 
-    constructor(myElement: ElementRef, overlay: Overlay, vcRef: ViewContainerRef, public modal: Modal) {
+    constructor(myElement: ElementRef, authService: AuthService, overlay: Overlay, vcRef: ViewContainerRef, public modal: Modal) {
         this.elementRef = myElement;
+        this.authService = authService;
         overlay.defaultViewContainer = vcRef;
     }
 
@@ -63,7 +68,7 @@ export class TicketFilterComponent implements OnInit, OnChanges {
             if (propName === 'addToQuery') {
                 let chng = changes[propName];
                 let cur = chng.currentValue;
-                if (cur !== '') {
+                if (cur !== '' && (this.query === undefined || this.query.indexOf(cur) < 0)) {
                     this.query = this.query + ' ' + cur;
                     this.filter(this.query);
                 }
@@ -75,13 +80,22 @@ export class TicketFilterComponent implements OnInit, OnChanges {
         this.tags = this.allTicketTags.toList();
         this.assignees = this.allUsers.toList();
         this.filterHelper = this.defaultFilterOpen;
+        this.user = this.authService.user;
+        this.authService.observeUser()
+            .subscribe(user => {
+                this.user = user;
+            });
         this.searchTerms
             .distinctUntilChanged()
             .subscribe(term => this.filter(term), error => { });
     }
 
     inputChanged(query: string): void {
-        this.searchTerms.next(query);
+        if (query === '') {
+            this.filter(''); // is ignored if not done this way
+        } else {
+            this.searchTerms.next(query);
+        }
     }
 
 
@@ -141,7 +155,11 @@ export class TicketFilterComponent implements OnInit, OnChanges {
                         });
                     } else if (command[0].indexOf('!user') === 0) {
                         command[1].split(',').forEach(t => {
-                            users.push(t);
+                            if (users.length > 0 && t === 'none' || users.length > 0 && users.indexOf('none') >= 0 ) {
+                                this.generateErrorAndMessage('Either unassigned or assigned:', command[0], command[1]);
+                            } else {
+                                users.push(t);
+                            }
                         });
                     } else if (command[0].indexOf('!progress') === 0) {
                         if (progressOne !== undefined) {
@@ -258,6 +276,8 @@ export class TicketFilterComponent implements OnInit, OnChanges {
                         let tempParentNr = parseInt(command[1], 10);
                         if (tempParentNr === tempParentNr) {
                             parentNumber = tempParentNr;
+                        } else if (command[1] === 'none') {
+                            parentNumber = -1;
                         } else {
                             this.generateErrorAndMessage('invalid command', command[0], command[1]);
                             return;
@@ -296,11 +316,18 @@ export class TicketFilterComponent implements OnInit, OnChanges {
         this.filter(this.query);
     }
     pickUser(username: string) {
-        this.query = this.query + ' !user:' + username;
+        if (username === 'me') {
+            let user = this.allUsers.findEntry(e => e.id === this.user.id);
+            username = user.pop().username;
+        }
+        if (username === 'none') {
+            this.query = this.query.split(' ').filter(e => e.indexOf('!user') < 0).join(' ') + ' !user:' + username;
+        } else {
+            this.query = this.query.split(' ').filter(e => e.indexOf('!user:none') < 0).join(' ') + ' !user:' + username;
+        }
         this.filter(this.query);
     }
     pickSP(op: string) {
-        console.log();
         // Split query at ' ', remove all elements in this array containing !sp and rejoin the array with ' ' to a string. 
         // Then add the new !sp command  
         this.query = this.query.split(' ').filter(e => e.indexOf('!sp') < 0).join(' ') + ' !sp:' + ((op === '-' || op === '=') ? '' : op)
@@ -333,11 +360,11 @@ export class TicketFilterComponent implements OnInit, OnChanges {
         // Split query at ' ', remove all elements in this array containing !parent and rejoin the array with ' ' to a string. 
         // Then add the new !parent command  
         this.query = this.query.split(' ').filter(e => e.indexOf('!parent') < 0).join(' ')
-            + (parentNumber === undefined ? '' : ' !parent:' + parentNumber);
+            + (parentNumber === undefined ? '' : ' !parent:' + (parentNumber < 0 ? 'none' : parentNumber));
         this.filter(this.query);
     }
 
-    datePickerOneSelection() { // TODO: fix Localtime/UTC
+    datePickerOneSelection() {
         let m = moment(this.datePickOneDate);
         this.datePickOne = m.local().format('YYYY-MM-DD');
     }
@@ -356,6 +383,14 @@ export class TicketFilterComponent implements OnInit, OnChanges {
     checkSPFormInvalid(spMode: string): boolean {
         return (this.spPickOne === undefined || this.spPickOne === null) ||
             spMode === '- Between' && (this.spPickTwo === undefined || this.spPickTwo === null);
+    }
+
+    setParentOnly(value: string) {
+        if (value === 'Subticket of') {
+            this.parentNumber = undefined;
+        } else {
+            this.parentNumber = -1;
+        }
     }
 }
 
