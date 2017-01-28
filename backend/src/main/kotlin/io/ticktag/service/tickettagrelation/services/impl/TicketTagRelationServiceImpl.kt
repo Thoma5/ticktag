@@ -61,6 +61,9 @@ open class TicketTagRelationServiceImpl(
             ticketEvents.insert(TicketEventTagAdded.create(ticket, user, tag))
             ticket.tags.add(tag)
         }
+        if (tag.autoClose) {
+            ticket.open = false
+        }
 
         return TicketTagRelationResult(ticketId = ticket.id, tagId = tag.id)
     }

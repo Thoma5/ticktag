@@ -100,7 +100,8 @@ CREATE TABLE IF NOT EXISTS "ticket_tag" (
   "normalized_name"     TEXT    NOT NULL,
   "color"               TEXT    NOT NULL, -- RRGGBB
   "order"               INTEGER NOT NULL,
-  "disabled"            BOOLEAN NOT NULL DEFAULT FALSE
+  "disabled"            BOOLEAN NOT NULL DEFAULT FALSE,
+  "auto_close"          BOOLEAN DEFAULT FALSE
 );
 CREATE INDEX ON "ticket_tag" ("ticket_tag_group_id");
 

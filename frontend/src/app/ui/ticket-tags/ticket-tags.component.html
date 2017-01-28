@@ -12,6 +12,7 @@
 						<th>Name</th>
 						<th>Tag Group</th>
 						<th>Order</th>
+            <th>Auto Close</th>
 						<th>Update & Delete</th>
 					</tr>
 					<tr *ngFor='let ticketTag of ticketTags' class="ticket-tag">
@@ -26,6 +27,9 @@
 						<td class="order" (click)="onEditClicked(ticketTag)">
 							{{ ticketTag.order }}
 						</td>
+            <td class="order" (click)="onEditClicked(ticketTag)">
+              <input type="checkbox" disabled="true" [ngModel]="ticketTag.autoClose" >
+            </td>
 						<td class="actions">
 							<button (click)="onEditClicked(ticketTag)" class="btn btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
 							<button (click)="onDeleteClicked(ticketTag)" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></button>

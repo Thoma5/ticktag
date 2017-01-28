@@ -21,7 +21,7 @@ open class TicketTagController @Inject constructor(
 ) {
     @PostMapping
     open fun createTicketTag(@RequestBody req: CreateTicketTagRequestJson): TicketTagResultJson {
-        val ticketTag = ticketTagService.createTicketTag(CreateTicketTag(req.name, req.color, req.order), req.ticketTagGroupId)
+        val ticketTag = ticketTagService.createTicketTag(CreateTicketTag(req.name, req.color, req.order,req.autoClose), req.ticketTagGroupId)
         return TicketTagResultJson(ticketTag)
     }
 
@@ -29,7 +29,7 @@ open class TicketTagController @Inject constructor(
     open fun updateTicketTag(@PathVariable(name = "id") id: UUID,
                              @RequestBody req: UpdateTicketTagRequestJson
     ): TicketTagResultJson {
-        val ticketTag = ticketTagService.updateTicketTag(id, UpdateTicketTag(req.name, req.color, req.order, req.ticketTagGroupId))
+        val ticketTag = ticketTagService.updateTicketTag(id, UpdateTicketTag(req.name, req.color, req.order, req.ticketTagGroupId,req.autoClose))
         return TicketTagResultJson(ticketTag)
     }
 

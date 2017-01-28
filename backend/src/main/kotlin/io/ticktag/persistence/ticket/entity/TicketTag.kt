@@ -39,6 +39,9 @@ open class TicketTag protected constructor() {
     @Column(name = "color", nullable = false)
     lateinit open var color: String
 
+    @Column(name = "auto_close", nullable = false)
+    open var autoClose: Boolean = false
+
     @Column(name = "order", nullable = false)
     open var order: Int = -1
 
