@@ -10,10 +10,10 @@ PASSWORD_HASH = bcrypt.hashpw(b"password", bcrypt.gensalt(prefix=b"2a")).decode(
 TICKET_TAGS = (
     ((("Bug", "c23b22"), ("Feature", "77dd77"), ("Idea", "fdfd96")), 0.9, "Type"),
     ((("Critical", "c23b22"), ("High", "ffb347"), ("Low", "aec6cf")), 0.25, "Severity"),
-    ((("Not Planned", "eeeeee"), ("Backlog", "bbbbbb"), ("Sprint 1", "bbbbbb"), ("Sprint 2", "bbbbbb"), ("Sprint 3", "bbbbbb"), ("Sprint 4", "bbbbbb")), 1, "Sprint"),
+    ((("Not Planned", "e5dcdc"), ("Backlog", "bbbbbb"), ("Sprint 1", "bbbbbb"), ("Sprint 2", "bbbbbb"), ("Sprint 3", "bbbbbb"), ("Sprint 4", "bbbbbb")), 1, "Sprint"),
     ((("Regression", "ffd1dc"),), 0.01, "Regression"),
     ((("Easy", "779ecb"), ("Hard", "c23b22")), 0.1, "Difficulty"),
-    ((("UI", "fafafa"), ("Frontend", "fafafa"), ("Backend", "fafafa"), ("Database", "fafafa")), 0.7, "Layer"),
+    ((("UI", "b9cc5b"), ("Frontend", "b9cc5b"), ("Backend", "b9cc5b"), ("Database", "b9cc5b")), 0.7, "Layer"),
 )
 ASSIGNMENT_TAGS = (
     ("Ticket Owner", (0.8,), "b19cd9"),
@@ -23,6 +23,8 @@ ASSIGNMENT_TAGS = (
     ("Blocked", (0.01, 0.5, 0.5), "ff6961"),
 )
 TIME_CATS = ("Implementing", "Reviewing", "Meeting", "Planning")
+ROLES = ["OBSERVER","ADMIN","USER"]
+PROJECT_ROLES = ["OBSERVER","ADMIN","NONE", "USER"]
 
 def random_datetime(may_none):
     if may_none and random.random() < 0.1:
@@ -94,15 +96,15 @@ def sql(value):
         return repr(value)
 
 class User:
-    def __init__(self):
+    def __init__(self, usercount):
         self.id = random_uuid()
         self.name = faker.name()
         self.username = re.sub(r"[^a-z0-9_]", "", self.name.lower())
         self.mail = re.sub(r"[^a-z0-9_]", "", self.name.lower()) + "@example.invalid"
         self.password_hash = PASSWORD_HASH
-        self.role = "USER"
+        self.role = ROLES[min(2, usercount %10)]
         self.current_token = random_uuid()
-        self.disabled = False
+        self.disabled = usercount % 15 == 0
 
     def insert(self):
         return """insert into public.user values ({}, {}, {}, {}, {}, {}, {}, {});""".format(
@@ -118,7 +120,7 @@ class User:
 class Project:
     def __init__(self):
         self.id = random_uuid()
-        self.name = "Big Project"
+        self.name = faker.company()[:21] + " Project"
         self.description = faker.sentence()
         self.time = random_datetime(False)
         self.disabled = False
@@ -416,56 +418,61 @@ def create_event(users, tickets, tag_groups, assignment_tags, time_cats, ticket)
 def main():
     print("set client_encoding to 'utf8';")
     print("begin;")
+    general_count = 0
+    for seed in range(10):
+        faker.random.seed(2017+seed, version=2)
+        users = [User(i) for i in range(USER_COUNT)]
+        for user in users:
+            print(user.insert())
+        
+        project = Project()
+        print(project.insert())
+        p_user = 0;
+        for user in users:
+            if()
+            print("insert into member values ({}, {}, {}, {});".format(
+                sql(user.id),
+                sql(project.id),
+                sql(PROJECT_ROLES[min(3, p_user %10)]),
+                sql(random_datetime(False))))
+            p_user += 1
+        
+        tag_groups = [TicketTagGroup(project, i, group) for i, group in enumerate(TICKET_TAGS)]
+        for group in tag_groups:
+            print(group.insert())
 
-    users = [User() for i in range(USER_COUNT)]
-    for user in users:
-        print(user.insert())
-    
-    project = Project()
-    print(project.insert())
+        assignment_tags = [AssignmentTag(project, tag) for tag in ASSIGNMENT_TAGS]
+        for tag in assignment_tags:
+            print(tag.insert())
 
-    for user in users:
-        print("insert into member values ({}, {}, 'USER', {});".format(
-            sql(user.id),
-            sql(project.id),
-            sql(random_datetime(False))))
-    
-    tag_groups = [TicketTagGroup(project, i, group) for i, group in enumerate(TICKET_TAGS)]
-    for group in tag_groups:
-        print(group.insert())
+        time_cats = [TimeCat(project, cat) for cat in TIME_CATS]
+        for cat in time_cats:
+            print(cat.insert())
 
-    assignment_tags = [AssignmentTag(project, tag) for tag in ASSIGNMENT_TAGS]
-    for tag in assignment_tags:
-        print(tag.insert())
-
-    time_cats = [TimeCat(project, cat) for cat in TIME_CATS]
-    for cat in time_cats:
-        print(cat.insert())
-
-    tickets = []
-    ticket_number = 1
-    for i in range(TICKET_COUNT):
-        ticket = create_ticket(project, users, time_cats, tag_groups, assignment_tags, ticket_number, None)
-        tickets.append(ticket)
-        ticket_number += 1
-
-        for j in range(subticket_count()):
-            subticket = create_ticket(project, users, time_cats, tag_groups, assignment_tags, ticket_number, ticket)
-            tickets.append(subticket)
+        tickets = []
+        ticket_number = 1
+        for i in range(TICKET_COUNT):
+            ticket = create_ticket(project, users, time_cats, tag_groups, assignment_tags, ticket_number, None)
+            tickets.append(ticket)
             ticket_number += 1
 
-    for ticket in tickets:
-        for i in range(event_count()):
-            create_event(users, tickets, tag_groups, assignment_tags, time_cats, ticket)
+            for j in range(subticket_count()):
+                subticket = create_ticket(project, users, time_cats, tag_groups, assignment_tags, ticket_number, ticket)
+                tickets.append(subticket)
+                ticket_number += 1
 
-        inserted = set()
-        for i in range(reference_count()):
-            comment_id = random.choice(ticket.comments).id
-            if comment_id not in inserted:
-                print("insert into mentioned_ticket values ({}, {});".format(
-                    sql(comment_id),
-                    sql(random.choice(tickets).id)))
-                inserted.add(comment_id)
+        for ticket in tickets:
+            for i in range(event_count()):
+                create_event(users, tickets, tag_groups, assignment_tags, time_cats, ticket)
+
+            inserted = set()
+            for i in range(reference_count()):
+                comment_id = random.choice(ticket.comments).id
+                if comment_id not in inserted:
+                    print("insert into mentioned_ticket values ({}, {});".format(
+                        sql(comment_id),
+                        sql(random.choice(tickets).id)))
+                    inserted.add(comment_id)
 
     print("commit;")
     print("vacuum full freeze analyze;")
