@@ -11,8 +11,9 @@
     </select>
   </div>
   <div class="row">
-    <label for="assignmentTag">Default Assignment Tag *</label>
-    <select class="form-control" name="assignmentTag" size="1" [(ngModel)]="request.defaultAssignmentTagId">
+    <label for="assignmentTag">Default Assignment Tag</label>
+    <select class="form-control" name="assignmentTag" size="1" [(ngModel)]="request.defaultAssignmentTagId"  (change)="onDefaultAssTagSelect($event)">
+      <option value="{{undefined}}"></option>
       <option *ngFor="let tag of assignmentTags" value="{{tag.id}}">{{tag.name}}</option>
     </select>
   </div>

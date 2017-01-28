@@ -71,7 +71,9 @@ open class MemberServiceImpl @Inject constructor(
         }
 
         if (member.defaultAssignmentTagId != null){
-            memberToUpdate.defaultAssignmentTag =  assignmentTagRepository.findOne(member.defaultAssignmentTagId)
+            assignmentTagRepository.findOne(member.defaultAssignmentTagId) ?: throw NotFoundException()
+        } else {
+            memberToUpdate.defaultAssignmentTag = null
         }
         return MemberResult(memberToUpdate)
     }

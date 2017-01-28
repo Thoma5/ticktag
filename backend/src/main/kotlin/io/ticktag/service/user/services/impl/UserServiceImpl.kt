@@ -167,9 +167,9 @@ open class UserServiceImpl @Inject constructor(
             projectMemberships = members.findByProject(project) ?: throw NotFoundException()
         } else {
             if (disabled) {
-                projectMemberships = members.findByProjectAndUserDisabledIsAndRoleIs(project, disabled, ProjectRole.NONE) ?: throw NotFoundException()
+                projectMemberships = members.findByRoleIsAndProjectAndUserDisabledIs(ProjectRole.NONE, project, false) ?: throw NotFoundException()
             } else {
-                projectMemberships = members.findByProjectAndUserDisabledIsAndRoleNot(project, disabled, ProjectRole.NONE) ?: throw NotFoundException()
+                projectMemberships = members.findByRoleNotAndProjectAndUserDisabledIs(ProjectRole.NONE, project, false) ?: throw NotFoundException()
             }
         }
         val userIds = projectMemberships.map { it.userId }

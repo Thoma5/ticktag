@@ -8,7 +8,7 @@ import { showValidationError } from '../../../../util/error';
 import { Modal } from 'angular2-modal/plugins/bootstrap';
 import { Overlay } from 'angular2-modal';
 import { RoleResultJson } from '../../../../api/model/RoleResultJson';
-import {AssignmentTagResultJson} from '../../../../api/model/AssignmentTagResultJson';
+import { AssignmentTagResultJson } from '../../../../api/model/AssignmentTagResultJson';
 
 @Component({
   selector: 'tt-member-update',
@@ -63,6 +63,11 @@ export class MemberUpdateComponent implements OnInit {
     this.request.projectRole = this.user.projectRole;
     this.request.defaultAssignmentTagId = this.user.defaultAssignmentTagId;
   }
+
+  onDefaultAssTagSelect(event: any) {
+    this.request.defaultAssignmentTagId = this.request.defaultAssignmentTagId === '' ? null : this.request.defaultAssignmentTagId;
+  }
+
 
   private error(result: ApiCallResult<void | {}>): void {
     showValidationError(this.modal, result);
