@@ -15,6 +15,7 @@ import io.ticktag.service.member.MemberService
 import io.ticktag.service.member.dto.CreateMember
 import io.ticktag.service.member.dto.MemberResult
 import io.ticktag.service.member.dto.UpdateMember
+import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
 import java.time.Instant
 import java.util.*
@@ -27,8 +28,8 @@ open class MemberServiceImpl @Inject constructor(
         private val projects: ProjectRepository,
         private val assignmentTagRepository: AssignmentTagRepository
 ) : MemberService {
-    @PreAuthorize(AuthExpr.ADMIN)
-    override fun getMember(userId: UUID, projectId: UUID): MemberResult {
+    @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
+    override fun getMember(userId: UUID, @P("authProjectId") projectId: UUID): MemberResult {
         val user = users.findOne(userId) ?: throw NotFoundException()
         val project = projects.findOne(projectId) ?: throw NotFoundException()
         val member = members.findOne(MemberKey.create(user, project)) ?: throw NotFoundException()
