@@ -28,7 +28,7 @@ open class MemberServiceImpl @Inject constructor(
         private val projects: ProjectRepository,
         private val assignmentTagRepository: AssignmentTagRepository
 ) : MemberService {
-    @PreAuthorize(AuthExpr.PROJECT_USER)
+    @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun getMember(userId: UUID, @P("authProjectId") projectId: UUID): MemberResult {
         val user = users.findOne(userId) ?: throw NotFoundException()
         val project = projects.findOne(projectId) ?: throw NotFoundException()
