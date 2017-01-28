@@ -1,7 +1,7 @@
 <span class='textview-container'>
     <span *ngIf="!editing" class='reading'>
         <ng-content select='.textview-read'></ng-content>
-        <tt-edit-button *ngIf="!transient" (click)='onEdit()'></tt-edit-button>
+        <tt-edit-button *ngIf="!transient && editable" (click)='onEdit()'></tt-edit-button>
         <span class="loading" *ngIf="transient"><tt-spinner></tt-spinner></span>
     </span>
     <span *ngIf="editing" class='editing'>

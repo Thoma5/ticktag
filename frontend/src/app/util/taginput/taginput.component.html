@@ -6,7 +6,7 @@
             <tt-spinner></tt-spinner>
         </div>
     </div>
-    <div *ngIf="!editing" class="add-button"><a href="javascript:void(0)" (click)="onShowAdd()">Add&nbsp;Tag</a></div>
+    <div *ngIf="!editing && editable" class="add-button"><a href="javascript:void(0)" (click)="onShowAdd()">Add&nbsp;Tag</a></div>
 </div>
 
 <div *ngIf="editing" class="add-form">

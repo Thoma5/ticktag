@@ -1,3 +1,4 @@
+import {AuthApi} from '../../api/api/AuthApi';
 const uuidV4 = require('uuid/v4');
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -30,6 +31,10 @@ import * as imm from 'immutable';
 import { CommandTextviewSaveEvent } from '../../util/command-textview/command-textview.component';
 import { showValidationError } from '../../util/error';
 import { Cmd } from '../../service/command/grammar';
+import {WhoamiResultJson} from '../../api/model/WhoamiResultJson';
+import {MemberApi} from '../../api/api/MemberApi';
+import {MemberResultJson} from '../../api/model/MemberResultJson';
+import ProjectRoleEnum = MemberResultJson.ProjectRoleEnum;
 
 @Component({
   selector: 'tt-ticket-detail',
@@ -68,6 +73,7 @@ export class TicketDetailComponent implements OnInit {
   private commentResetEventObservable = new Subject<string>();
   private transientSubtickets = imm.Map<string, TicketDetailRelated>();
   private transientTimes = imm.Map<string, boolean>();
+  private userIsAllowedToEdit = true;
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(private route: ActivatedRoute,
@@ -86,11 +92,15 @@ export class TicketDetailComponent implements OnInit {
     private modal: Modal,
     private overlay: Overlay,
     private vcRef: ViewContainerRef,
+    private authApi: AuthApi,
+    private memberApi: MemberApi
   ) {
     overlay.defaultViewContainer = vcRef;
   }
 
   ngOnInit(): void {
+
+
     this.route.params
       .do(() => {
         this.loading = true;
@@ -441,6 +451,30 @@ export class TicketDetailComponent implements OnInit {
   }
 
   private refresh(projectId: string, ticketNumber: number): Observable<void> {
+    this.apiCallService
+      .callNoError<WhoamiResultJson>((h) => this.authApi.whoamiUsingGETWithHttpInfo(h))
+      .subscribe(me => {
+        if (me.authorities.includes('ADMIN')) {
+          this.userIsAllowedToEdit = true;
+        } else {
+
+          this.apiCallService
+            .call<MemberResultJson>((h) => this.memberApi.getMemberUsingGETWithHttpInfo(me.id, projectId, h))
+            .subscribe(result => {
+              if (result.isValid) {
+                if (result.result.projectRole === ProjectRoleEnum.ADMIN || result.result.projectRole === ProjectRoleEnum.USER) {
+                  this.userIsAllowedToEdit = true;
+                } else {
+                  this.userIsAllowedToEdit = false;
+                }
+              } else {
+                this.userIsAllowedToEdit = false;
+              }
+            });
+        }
+
+      });
+
     let transientUsers = this.transientUsers;  // Backup to avoid data races
 
     let rawTicketObs = this.apiCallService

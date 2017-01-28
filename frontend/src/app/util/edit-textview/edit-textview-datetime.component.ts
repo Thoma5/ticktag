@@ -70,7 +70,7 @@ export class EditTextviewDateTimeEditComponent implements TextviewEditComponent<
 @Component({
   selector: 'tt-edit-textview-datetime',
   template: `
-    <tt-edit-textview [content]="content" (contentChange)="contentChange.emit($event)" [transient]="transient">
+    <tt-edit-textview [editable]="editable" [content]="content" (contentChange)="contentChange.emit($event)" [transient]="transient">
       <tt-edit-textview-datetime-edit #edit class="textview-edit" [nullable]="nullable"></tt-edit-textview-datetime-edit>
       <tt-edit-textview-datetime-read #read class="textview-read"></tt-edit-textview-datetime-read>
     </tt-edit-textview>
@@ -81,4 +81,5 @@ export class EditTextviewDateTimeComponent {
   @Output() readonly contentChange: EventEmitter<number> = new EventEmitter<number>();
   @Input() transient = false;
   @Input() nullable = false;
+  @Input() editable = true;
 }

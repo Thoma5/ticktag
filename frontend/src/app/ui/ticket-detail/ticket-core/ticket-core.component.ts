@@ -29,6 +29,8 @@ export class TicketCoreComponent implements OnChanges {
   @Output() readonly descriptionChange = new EventEmitter<{text: string, commands: imm.List<Cmd>}>();
 
   @Input() storypoints: number;
+
+  @Input() isAllowedToEdit: boolean;
   @Input() storypointsTransient = false;
   @Output() readonly storypointsChange = new EventEmitter<number>();
 

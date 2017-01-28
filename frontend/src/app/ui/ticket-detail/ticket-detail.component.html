@@ -18,7 +18,7 @@
                 [createTime]='ticketDetail.createTime'
                 [subtickets]='ticketDetail.subtickets' (subticketAdd)='onSubticketAdd($event)'
                 [parentTicket]='ticketDetail.parentTicket'
-
+                [isAllowedToEdit]='userIsAllowedToEdit'
                 [ticket]='ticketDetail'
                 [allTicketTags]='allTicketTags'
                 [allTimeCategories]='allTimeCategories'
@@ -58,6 +58,7 @@
     <div class='right col-md-4'>
       <tt-ticket-sidebar
         [ticket]="ticketDetail"
+        [isAllowedToEdit]='userIsAllowedToEdit'
         [allAssignmentTags]="allAssignmentTags"
         (assignmentAdd)="onAssignmentAdd($event)"
         (assignmentRemove)="onAssignmentRemove($event)"

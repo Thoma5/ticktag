@@ -22,6 +22,12 @@ import * as imm from 'immutable';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
 import { showValidationError } from '../../util/error';
+import {MemberResultJson} from '../../api/model/MemberResultJson';
+import ProjectRoleEnum = MemberResultJson.ProjectRoleEnum;
+import {AuthApi} from '../../api/api/AuthApi';
+import {MemberApi} from '../../api/api/MemberApi';
+import {WhoamiResultJson} from '../../api/model/WhoamiResultJson';
+
 
 @Component({
   selector: 'tt-ticket-overview',
@@ -59,7 +65,7 @@ export class TicketOverviewComponent implements OnInit {
   @ViewChild('ticketDataTable') table: any;
   creating = false;
   createRunning = false;
-
+  userIsAllowedToEdit = true;
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -75,6 +81,8 @@ export class TicketOverviewComponent implements OnInit {
     private modal: Modal,
     private overlay: Overlay,
     private vcRef: ViewContainerRef,
+    private authApi: AuthApi,
+    private memberApi: MemberApi,
   ) {
     overlay.defaultViewContainer = vcRef;
   }
@@ -109,6 +117,29 @@ export class TicketOverviewComponent implements OnInit {
             p['open'] || undefined, p['parent'] || undefined);
           this.offset = p['page'] || 0;
           this.query = this.ticketFilter.toTicketFilterString();
+          this.apiCallService
+            .callNoError<WhoamiResultJson>((h) => this.authApi.whoamiUsingGETWithHttpInfo(h))
+            .subscribe(me => {
+              if (me.authorities.includes('ADMIN')) {
+                this.userIsAllowedToEdit = true;
+              } else {
+
+                this.apiCallService
+                  .call<MemberResultJson>((h) => this.memberApi.getMemberUsingGETWithHttpInfo(me.id, projectId, h))
+                  .subscribe(result => {
+                    if (result.isValid) {
+                      if (result.result.projectRole === ProjectRoleEnum.ADMIN || result.result.projectRole === ProjectRoleEnum.USER) {
+                        this.userIsAllowedToEdit = true;
+                      } else {
+                        this.userIsAllowedToEdit = false;
+                      }
+                    } else {
+                      this.userIsAllowedToEdit = false;
+                    }
+                  });
+              }
+
+            });
         }, error => { });
         return this.refresh(this.ticketFilter);
       }, error => { })

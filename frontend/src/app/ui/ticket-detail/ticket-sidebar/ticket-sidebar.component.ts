@@ -34,7 +34,7 @@ export class TicketSidebarComponent implements OnChanges {
   @Input() ticket: TicketDetail;
   @Input() allAssignmentTags = imm.Map<string, TicketDetailAssTag>();
   private assignments: imm.List<Assignment>;
-
+  @Input() isAllowedToEdit: boolean;
   @Output() readonly assignmentAdd = new EventEmitter<{user: string, tag: string}>();
   @Output() readonly assignmentRemove = new EventEmitter<{user: string, tag: string}>();
   @Output() readonly userAdd = new EventEmitter<TicketDetailUser>();
