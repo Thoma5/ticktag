@@ -31,6 +31,13 @@
     </div>
   </div>
   <div class="row">
+    <label for="autoclose">Auto Close *</label>
+    <div class="form-group" [ngClass]="{'has-error has-feedback': f.controls.autoclose?.touched && ! f.controls.autoclose?.valid}">
+      <input class="form-control" type="checkbox" name="autoclose" [(ngModel)]="request.autoClose">
+      <span *ngIf="f.controls.autoclose?.touched && !f.controls.autoclose?.valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
+    </div>
+  </div>
+  <div class="row">
     <input type="button" type="submit" [disabled]="!f.form.valid" class="btn btn-success btn-block" *ngIf="!working" (click)="onSubmit()"
       value="Create Ticket Tag">
   </div>

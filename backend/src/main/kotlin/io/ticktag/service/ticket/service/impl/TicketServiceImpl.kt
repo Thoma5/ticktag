@@ -37,10 +37,10 @@ open class TicketServiceImpl @Inject constructor(
         private val comments: CommentRepository,
         private val assignments: TicketAssignmentRepository,
         private val ticketAssignmentService: TicketAssignmentService,
-        private val commandService: CommandService,
         private val ticketEvents: TicketEventRepository
 ) : TicketService {
-
+    @Inject()
+    private lateinit var commandService: CommandService
     companion object {
         private val LOG = LoggerFactory.getLogger(TicketServiceImpl::class.java)
     }

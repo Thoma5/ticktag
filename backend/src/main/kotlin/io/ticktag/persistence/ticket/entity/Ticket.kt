@@ -59,6 +59,7 @@ open class Ticket protected constructor() {
     @Column(name = "open", nullable = false)
     open var open: Boolean = false
 
+
     @Column(name = "story_points", nullable = true)
     open var storyPoints: Int? = null
 

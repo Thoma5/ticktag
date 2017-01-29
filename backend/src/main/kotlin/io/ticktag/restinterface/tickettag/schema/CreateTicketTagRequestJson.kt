@@ -6,5 +6,6 @@ data class CreateTicketTagRequestJson(
         val name: String,
         val color: String,
         val order: Int,
-        val ticketTagGroupId: UUID
+        val ticketTagGroupId: UUID,
+        val autoClose: Boolean
 )

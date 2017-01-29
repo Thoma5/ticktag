@@ -34,5 +34,7 @@ export interface CreateTicketTagRequestJson {
 
     ticketTagGroupId: string;
 
+    autoClose: boolean;
+
 }
 

@@ -31,11 +31,13 @@ open class CommandServiceImpl(
         private val timeCategories: TimeCategoryRepository,
         private val assignmentTags: AssignmentTagRepository,
         private val nn: NameNormalizationLibrary,
-        private val ticketTagRelationService: TicketTagRelationService,
         private val ticketAssignmentService: TicketAssignmentService
 ) : CommandService {
     @Inject()
     private lateinit var ticketService: TicketService
+
+    @Inject()
+    private lateinit var ticketTagRelationService: TicketTagRelationService
 
     @PreAuthorize(AuthExpr.USER)
     override fun applyCommands(comment: Comment, @Valid commands: List<Command>, principal: Principal) {

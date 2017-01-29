@@ -50,6 +50,7 @@ open class TicketTagServiceImpl @Inject constructor(
         }
 
         val newTicketTag = TicketTag.create(ticketTag.name, normalizedName, ticketTag.color, ticketTag.order, ticketTagGroup)
+        newTicketTag.autoClose = ticketTag.autoClose
         ticketTags.insert(newTicketTag)
         return TicketTagResult(newTicketTag)
     }
@@ -75,6 +76,10 @@ open class TicketTagServiceImpl @Inject constructor(
         }
         if (ticketTag.color != null) {
             ticketTagToUpdate.color = ticketTag.color
+        }
+
+        if (ticketTag.autoClose != null){
+            ticketTagToUpdate.autoClose = ticketTag.autoClose
         }
         if (ticketTag.order != null) {
             ticketTagToUpdate.order = ticketTag.order

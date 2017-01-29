@@ -26,6 +26,8 @@
 import * as models from './models';
 
 export interface TicketTagResultJson {
+    autoClose: boolean;
+
     color: string;
 
     disabled: boolean;

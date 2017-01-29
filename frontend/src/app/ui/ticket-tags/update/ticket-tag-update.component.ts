@@ -19,7 +19,8 @@ export class TicketTagUpdateComponent implements OnInit {
     name: undefined,
     color: undefined,
     order: 0,
-    ticketTagGroupId: ''
+    ticketTagGroupId: '',
+    autoClose: false
   };
   active: Boolean;
   working = false;
@@ -48,6 +49,7 @@ export class TicketTagUpdateComponent implements OnInit {
           this.request.name = '';
           this.request.color = '';
           this.request.ticketTagGroupId = '';
+          this.request.autoClose = false;
           this.updated.emit(result.result);
         } else {
           this.error(result);
@@ -62,6 +64,7 @@ export class TicketTagUpdateComponent implements OnInit {
     this.request.color = '#' + this.ticketTag.color;
     this.request.order = this.ticketTag.order;
     this.request.ticketTagGroupId = this.ticketTag.ticketTagGroupId;
+    this.request.autoClose = this.ticketTag.autoClose;
   }
 
   private error(result: ApiCallResult<void | {}>): void {

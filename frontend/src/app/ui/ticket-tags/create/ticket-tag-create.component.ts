@@ -20,6 +20,7 @@ export class TicketTagCreateComponent {
     color: '',
     order: 0,
     ticketTagGroupId: '',
+    autoClose: false
   };
   working = false;
   @Input() tagGroups: TicketTagGroupResultJson[];
@@ -42,6 +43,7 @@ export class TicketTagCreateComponent {
           this.request.name = '';
           this.request.color = '';
           this.request.order = 0;
+          this.request.autoClose = false;
           this.created.emit(result.result);
         } else {
           this.error(result);

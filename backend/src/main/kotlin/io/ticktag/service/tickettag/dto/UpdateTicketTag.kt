@@ -9,5 +9,6 @@ data class UpdateTicketTag(
         @field:Size(min = 1, max = 30) val name: String?,
         @field:Pattern(regexp = TicketTag.COLOR_REGEX) val color: String?, //RGB HEX Color
         val order: Int?,
-        val ticketTagGroupId: UUID
+        val ticketTagGroupId: UUID,
+        val autoClose: Boolean?
 )
