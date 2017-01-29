@@ -120,8 +120,8 @@ class User:
 class Project:
     def __init__(self):
         self.id = random_uuid()
-        self.name = faker.company()[:21] + " Project"
-        self.description = faker.sentence()
+        self.name = faker.color_name()[:21] + " Project"
+        self.description = faker.catch_phrase()
         self.time = random_datetime(False)
         self.disabled = False
     
@@ -420,7 +420,6 @@ def main():
     print("begin;")
     general_count = 0
     for seed in range(10):
-        faker.random.seed(2017+seed, version=2)
         users = [User(i) for i in range(USER_COUNT)]
         for user in users:
             print(user.insert())
