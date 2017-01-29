@@ -505,6 +505,23 @@ class TicketApiTest : ApiBaseTest() {
         }
     }
 
+    @Test
+    fun `listTickets should not find tickets right on the edge`() {
+        val projectId = UUID.fromString("00000000-0002-0000-0000-000000000001")
+        withUser(ADMIN_ID) { p ->
+            val today = LocalDateTime.parse("2017-01-01T00:00:00").toInstant(ZoneOffset.UTC)
+            val req = CreateTicketRequestJson("ticket", true, null, null, null,
+                    today, "description", projectId, emptyList(), emptyList(), emptyList(), null, emptyList())
+            val result = ticketController.createTicket(req, p)
+
+            val filterToday = LocalDateTime.parse("2017-01-02T00:00:00").toInstant(ZoneOffset.UTC)
+            val tickets = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), null, null, null, null, null, null, null, filterToday, null, null, null, null, null, null, null, 0, 50, listOf(TicketSort.NUMBER_ASC))
+
+            val createdTicket = tickets.filter { it.id == result.body.id }.getOrNull(0)
+            assertEquals(null, createdTicket)
+        }
+    }
+
     @Test(expected = org.springframework.security.access.AccessDeniedException::class)
     fun `listTicketsFuzzy should only work for project members`() {
         withUser(UUID.fromString("00000000-0001-0000-0000-000000000004")) { ->
