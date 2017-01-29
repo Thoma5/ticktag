@@ -158,8 +158,8 @@ class TicketTag:
             sql(self.normalized_name),
             sql(self.color),
             sql(self.order),
-            sql(false),
-            sql(false))
+            sql(False),
+            sql(False))
 
 class AssignmentTag:
     def __init__(self, project, tag):
