@@ -52,7 +52,12 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
         if (u == null) {
           return Observable.of([null, null]);
         } else {
-          return this.loadUserProjects(u.id).map(prs => [u, prs]);
+          return this.loadUserProjects(u.id).map(prs => [u, prs])
+            .catch((err: any) => {
+              console.log('Error loading user projects');
+              console.dir(err);
+              return Observable.of([u, null]);
+            });
         }
       })
       .subscribe(userAndProjects => {
@@ -81,8 +86,7 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
               console.log('Error loading project');
               console.dir(err);
               return Observable.empty<ProjectResultJson>();
-            })
-            .delay(2000);
+            });
         } else {
           return Observable.of(null);
         }
