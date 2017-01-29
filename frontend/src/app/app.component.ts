@@ -48,21 +48,23 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
 
   ngOnInit(): void {
     Observable.concat(Observable.of(this.authService.user), this.authService.observeUser())
+      .subscribe(user => this.user = user);
+
+    Observable.concat(Observable.of(this.authService.user), this.authService.observeUser())
       .flatMap(u => {
         if (u == null) {
-          return Observable.of([null, null]);
+          return Observable.of(null);
         } else {
-          return this.loadUserProjects(u.id).map(prs => [u, prs])
+          return this.loadUserProjects(u.id)
             .catch((err: any) => {
               console.log('Error loading user projects');
               console.dir(err);
-              return Observable.of([u, null]);
+              return Observable.of(null);
             });
         }
       })
-      .subscribe(userAndProjects => {
-        this.user = userAndProjects[0];
-        this.userProjects = userAndProjects[1];
+      .subscribe(userProjects => {
+        this.userProjects = userProjects;
       });
 
     this.router.events
@@ -166,19 +168,7 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
   }
 
   private unauthenticatedError(resp: Response): void {
-    this.modal.alert()
-      .size('sm')
-      .isBlocking(true)
-      .title('Unauthenticated')
-      .body('You are not logged in')
-      .okBtn('Login')
-      .open()
-      .then(promise => {
-        promise.result.then(result => {
-          this.clearUser();
-          this.gotoLogin();
-        });
-      });
+    this.gotoLogin();
   }
 
   private unauthorizedError(resp: Response): void {
