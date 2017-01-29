@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { User } from '../../service';
-import { ProjectResultJson } from '../../api';
+import { ProjectResultJson, ProjectUserResultJson } from '../../api';
 import * as _ from 'lodash';
 import * as imm from 'immutable';
 
@@ -15,6 +15,8 @@ export class SidebarComponent {
   @Input()
   project: ProjectResultJson | null;
   @Input()
+  projectRole: ProjectUserResultJson.ProjectRoleEnum | null;
+  @Input()
   loadingProject: boolean;
   @Input()
   projects: imm.List<ProjectResultJson>;
@@ -27,6 +29,10 @@ export class SidebarComponent {
 
   get isAdmin(): boolean {
     return _.includes(this.user.authorities, 'ADMIN');
+  }
+
+  get isProjectAdmin(): boolean {
+    return this.projectRole === ProjectUserResultJson.ProjectRoleEnum.ADMIN;
   }
 
   get otherProjects(): imm.List<ProjectResultJson> {
