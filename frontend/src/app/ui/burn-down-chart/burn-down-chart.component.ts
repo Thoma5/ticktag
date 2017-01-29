@@ -46,7 +46,7 @@ export class BurnDownChartComponent implements OnInit {
         todayHighlight: true,
         assumeNearbyYear: true,
         format: 'yyyy-mm-dd',
-        startDate: new Date(2016,0)
+        startDate: new Date(2016, 0)
     };
 
     public datePickerToOpts: any;
