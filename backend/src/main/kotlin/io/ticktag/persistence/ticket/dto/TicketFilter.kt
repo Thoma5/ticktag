@@ -68,15 +68,15 @@ data class TicketFilter(val project: UUID, val numbers: List<Int>?, val title: S
         }
         if (dueDateOne != null) {
             if (dueDateTwo != null) {
-                predicates.add(cb.between(root.get<Instant>("dueDate"), dueDateOne, dueDateTwo))
+                predicates.add(cb.between(root.get<Instant>("dueDate"), dueDateOne, dueDateTwo.plusSeconds(86399)))
             } else if (dueDateGreater != null) {
                 if (dueDateGreater == true) {
-                    predicates.add(cb.greaterThan(root.get<Instant>("dueDate"), dueDateOne))
+                    predicates.add(cb.greaterThan(root.get<Instant>("dueDate"), dueDateOne.plusSeconds(86399)))
                 } else if (dueDateGreater == false) {
                     predicates.add(cb.lessThan(root.get<Instant>("dueDate"), dueDateOne))
                 }
             } else {
-                predicates.add(cb.equal(root.get<Instant>("dueDate"), dueDateOne))
+                predicates.add(cb.between(root.get<Instant>("dueDate"), dueDateOne, dueDateOne.plusSeconds(86399)))
             }
         }
         if (storyPointsOne != null) {
