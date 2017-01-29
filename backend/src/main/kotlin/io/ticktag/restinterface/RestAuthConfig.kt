@@ -69,6 +69,8 @@ open class RestSecurityConfig @Inject constructor(
                 .csrf().disable()
                 .cors().configurationSource { CORS_CONFIG }.and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .exceptionHandling().authenticationEntryPoint { httpServletRequest, httpServletResponse, authenticationException -> httpServletResponse.sendError(401) }
     }
 
     override fun configure(auth: AuthenticationManagerBuilder) {
@@ -101,7 +103,7 @@ open class RestSecurityConfigBeans {
     }
 
     @Bean("restAuthFilter")
-    open fun restAuthFilter(@Named("restAuthTokenService") tokenService: TokenService, users: UserRepository, members: MemberRepository, comments: CommentRepository, assignmentTags: AssignmentTagRepository, timeCategories: TimeCategoryRepository,loggedTimes: LoggedTimeRepository): Filter {
+    open fun restAuthFilter(@Named("restAuthTokenService") tokenService: TokenService, users: UserRepository, members: MemberRepository, comments: CommentRepository, assignmentTags: AssignmentTagRepository, timeCategories: TimeCategoryRepository, loggedTimes: LoggedTimeRepository): Filter {
         return object : OncePerRequestFilter() {
             override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
                 val tokenKey = request.getHeader("X-Authorization")

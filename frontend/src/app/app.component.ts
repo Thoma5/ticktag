@@ -168,6 +168,7 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
   }
 
   private unauthenticatedError(resp: Response): void {
+    this.authService.user = null;
     this.gotoLogin();
   }
 
