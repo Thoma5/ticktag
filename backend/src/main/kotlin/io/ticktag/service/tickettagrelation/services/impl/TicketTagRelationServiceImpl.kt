@@ -9,11 +9,14 @@ import io.ticktag.persistence.ticket.entity.TicketEventTagRemoved
 import io.ticktag.persistence.tickettag.TicketTagRepository
 import io.ticktag.persistence.user.UserRepository
 import io.ticktag.service.*
+import io.ticktag.service.ticket.dto.UpdateTicket
+import io.ticktag.service.ticket.service.TicketService
 import io.ticktag.service.tickettagrelation.dto.TicketTagRelationResult
 import io.ticktag.service.tickettagrelation.services.TicketTagRelationService
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
 import java.util.*
+import javax.inject.Inject
 
 @TicktagService
 open class TicketTagRelationServiceImpl(
@@ -23,7 +26,8 @@ open class TicketTagRelationServiceImpl(
         private val users: UserRepository,
         private val kanbanCellRepository: KanbanCellRepository
 ) : TicketTagRelationService {
-
+    @Inject()
+    private lateinit var ticketService: TicketService
     @PreAuthorize(AuthExpr.READ_TICKET_TAG_RELATION)
     override fun getTicketTagRelation(@P("authTicketId") ticketId: UUID, tagId: UUID): TicketTagRelationResult {
         val ticket = tickets.findOne(ticketId) ?: throw NotFoundException()
@@ -37,7 +41,7 @@ open class TicketTagRelationServiceImpl(
         val ticket = tickets.findOne(ticketId) ?: throw NotFoundException()
         val tag = tags.findOne(tagId) ?: throw NotFoundException()
 
-        if(tag.disabled)
+        if (tag.disabled)
             throw TicktagValidationException(listOf(ValidationError("tag", ValidationErrorDetail.Other("tagDisabled"))))
 
 
@@ -62,7 +66,8 @@ open class TicketTagRelationServiceImpl(
             ticket.tags.add(tag)
         }
         if (tag.autoClose) {
-            ticket.open = false
+            ticketService.updateTicket(UpdateTicket(open = UpdateValue(false), commands = null, currentEstimatedTime = null, description = null, dueDate = null, initialEstimatedTime = null, parentTicket = null, storyPoints = null, title = null), ticket.id, principal)
+
         }
 
         return TicketTagRelationResult(ticketId = ticket.id, tagId = tag.id)
