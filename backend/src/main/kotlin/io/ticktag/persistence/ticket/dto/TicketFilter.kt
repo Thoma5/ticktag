@@ -8,6 +8,11 @@ import io.ticktag.persistence.ticket.entity.TicketTag
 import io.ticktag.persistence.user.entity.User
 import org.springframework.data.jpa.domain.Specification
 import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZoneOffset
+import java.time.temporal.ChronoUnit
+import java.time.temporal.TemporalUnit
 import java.util.*
 import javax.persistence.criteria.*
 
@@ -66,17 +71,25 @@ data class TicketFilter(val project: UUID, val numbers: List<Int>?, val title: S
                 predicates.add(cb.equal(root.get<Progress>("progress").get<List<String>>("totalProgress"), progressOne))
             }
         }
+
+        // We assume that the client sent us a valid UTC timestamp for the given day
+        // We trim the clients timestamp down to the day, just to be sure
+        // And filter everything between trimmed(now) <= date < trimmed(now + 1)
         if (dueDateOne != null) {
             if (dueDateTwo != null) {
-                predicates.add(cb.between(root.get<Instant>("dueDate"), dueDateOne, dueDateTwo))
+                // We check for first <= date < second i.e. we can use exactly the method above
+                predicates.add(cb.between(root.get<Instant>("dueDate"), normalizedCurrentDay(dueDateOne), normalizedNextDay(dueDateTwo)))
             } else if (dueDateGreater != null) {
                 if (dueDateGreater == true) {
-                    predicates.add(cb.greaterThan(root.get<Instant>("dueDate"), dueDateOne))
+                    // first > date
+                    predicates.add(cb.greaterThan(root.get<Instant>("dueDate"), normalizedCurrentDay(dueDateOne)))
                 } else if (dueDateGreater == false) {
-                    predicates.add(cb.lessThan(root.get<Instant>("dueDate"), dueDateOne))
+                    // first < date
+                    predicates.add(cb.lessThan(root.get<Instant>("dueDate"), normalizedNextDay(dueDateOne)))
                 }
             } else {
-                predicates.add(cb.equal(root.get<Instant>("dueDate"), dueDateOne))
+                // Instead of an exact match, we match between the two limits
+                predicates.add(cb.between(root.get<Instant>("dueDate"), normalizedCurrentDay(dueDateOne), normalizedNextDay(dueDateOne)))
             }
         }
         if (storyPointsOne != null) {
@@ -112,4 +125,15 @@ data class TicketFilter(val project: UUID, val numbers: List<Int>?, val title: S
 
     }
 
+    private fun trimToDay(timestamp: Instant): Instant {
+        return timestamp.truncatedTo(ChronoUnit.DAYS)
+    }
+
+    private fun normalizedCurrentDay(timestamp: Instant): Instant {
+        return trimToDay(timestamp)
+    }
+
+    private fun normalizedNextDay(timestamp: Instant): Instant {
+        return normalizedCurrentDay(timestamp).plus(1, ChronoUnit.DAYS)
+    }
 }
