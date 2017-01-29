@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {ApiCallService} from '../../service';
-import {AssignmenttagApi} from '../../api/api/AssignmenttagApi';
-import {ActivatedRoute, Router} from '@angular/router';
-import {AssignmentTagResultJson} from '../../api/model/AssignmentTagResultJson';
-import {Observable} from 'rxjs';
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
+import { ApiCallService } from '../../service';
+import { AssignmenttagApi } from '../../api/api/AssignmenttagApi';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AssignmentTagResultJson } from '../../api/model/AssignmentTagResultJson';
+import { Observable } from 'rxjs';
+import { Overlay } from 'angular2-modal';
 import { Modal } from 'angular2-modal/plugins/bootstrap';
 
 @Component({
@@ -24,7 +25,11 @@ export class AssignmentTagsComponent implements OnInit {
     private route: ActivatedRoute,
     private assignmentTagApi: AssignmenttagApi,
     private apiCallService: ApiCallService,
-    private modal: Modal) {
+    private modal: Modal,
+    private overlay: Overlay,
+    private vcRef: ViewContainerRef,
+  ) {
+    overlay.defaultViewContainer = vcRef;
   }
 
   ngOnInit(): void {
@@ -65,8 +70,8 @@ export class AssignmentTagsComponent implements OnInit {
           this.apiCallService
             .call<any>(h => this.assignmentTagApi.deleteAssignmentTagUsingDELETEWithHttpInfo(tag.id, h))
             .subscribe(param => {
-                this.refresh().subscribe();
-              }
+              this.refresh().subscribe();
+            }
             );
         }).catch(result => {
           // Cancel clicked

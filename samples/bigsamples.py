@@ -429,7 +429,6 @@ def main():
         print(project.insert())
         p_user = 0;
         for user in users:
-            if()
             print("insert into member values ({}, {}, {}, {});".format(
                 sql(user.id),
                 sql(project.id),

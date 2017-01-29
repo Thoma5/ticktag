@@ -17,7 +17,7 @@
  }
  
  .core {
-   @extend %card;
+   margin: $small-gap; 
  }
  
  .subtitle {
