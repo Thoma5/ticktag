@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ViewContainerRef, OnDestroy, NgZone } from '@angular/core';
 import { Location } from '@angular/common';
+import { Title } from '@angular/platform-browser';
 import '../style/app.scss';
 import { AuthService, ApiCallService, User, ErrorHandler } from './service';
 import { ProjectApi, ProjectResultJson, PageProjectResultJson } from './api';
@@ -20,11 +21,10 @@ import { Observable } from 'rxjs';
 export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
   @ViewChild('start') sidebar: any;
   private showLoginButton: boolean;
-  private title: string;
   private user: User;
   private directTicketLinkEvent: (eventObject: JQueryEventObject) => any;
   private loadingProject: boolean = false;
-  private project: ProjectResultJson | null = null;
+  private _project: ProjectResultJson | null = null;
   private userProjects: imm.List<ProjectResultJson> | null = null;
 
   // TODO make readonly once Intellij supports readonly properties in ctr
@@ -35,16 +35,28 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
     private overlay: Overlay,
     private vcRef: ViewContainerRef,
     private router: Router,
+    private title: Title,
     private location: Location,
     private zone: NgZone,
     private apiCallService: ApiCallService,
     private projectApi: ProjectApi) {
 
     apiCallService.initErrorHandler(this);
-    this.title = 'TickTag';
     overlay.defaultViewContainer = vcRef;
   }
 
+  set project(val: ProjectResultJson | null) {
+    this._project = val;
+    if (val != null) {
+      this.title.setTitle(val.name + ' | TickTag');
+    } else {
+      this.title.setTitle('TickTag');
+    }
+  }
+
+  get project(): ProjectResultJson | null {
+    return this._project;
+  }
 
   ngOnInit(): void {
     Observable.concat(Observable.of(this.authService.user), this.authService.observeUser())
