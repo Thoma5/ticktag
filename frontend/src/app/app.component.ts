@@ -3,12 +3,13 @@ import { Location } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import '../style/app.scss';
 import { AuthService, ApiCallService, User, ErrorHandler } from './service';
-import { ProjectApi, ProjectResultJson, PageProjectResultJson } from './api';
+import { ProjectApi, ProjectResultJson, ProjectUserResultJson, PageProjectResultJson } from './api';
 import { Router, ActivatedRoute, NavigationStart } from '@angular/router';
 import { Overlay } from 'angular2-modal';
 import { Modal } from 'angular2-modal/plugins/bootstrap';
 import { Response } from '@angular/http';
 import * as $ from 'jquery';
+import * as _ from 'lodash';
 import * as imm from 'immutable';
 import { Observable } from 'rxjs';
 
@@ -25,6 +26,7 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
   private directTicketLinkEvent: (eventObject: JQueryEventObject) => any;
   private loadingProject: boolean = false;
   private _project: ProjectResultJson | null = null;
+  private projectRole: ProjectUserResultJson.ProjectRoleEnum | null = null;
   private userProjects: imm.List<ProjectResultJson> | null = null;
 
   // TODO make readonly once Intellij supports readonly properties in ctr
@@ -59,10 +61,10 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
   }
 
   ngOnInit(): void {
-    Observable.concat(Observable.of(this.authService.user), this.authService.observeUser())
+    this.userObservable()
       .subscribe(user => this.user = user);
 
-    Observable.concat(Observable.of(this.authService.user), this.authService.observeUser())
+    this.userObservable()
       .flatMap(u => {
         if (u == null) {
           return Observable.of(null);
@@ -90,23 +92,30 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
       .filter(e => e instanceof NavigationStart)
       .map(e => e.url)
       .map(url => projectIdFromUrl(url))
+      .combineLatest(this.userObservable())
       .distinctUntilChanged()
-      .switchMap(projectId => {
+      .switchMap(projectIdAndUser => {
+        let projectId = projectIdAndUser[0];
+        let user = projectIdAndUser[1];
         this.loadingProject = true;
+        if (user == null) {
+          return Observable.of([null, null]);
+        }
         if (projectId != null) {
           // TODO do we need better error handling here?
-          return this.loadProject(projectId)
+          return this.loadProjectInfo(projectId, user.id)
             .catch((err: any) => {
               console.log('Error loading project');
               console.dir(err);
-              return Observable.empty<ProjectResultJson>();
+              return Observable.empty<[ProjectResultJson, ProjectUserResultJson.ProjectRoleEnum]>();
             });
         } else {
-          return Observable.of(null);
+          return Observable.of([null, null]);
         }
       })
-      .subscribe(project => {
-        this.project = project;
+      .subscribe(projectAndMembership => {
+        this.project = projectAndMembership[0];
+        this.projectRole = projectAndMembership[1] != null ? projectAndMembership[1].projectRole : null;
         this.loadingProject = false;
       });
 
@@ -123,14 +132,21 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
     });
   }
 
+  private userObservable(): Observable<User> {
+    return Observable.concat(Observable.of(this.authService.user), this.authService.observeUser());
+  }
+
   ngOnDestroy() {
     if (this.directTicketLinkEvent) {
       $(document).off('click', 'a.grammar-htmlifyCommands', this.directTicketLinkEvent);
     }
   }
 
-  loadProject(id: string): Observable<ProjectResultJson> {
-    return this.apiCallService.callNoError(p => this.projectApi.getProjectUsingGETWithHttpInfo(id, p));
+  loadProjectInfo(id: string, userId: string): Observable<[ProjectResultJson, ProjectUserResultJson]> {
+    return Observable.zip(this.apiCallService.callNoError(p => this.projectApi.getProjectUsingGETWithHttpInfo(id, p)),
+                          this.apiCallService.callNoError(p => this.projectApi.listProjectMembersUsingGETWithHttpInfo(id, false, p))
+                            .map((members: ProjectUserResultJson[]) => _.filter(members, member => member.id === userId)[0])
+                          );
   }
 
   loadUserProjects(userId: string): Observable<imm.List<ProjectResultJson>> {

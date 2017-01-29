@@ -68,19 +68,19 @@
         </a>
       </div>
     <div>
-        <a *ngIf="isAdmin"  md-button [routerLink]="['/project', project.id, 'tickettags']">
+        <a *ngIf="isAdmin || isProjectAdmin"  md-button [routerLink]="['/project', project.id, 'tickettags']">
           <i class='link-icon fa fa-tag'></i>
           <span class='link-text'>Ticket Tags</span>
         </a>
       </div>
       <div>
-        <a *ngIf="isAdmin"  md-button [routerLink]="['/project', project.id, 'assignmenttags']">
+        <a *ngIf="isAdmin || isProjectAdmin"  md-button [routerLink]="['/project', project.id, 'assignmenttags']">
           <i class='link-icon fa fa-tag'></i>
           <span class='link-text'>Assignment Tags</span>
         </a>
       </div>
       <div>
-        <a *ngIf="isAdmin"  md-button [routerLink]="['/project', project.id, 'timecategories']">
+        <a *ngIf="isAdmin || isProjectAdmin"  md-button [routerLink]="['/project', project.id, 'timecategories']">
           <i class='link-icon fa fa-tag'></i>
           <span class='link-text'>Time Categories</span>
         </a>
