@@ -157,7 +157,9 @@ class TicketTag:
             sql(self.name),
             sql(self.normalized_name),
             sql(self.color),
-            sql(self.order))
+            sql(self.order),
+            sql(false),
+            sql(false))
 
 class AssignmentTag:
     def __init__(self, project, tag):
