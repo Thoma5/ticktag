@@ -1,11 +1,12 @@
-import {Component, OnInit} from '@angular/core';
-import {ApiCallService} from '../../service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {AssignmentTagResultJson} from '../../api/model/AssignmentTagResultJson';
-import {Observable} from 'rxjs';
-import {Modal} from 'angular2-modal/plugins/bootstrap';
-import {TimeCategoryJson} from '../../api/model/TimeCategoryJson';
-import {TimecategoryApi} from '../../api/api/TimecategoryApi';
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
+import { ApiCallService } from '../../service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AssignmentTagResultJson } from '../../api/model/AssignmentTagResultJson';
+import { Observable } from 'rxjs';
+import { Overlay } from 'angular2-modal';
+import { Modal } from 'angular2-modal/plugins/bootstrap';
+import { TimeCategoryJson } from '../../api/model/TimeCategoryJson';
+import { TimecategoryApi } from '../../api/api/TimecategoryApi';
 
 @Component({
   selector: 'tt-time-categories',
@@ -25,8 +26,13 @@ export class TimeCategoriesComponent implements OnInit {
     private route: ActivatedRoute,
     private timeCategoryApi: TimecategoryApi,
     private apiCallService: ApiCallService,
-    private modal: Modal) {
+    private modal: Modal,
+    private overlay: Overlay,
+    private vcRef: ViewContainerRef,
+  ) {
+    overlay.defaultViewContainer = vcRef;
   }
+
 
   ngOnInit(): void {
     this.route.params
@@ -66,8 +72,8 @@ export class TimeCategoriesComponent implements OnInit {
           this.apiCallService
             .call<any>(h => this.timeCategoryApi.deleteTimeCategoryUsingDELETEWithHttpInfo(cat.id, h))
             .subscribe(param => {
-                this.refresh().subscribe();
-              }
+              this.refresh().subscribe();
+            }
             );
         }).catch(result => {
           // Cancel clicked

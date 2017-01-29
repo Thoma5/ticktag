@@ -95,6 +95,12 @@ export class UserProfileComponent implements OnInit {
           }
           this.request.password = undefined;
           this.request.oldPassword = undefined;
+          this.modal.alert()
+            .size('sm')
+            .showClose(true)
+            .title('User Profile changed!')
+            .body('The user profile has been changed.')
+            .open();
         } else {
           this.error(result);
         }
