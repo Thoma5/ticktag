@@ -78,18 +78,18 @@ data class TicketFilter(val project: UUID, val numbers: List<Int>?, val title: S
         if (dueDateOne != null) {
             if (dueDateTwo != null) {
                 // We check for first <= date < second i.e. we can use exactly the method above
-                predicates.add(cb.between(root.get<Instant>("dueDate"), normalizedCurrentDay(dueDateOne), normalizedNextDay(dueDateTwo)))
+                predicates.add(cb.betweenLowerInclUpperExcl(root.get<Instant>("dueDate"), dueDateOne.normalizedCurrentDay(), dueDateTwo.normalizedNextDay()))
             } else if (dueDateGreater != null) {
                 if (dueDateGreater == true) {
                     // first > date
-                    predicates.add(cb.greaterThan(root.get<Instant>("dueDate"), normalizedCurrentDay(dueDateOne)))
+                    predicates.add(cb.greaterThan(root.get<Instant>("dueDate"), dueDateOne.normalizedCurrentDay()))
                 } else if (dueDateGreater == false) {
                     // first < date
-                    predicates.add(cb.lessThan(root.get<Instant>("dueDate"), normalizedNextDay(dueDateOne)))
+                    predicates.add(cb.lessThan(root.get<Instant>("dueDate"), dueDateOne.normalizedNextDay()))
                 }
             } else {
                 // Instead of an exact match, we match between the two limits
-                predicates.add(cb.between(root.get<Instant>("dueDate"), normalizedCurrentDay(dueDateOne), normalizedNextDay(dueDateOne)))
+                predicates.add(cb.betweenLowerInclUpperExcl(root.get<Instant>("dueDate"), dueDateOne.normalizedCurrentDay(), dueDateOne.normalizedNextDay()))
             }
         }
         if (storyPointsOne != null) {
@@ -125,15 +125,20 @@ data class TicketFilter(val project: UUID, val numbers: List<Int>?, val title: S
 
     }
 
-    private fun trimToDay(timestamp: Instant): Instant {
-        return timestamp.truncatedTo(ChronoUnit.DAYS)
-    }
+}
 
-    private fun normalizedCurrentDay(timestamp: Instant): Instant {
-        return trimToDay(timestamp)
-    }
+fun CriteriaBuilder.betweenLowerInclUpperExcl(v: Expression<out Instant>, lower: Instant, upper: Instant): Predicate {
+    return this.and(this.greaterThanOrEqualTo(v, lower), this.lessThan(v, upper))
+}
 
-    private fun normalizedNextDay(timestamp: Instant): Instant {
-        return normalizedCurrentDay(timestamp).plus(1, ChronoUnit.DAYS)
-    }
+private fun Instant.trimToDay(): Instant {
+    return this.truncatedTo(ChronoUnit.DAYS)
+}
+
+private fun Instant.normalizedCurrentDay(): Instant {
+    return this.trimToDay()
+}
+
+private fun Instant.normalizedNextDay(): Instant {
+    return this.normalizedCurrentDay().plus(1, ChronoUnit.DAYS)
 }
