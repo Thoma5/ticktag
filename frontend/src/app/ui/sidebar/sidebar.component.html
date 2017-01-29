@@ -59,32 +59,35 @@
         <span class='link-text'>Kanban</span>
       </a>
     </div>
-     <div>
-      <a md-button [routerLink]="['/project', project.id, 'users']">
-        <i class='link-icon fa fa-users'></i>
-        <span class='link-text'>Project Users</span>
-      </a>
-    </div>
-	 <div>
-      <a *ngIf="isAdmin"  md-button [routerLink]="['/project', project.id, 'tickettags']">
-        <i class='link-icon fa fa-tag'></i>
-        <span class='link-text'>Ticket Tags</span>
-      </a>
-    </div>
+
+    <div class="project-admin-block">
+      <div>
+        <a md-button [routerLink]="['/project', project.id, 'users']">
+          <i class='link-icon fa fa-users'></i>
+          <span class='link-text'>Project Users</span>
+        </a>
+      </div>
     <div>
-      <a *ngIf="isAdmin"  md-button [routerLink]="['/project', project.id, 'assignmenttags']">
-        <i class='link-icon fa fa-tag'></i>
-        <span class='link-text'>Assignment Tags</span>
-      </a>
-    </div>
-    <div>
-      <a *ngIf="isAdmin"  md-button [routerLink]="['/project', project.id, 'timecategories']">
-        <i class='link-icon fa fa-tag'></i>
-        <span class='link-text'>Time Categories</span>
-      </a>
+        <a *ngIf="isAdmin"  md-button [routerLink]="['/project', project.id, 'tickettags']">
+          <i class='link-icon fa fa-tag'></i>
+          <span class='link-text'>Ticket Tags</span>
+        </a>
+      </div>
+      <div>
+        <a *ngIf="isAdmin"  md-button [routerLink]="['/project', project.id, 'assignmenttags']">
+          <i class='link-icon fa fa-tag'></i>
+          <span class='link-text'>Assignment Tags</span>
+        </a>
+      </div>
+      <div>
+        <a *ngIf="isAdmin"  md-button [routerLink]="['/project', project.id, 'timecategories']">
+          <i class='link-icon fa fa-tag'></i>
+          <span class='link-text'>Time Categories</span>
+        </a>
+      </div>
     </div>
   </div>
-    <div class="navadmin-block">
+  <div class="navadmin-block">
     <div>
       <a md-button *ngIf="isAdmin" [routerLink]="['/users']">
         <i class='link-icon fa fa-users'></i>
