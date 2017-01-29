@@ -143,10 +143,10 @@ export function extractCommands(string: string): imm.List<Cmd> {
       });
     } else if (command.startsWith('!due:')) {
       let [year, month, day] = command.substr(5).split('-').map(s => parseInt(s, 10));
-      let date = new Date(year, month - 1, day);
+      let date = Date.UTC(year, month - 1, day);
       result.push({
         cmd: 'due',
-        date: date.getTime(),
+        date: date,
       });
     } else if (command[0] === '#') {
       result.push({

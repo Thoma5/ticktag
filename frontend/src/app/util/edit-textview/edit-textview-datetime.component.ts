@@ -35,7 +35,7 @@ export class EditTextviewDateTimeEditComponent implements TextviewEditComponent<
     this._content = (v !== null && v !== undefined) ? moment(v).format('YYYY-MM-DD') : '';
   }
   get content() {
-    return this._content ? moment(this._content, 'YYYY-MM-DD').valueOf() : null;
+    return this._content ? moment(this._content + ' +0000', 'YYYY-MM-DD ZZ').valueOf() : null;
   }
 
   valid: boolean = true;

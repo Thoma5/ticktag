@@ -195,8 +195,8 @@ export class TicketFilterComponent implements OnInit, OnChanges {
                         }
                         const regexp = new RegExp('\\d{4}-\\d{2}-\\d{2}');
                         if (date[1] && date[1].length !== 0) { // DateFrom-DateTo  
-                            const m1 = moment(date[0], 'YYYY-MM-DD');
-                            const m2 = moment(date[1], 'YYYY-MM-DD');
+                            const m1 = moment(date[0] + ' +0000', 'YYYY-MM-DD ZZ');
+                            const m2 = moment(date[1] + ' +0000', 'YYYY-MM-DD ZZ');
                             if (regexp.test(date[0]) && m1.isValid() && regexp.test(date[1]) && m2.isValid()) {
                                 dueDateOne = m1.valueOf();
                                 dueDateTwo = m2.valueOf();
@@ -213,7 +213,7 @@ export class TicketFilterComponent implements OnInit, OnChanges {
                                 dueDateGreater = false;
                                 date[0] = date[0].substr(1);
                             }
-                            const m1 = moment(date[0], 'YYYY-MM-DD');
+                            const m1 = moment(date[0] + ' +0000', 'YYYY-MM-DD ZZ');
                             if (regexp.test(date[0]) && m1.isValid()) {
                                 dueDateOne = m1.valueOf();
                                 return;
