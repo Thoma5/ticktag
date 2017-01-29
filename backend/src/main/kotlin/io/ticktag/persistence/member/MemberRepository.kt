@@ -15,8 +15,8 @@ import java.util.*
 interface MemberRepository : TicktagCrudRepository<Member, MemberKey> {
     fun findByUserAndUserDisabledIs(user: User, disabledUsers: Boolean): List<Member>?
     fun findByUserAndRoleNot(user: User, projectRole: ProjectRole): List<Member>?
-    fun findByProjectAndUserDisabledIsAndRoleIs(project: Project, disabledUsers: Boolean, role: ProjectRole): List<Member>?
-    fun findByProjectAndUserDisabledIsAndRoleNot(project: Project, disabledUsers: Boolean, role: ProjectRole): List<Member>?
+    fun findByRoleIsAndProjectAndUserDisabledIs(role: ProjectRole, project: Project, disabledUsers: Boolean): List<Member>?
+    fun findByRoleNotAndProjectAndUserDisabledIs(role: ProjectRole, project: Project, disabledUsers: Boolean): List<Member>?
     fun findByProject(project: Project): List<Member>?
 
     fun findByUserIdAndProjectId(userId: UUID, projectId: UUID): Member?

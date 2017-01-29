@@ -29,6 +29,13 @@
           <option *ngFor="let role of roles" value="{{role.role}}">{{role.role.charAt(0) + role.role.slice(1).toLowerCase()}}</option>
         </select>
           </div>
+          <div class="form-group">
+            <label for="assignmentTag">Default Assignment Tag</label>
+            <select class="form-control" name="assignmentTag" size="1" [(ngModel)]="request.defaultAssignmentTagId" (change)="onDefaultAssTagSelect($event)">
+              <option value="{{undefined}}"></option>
+              <option *ngFor="let tag of assignmentTags" value="{{tag.id}}">{{tag.name}}</option>
+            </select>
+          </div>
           <input type="button" type="submit" [disabled]="!f.form.valid || !selectedUser" class="btn btn-success btn-block" *ngIf="!working"
             (click)="onSubmit()" value="Assign User">
         </form>

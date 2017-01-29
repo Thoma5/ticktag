@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
-import {ApiCallService, AuthService, User} from '../../../service';
-import {ProjectApi, MemberApi, ProjectUserResultJson, ProjectRoleResultJson} from '../../../api';
-import {AssignmentTagResultJson} from '../../../api/model/AssignmentTagResultJson';
-import {AssignmenttagApi} from '../../../api/api/AssignmenttagApi';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { ApiCallService, AuthService, User } from '../../../service';
+import { ProjectApi, MemberApi, ProjectUserResultJson, ProjectRoleResultJson } from '../../../api';
+import { AssignmentTagResultJson } from '../../../api/model/AssignmentTagResultJson';
+import { AssignmenttagApi } from '../../../api/api/AssignmenttagApi';
 @Component({
   selector: 'tt-project-users',
   templateUrl: './project-users.component.html',
@@ -37,12 +37,12 @@ export class ProjectUsersComponent implements OnInit {
   private toUpdateMember: ProjectUserResultJson = undefined;
 
   constructor(private route: ActivatedRoute,
-              private router: Router,
-              private projectApi: ProjectApi,
-              private memberApi: MemberApi,
-              private apiCallService: ApiCallService,
-              private authService: AuthService,
-              private assignmentTagApi: AssignmenttagApi) {
+    private router: Router,
+    private projectApi: ProjectApi,
+    private memberApi: MemberApi,
+    private apiCallService: ApiCallService,
+    private authService: AuthService,
+    private assignmentTagApi: AssignmenttagApi) {
   }
 
   ngOnInit(): void {
@@ -74,7 +74,10 @@ export class ProjectUsersComponent implements OnInit {
       .subscribe(users => {
         this.refresh = true;
         this.users = users;
-        this.rows = users;
+        this.rows = this.users.filter(e => (e.name.toLocaleLowerCase().indexOf(this.filter) >= 0 ||
+          e.username.toLocaleLowerCase().indexOf(this.filter) >= 0 ||
+          e.mail.toLocaleLowerCase().indexOf(this.filter) >= 0) &&
+          (e.projectRole.toString().indexOf(this.filterRole) >= 0));
         this.loading = false;
         this.refresh = false;
       });
@@ -84,15 +87,17 @@ export class ProjectUsersComponent implements OnInit {
     if (event) {
       this.filter = event.target.value.toLocaleLowerCase();
     }
-    this.temp = this.users;
     // filter our data
-    let temp = this.temp.filter(e => (e.name.toLocaleLowerCase().indexOf(this.filter) >= 0 ||
-    e.username.toLocaleLowerCase().indexOf(this.filter) >= 0 ||
-    e.mail.toLocaleLowerCase().indexOf(this.filter) >= 0 ) &&
-    (e.projectRole.toString().indexOf(this.filterRole) >= 0));
-
-    // update the rows
-    this.rows = temp;
+    if (this.filterRole === 'NONE' || this.filterRole !== 'NONE' && this.disabled) {
+      this.disabled = this.filterRole === 'NONE';
+      this.refresh = true;
+      this.getProjectMembers();
+    } else {
+      this.rows = this.users.filter(e => (e.name.toLocaleLowerCase().indexOf(this.filter) >= 0 ||
+        e.username.toLocaleLowerCase().indexOf(this.filter) >= 0 ||
+        e.mail.toLocaleLowerCase().indexOf(this.filter) >= 0) &&
+        (e.projectRole.toString().indexOf(this.filterRole) >= 0));
+    }
   }
 
   getRoles(): void {

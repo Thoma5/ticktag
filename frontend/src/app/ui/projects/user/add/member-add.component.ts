@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, OnInit, ViewContainerRef } from
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiCallService, ApiCallResult } from '../../../../service';
 import {
-  UserApi, ProjectApi, MemberApi, CreateMemberRequestJson, UserResultJson, MemberResultJson
+  UserApi, ProjectApi, MemberApi, AssignmenttagApi, CreateMemberRequestJson, UserResultJson, MemberResultJson, AssignmentTagResultJson
 } from '../../../../api';
 import { RoleResultJson } from '../../../../api/model/RoleResultJson';
 import { showValidationError } from '../../../../util/error';
@@ -19,15 +19,17 @@ import RoleEnum = CreateMemberRequestJson.ProjectRoleEnum;
 export class MemberAddComponent implements OnInit {
   request: CreateMemberRequestJson = {
     projectRole: RoleEnum.USER,
-    defaultAssignmentTagId: null
+    defaultAssignmentTagId: undefined
   };
   private loading = true;
   private selectedUser: UserResultJson;
   working = false;
   confPassword: string = undefined;
   private roles: RoleResultJson[] = [];
+  private assignmentTags: AssignmentTagResultJson[];
   @Input() projectId: string;
   @Input() assignedUsers: UserResultJson[];
+
   @Output() readonly created = new EventEmitter<MemberResultJson>();
 
   constructor(private apiCallService: ApiCallService,
@@ -36,6 +38,7 @@ export class MemberAddComponent implements OnInit {
     private projectApi: ProjectApi,
     private userApi: UserApi,
     private memberApi: MemberApi,
+    private assignmentTagApi: AssignmenttagApi,
     private modal: Modal,
     private overlay: Overlay,
     private vcRef: ViewContainerRef,
@@ -57,6 +60,7 @@ export class MemberAddComponent implements OnInit {
         });
       this.getProjectMembers();
     }
+    this.getAssignmentTags();
     this.getRoles();
     this.loading = false;
   }
@@ -65,6 +69,14 @@ export class MemberAddComponent implements OnInit {
       .callNoError<UserResultJson[]>(h => this.projectApi.listProjectMembersUsingGETWithHttpInfo(this.projectId, undefined, h))
       .subscribe(users => {
         this.assignedUsers = users;
+      });
+  }
+
+  getAssignmentTags(): void {
+    this.apiCallService
+      .callNoError<AssignmentTagResultJson[]>(h => this.assignmentTagApi.listAssignmentTagsUsingGETWithHttpInfo(this.projectId, h))
+      .subscribe(tags => {
+        this.assignmentTags = tags;
       });
   }
 
@@ -95,6 +107,10 @@ export class MemberAddComponent implements OnInit {
 
   onAssignUser(user: UserResultJson) {
     this.selectedUser = user;
+  }
+
+  onDefaultAssTagSelect(event: any) {
+    this.request.defaultAssignmentTagId = this.request.defaultAssignmentTagId === '' ? undefined : this.request.defaultAssignmentTagId;
   }
 
   private error(result: ApiCallResult<void | {}>): void {

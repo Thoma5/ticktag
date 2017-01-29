@@ -71,7 +71,10 @@ open class MemberServiceImpl @Inject constructor(
         }
 
         if (member.defaultAssignmentTagId != null){
-            memberToUpdate.defaultAssignmentTag =  assignmentTagRepository.findOne(member.defaultAssignmentTagId)
+            val assignmentTag = assignmentTagRepository.findOne(member.defaultAssignmentTagId) ?: throw NotFoundException()
+            memberToUpdate.defaultAssignmentTag = assignmentTag
+        } else {
+            memberToUpdate.defaultAssignmentTag = null
         }
         return MemberResult(memberToUpdate)
     }
