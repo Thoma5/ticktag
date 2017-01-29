@@ -16,7 +16,7 @@
           </tt-ticket-filter>
         </div>
         <div class="col-md-1 aboveTableButtons">
-          <button type="button" class="btn btn-primary button-submit pull-right" (click)="onStartCreate()"><span class="glyphicon glyphicon-plus"></span> Add Ticket</button>
+          <button *ngIf="userIsAllowedToEdit" type="button" class="btn btn-primary button-submit pull-right" (click)="onStartCreate()"><span class="glyphicon glyphicon-plus"></span> Add Ticket</button>
         </div>
       </div>
       <ngx-datatable class="material" [rows]="rows" [columns]="columns" [columnMode]="'force'" [headerHeight]="32" [rowHeight]="32"
@@ -26,8 +26,8 @@
         <ngx-datatable-column name="#" prop="number" width="96" [maxWidth]="128" [draggable]="false" [resizeable]="false">
           <template let-row="row" let-value="value" ngx-datatable-cell-template>
             <span style="text-align:center;" *ngIf="row.parentTicketNumber">
-            <a  *ngIf="row.parentTicketOpen" routerLink="/project/{{projectId}}/ticket/{{row.parentTicketNumber}}" tooltip="{{row.parentTicketTitle}}" tooltipPopupDelay="500" tooltipPlacement="right" tooltipTrigger="mouseenter">#{{row.parentTicketNumber}}</a>    
-            <a  *ngIf="!row.parentTicketOpen"routerLink="/project/{{projectId}}/ticket/{{row.parentTicketNumber}}" tooltip="{{row.parentTicketTitle}}" tooltipPopupDelay="500" tooltipPlacement="right" tooltipTrigger="mouseenter"><s style="color: grey;">#{{row.parentTicketNumber}}</s></a> /   
+            <a  *ngIf="row.parentTicketOpen" routerLink="/project/{{projectId}}/ticket/{{row.parentTicketNumber}}" tooltip="{{row.parentTicketTitle}}" tooltipPopupDelay="500" tooltipPlacement="right" tooltipTrigger="mouseenter">#{{row.parentTicketNumber}}</a>
+            <a  *ngIf="!row.parentTicketOpen"routerLink="/project/{{projectId}}/ticket/{{row.parentTicketNumber}}" tooltip="{{row.parentTicketTitle}}" tooltipPopupDelay="500" tooltipPlacement="right" tooltipTrigger="mouseenter"><s style="color: grey;">#{{row.parentTicketNumber}}</s></a> /
             </span>
             <s style="text-align:center;" *ngIf="!row.open"><a routerLink="/project/{{projectId}}/ticket/{{row.number}}" style="color: grey;">#{{value}}</a></s>
             <span style="text-align:center;" *ngIf="row.open"><a routerLink="/project/{{projectId}}/ticket/{{row.number}}">#{{value}}</a></span>

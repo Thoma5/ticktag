@@ -11,14 +11,14 @@
                     </span>
                     <span class='number'>#{{number}}</span>
                     <span class='title-text-wrapper'>
-                        <tt-edit-textview-string [content]='title' (contentChange)='titleChange.emit($event)' [transient]="titleTransient"></tt-edit-textview-string>
+                        <tt-edit-textview-string  [editable]="isAllowedToEdit" [content]='title' (contentChange)='titleChange.emit($event)' [transient]="titleTransient"></tt-edit-textview-string>
                     </span>
                 </div>
             </h3>
         </div>
         <div class='sub-header-row'>
             <div class='tags'>
-                <tt-taginput [tags]='tagIds' (tagAdd)='tagAdd.emit($event)' (tagRemove)='tagRemove.emit($event)' [allTags]='allTicketTags'>
+                <tt-taginput [tags]='tagIds' [editable]="isAllowedToEdit" (tagAdd)='tagAdd.emit($event)' (tagRemove)='tagRemove.emit($event)' [allTags]='allTicketTags'>
                 </tt-taginput>
             </div>
         </div>
@@ -30,7 +30,7 @@
               (ticketRestore)='onSubticketRestore($event)'
             ></tt-subtickets>
             <div class="subticket-add">
-              <tt-subticket-add
+              <tt-subticket-add *ngIf="isAllowedToEdit"
                 [parentTicket]='ticket'
                 [allTicketTags]='allTicketTags'
                 [allTimeCategories]='allTimeCategories'
@@ -45,6 +45,7 @@
             <div class="storypoints">
               <span>Storypoints: </span>
               <tt-edit-textview-posnumber
+                    [editable]="isAllowedToEdit"
                     [content]="storypoints"
                     (contentChange)="storypointsChange.emit($event)"
                     [transient]="storypointsTransient"></tt-edit-textview-posnumber>
@@ -52,6 +53,7 @@
             <div class="status-time">
                 <div class='initial-estimation'>
                     Initial estimation: <tt-edit-textview-time
+                        [editable]="isAllowedToEdit"
                         [content]="initialEstimatedTime"
                         [transient]="initialEstimatedTimeTransient"
                         (contentChange)="initialEstimatedTimeChange.emit($event)"
@@ -60,6 +62,7 @@
                 <div class='current-estimation'>
                     <div *ngIf="initialEstimatedTime !== null && initialEstimatedTime !== undefined">
                         Current estimation: <tt-edit-textview-time
+                            [editable]="isAllowedToEdit"
                             [content]="currentEstimatedTime"
                             [transient]="currentEstimatedTimeTransient"
                             (contentChange)="currentEstimatedTimeChange.emit($event)"
@@ -72,6 +75,7 @@
                 </div>
                 <div class='due-date'>
                     Due date: <tt-edit-textview-datetime
+                        [editable]="isAllowedToEdit"
                         [content]="dueDate"
                         [transient]="dueDateTransient"
                         (contentChange)="dueDateChange.emit($event)"
@@ -88,7 +92,7 @@
         </div>
         <div class='section-header'>
             Description
-            <tt-edit-button *ngIf="!editingDescription && !descriptionTransient" (click)="onEditDescription()"></tt-edit-button>
+            <tt-edit-button *ngIf="!editingDescription && !descriptionTransient && isAllowedToEdit" (click)="onEditDescription()"></tt-edit-button>
             <div class='spinner' *ngIf="!editingDescription && descriptionTransient"><tt-spinner></tt-spinner></div>
         </div>
         <div class='description-container'>
