@@ -22,6 +22,8 @@ import org.junit.Test
 import org.springframework.security.access.AccessDeniedException
 import java.time.Duration
 import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.*
 import javax.inject.Inject
 import kotlin.test.assertFailsWith
@@ -467,6 +469,39 @@ class TicketApiTest : ApiBaseTest() {
 
             assertEquals(4, tickets.size)
             assertEquals(listOf(2, 3, 4, 5), tickets.map { it.number })
+        }
+    }
+
+    @Test
+    fun `listTickets should find tickets with due date on current day`() {
+        val projectId = UUID.fromString("00000000-0002-0000-0000-000000000001")
+        withUser(ADMIN_ID) { p ->
+            val today = LocalDateTime.parse("2017-01-30T00:35:01").toInstant(ZoneOffset.UTC)
+            val req = CreateTicketRequestJson("ticket", true, null, null, null,
+                    today, "description", projectId, emptyList(), emptyList(), emptyList(), null, emptyList())
+            val result = ticketController.createTicket(req, p)
+
+            val filterToday = LocalDateTime.parse("2017-01-30T23:36:02").toInstant(ZoneOffset.UTC)
+            val tickets = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), null, null, null, null, null, null, null, filterToday, null, null, null, null, null, null, null, 0, 50, listOf(TicketSort.NUMBER_ASC))
+
+            val createdTicket = tickets.filter { it.id == result.body.id }[0]
+        }
+    }
+
+    @Test
+    fun `listTickets should not find tickets with due date on next day`() {
+        val projectId = UUID.fromString("00000000-0002-0000-0000-000000000001")
+        withUser(ADMIN_ID) { p ->
+            val today = LocalDateTime.parse("2017-01-31T00:35:01").toInstant(ZoneOffset.UTC)
+            val req = CreateTicketRequestJson("ticket", true, null, null, null,
+                    today, "description", projectId, emptyList(), emptyList(), emptyList(), null, emptyList())
+            val result = ticketController.createTicket(req, p)
+
+            val filterToday = LocalDateTime.parse("2017-01-30T23:36:02").toInstant(ZoneOffset.UTC)
+            val tickets = ticketController.listTickets(UUID.fromString("00000000-0002-0000-0000-000000000001"), null, null, null, null, null, null, null, filterToday, null, null, null, null, null, null, null, 0, 50, listOf(TicketSort.NUMBER_ASC))
+
+            val createdTicket = tickets.filter { it.id == result.body.id }.getOrNull(0)
+            assertEquals(null, createdTicket)
         }
     }
 
