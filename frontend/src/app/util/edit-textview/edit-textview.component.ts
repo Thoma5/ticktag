@@ -25,6 +25,7 @@ export class EditableTextviewComponent<T> implements AfterContentInit, OnChanges
     @Input() content: T = null;
     @Output() contentChange: EventEmitter<T> = new EventEmitter<T>();
     @Input() transient = false;
+    @Input() editable = true;
 
     @ContentChild('read') private readonly readComponent: TextviewReadComponent<T>;
     @ContentChild('edit') private readonly editComponent: TextviewEditComponent<T>;

@@ -85,22 +85,6 @@ export class CommentsApi {
     }
 
     /**
-     * deleteComment
-     * 
-     * @param id id
-     */
-    public deleteCommentUsingDELETE(id: string, extraHttpRequestParams?: any): Observable<{}> {
-        return this.deleteCommentUsingDELETEWithHttpInfo(id, extraHttpRequestParams)
-            .map((response: Response) => {
-                if (response.status === 204) {
-                    return undefined;
-                } else {
-                    return response.json();
-                }
-            });
-    }
-
-    /**
      * getComment
      * 
      * @param id id
@@ -123,23 +107,6 @@ export class CommentsApi {
      */
     public listCommentsUsingGET(ticketId: string, extraHttpRequestParams?: any): Observable<Array<models.CommentResultJson>> {
         return this.listCommentsUsingGETWithHttpInfo(ticketId, extraHttpRequestParams)
-            .map((response: Response) => {
-                if (response.status === 204) {
-                    return undefined;
-                } else {
-                    return response.json();
-                }
-            });
-    }
-
-    /**
-     * updateComment
-     * 
-     * @param req req
-     * @param id id
-     */
-    public updateCommentUsingPUT(req: models.UpdateCommentRequestJson, id: string, extraHttpRequestParams?: any): Observable<models.CommentResultJson> {
-        return this.updateCommentUsingPUTWithHttpInfo(req, id, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -185,50 +152,6 @@ export class CommentsApi {
             method: RequestMethod.Post,
             headers: headers,
             body: req == null ? '' : JSON.stringify(req), // https://github.com/angular/angular/issues/10612
-            search: queryParameters
-        });
-        
-        // https://github.com/swagger-api/swagger-codegen/issues/4037
-        if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
-        }
-
-        return this.http.request(path, requestOptions);
-    }
-
-    /**
-     * deleteComment
-     * 
-     * @param id id
-     */
-    public deleteCommentUsingDELETEWithHttpInfo(id: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/comments/${id}`;
-
-        let queryParameters = new URLSearchParams();
-        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'id' is not null or undefined
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling deleteCommentUsingDELETE.');
-        }
-
-
-        // to determine the Content-Type header
-        let consumes: string[] = [
-            'application/json'
-        ];
-
-        // to determine the Accept header
-        let produces: string[] = [
-            'application/json'
-        ];
-        
-            
-
-
-
-        let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Delete,
-            headers: headers,
             search: queryParameters
         });
         
@@ -320,57 +243,6 @@ export class CommentsApi {
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
-            search: queryParameters
-        });
-        
-        // https://github.com/swagger-api/swagger-codegen/issues/4037
-        if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
-        }
-
-        return this.http.request(path, requestOptions);
-    }
-
-    /**
-     * updateComment
-     * 
-     * @param req req
-     * @param id id
-     */
-    public updateCommentUsingPUTWithHttpInfo(req: models.UpdateCommentRequestJson, id: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/comments/${id}`;
-
-        let queryParameters = new URLSearchParams();
-        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'req' is not null or undefined
-        if (req === null || req === undefined) {
-            throw new Error('Required parameter req was null or undefined when calling updateCommentUsingPUT.');
-        }
-        // verify required parameter 'id' is not null or undefined
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling updateCommentUsingPUT.');
-        }
-
-
-        // to determine the Content-Type header
-        let consumes: string[] = [
-            'application/json'
-        ];
-
-        // to determine the Accept header
-        let produces: string[] = [
-            'application/json'
-        ];
-        
-            
-
-        headers.set('Content-Type', 'application/json');
-
-
-        let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Put,
-            headers: headers,
-            body: req == null ? '' : JSON.stringify(req), // https://github.com/angular/angular/issues/10612
             search: queryParameters
         });
         

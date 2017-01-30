@@ -30,11 +30,15 @@ export interface ProjectResultJson {
 
     description: string;
 
-    icon?: Array<string>;
+    disabled: boolean;
+
+    icon?: string;
 
     id: string;
 
     name: string;
+
+    ticketTemplate: string;
 
 }
 

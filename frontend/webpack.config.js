@@ -221,7 +221,6 @@ new webpack.ProvidePlugin({
 
   if (!isTest && !isTestWatch) {
     config.plugins.push(
-      new ForkCheckerPlugin(),
 
       // Generate common chunks if necessary
       // Reference: https://webpack.github.io/docs/code-splitting.html

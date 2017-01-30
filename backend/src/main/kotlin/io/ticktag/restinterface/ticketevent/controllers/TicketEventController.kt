@@ -3,11 +3,11 @@ package io.ticktag.restinterface.ticketevent.controllers
 import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.ticketevent.schema.*
+import io.ticktag.service.Principal
 import io.ticktag.service.ticketevent.dto.*
 import io.ticktag.service.ticketevent.services.TicketEventService
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.web.bind.annotation.*
 import java.util.*
 import javax.inject.Inject
 
@@ -18,8 +18,19 @@ open class TicketEventController @Inject constructor(
         private val ticketEventService: TicketEventService
 ) {
 
+    @PostMapping(value = "/statechangedevent")
+    open fun listTicketStateChangedEvents(@RequestBody ticketIds: List<UUID>, @AuthenticationPrincipal principal: Principal
+    ): List<TicketEventResultJson> {
+        return ticketEventService.findAllStateChangedEvents(ticketIds, principal).map { e ->
+            when (e) {
+                is TicketEventStateChangedResult -> TicketEventStateChangedResultJson(e)
+                else -> TicketEventResultJson(e)
+            }
+        }
+    }
+
     @GetMapping
-    open fun listTicketEvents(@RequestParam(name = "ticketId") ticketId: UUID) : List<TicketEventResultJson> {
+    open fun listTicketEvents(@RequestParam(name = "ticketId") ticketId: UUID): List<TicketEventResultJson> {
         return ticketEventService.listTicketEvents(ticketId).map { e ->
             when (e) {
                 is TicketEventTitleChangedResult -> TicketEventTitleChangedResultJson(e)

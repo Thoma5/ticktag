@@ -9,7 +9,8 @@ export type TicketCreateEvent = {
   title: string,
   description: string,
   commands: imm.List<grammar.Cmd>,
-}
+  navigate: boolean
+};
 
 @Component({
   selector: 'tt-ticket-create',
@@ -21,6 +22,7 @@ export class TicketCreateComponent {
   @Input() allTicketTags: imm.Map<string, CommandTextviewTicketTag>;
   @Input() allTimeCategories: imm.Map<string, CommandTextviewTimeCategory>;
   @Input() allAssignmentTags: imm.Map<string, CommandTextviewAssignmentTag>;
+  @Input() template: string = '';
   readonly activeTags = imm.List.of();
   readonly assignedUsers = imm.List.of();
 
@@ -31,12 +33,13 @@ export class TicketCreateComponent {
   description: CommandTextviewSaveEvent = this.getEmptyDescription();
   title: string = '';
 
-  onSubmit() {
+  onSubmit(navigate: boolean) {
     this.ticketAdd.emit({
       projectId: this.projectId,
       title: this.title,
       description: this.description.text,
-      commands: this.description.commands
+      commands: this.description.commands,
+      navigate: navigate
     });
   }
 

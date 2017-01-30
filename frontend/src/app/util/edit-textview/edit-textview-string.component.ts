@@ -33,7 +33,7 @@ export class EditTextviewStringEditComponent implements TextviewEditComponent<st
 @Component({
   selector: 'tt-edit-textview-string',
   template: `
-    <tt-edit-textview [content]="content" (contentChange)="contentChange.emit($event)" [transient]="transient">
+    <tt-edit-textview [editable]="editable" [content]="content" (contentChange)="contentChange.emit($event)" [transient]="transient">
       <tt-edit-textview-string-edit #edit class="textview-edit"></tt-edit-textview-string-edit>
       <tt-edit-textview-string-read #read class="textview-read"></tt-edit-textview-string-read>
     </tt-edit-textview>
@@ -43,4 +43,5 @@ export class EditTextviewStringComponent {
   @Input() content: string;
   @Output() readonly contentChange: EventEmitter<string> = new EventEmitter<string>();
   @Input() transient = false;
+  @Input() editable = true;
 }

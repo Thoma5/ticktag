@@ -71,7 +71,7 @@ export class EditTextviewTimeEditComponent implements TextviewEditComponent<numb
 @Component({
   selector: 'tt-edit-textview-time',
   template: `
-    <tt-edit-textview [content]="content" (contentChange)="contentChange.emit($event)" [transient]="transient">
+    <tt-edit-textview [editable]="editable"  [content]="content" (contentChange)="contentChange.emit($event)" [transient]="transient">
       <tt-edit-textview-time-edit #edit class="textview-edit" [nullable]="nullable"></tt-edit-textview-time-edit>
       <tt-edit-textview-time-read #read class="textview-read"></tt-edit-textview-time-read>
     </tt-edit-textview>
@@ -82,4 +82,5 @@ export class EditTextviewTimeComponent {
   @Output() readonly contentChange: EventEmitter<number> = new EventEmitter<number>();
   @Input() transient = false;
   @Input() nullable = false;
+  @Input() editable = true;
 }

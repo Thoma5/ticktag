@@ -14,6 +14,7 @@ open class AssignmentTag protected constructor() {
             o.name = name
             o.normalizedName = normalizedName
             o.color = color
+            o.disabled = false
             o.project = project
             o.assignedTicketUsers = mutableListOf()
             o.userAddedEvents = mutableListOf()
@@ -35,6 +36,9 @@ open class AssignmentTag protected constructor() {
 
     @Column(name = "color", nullable = false)
     lateinit open var color: String
+
+    @Column(name = "disabled", nullable = false)
+    open var disabled: Boolean = false
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", referencedColumnName = "id", nullable = false)

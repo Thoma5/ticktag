@@ -1,0 +1,53 @@
+<div *ngIf="loading" class="loading">
+  <tt-loading></tt-loading>
+</div>
+<div class="card box">
+  <h1 class='title'>Assignment Tags</h1>
+  <div class="container">
+    <button type="button" class="btn btn-primary pull-right" (click)="onStartCreate()"><span
+      class="glyphicon glyphicon-plus"></span> Assignment Tag
+    </button>
+
+    <table class="table assignment-tags">
+      <tr>
+        <th>Name</th>
+        <th>Update & Delete</th>
+      </tr>
+      <tr *ngFor='let assignmentTag of assignmentTags' class="assignment-tag">
+        <td class="tag-wrapper">
+        <span class="tag" [style.backgroundColor]="'#' + assignmentTag.color">
+          <span class="name">{{ assignmentTag.name }}</span>
+        </span>
+        </td>
+        <td class="actions">
+          <button (click)="onEditClicked(assignmentTag)" class="btn btn-xs"><span
+            class="glyphicon glyphicon-edit"></span></button>
+          <button (click)="onDeleteClicked(assignmentTag)" class="btn btn-xs btn-danger"><span
+            class="glyphicon glyphicon-trash"></span></button>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div *ngIf="cu" class="overlay" (click)="$event.stopPropagation()">
+  <div class="overlay-body" (click)="$event.stopPropagation()">
+    <button type="button" class="exit pull-right" (click)="onStopCreate()">
+      <i class='fa fa-times'></i>
+    </button>
+    <div class="overlay-content">
+      <div class="head">
+        <h3 class="title">
+          {{mode}} Assignment Tag
+        </h3>
+      </div>
+      <div class="body">
+        <tt-assignment-tag-create *ngIf="mode === 'Create'" (created)="finishCreateUpdate()"
+                                  [projectId]="projectId"></tt-assignment-tag-create>
+        <tt-assignment-tag-update *ngIf="mode === 'Update' && toUpdateAssignmentTag"
+                                  [assignmentTag]="toUpdateAssignmentTag"
+                                  (updated)="finishCreateUpdate()"></tt-assignment-tag-update>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,68 @@
+ @import '../../../style/constants.scss';
+
+.loading {
+  @extend %loading
+}
+
+.tag {
+  @extend %tag;
+}
+
+.tag-wrapper {
+
+}
+
+ .actions {
+
+ }
+
+.title {
+ @extend %title;
+ margin-bottom: $small-gap;
+}
+
+.subtitle {
+  @extend %subtitle;
+  margin-bottom: $small-gap;
+}
+
+.assignment-tags {
+ margin-top: 50px;
+}
+
+.container {
+  width: 70%;
+  min-width: 500px;
+  display: inline-block;
+}
+
+.assignment-tag {
+  margin-bottom: $internal-gap;
+}
+
+ .no-scroll {
+   overflow: hidden;
+ }
+
+ * .btn {
+   @extend %btn;
+ }
+
+ .overlay {
+   @extend %overlay;
+ }
+
+ .card {
+   @extend %card;
+   margin-bottom: 3em;
+ }
+
+ th {
+   font-weight: bold;
+ }
+
+ .box {
+   max-width: 1000px;
+   margin-left: auto;
+   margin-right: auto;
+ }

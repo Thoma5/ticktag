@@ -17,8 +17,10 @@
                 [creator]='ticketDetail.createdBy'
                 [createTime]='ticketDetail.createTime'
                 [subtickets]='ticketDetail.subtickets' (subticketAdd)='onSubticketAdd($event)'
-
+                [parentTicket]='ticketDetail.parentTicket'
+                [isAllowedToEdit]='userIsAllowedToEdit'
                 [ticket]='ticketDetail'
+                [ticketTemplate]='ticketTemplate'
                 [allTicketTags]='allTicketTags'
                 [allTimeCategories]='allTimeCategories'
                 [allAssignmentTags]='allAssignmentTags'
@@ -27,7 +29,13 @@
         <tabset>
           <tab heading='Comments'>
             <div class='comments-wrapper'>
-                <tt-ticket-comments [ticket]='ticketDetail' [allAssignmentTags]='allAssignmentTags'></tt-ticket-comments>
+                <tt-ticket-comments
+                    [ticket]='ticketDetail'
+                    [allAssignmentTags]='allAssignmentTags'
+                    [transientTimes]="transientTimes"
+                    (undoTime)="onUndoRedoTime($event, true)"
+                    (redoTime)="onUndoRedoTime($event, false)"
+                ></tt-ticket-comments>
                 <tt-ticket-comment-input
                     [allTicketTags]='allTicketTags'
                     [ticket]='ticketDetail'
@@ -45,11 +53,13 @@
             </div>
           </tab>
         </tabset>
+		<div (window:keydown)="scrollToCommentInput($event)" style="display:none">Add New Comment</div>
       </div>
     </div>
     <div class='right col-md-4'>
       <tt-ticket-sidebar
         [ticket]="ticketDetail"
+        [isAllowedToEdit]='userIsAllowedToEdit'
         [allAssignmentTags]="allAssignmentTags"
         (assignmentAdd)="onAssignmentAdd($event)"
         (assignmentRemove)="onAssignmentRemove($event)"

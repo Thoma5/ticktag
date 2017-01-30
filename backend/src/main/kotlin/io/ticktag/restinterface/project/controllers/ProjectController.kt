@@ -2,12 +2,9 @@ package io.ticktag.restinterface.project.controllers
 
 import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
-import io.ticktag.restinterface.generic.CountJson
-import io.ticktag.restinterface.project.schema.CreateProjectRequestJson
-import io.ticktag.restinterface.project.schema.ProjectResultJson
-import io.ticktag.restinterface.project.schema.ProjectSort
-import io.ticktag.restinterface.project.schema.UpdateProjectRequestJson
-import io.ticktag.restinterface.user.schema.UserResultJson
+import io.ticktag.restinterface.project.schema.*
+import io.ticktag.restinterface.user.schema.ProjectUserResultJson
+import io.ticktag.service.NotFoundException
 import io.ticktag.service.Principal
 import io.ticktag.service.project.dto.CreateProject
 import io.ticktag.service.project.dto.UpdateProject
@@ -37,6 +34,7 @@ open class ProjectController @Inject constructor(
                           @RequestParam(name = "asc", defaultValue = "true", required = false) asc: Boolean,
                           @RequestParam(name = "name", defaultValue = "", required = false) name: String,
                           @RequestParam(name = "all", defaultValue = "false", required = false) all: Boolean,
+                          @RequestParam(name = "disabled", defaultValue = "false", required = false) disabled: Boolean,
                           @AuthenticationPrincipal principal: Principal
     ): Page<ProjectResultJson> {
         val ascOrder = if (asc) Sort.Direction.ASC else Sort.Direction.DESC
@@ -44,26 +42,26 @@ open class ProjectController @Inject constructor(
         val pageRequest = PageRequest(pageNumber, size, Sort(sortOrder))
 
         return if (all) {
-            val page = projectService.listAllProjects(name, pageRequest)
+            val page = projectService.listAllProjects(name, disabled, pageRequest)
             val content = page.content.map(::ProjectResultJson)
             PageImpl(content, pageRequest, page.totalElements)
         } else {
-            val page = projectService.listUserProjects(principal.id, name, pageRequest)
+            val page = projectService.listUserProjects(principal.id, name, disabled, pageRequest)
             val content = page.content.map(::ProjectResultJson)
             PageImpl(content, pageRequest, page.totalElements)
         }
     }
-
-    @GetMapping(value = "/{id}/users")
-    open fun listProjectUsers(@PathVariable(name = "id") id: UUID,
-                              @AuthenticationPrincipal principal: Principal
-    ): List<UserResultJson> {
-        return userService.listUsersInProject(id, principal).map(::UserResultJson)
+    @GetMapping(value = "/{id}/members")
+    open fun listProjectMembers(@PathVariable(name = "id") id: UUID,
+                                @RequestParam(name = "disabled", required = false) disabled: Boolean?,
+                                @AuthenticationPrincipal principal: Principal
+    ): List<ProjectUserResultJson> {
+        return userService.listProjectUsers(id, disabled, principal).map(::ProjectUserResultJson)
     }
 
     @PostMapping
     open fun createProject(@RequestBody req: CreateProjectRequestJson): ProjectResultJson {
-        val project = projectService.createProject(CreateProject(req.name, req.description, req.icon))
+        val project = projectService.createProject(CreateProject(req.name, req.description, req.ticketTemplate, req.icon))
         return ProjectResultJson(project)
     }
 
@@ -75,17 +73,18 @@ open class ProjectController @Inject constructor(
     @PutMapping(value = "/{id}")
     open fun updateProject(@PathVariable(name = "id") id: UUID,
                            @RequestBody req: UpdateProjectRequestJson): ProjectResultJson {
-        val project = projectService.updateProject(id, UpdateProject(req.name, req.description, req.icon))
+        val project = projectService.updateProject(id, UpdateProject(req.name, req.description, req.ticketTemplate, req.disabled, req.icon))
         return ProjectResultJson(project)
     }
 
-    @GetMapping(value = "/count")
-    open fun getProjectsCount(@RequestParam(name = "all", defaultValue = "false", required = false) all: Boolean,
-                              @AuthenticationPrincipal principal: Principal): CountJson {
-        return if (all) {
-            CountJson(projectService.getProjectCount())
-        } else {
-            CountJson(projectService.getUserProjectCount(principal.id))
-        }
+    @GetMapping(value = "/{id}")
+    open fun getProject(@PathVariable(name = "id") id: UUID): ProjectResultJson {
+        val project = projectService.getProject(id)?: throw NotFoundException()
+        return ProjectResultJson(project)
+    }
+
+    @GetMapping(value = "/roles")
+    open fun listProjectRoles(): List<ProjectRoleResultJson> {
+        return projectService.listProjectRoles().map(::ProjectRoleResultJson)
     }
 }

@@ -1,74 +1,86 @@
 @import '~google-material-color/dist/palette';
-
 // Conversion of a pixel to a (r)em at standard zoom and standard font size.
 $px: (1 / 16);
-
 // Base fonts
-$base-font: "Segoe UI", Helvetica, Arial, sans-serif;
+$base-font: "Segoe UI",
+Helvetica,
+Arial,
+sans-serif;
 $base-pt: 10.5pt;
 $base-line-height: 1.5;
-
 %title {
-    font-size: ($base-pt * 2.25);
+  font-size: ($base-pt * 2.25);
 }
 
 %subtitle {
-    font-size: ($base-pt * 1.5);
+  font-size: ($base-pt * 1.5);
 }
 
 // Colors
 $font-color: palette(Black, Primary);
+$font-color-secondary: palette(Grey, 500);
 $edit-font-color: palette(Black, Disabled);
 $edit-font-color-focus: palette(Black, Secondary);
 $background-primary: palette(White, 500);
 $background-secondary: palette(Grey, 100);
-
 // Layout stuff
 $card-background: $background-primary;
-$card-shadow: 0 ($px * 1rem) ($px * 3rem) rgba(0,0,0,0.12);
+$card-shadow: 0 ($px * 5rem) ($px * 10rem) rgba(0, 0, 0, 0.12);
 $card-padding: 1rem;
-$thin-line: ($px * 1rem);  // Use whenever you want to use "one pixel"
-$small-gap: 1rem;   // Use for margins between seperate complex elements in a "section"
-$medium-gap: 2rem;  // Use for seperation of sections or subsections
-$large-gap: 4rem;   // Use for seperation of section oif medium does not cut it.
+$thin-line: ($px * 1rem); // Use whenever you want to use "one pixel"
+$small-gap: 1rem; // Use for margins between seperate complex elements in a "section"
+$medium-gap: 2rem; // Use for seperation of sections or subsections
+$large-gap: 4rem; // Use for seperation of section oif medium does not cut it.
 $internal-gap: 1ex; // Use for internal spacing, like in tables or if you need a larger space character.
-
 // Other stuff :)
 $fast-transition: 75ms ease-in-out;
-
 // Edit link/button
 %edit-a {
-    color: $edit-font-color;
+  color: $edit-font-color;
+  transition: color $fast-transition;
+  text-transform: uppercase;
+  font-size: 75%;
+  font-weight: bold;
+  &:hover,
+  &:focus {
+    color: $edit-font-color-focus;
     transition: color $fast-transition;
-    text-transform: uppercase;
-    font-size: 75%;
-    font-weight: bold;
-
-    &:hover, &:focus {
-        color: $edit-font-color-focus;
-        transition: color $fast-transition;
-    }
+  }
 }
-
+%btn {
+  border-radius: 0.2em;
+}
 // Layout card
 %card {
-    background: $card-background;
-    box-shadow: $card-shadow;
-    padding: $card-padding;
-    border-radius: ($px * 2rem);
+  background: $card-background;
+  box-shadow: $card-shadow;
+  padding: $card-padding;
+  border-radius: ($px * 2rem);
+  .head {
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    border-bottom: $thin-line solid palette(Grey, 300);
+    margin-bottom: $small-gap;
+    .title {
+      @extend %title;
+      flex-grow: 1;
+    }
+  }
 }
 
 // User/Project icon
 %user-icon {
-    height: 3em;
-    width: 3em;
+  height: 3em;
+  width: 3em;
 }
-
 
 // Button reset
 %reset-button {
-    background: none;
-    border: none;
+  background: none;
+  border: none;
 }
 
 // Tag
@@ -79,12 +91,63 @@ $fast-transition: 75ms ease-in-out;
   padding-right: 0.4em;
   padding-top: 0.2em;
   padding-bottom: 0.2em;
-  box-shadow: 0 ($px * 1em) 0 rgba(0,0,0,0.12);
+  box-shadow: 0 ($px * 1em) 0 rgba(0, 0, 0, 0.12);
   margin-left: $internal-gap;
   margin-bottom: 0.25em;
   font-weight: bold;
-
   .delete {
     @extend %edit-a;
   }
+}
+
+%overlay {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  padding-top: 5em;
+  padding-bottom: 3em;
+  justify-content: center;
+  align-items: center;
+  transition: 0.5s;
+  z-index: 1;
+  .overlay-body {
+    @extend %card;
+    box-shadow: 0 ($px * 1rem) ($px * 16rem) rgba(0, 0, 0, 0.6);
+    width: 30em;
+    .exit {
+      @extend %reset-button;
+    }
+    .overlay-content {
+      padding: 0em 3em 0em 3em;
+      .head {
+        width: 100%;
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        border-bottom: $thin-line solid palette(Grey, 300);
+        margin-bottom: $small-gap;
+        .title {
+          @extend %title;
+          flex-grow: 1;
+        }
+      }
+      .body {
+        width: 100%;
+        position: relative;
+        margin-bottom: 10px;
+      }
+    }
+  }
+}
+
+%loading {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content:center;
+  align-items:center;
 }

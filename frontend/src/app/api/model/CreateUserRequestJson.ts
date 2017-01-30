@@ -36,6 +36,8 @@ export interface CreateUserRequestJson {
 
     role: CreateUserRequestJson.RoleEnum;
 
+    image?: string;
+
 }
 export namespace CreateUserRequestJson {
     export enum RoleEnum {

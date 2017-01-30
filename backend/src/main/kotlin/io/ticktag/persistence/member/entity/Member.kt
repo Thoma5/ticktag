@@ -1,8 +1,10 @@
 package io.ticktag.persistence.member.entity
 
 import io.ticktag.persistence.project.entity.Project
+import io.ticktag.persistence.ticket.entity.AssignmentTag
 import io.ticktag.persistence.user.entity.User
 import java.io.Serializable
+import java.time.Instant
 import java.util.*
 import javax.persistence.*
 
@@ -47,12 +49,13 @@ open class MemberKey protected constructor() : Serializable {
 @IdClass(MemberKey::class)
 open class Member protected constructor() {
     companion object {
-        fun create(user: User, project: Project, role: ProjectRole, joinDate: Date): Member {
+        fun create(user: User, project: Project, role: ProjectRole, joinDate: Instant, assignmentTag: AssignmentTag? = null): Member {
             val m = Member()
             m.user = user
             m.project = project
             m.role = role
             m.joinDate = joinDate
+            m.defaultAssignmentTag = assignmentTag
             return m
         }
     }
@@ -63,17 +66,29 @@ open class Member protected constructor() {
     lateinit open var user: User
         protected set
 
+    @Column(name = "u_id", insertable = false, updatable = false)
+    lateinit open var userId: UUID
+
+
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "default_assignment_tag_id", referencedColumnName = "id")
+    open var defaultAssignmentTag: AssignmentTag? = null
+
+
     @Id
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "p_id", referencedColumnName = "id", nullable = false)
     lateinit open var project: Project
         protected set
 
+    @Column(name = "p_id", insertable = false, updatable = false)
+    lateinit open var projectId: UUID
+
     @Column(name = "project_role", nullable = false)
     @Enumerated(EnumType.STRING)
     lateinit open var role: ProjectRole
 
     @Column(name = "join_date", nullable = false)
-    lateinit open var joinDate: Date
+    lateinit open var joinDate: Instant
 
 }

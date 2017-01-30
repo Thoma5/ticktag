@@ -1,11 +1,10 @@
-package io.ticktag.restinterface.comment
+package io.ticktag.integrationtests.restinterface.comment
 
 import io.ticktag.*
 import io.ticktag.integrationtests.restinterface.ApiBaseTest
 import io.ticktag.restinterface.comment.controllers.CommentController
 import io.ticktag.restinterface.comment.schema.CommandJson
 import io.ticktag.restinterface.comment.schema.CreateCommentRequestJson
-import io.ticktag.restinterface.comment.schema.UpdateCommentRequestJson
 import io.ticktag.restinterface.loggedtime.controller.LoggedTimeController
 import io.ticktag.restinterface.ticket.controllers.TicketController
 import io.ticktag.restinterface.ticketuserrelation.schema.TicketUserRelationResultJson
@@ -16,6 +15,7 @@ import org.hamcrest.CoreMatchers.*
 import org.junit.Assert.assertThat
 import org.junit.Test
 import java.time.Duration
+import java.time.Instant
 import java.util.*
 import javax.inject.Inject
 
@@ -32,42 +32,12 @@ class CommentApiTest : ApiBaseTest() {
     }
 
     @Test
-    fun `updateComment should update a comment`() {
-        withUser(ADMIN_ID) { ->
-
-            commentController.updateComment(UpdateCommentRequestJson("test", null, null), COMMENTS_PROJECT1_TICKET1[0])
-
-            val comment = commentController.getComment(COMMENTS_PROJECT1_TICKET1[0])
-            assertThat(comment.text, `is`("test"))
-        }
-    }
-
-    @Test
     fun `getComment should find a comment`() {
         withUser(ADMIN_ID) { ->
 
             val comment = commentController.getComment(COMMENTS_PROJECT1_TICKET1[0])
 
             assertThat(comment.id, `is`(COMMENTS_PROJECT1_TICKET1[0]))
-        }
-    }
-
-    @Test(expected = NotFoundException::class)
-    fun `deleteComment should delete a comment`() {
-        withUser(ADMIN_ID) { ->
-
-            commentController.deleteComment(COMMENTS_PROJECT1_TICKET1[0])
-
-            commentController.getComment(COMMENTS_PROJECT1_TICKET1[0])
-        }
-    }
-
-
-    @Test(expected = NotFoundException::class)
-    fun `updateComment should 404 if the comment does not exist`() {
-        withUser(ADMIN_ID) { ->
-
-            commentController.updateComment(UpdateCommentRequestJson("test", null, null), UUID(-1, -1))
         }
     }
 
@@ -79,19 +49,11 @@ class CommentApiTest : ApiBaseTest() {
         }
     }
 
-    @Test(expected = NotFoundException::class)
-    fun `deleteComment should 404 if the comment does not exist`() {
-        withUser(ADMIN_ID) { ->
-
-            commentController.deleteComment(UUID(-1, -1))
-        }
-    }
-
     @Test
     fun `createComment with a time command should log time`() {
         withUser(ADMIN_ID) { principal ->
 
-            val id = createCommentCmd(principal, CommandJson("time", 90, TIMECAT_CONTENT[0], null, null, null))
+            val id = createCommentCmd(principal, CommandJson("time", 90, TIMECAT_CONTENT[0], null, null, null, null, null))
 
             val comment = commentController.getComment(id)
             assertThat(comment.loggedTimeIds.size, `is`(1))
@@ -105,11 +67,11 @@ class CommentApiTest : ApiBaseTest() {
     fun `createComment with an invalid time command fail`() {
         withUser(ADMIN_ID) { principal ->
 
-            val id = createCommentCmd(principal, CommandJson("time", -90, TIMECAT_CONTENT[0], null, null, null))
+            val id = createCommentCmd(principal, CommandJson("time", -90, TIMECAT_CONTENT[0], null, null, null, null, null))
 
             val comment = commentController.getComment(id)
             assertThat(comment.loggedTimeIds.size, `is`(1))
-            val time = loggedTimeController.getLoggedTimesForId(comment.loggedTimeIds[0])
+            loggedTimeController.getLoggedTimesForId(comment.loggedTimeIds[0])
         }
     }
 
@@ -117,7 +79,7 @@ class CommentApiTest : ApiBaseTest() {
     fun `createComment with an assign command should assing the user`() {
         withUser(ADMIN_ID) { principal ->
 
-            val id = createCommentCmd(principal, CommandJson("assign", null, null, "obelix", ASSTAG_CONTENT[0], null))
+            val id = createCommentCmd(principal, CommandJson("assign", null, null, "obelix", ASSTAG_CONTENT[0], null, null, null))
 
             commentController.getComment(id)
             val ticket = ticketController.getTicket(TEST_TICKET)
@@ -133,7 +95,7 @@ class CommentApiTest : ApiBaseTest() {
     fun `createComment with an unassign command should unassign the user`() {
         withUser(ADMIN_ID) { principal ->
 
-            val id = createCommentCmd(principal, CommandJson("unassign", null, null, "admit", ASSTAG_CONTENT[0], null))
+            val id = createCommentCmd(principal, CommandJson("unassign", null, null, "admit", ASSTAG_CONTENT[0], null, null, null))
 
             commentController.getComment(id)
             val ticket = ticketController.getTicket(TEST_TICKET)
@@ -145,7 +107,7 @@ class CommentApiTest : ApiBaseTest() {
     fun `createComment with an unassign command without tag should unassign the user`() {
         withUser(ADMIN_ID) { principal ->
 
-            val id = createCommentCmd(principal, CommandJson("unassign", null, null, "admit", null, null))
+            val id = createCommentCmd(principal, CommandJson("unassign", null, null, "admit", null, null, null, null))
 
             commentController.getComment(id)
             val ticket = ticketController.getTicket(TEST_TICKET)
@@ -157,13 +119,13 @@ class CommentApiTest : ApiBaseTest() {
     fun `createComment with a close and reopen command should change the open status of the ticket`() {
         withUser(ADMIN_ID) { principal ->
 
-            val id = createCommentCmd(principal, CommandJson("close", null, null, null, null, null))
+            val id = createCommentCmd(principal, CommandJson("close", null, null, null, null, null, null, null))
 
             commentController.getComment(id)
             val ticket = ticketController.getTicket(TEST_TICKET)
             assertThat(ticket.open, `is`(false))
 
-            val id2 = createCommentCmd(principal, CommandJson("reopen", null, null, null, null, null))
+            val id2 = createCommentCmd(principal, CommandJson("reopen", null, null, null, null, null, null, null))
 
             commentController.getComment(id2)
             val ticket2 = ticketController.getTicket(TEST_TICKET)
@@ -175,7 +137,7 @@ class CommentApiTest : ApiBaseTest() {
     fun `createComment with a tag command should assign the tag`() {
         withUser(ADMIN_ID) { principal ->
 
-            val id = createCommentCmd(principal, CommandJson("tag", null, null, null, "bug", null))
+            val id = createCommentCmd(principal, CommandJson("tag", null, null, null, "bug", null, null, null))
 
             commentController.getComment(id)
             val ticket = ticketController.getTicket(TEST_TICKET)
@@ -187,7 +149,7 @@ class CommentApiTest : ApiBaseTest() {
     fun `createComment with an untag command should remove the tag`() {
         withUser(ADMIN_ID) { principal ->
 
-            val id = createCommentCmd(principal, CommandJson("untag", null, null, null, "feature", null))
+            val id = createCommentCmd(principal, CommandJson("untag", null, null, null, "feature", null, null, null))
 
             commentController.getComment(id)
             val ticket = ticketController.getTicket(TEST_TICKET)
@@ -199,7 +161,7 @@ class CommentApiTest : ApiBaseTest() {
     fun `createComment with an est command should change the current estimation`() {
         withUser(ADMIN_ID) { principal ->
 
-            val id = createCommentCmd(principal, CommandJson("est", 1234, null, null, null, null))
+            val id = createCommentCmd(principal, CommandJson("est", 1234, null, null, null, null, null, null))
 
             commentController.getComment(id)
             val ticket = ticketController.getTicket(TEST_TICKET)
@@ -207,15 +169,38 @@ class CommentApiTest : ApiBaseTest() {
         }
     }
 
-
     @Test(expected = TicktagValidationException::class)
     fun `createComment with an invalid est command should fail`() {
         withUser(ADMIN_ID) { principal ->
 
-            val id = createCommentCmd(principal, CommandJson("est", -1234, null, null, null, null))
+            val id = createCommentCmd(principal, CommandJson("est", -1234, null, null, null, null, null, null))
+
+            commentController.getComment(id)
+            ticketController.getTicket(TEST_TICKET)
+        }
+    }
+
+    @Test
+    fun `createComment with an sp command should change the story points`() {
+        withUser(ADMIN_ID) { principal ->
+
+            val id = createCommentCmd(principal, CommandJson("sp", null, null, null, null, null, 1234, null))
 
             commentController.getComment(id)
             val ticket = ticketController.getTicket(TEST_TICKET)
+            assertThat(ticket.storyPoints, `is`(1234))
+        }
+    }
+
+    @Test
+    fun `createComment with an due command should change the due date`() {
+        withUser(ADMIN_ID) { principal ->
+
+            val id = createCommentCmd(principal, CommandJson("due", null, null, null, null, null, null, Instant.ofEpochMilli(1484647317000L)))
+
+            commentController.getComment(id)
+            val ticket = ticketController.getTicket(TEST_TICKET)
+            assertThat(ticket.dueDate, `is`(Instant.ofEpochMilli(1484647317000L)))
         }
     }
 
@@ -226,7 +211,7 @@ class CommentApiTest : ApiBaseTest() {
             val result = commentController.createComment(CreateCommentRequestJson(
                     text = "Text",
                     ticketId = TEST_TICKET,
-                    commands = listOf(CommandJson("refTicket", null, null, null, null, 2))
+                    commands = listOf(CommandJson("refTicket", null, null, null, null, 2, null, null))
             ), principal)
 
             commentController.getComment(result.body.id)

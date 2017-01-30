@@ -1,0 +1,13 @@
+<h1 class="title">Kanban Boards</h1>
+<div class='ticket-detail-container'>
+  <div *ngIf="loading" class='loading'>
+    <tt-loading></tt-loading>
+  </div>
+  <div *ngIf="!loading">
+    <div *ngFor="let board of kanbanBoards">
+      <div class='board'>
+        <a [routerLink]="['/project', board.projectId, 'board', board.id]"  [queryParams]="{open: 'true'}">{{ board.name }}</a>
+      </div>
+    </div>
+  </div>
+</div>

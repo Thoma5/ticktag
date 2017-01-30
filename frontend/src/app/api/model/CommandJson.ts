@@ -38,5 +38,9 @@ export interface CommandJson {
 
     ticket?: number;
 
+    number?: number;
+
+    date?: number;
+
 }
 

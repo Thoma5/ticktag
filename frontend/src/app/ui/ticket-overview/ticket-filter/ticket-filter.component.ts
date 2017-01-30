@@ -10,6 +10,7 @@ import {
     TicketOverviewTag,
     TicketOverviewUser
 } from '../../ticket-overview/ticket-overview';
+import { AuthService, User } from '../../../service';
 import { TicketFilter } from './ticket-filter';
 import * as moment from 'moment';
 
@@ -17,7 +18,7 @@ import * as moment from 'moment';
 export type CommentTextviewSaveEvent = {
     commands: imm.List<grammar.Cmd>,
     text: string,
-}
+};
 
 @Component({
     selector: 'tt-ticket-filter',
@@ -27,9 +28,10 @@ export type CommentTextviewSaveEvent = {
 export class TicketFilterComponent implements OnInit, OnChanges {
     @Input() allUsers: imm.Map<string, TicketOverviewUser>;
     @Input() allTicketTags: imm.Map<string, TicketOverviewTag>;
-    @Input() defaultFilterOpen: boolean = false;
+    @Input() defaultFilterOpen: boolean = false; // whether the filter bar is open or not
     @Input() disabledFilterHelper: string = '';
     @Input() addToQuery: string = '';
+    @Input() hideErrorBox = false;
     @Output() ticketFilter = new EventEmitter<TicketFilter>();
     public query: string = '';
     public elementRef: ElementRef;
@@ -37,6 +39,7 @@ export class TicketFilterComponent implements OnInit, OnChanges {
     public error = false;
     public errorMsg = '';
     private searchTerms = new Subject<string>();
+    public ticketNumbers: string;
     public assignees: imm.List<TicketOverviewUser>;
     public tags: imm.List<TicketOverviewTag>;
     public datePickOneActive: boolean = false;
@@ -50,9 +53,13 @@ export class TicketFilterComponent implements OnInit, OnChanges {
     public spPickOne: number;
     public spPickTwo: number;
     public dateMode: string = '< Smaller Than';
+    public parentNumber: number = -1;
+    private user: User;
+    private authService: AuthService;
 
-    constructor(myElement: ElementRef, overlay: Overlay, vcRef: ViewContainerRef, public modal: Modal) {
+    constructor(myElement: ElementRef, authService: AuthService, overlay: Overlay, vcRef: ViewContainerRef, public modal: Modal) {
         this.elementRef = myElement;
+        this.authService = authService;
         overlay.defaultViewContainer = vcRef;
     }
 
@@ -61,7 +68,7 @@ export class TicketFilterComponent implements OnInit, OnChanges {
             if (propName === 'addToQuery') {
                 let chng = changes[propName];
                 let cur = chng.currentValue;
-                if (cur !== '') {
+                if (cur !== '' && (this.query === undefined || this.query.indexOf(cur) < 0)) {
                     this.query = this.query + ' ' + cur;
                     this.filter(this.query);
                 }
@@ -73,53 +80,22 @@ export class TicketFilterComponent implements OnInit, OnChanges {
         this.tags = this.allTicketTags.toList();
         this.assignees = this.allUsers.toList();
         this.filterHelper = this.defaultFilterOpen;
+        this.user = this.authService.user;
+        this.authService.observeUser()
+            .subscribe(user => {
+                this.user = user;
+            });
         this.searchTerms
             .distinctUntilChanged()
             .subscribe(term => this.filter(term), error => { });
     }
 
-    onManualClick() {
-        this.modal.alert()
-            .size('lg')
-            .showClose(true)
-            .title('Filter Manual')
-            .body(`
-                    <h3>Filter ticket title</h3>
-                        <p>Some ticket title</p>
-                    <h3>Filter ticket number</h3>
-                        <p>!#:1 </p>
-                    <h3>Filter ticket tag</h3>
-                        <p>!tag:name_1,name_2,...,name_n</p>
-                    <h3>Filter ticket assignees</h3>
-                        <p>!user:name_1,name_2,...,name_n </p>
-                    <h3>Filter story points</h3>
-                        <p>!sp:1-10 </p>
-                        <p>!sp:&gt;10 </p>
-                        <p>!sp:&lt;10</p>
-                        <p>!sp:10</p>
-                    <h3>Filter due dates</h3>
-                        <p>!dueDate:1970-01-01/2038-01-19 </p>
-                        <p>!dueDate:&gt;2038-01-19 </p>
-                        <p>!dueDate:&lt;2038-01-19</p>
-                        <p>!dueDate:2038-01-19</p>
-                    <h3>Filter progress</h3>
-                        <p>!progress:1%-10% </p>
-                        <p>!progress:&gt;10% </p>
-                        <p>!progress:&lt;10%</p>
-                        <p>!progress:10%</p>
-                        <p>Note: also works with 0.1 instead of 10%</p>
-                    <h3>Filter StoryPoints</h3>
-                        <p>!sp:1-10 </p>
-                        <p>!sp:&gt;10 </p>
-                        <p>!sp:&lt;10</p>
-                        <p>!sp:10</p>
-                    <h3>Filter Status</h3>
-                        <p>!open:true </p>
-        `)
-            .open();
-    }
     inputChanged(query: string): void {
-        this.searchTerms.next(query);
+        if (query === '') {
+            this.filter(''); // is ignored if not done this way
+        } else {
+            this.searchTerms.next(query);
+        }
     }
 
 
@@ -129,7 +105,7 @@ export class TicketFilterComponent implements OnInit, OnChanges {
         this.errorMsg = '';
         let queryArray = query.split(' ');
         let title = '';
-        let ticketNumber: number;
+        let ticketNumbers: number[];
         let tags: string[] = [];
         let users: string[] = [];
         let progressOne: number;
@@ -142,6 +118,7 @@ export class TicketFilterComponent implements OnInit, OnChanges {
         let storyPointsTwo: number;
         let storyPointsGreater: boolean;
         let open: boolean;
+        let parentNumber: number;
 
         queryArray.forEach(e => {
             if (e.charAt(0) !== '!') {
@@ -156,18 +133,21 @@ export class TicketFilterComponent implements OnInit, OnChanges {
                 let command = e.split(':');
                 if (command[1] && command[1].length > 0) {
                     if (command[0].indexOf('!#') === 0) {
-                        if (ticketNumber !== undefined) {
+                        if (ticketNumbers !== undefined) {
                             this.generateErrorAndMessage('only one !# allowed', command[0], undefined);
                             return;
                         }
-                        let tempNr = parseInt(command[1], 10);
-                        if (tempNr === tempNr) {
-                            ticketNumber = tempNr;
-                            return;
-                        } else {
-                            this.generateErrorAndMessage('invalid number', command[0], command[1]);
-                            return;
-                        }
+                        ticketNumbers = [];
+                        command[1].split(',').forEach(n => {
+                            let tempNr = parseInt(n, 10);
+                            if (tempNr === tempNr && tempNr) {
+                                ticketNumbers.push(tempNr);
+                                return;
+                            } else {
+                                this.generateErrorAndMessage('invalid number', command[0], command[1]);
+                                return;
+                            }
+                        });
 
                     } else if (command[0].indexOf('!tag') === 0) {
                         command[1].split(',').forEach(t => {
@@ -175,7 +155,11 @@ export class TicketFilterComponent implements OnInit, OnChanges {
                         });
                     } else if (command[0].indexOf('!user') === 0) {
                         command[1].split(',').forEach(t => {
-                            users.push(t);
+                            if (users.length > 0 && t === 'none' || users.length > 0 && users.indexOf('none') >= 0 ) {
+                                this.generateErrorAndMessage('Either unassigned or assigned:', command[0], command[1]);
+                            } else {
+                                users.push(t);
+                            }
                         });
                     } else if (command[0].indexOf('!progress') === 0) {
                         if (progressOne !== undefined) {
@@ -214,8 +198,8 @@ export class TicketFilterComponent implements OnInit, OnChanges {
                             const m1 = moment(date[0], 'YYYY-MM-DD');
                             const m2 = moment(date[1], 'YYYY-MM-DD');
                             if (regexp.test(date[0]) && m1.isValid() && regexp.test(date[1]) && m2.isValid()) {
-                                dueDateOne = m1.valueOf() + 3600000; // Todo:clean fix
-                                dueDateTwo = m2.valueOf() + 3600000;
+                                dueDateOne = m1.valueOf();
+                                dueDateTwo = m2.valueOf();
                                 return;
                             } else {
                                 this.generateErrorAndMessage('invalid ', command[0], command[1]);
@@ -231,7 +215,7 @@ export class TicketFilterComponent implements OnInit, OnChanges {
                             }
                             const m1 = moment(date[0], 'YYYY-MM-DD');
                             if (regexp.test(date[0]) && m1.isValid()) {
-                                dueDateOne = m1.valueOf() + 3600000; // Todo: clean fix 
+                                dueDateOne = m1.valueOf();
                                 return;
                             } else {
                                 this.generateErrorAndMessage('invalid ', command[0], command[1]);
@@ -280,10 +264,24 @@ export class TicketFilterComponent implements OnInit, OnChanges {
                             open = true;
                         } else if (command[1] === 'false') {
                             open = false;
+                        } else {
+                            this.generateErrorAndMessage('invalid command', command[0], command[1]);
+                            return;
                         }
-                    } else {
-                        this.generateErrorAndMessage('invalid command', command[0], command[1]);
-                        return;
+                    } else if (command[0].indexOf('!parent') === 0) {
+                        if (parentNumber !== undefined) {
+                            this.generateErrorAndMessage('only one !parent allowed', command[0], undefined);
+                            return;
+                        }
+                        let tempParentNr = parseInt(command[1], 10);
+                        if (tempParentNr === tempParentNr) {
+                            parentNumber = tempParentNr;
+                        } else if (command[1] === 'none') {
+                            parentNumber = -1;
+                        } else {
+                            this.generateErrorAndMessage('invalid command', command[0], command[1]);
+                            return;
+                        }
                     }
                 } else {
                     this.generateErrorAndMessage('invalid command', command[0], '');
@@ -292,9 +290,9 @@ export class TicketFilterComponent implements OnInit, OnChanges {
 
             }
         });
-        let finalFilter = new TicketFilter(title, ticketNumber, tags, users, progressOne, progressTwo,
+        let finalFilter = new TicketFilter(title, ticketNumbers, tags, users, progressOne, progressTwo,
             progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo,
-            storyPointsGreater, open);
+            storyPointsGreater, open, parentNumber);
         this.ticketFilter.emit(finalFilter);
     }
 
@@ -309,16 +307,27 @@ export class TicketFilterComponent implements OnInit, OnChanges {
         }
         return;
     }
+    pickNumbers(numbers: string) {
+        this.query = this.query.split(' ').filter(e => e.indexOf('!#') < 0).join(' ') + ' !#:' + numbers;
+        this.filter(this.query);
+    }
     pickTag(tagname: string) {
         this.query = this.query + ' !tag:' + tagname;
         this.filter(this.query);
     }
     pickUser(username: string) {
-        this.query = this.query + ' !user:' + username;
+        if (username === 'me') {
+            let user = this.allUsers.findEntry(e => e.id === this.user.id);
+            username = user.pop().username;
+        }
+        if (username === 'none') {
+            this.query = this.query.split(' ').filter(e => e.indexOf('!user') < 0).join(' ') + ' !user:' + username;
+        } else {
+            this.query = this.query.split(' ').filter(e => e.indexOf('!user:none') < 0).join(' ') + ' !user:' + username;
+        }
         this.filter(this.query);
     }
     pickSP(op: string) {
-        console.log();
         // Split query at ' ', remove all elements in this array containing !sp and rejoin the array with ' ' to a string. 
         // Then add the new !sp command  
         this.query = this.query.split(' ').filter(e => e.indexOf('!sp') < 0).join(' ') + ' !sp:' + ((op === '-' || op === '=') ? '' : op)
@@ -347,8 +356,15 @@ export class TicketFilterComponent implements OnInit, OnChanges {
         this.query = this.query.split(' ').filter(e => e.indexOf('!open') < 0).join(' ') + (open === undefined ? '' : ' !open:' + open);
         this.filter(this.query);
     }
+    pickParent(parentNumber: number) {
+        // Split query at ' ', remove all elements in this array containing !parent and rejoin the array with ' ' to a string. 
+        // Then add the new !parent command  
+        this.query = this.query.split(' ').filter(e => e.indexOf('!parent') < 0).join(' ')
+            + (parentNumber === undefined ? '' : ' !parent:' + (parentNumber < 0 ? 'none' : parentNumber));
+        this.filter(this.query);
+    }
 
-    datePickerOneSelection() { // TODO: fix Localtime/UTC
+    datePickerOneSelection() {
         let m = moment(this.datePickOneDate);
         this.datePickOne = m.local().format('YYYY-MM-DD');
     }
@@ -369,5 +385,12 @@ export class TicketFilterComponent implements OnInit, OnChanges {
             spMode === '- Between' && (this.spPickTwo === undefined || this.spPickTwo === null);
     }
 
+    setParentOnly(value: string) {
+        if (value === 'Subticket of') {
+            this.parentNumber = undefined;
+        } else {
+            this.parentNumber = -1;
+        }
+    }
 }
 

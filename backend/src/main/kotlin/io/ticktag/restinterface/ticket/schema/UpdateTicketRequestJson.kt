@@ -2,6 +2,7 @@ package io.ticktag.restinterface.ticket.schema
 
 import io.ticktag.restinterface.UpdateNotnullValueJson
 import io.ticktag.restinterface.UpdateNullableValueJson
+import io.ticktag.restinterface.comment.schema.CommandJson
 import io.ticktag.service.ticket.dto.UpdateTicket
 import java.time.Duration
 import java.time.Instant
@@ -15,7 +16,8 @@ data class UpdateTicketRequestJson(
         val currentEstimatedTime: UpdateNullableValueJson<Duration>?,
         val dueDate: UpdateNullableValueJson<Instant>?,
         val description: UpdateNotnullValueJson<String>?,
-        val parentTicketId: UpdateNullableValueJson<UUID>?
+        val parentTicketId: UpdateNullableValueJson<UUID>?,
+        val commands: List<CommandJson>?
 ) {
     fun toUpdateTicket() =
             UpdateTicket(
@@ -26,6 +28,7 @@ data class UpdateTicketRequestJson(
                     initialEstimatedTime = initialEstimatedTime?.toUpdateValue(),
                     dueDate = dueDate?.toUpdateValue(),
                     description = description?.toUpdateValue(),
-                    parentTicket = parentTicketId?.toUpdateValue()
+                    parentTicket = parentTicketId?.toUpdateValue(),
+                    commands = commands?.map { it.toCommentCommand() }?.filterNotNull()
             )
 }

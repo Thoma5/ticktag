@@ -4,13 +4,10 @@ import io.swagger.annotations.Api
 import io.ticktag.TicktagRestInterface
 import io.ticktag.restinterface.comment.schema.CommentResultJson
 import io.ticktag.restinterface.comment.schema.CreateCommentRequestJson
-import io.ticktag.restinterface.comment.schema.UpdateCommentRequestJson
 import io.ticktag.service.NotFoundException
 import io.ticktag.service.Principal
 import io.ticktag.service.comment.dto.CreateComment
-import io.ticktag.service.comment.dto.UpdateComment
 import io.ticktag.service.comment.service.CommentService
-import io.ticktag.service.loggedtime.dto.CreateLoggedTime
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
@@ -45,18 +42,5 @@ open class CommentController @Inject constructor(
         val createComment = CreateComment(req.text, req.ticketId, commands)
         val comment = commentService.createComment(createComment, principal, req.ticketId)
         return ResponseEntity.ok(CommentResultJson(comment))
-    }
-
-    @PutMapping(value = "/{id}")
-    open fun updateComment(@RequestBody req: UpdateCommentRequestJson,
-                           @PathVariable(name = "id") id: UUID): CommentResultJson {
-        val serviceRequest = UpdateComment(req.text, req.mentionedTicketIds, req.loggedTime?.map(::CreateLoggedTime))
-        val serviceResult = commentService.updateComment(updateComment = serviceRequest, commentId = id) ?: throw NotFoundException()
-        return CommentResultJson(serviceResult)
-    }
-
-    @DeleteMapping(value = "/{id}")
-    open fun deleteComment(@PathVariable(name = "id") id: UUID) {
-        commentService.deleteComment(id)
     }
 }

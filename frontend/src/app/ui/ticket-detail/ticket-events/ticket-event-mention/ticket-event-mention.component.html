@@ -1,0 +1,16 @@
+<div *ngIf='added'>
+  <div class='subtitle'>Mention added</div>
+  <span class='label label-success change-label'>Added</span>
+  <span class="ticket-ref">
+    <span class="number"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.number]">#{{ ticket.number }}</a></span>
+    <span class="title"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.number]">{{ ticket.title }}</a></span>
+  </span>
+</div>
+<div *ngIf='!added'>
+  <div class='subtitle'>Mention removed</div>
+  <span class='label label-danger change-label'>Removed</span>
+  <span class="ticket-ref">
+    <span class="number"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.number]">#{{ ticket.number }}</a></span>
+    <span class="title"><a [routerLink]="['/project', ticket.projectId, 'ticket', ticket.number]">{{ ticket.title }}</a></span>
+  </span>
+</div>

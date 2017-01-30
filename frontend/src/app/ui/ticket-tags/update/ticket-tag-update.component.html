@@ -1,0 +1,45 @@
+<form (ngSubmit)="onSubmit()" #f="ngForm">
+  <div class="row">
+    <label for="name">Name *</label>
+    <div class="form-group" [ngClass]="{'has-error has-feedback': f.controls.name?.touched && ! f.controls.name?.valid}">
+      <input class="form-control" type="text" name="name" minlength="1" [(ngModel)]="request.name" required>
+      <span *ngIf="f.controls.name?.touched && !f.controls.name?.valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
+    </div>
+  </div>
+  <div class="row">
+    <label for="taggroup">Tag Group *</label>
+    <div class="form-group" [ngClass]="{'has-error has-feedback': f.controls.taggroup?.touched && ! f.controls.taggroup?.valid}">
+      <select class="form-control" id="taggroup" name="taggroup" size="1" placeholder="Tag Groups" [(ngModel)]="request.ticketTagGroupId"
+        required>
+				<option *ngFor="let tagGroup of tagGroups" value="{{tagGroup.id}}">{{tagGroup.name}}</option>
+			</select>
+      <span *ngIf="f.controls.taggroup?.touched && !f.controls.taggroup?.valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
+    </div>
+  </div>
+  <div class="row">
+    <label for="color">Color *</label>
+    <div class="form-group" [ngClass]="{'has-error has-feedback': f.controls.color?.touched && ! f.controls.color?.valid}">
+      <input class="form-control" type="color" name="color" [(ngModel)]="request.color" required>
+      <span *ngIf="f.controls.color?.touched && !f.controls.color?.valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
+    </div>
+  </div>
+  <div class="row">
+    <label for="order">Order *</label>
+    <div class="form-group" [ngClass]="{'has-error has-feedback': f.controls.order?.touched && ! f.controls.order?.valid}">
+      <input class="form-control" type="number" name="order" [(ngModel)]="request.order" required>
+      <span *ngIf="f.controls.order?.touched && !f.controls.order?.valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
+    </div>
+  </div>
+  <div class="row">
+    <label for="autoclose">Auto Close *</label>
+    <div class="form-group" [ngClass]="{'has-error has-feedback': f.controls.autoclose?.touched && ! f.controls.autoclose?.valid}">
+      <input class="form-control" type="checkbox" name="autoclose" [(ngModel)]="request.autoClose">
+      <span *ngIf="f.controls.autoclose?.touched && !f.controls.autoclose?.valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
+    </div>
+  </div>
+  <div class="row">
+    <input type="button" class="btn btn-default btn-block" (click)="revert()" value="Revert Changes">
+    <input type="button" type="submit" [disabled]="!f.form.valid || request.password !== confPassword" class="btn btn-success btn-block"
+      *ngIf="!working" (click)="onSubmit()" value="Edit Ticket Tag">
+  </div>
+</form>

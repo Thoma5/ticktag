@@ -7,7 +7,9 @@ import javax.validation.constraints.Size
 data class UpdateUser(
         @field:Size(min = 3, max = 255) val mail: String?,
         @field:Size(min = 3, max = 30) val name: String?,
-        @field:Size(min = 1) val password: String?,
+        @field:Size(min = 8) val password: String?,
         @field:Size(min = 1) val oldPassword: String?,
-        val role: Role?
+        val role: Role?,
+        val image: String?,
+        val disabled: Boolean?
 )

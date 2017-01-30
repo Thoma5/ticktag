@@ -13,12 +13,12 @@ export type SubticketCreateEvent = {
   title: string,
   description: string,
   commands: imm.List<grammar.Cmd>,
-}
+};
 
 export type ResetEvent = {
   title: string,
   description: string,
-}
+};
 
 @Component({
   selector: 'tt-subticket-add',
@@ -27,6 +27,7 @@ export type ResetEvent = {
 })
 export class SubticketAddComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() parentTicket: TicketDetail;
+  @Input() template: string = '';
   @Input() allTicketTags: imm.Map<string, TicketDetailTag>;
   @Input() allTimeCategories: imm.Map<string, TicketDetailTimeCategory>;
   @Input() allAssignmentTags: imm.Map<string, TicketDetailAssTag>;
@@ -114,6 +115,6 @@ export class SubticketAddComponent implements AfterViewInit, OnChanges, OnDestro
   }
 
   private getEmptyDescription(): CommandTextviewSaveEvent {
-    return { commands: imm.List.of<grammar.Cmd>(), text: '' };
+    return { commands: imm.List.of<grammar.Cmd>(), text: this.template };
   }
 }

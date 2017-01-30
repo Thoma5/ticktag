@@ -27,7 +27,7 @@
         [number]="ticket.number"
         [title]="ticket.title"
         [description]="ticket.description"
-        [loggedTime]="ticket.progress ? ticket.progress.totalLoggedTime : null"
+        [loggedTime]="ticket.progress ? ticket.progress.loggedTime : null"
         [estimatedTime]="ticket.progress ? ticket.progress.totalCurrentEstimatedTime : null"
         [initialEstimatedTime]="ticket.initialEstimatedTime"
         [open]="ticket.open"

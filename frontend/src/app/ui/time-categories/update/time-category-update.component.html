@@ -1,0 +1,15 @@
+<form (ngSubmit)="onSubmit()" #f="ngForm">
+  <div class="row">
+    <label for="name">Name *</label>
+    <div class="form-group" [ngClass]="{'has-error has-feedback': f.controls.name?.touched && ! f.controls.name?.valid}">
+      <input class="form-control" type="text" name="name" minlength="1" [(ngModel)]="request.name" required>
+      <span *ngIf="f.controls.name?.touched && !f.controls.name?.valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
+    </div>
+  </div>
+
+  <div class="row">
+    <input type="button" class="btn btn-default btn-block" (click)="revert()" value="Revert Changes">
+    <input type="button" type="submit" [disabled]="!f.form.valid || request.password !== confPassword" class="btn btn-success btn-block" *ngIf="!working" (click)="onSubmit()"
+      value="Time Category Tag">
+  </div>
+</form>

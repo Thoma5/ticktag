@@ -1,0 +1,61 @@
+ @import '../../../../../style/constants.scss';
+ .row {
+   margin-top: 0;
+   margin-bottom: 0;
+   padding-bottom: 0;
+ }
+ 
+ .row .form-group {
+   margin-bottom: 1em;
+ }
+ 
+ * .btn {
+   @extend %btn;
+ }
+ 
+ small {
+   color: darkgrey;
+ }
+ 
+ .selection {
+   margin-top: 2em;
+ }
+ 
+ .card {
+   @extend %card;
+   .head {
+     margin-bottom: 0;
+   }
+ }
+ .deselect{
+   position: absolute;
+   top: 1em;
+   margin-left: 1.5em;
+   text-align: center;
+   border: 1px solid lightgray;
+   border-radius: 50%;
+   height: 1.7em;
+   width: 1.7em;
+   @extend %reset-button;
+ }
+ .memberinfo {
+   align-items: center;
+   text-align: center;
+   color: darkgray;
+   .image {
+     display: block;
+     margin: auto;
+     width: 48px;
+     height: 48px;
+   }
+   .name {
+     color: black;
+     font-size: 1.5em;
+     font-weight: 600;
+   }
+   .username {
+     color: dimgrey;
+     font-size: 1.2em;
+     font-weight: 600;
+   }
+ }

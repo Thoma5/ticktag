@@ -1,13 +1,12 @@
 package io.ticktag.integrationtests.restinterface.tickettaggroup
 
-import io.ticktag.persistence.tickettaggroup.TicketTagGroupRepository
 import io.ticktag.integrationtests.restinterface.ApiBaseTest
+import io.ticktag.persistence.tickettaggroup.TicketTagGroupRepository
 import io.ticktag.restinterface.tickettaggroup.controllers.TicketTagGroupController
 import io.ticktag.restinterface.tickettaggroup.schema.CreateTicketTagGroupRequestJson
 import io.ticktag.restinterface.tickettaggroup.schema.UpdateTicketTagGroupRequestJson
 import org.junit.Assert
 import org.junit.Assert.assertEquals
-import org.junit.Ignore
 import org.junit.Test
 import org.springframework.security.access.AccessDeniedException
 import java.util.*
@@ -18,14 +17,12 @@ class TicketTagGroupApiTest : ApiBaseTest() {
     @Inject lateinit var ticketTagGroupController: TicketTagGroupController
     @Inject lateinit var ticketTagGroupRepo: TicketTagGroupRepository
 
-    val LOCAL_USER_ID: UUID = UUID.fromString("00000000-0001-0000-0000-000000000003")
+    val LOCAL_USER_ID: UUID = UUID.fromString("00000000-0001-0000-0000-000000000103")
 
     override fun loadTestData(): List<String> {
-        return arrayListOf("sql/testBaseSamples.sql", "sql/WILL_BE_DELETED_SOON.sql")
+        return arrayListOf("sql/testBaseSamples.sql")
     }
 
-    // TODO
-    @Ignore("Failing because of tag id not matching new data")
     @Test
     fun getTicketTagGroup_positive() {
         withUser(LOCAL_USER_ID) { ->
@@ -46,9 +43,7 @@ class TicketTagGroupApiTest : ApiBaseTest() {
     }
 
 
-    val ticketTagGroupToInsert = CreateTicketTagGroupRequestJson("ticket", true, UUID.fromString("00000000-0002-0000-0000-000000000001"))
-    // TODO
-    @Ignore("Failing because of tag id not matching new data")
+    val ticketTagGroupToInsert = CreateTicketTagGroupRequestJson("ticket", true, UUID.fromString("00000000-0002-0000-0000-000000000102"))
     @Test
     fun createTicketTagGroup_positive() {
         withUser(LOCAL_USER_ID) { ->
@@ -69,9 +64,7 @@ class TicketTagGroupApiTest : ApiBaseTest() {
 
 
     val ticketTagGroupToUpdate = UpdateTicketTagGroupRequestJson("ticket", true, null)
-    val ticketTagGroupToUpdateId = UUID.fromString("00000000-0009-0000-0000-000000000001")!!
-    // TODO
-    @Ignore("Failing because of tag id not matching new data")
+    val ticketTagGroupToUpdateId = UUID.fromString("00000000-0009-0000-0000-000000000104")!!
     @Test
     fun updateTicketTagGroup_positive() {
         withUser(LOCAL_USER_ID) { ->
@@ -90,9 +83,7 @@ class TicketTagGroupApiTest : ApiBaseTest() {
         }
     }
 
-    val ticketTagGroupToDeleteId = UUID.fromString("00000000-0009-0000-0000-000000000001")!!
-    // TODO
-    @Ignore("Failing because of tag id not matching new data")
+    val ticketTagGroupToDeleteId = UUID.fromString("00000000-0009-0000-0000-000000000104")!!
     @Test
     fun deleteTicketTagGroup_positive() {
         withUser(LOCAL_USER_ID) { ->

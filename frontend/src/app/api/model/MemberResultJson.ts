@@ -26,7 +26,9 @@
 import * as models from './models';
 
 export interface MemberResultJson {
-    joinDate: Date;
+    defaultAssignmentTagId?: string;
+
+    joinDate: number;
 
     projectId: string;
 
@@ -37,6 +39,7 @@ export interface MemberResultJson {
 }
 export namespace MemberResultJson {
     export enum ProjectRoleEnum {
+        NONE = <any> 'NONE',
         OBSERVER = <any> 'OBSERVER',
         USER = <any> 'USER',
         ADMIN = <any> 'ADMIN'

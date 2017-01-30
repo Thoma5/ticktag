@@ -30,6 +30,7 @@ export class TaginputComponent implements OnChanges {
 
   // Array of `Tag.id` values of `allTags`.
   @Input() tags: imm.List<TagRef>;
+  @Input() editable: boolean = true;
   @Output() readonly tagsChange = new EventEmitter<imm.List<TagRef>>();
   @Output() readonly tagAdd = new EventEmitter<string>();
   @Output() readonly tagRemove = new EventEmitter<string>();
@@ -75,6 +76,8 @@ export class TaginputComponent implements OnChanges {
         if (ev.key === 'Enter') {
           this.onAdd(input.value);
           input.value = '';
+        } else if (ev.key === 'Escape') {
+          this.editing = false;
         }
       });
       input.addEventListener('blur', () => {
@@ -82,6 +85,9 @@ export class TaginputComponent implements OnChanges {
       });
       input.addEventListener('input', () => {
         this.lastEditedText = input.value;
+      });
+      input.addEventListener('awesomplete-select', (ev: any) => {
+        this.lastEditedText = ev.text;
       });
       result.open();
     });

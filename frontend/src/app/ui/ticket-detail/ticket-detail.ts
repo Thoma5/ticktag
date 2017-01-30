@@ -134,7 +134,9 @@ Object.freeze(TicketDetailAssignment.prototype);
 export class TicketEventTagRemoved extends TicketEvent {
   readonly tag: TicketDetailTag;
 
-  constructor(event: TicketEventResultJson, users: imm.Map<string, TicketDetailUser>, tags: imm.Map<string, TicketDetailTag>) {
+  constructor(event: TicketEventResultJson,
+              users: imm.Map<string, TicketDetailUser>,
+              tags: imm.Map<string, TicketDetailTag>) {
     super(event, users);
     let eventTag: any = event;
     this.tag = tags.get(eventTag.tagId);
@@ -146,7 +148,9 @@ Object.freeze(TicketEventTagRemoved.prototype);
 export class TicketEventTagAdded extends TicketEvent {
   readonly tag: TicketDetailTag;
 
-  constructor(event: TicketEventResultJson, users: imm.Map<string, TicketDetailUser>, tags: imm.Map<string, TicketDetailTag>) {
+  constructor(event: TicketEventResultJson,
+              users: imm.Map<string, TicketDetailUser>,
+              tags: imm.Map<string, TicketDetailTag>) {
     super(event, users);
     let eventTag: any = event;
     this.tag = tags.get(eventTag.tagId);
@@ -154,6 +158,34 @@ export class TicketEventTagAdded extends TicketEvent {
   }
 }
 Object.freeze(TicketEventTagRemoved.prototype);
+
+export class TicketEventMentionAdded extends TicketEvent {
+  readonly mentionedTicket: TicketDetailRelated;
+
+  constructor(event: TicketEventResultJson,
+              users: imm.Map<string, TicketDetailUser>,
+              relatedTickets: imm.Map<string, TicketDetailRelated>) {
+    super(event, users);
+    let eventMention: any = event;
+    this.mentionedTicket = relatedTickets.get(eventMention.mentionedTicketId);
+    Object.freeze(this);
+  }
+}
+Object.freeze(TicketEventMentionAdded.prototype);
+
+export class TicketEventMentionRemoved extends TicketEvent {
+  readonly mentionedTicket: TicketDetailRelated;
+
+  constructor(event: TicketEventResultJson,
+              users: imm.Map<string, TicketDetailUser>,
+              relatedTickets: imm.Map<string, TicketDetailRelated>) {
+    super(event, users);
+    let eventMention: any = event;
+    this.mentionedTicket = relatedTickets.get(eventMention.mentionedTicketId);
+    Object.freeze(this);
+  }
+}
+Object.freeze(TicketEventMentionRemoved.prototype);
 
 // TODO remove
 export class TicketDetailTransient<T> {
@@ -172,11 +204,13 @@ export class TicketDetailLoggedTime {
   readonly id: string;
   readonly category: TicketDetailTimeCategory;
   readonly time: number;
+  readonly canceled: boolean;
 
   constructor(time: LoggedTimeResultJson, cats: imm.Map<string, TicketDetailTimeCategory>) {
     this.id = time.id;
     this.category = cats.get(time.categoryId);  // TODO error handling or dummy time category
     this.time = time.time;
+    this.canceled = time.canceled;
     Object.freeze(this);
   }
 }
@@ -253,6 +287,7 @@ export class TicketDetailTag implements Tag {
   readonly normalizedName: string;
   readonly order: number;
   readonly color: string;
+  readonly disabled: boolean;
 
   constructor(tag: TicketTagResultJson) {
     this.id = tag.id;
@@ -260,6 +295,7 @@ export class TicketDetailTag implements Tag {
     this.normalizedName = tag.normalizedName;
     this.order = tag.order;
     this.color = tag.color;
+    this.disabled = tag.disabled;
     Object.freeze(this);
   }
 }
@@ -314,6 +350,7 @@ export function newTransientTicketDetailRelated(title: string, description: stri
 }
 
 export class TicketDetail {
+  readonly parentTicket: TicketDetailRelated | undefined;
   readonly comments: imm.List<TicketDetailComment>;
   readonly createTime: number;
   readonly createdBy: TicketDetailUser;
@@ -348,6 +385,7 @@ export class TicketDetail {
       transientSubtickets: imm.Map<string, TicketDetailRelated>,
       progress: TicketDetailProgress,
       ) {
+    this.parentTicket = relatedTickets.get(ticket.parentTicketId);
     this.comments = imm.List(ticket.commentIds)
       .map(cid => comments.get(cid))
       .filter(it => !!it)
@@ -420,10 +458,12 @@ export class TicketDetail {
     this.referenced = imm.Seq(ticket.referencedTicketIds)
       .map(id => relatedTickets.get(id))
       .filter(t => !!t)
+      .sortBy(t => t.number)
       .toList();
     this.referencedBy = imm.Seq(ticket.referencingTicketIds)
       .map(id => relatedTickets.get(id))
       .filter(t => !!t)
+      .sortBy(t => t.number)
       .toList();
     this.progress = relatedProgresses.get(this.id);
     Object.freeze(this);

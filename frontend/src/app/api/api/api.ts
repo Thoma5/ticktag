@@ -1,6 +1,7 @@
 /* tslint:disable */
 export * from './AssignmenttagApi';
 export * from './AuthApi';
+export * from './BoardApi';
 export * from './CommentsApi';
 export * from './GetApi';
 export * from './LoggedtimeApi';

@@ -2,10 +2,13 @@ package io.ticktag.service.ticketevent.services.impl
 
 import io.ticktag.TicktagService
 import io.ticktag.persistence.ticket.TicketEventRepository
+import io.ticktag.persistence.ticket.TicketEventStateChangedRepository
 import io.ticktag.persistence.ticket.entity.*
 import io.ticktag.service.AuthExpr
+import io.ticktag.service.Principal
 import io.ticktag.service.ticketevent.dto.*
 import io.ticktag.service.ticketevent.services.TicketEventService
+import org.springframework.dao.PermissionDeniedDataAccessException
 import org.springframework.security.access.method.P
 import org.springframework.security.access.prepost.PreAuthorize
 import java.util.*
@@ -13,8 +16,20 @@ import javax.inject.Inject
 
 @TicktagService
 open class TicketEventServiceImpl @Inject constructor(
-        private val ticketEvents: TicketEventRepository
+        private val ticketEvents: TicketEventRepository,
+        private val ticketEventStateChangedRepository: TicketEventStateChangedRepository
 ) : TicketEventService {
+
+    @PreAuthorize(AuthExpr.USER)
+    override fun findAllStateChangedEvents(ticketIds: List<UUID>, principal: Principal): List<TicketEventResult> {
+        val permittedIds = ticketIds.filter {
+            principal.hasProjectRoleForTicket(it, AuthExpr.ROLE_PROJECT_OBSERVER) || principal.hasRole(AuthExpr.ROLE_GLOBAL_OBSERVER)
+        }
+        if (permittedIds.isEmpty()) {
+            return ArrayList<TicketEventResult>()
+        }
+        return ticketEventStateChangedRepository.findByTicketIdIn(ticketIds).map(::TicketEventStateChangedResult)
+    }
 
     @PreAuthorize(AuthExpr.READ_TICKET)
     override fun listTicketEvents(@P("authTicketId") ticketId: UUID): List<TicketEventResult> {

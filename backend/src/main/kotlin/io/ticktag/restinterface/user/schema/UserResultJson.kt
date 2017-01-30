@@ -11,7 +11,8 @@ data class UserResultJson(
         val username: String,
         val mail: String?,
         val role: Role,
-        val imageId: String
+        val imageId: String,
+        val disabled: Boolean
 ) {
-    constructor(u: UserResult) : this(id = u.id, name = u.name, mail = u.mail, role = u.role, username = u.username, imageId = Base64.encodeBase64URLSafeString(u.imageId.data))
+    constructor(u: UserResult) : this(id = u.id, name = u.name, mail = u.mail, role = u.role, username = u.username, imageId = Base64.encodeBase64URLSafeString(u.imageId.data), disabled = u.disabled)
 }

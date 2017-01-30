@@ -1,57 +1,86 @@
-<div class="col-md-10 col-md-offset-1 form-box">
-  <div *ngIf="!loading">
-    <div class="row">
-      <tt-project-create (created)="getProjects()"></tt-project-create>
+<div *ngIf="loading" class="loading">
+  <tt-loading></tt-loading>
+</div>
+<div *ngIf="!loading" class="card" [ngClass]="{'no-scroll': creating }">
+  <div class="head">
+    <div class="title">
+      Projects
     </div>
-    <div class="search row">
-      <div class="col-md-4"><input class="form-control" type='text' placeholder='Type to filter name...' (keyup)='updateFilter($event)' /></div>
-      <div class="col-md-4" *ngIf="user && ((user.authorities.indexOf('ADMIN') != -1) ||(user.authorities.indexOf('OBSERVER') != -1))">
-        <md-slide-toggle [(ngModel)]="allProjects" (change)="getProjects(offset, limit, sortprop, asc, undefined)">All Projects</md-slide-toggle>
+  </div>
+  <div class="search row">
+    <div class="col-lg-4"><input class="form-control" type='text' placeholder='Type to filter name...' (keyup)='updateFilter($event)' /></div>
+    <div class="col-lg-6" *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0) ||(user.authorities.indexOf('OBSERVER') != -1))">
+      <md-slide-toggle class="admintoggles" [(ngModel)]="allProjects" color="primary" (change)="getProjects(offset, limit, sortprop, asc, undefined)">Include Foreign Projects</md-slide-toggle>
+      <md-slide-toggle class="admintoggles" [(ngModel)]="disabled" color="primary" (change)="getProjects(offset, limit, sortprop, asc, undefined)">View Disabled</md-slide-toggle>
+    </div>
+    <div *ngIf="user && (user.authorities.indexOf('ADMIN') >= 0)" class="col-lg-2"><button type="button" class="btn btn-primary pull-right" (click)="onStartCreate()"><span class="glyphicon glyphicon-plus"></span> Add Project</button></div>
+  </div>
+  <ngx-datatable #projectDataTable class="material expandable" [rows]="rows" [columns]="columns" [columnMode]="'force'" [headerHeight]="32"
+    [footerHeight]="32" [rowHeight]="32" [externalPaging]="true" [count]="totalElements" [offset]="offset"
+    [limit]="limit" [scrollbarH]="true" [scrollbarV]="false" [loadingIndicator]="refresh" [externalSorting]="true" (sort)="onSort($event)"
+    (page)='onPage($event)' [cssClasses]="iconsCss" [selectionType]="'row'" (activate)="activate($event)">
+    <ngx-datatable-row-detail [rowHeight]="80">
+      <template let-row="row" ngx-datatable-row-detail-template>
+        <div style="padding-left:4.2em;">
+          <div><strong>Description</strong></div>
+          <div>{{row.description}}</div>
+        </div>
+      </template>
+    </ngx-datatable-row-detail>
+    <ngx-datatable-column [width]="50" [resizeable]="false" [sortable]="false" [draggable]="false" [canAutoResize]="false">
+      <template let-row="row" ngx-datatable-cell-template>
+        <a title="Expand/Collapse Row" (click)="toggleExpandRow(row)">
+          <span class="glyphicon" [ngClass]="{'glyphicon-chevron-down': row.$$expanded, 'glyphicon-chevron-right': !row.$$expanded}"></span>
+        </a>
+      </template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Icon" width="48" [resizeable]="false" [sortable]="false">
+      <template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <img *ngIf="row.icon !== null" width="24" src="{{value}}" />
+      </template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Name" width="256" [resizeable]="false">
+      <template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <a routerLink="/project/{{row.id}}/tickets" [queryParams]="{open: 'true'}" tooltip="Tickets" tooltipPopupDelay="500" tooltipPlacement="left"
+          tooltipTrigger="mouseenter">{{value}}</a>
+      </template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Created" prop="creationDate" width="128" [resizeable]="false">
+      <template let-row="row" let-value="value" ngx-datatable-cell-template>
+        {{value | date: 'yyyy-MM-dd': 'UTC'}}
+      </template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Actions" width="128" [resizeable]="false" [sortable]="false">
+      <template let-row="row" ngx-datatable-cell-template>
+        <button *ngIf="user && ((user.authorities.indexOf('ADMIN') >= 0))" (click)="onStartUpdate(row)" class="btn btn-xs" tooltip="Edit Project"
+          tooltipPopupDelay="500" tooltipPlacement="left" tooltipTrigger="mouseenter"><i class='fa fa-edit'></i></button>
+        <button routerLink="/project/{{row.id}}/users" class="btn btn-xs" tooltip="Project Users" tooltipPopupDelay="500" tooltipPlacement="left"
+          tooltipTrigger="mouseenter"><i class='fa fa-users'></i></button>
+        <button routerLink="/project/{{row.id}}/burndown" class="btn btn-xs" tooltip="Burndown Chart" tooltipPopupDelay="500" tooltipPlacement="left"
+          tooltipTrigger="mouseenter"><i class='fa fa-area-chart'></i></button>
+        <button routerLink="/project/{{row.id}}/boards" class="btn btn-xs" tooltip="Kanban Boards" tooltipPopupDelay="500" tooltipPlacement="left"
+          tooltipTrigger="mouseenter"><i class='fa fa-th'></i></button>
+        <button *ngIf="!row.disabled && user && ((user.authorities.indexOf('ADMIN') >= 0))" (click)="onDeleteClicked(row.id)" class="btn btn-xs btn-danger"
+          tooltip="Disable Project" tooltipPopupDelay="500" tooltipPlacement="left" tooltipTrigger="mouseenter"><i class='fa fa-trash-o'></i></button>
+      </template>
+    </ngx-datatable-column>
+  </ngx-datatable>
+</div>
+<div *ngIf="cu" class="overlay" (click)="$event.stopPropagation()">
+  <div class="overlay-body" (click)="$event.stopPropagation()">
+    <button type="button" class="exit pull-right" (click)="onStopCreate()">
+            <i class='fa fa-times'></i>
+          </button>
+    <div class="overlay-content">
+      <div class="head">
+        <h3 class="title">
+          {{mode}} Project
+        </h3>
+      </div>
+      <div class="body">
+        <tt-project-create *ngIf="mode === 'Create'" (created)="finishCreateUpdate()"></tt-project-create>
+        <tt-project-update *ngIf="mode === 'Update' && toUpdateProject" [project]="toUpdateProject" (updated)="finishCreateUpdate()"></tt-project-update>
       </div>
     </div>
-
-    <swui-datatable class="material" [rows]="rows" [columns]="columns" [columnMode]="'force'" [headerHeight]="32" [footerHeight]="32"
-      [rowHeight]="32" [externalPaging]="true" [count]="totalElements" [offset]="offset" [limit]="limit" [scrollbarH]="true"
-      [scrollbarV]="false" [loadingIndicator]="refresh" [externalSorting]="true" (sort)="onSort($event)" (page)='onPage($event)'
-      [cssClasses]="iconsCss" [selectionType]="'row'" (activate)="activate($event)">
-      <swui-datatable-column name="Icon" minWidth="48" width="48" maxWidth="48">
-        <template let-column="column" swui-datatable-header-template>
-          {{""}}
-        </template>
-        <template let-value="value" swui-datatable-cell-template>
-          <img class="img-circle" width="24" src="http://lorempixel.com/32/32/cats" />
-        </template>
-      </swui-datatable-column>
-      <swui-datatable-column name="Name" minWidth="256" width="256" maxWidth="256">
-        <template  let-row="row" let-value="value" swui-datatable-cell-template>
-          <a routerLink="/project/{{row.id}}/tickets">{{value}}</a>
-        </template>
-      </swui-datatable-column>
-      <swui-datatable-column name="Created" prop="creationDate" minWidth="128" width="128" maxWidth="128">
-        <template let-row="row" let-value="value" swui-datatable-cell-template>
-          {{value | date: 'yyyy-MM-dd'}}
-        </template>
-      </swui-datatable-column>
-      <swui-datatable-column name="Description" minWidth="256" width="256" maxWidth="1024">
-        <template let-column="column" swui-datatable-header-template>
-          {{"Description"}}
-        </template>
-        <template let-row="row" let-value="value" swui-datatable-cell-template>
-          <div class="form-group">
-            {{value}}
-          </div>
-        </template>
-      </swui-datatable-column>
-      <swui-datatable-column name="Actions" minWidth="128" width="128" maxWidth="128">
-        <template id="test" let-column="column" swui-datatable-header-template>
-          Actions
-        </template>
-        <template let-row="row" swui-datatable-cell-template>
-          <button class="btn btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
-          <button (click)="onDeleteClicked(row.id)" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
-        </template>
-      </swui-datatable-column>
-
-    </swui-datatable>
   </div>
 </div>

@@ -30,7 +30,9 @@ export interface CreateProjectRequestJson {
 
     description: string;
 
-    icon?: Array<string>;
+    ticketTemplate: string;
+
+    icon?: string;
 
 }
 

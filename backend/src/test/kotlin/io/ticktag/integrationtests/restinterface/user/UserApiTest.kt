@@ -37,7 +37,7 @@ class UserApiTest : ApiBaseTest() {
     @Test(expected = AccessDeniedException::class)
     fun test_createUser_negative() {
         withUser(OBSERVER_ID) { p ->
-            val req = CreateUserRequestJson("a@b.com", "name", "password", "unique_test_user", Role.USER)
+            val req = CreateUserRequestJson("a@b.com", "name", "Pa\$\$w0rd", "unique_test_user", Role.USER, null)
             userController.createUser(req, p)
         }
     }
@@ -45,11 +45,11 @@ class UserApiTest : ApiBaseTest() {
     @Test
     fun test_createUser_positive() {
         withUser(ADMIN_ID) { p ->
-            val req = CreateUserRequestJson("a@b.com", "name", "password", "unique_test_user", Role.USER)
+            val req = CreateUserRequestJson("a@b.com", "name", "uname", "Pa\$\$w0rd", Role.USER, null)
             val res = userController.createUser(req, p)
 
             val userId = res.id
-            val storedUser = userController.listUsers(p)
+            val storedUser = userController.listUsers(0,100, listOf(UserSort.NAME_ASC),"",null, false, p).content
                     .filter { it.id == userId }
                     .singleOrNull()
 
@@ -68,11 +68,11 @@ class UserApiTest : ApiBaseTest() {
         val id = ADMIN_ID
         val name = "name"
         val mail = "mail"
-        val newPassword = "password"
+        val newPassword = "Pa\$\$w0rd"
 
         withUser(id) { principal ->
 
-            userController.updateUser(id, UpdateUserRequestJson(oldPassword = "aaaa", password = newPassword, mail = mail, role = Role.ADMIN, name = name), principal)
+            userController.updateUser(id, UpdateUserRequestJson(oldPassword = "aaaa", password = newPassword, mail = mail, role = null, image = null, disabled = null, name = name), principal)
 
             val user = userController.getUser(id, principal)
 
@@ -86,16 +86,60 @@ class UserApiTest : ApiBaseTest() {
         }
     }
 
+    @Test(expected = TicktagValidationException::class)
+    fun test_updateUser_own_role_admin_negative() {
+        val id = ADMIN_ID
+        val name = "name"
+        val mail = "mail"
+        val newPassword = "password"
 
-    @Test
-    fun test_updateUser_positive_own_user() {
+        withUser(id) { principal ->
+
+            userController.updateUser(id, UpdateUserRequestJson(oldPassword = "aaaa", password = newPassword, mail = mail, role = Role.USER, image = null, disabled = null, name = name), principal)
+
+            val user = userController.getUser(id, principal)
+
+            assertEquals(user.name, name)
+            assertEquals(user.mail, mail)
+            assertEquals(user.role.name, Role.ADMIN.name)
+
+            val result = authController.login(LoginRequestJson(mail, newPassword))
+            assertNotNull(result.token)
+            assertThat(result.token, `is`(not("")))
+        }
+    }
+
+    @Test(expected = TicktagValidationException::class)
+    fun test_updateUser_disable_negative_own_user() {
         val id = OBSERVER_ID
         val name = "name"
         val mail = "cccc@c.c"
         val newPassword = "password"
 
         withUser(id) { principal ->
-            userController.updateUser(id, UpdateUserRequestJson(oldPassword = OBSERVER_PASSWORD, password = newPassword, mail = mail, role = null, name = name), principal)
+            userController.updateUser(id, UpdateUserRequestJson(oldPassword = OBSERVER_PASSWORD, password = newPassword, mail = mail, role = null, image = null, disabled = true, name = name), principal)
+
+            val user = userController.getUser(id, principal)
+
+            assertEquals(user.name, name)
+            assertEquals(user.mail, mail)
+            assertEquals(user.role.name, Role.OBSERVER.name) //Can't change own role!
+
+            val result = authController.login(LoginRequestJson(mail, newPassword))
+            assertNotNull(result.token)
+            assertThat(result.token, `is`(not("")))
+        }
+    }
+
+    @Test
+    fun test_updateUser_positive_own_user() {
+        val id = OBSERVER_ID
+        val name = "name"
+        val mail = "cccc@c.c"
+        val newPassword = "Pa\$\$w0rd"
+
+        withUser(id) { principal ->
+            userController.updateUser(id, UpdateUserRequestJson(oldPassword = OBSERVER_PASSWORD, password = newPassword, mail = mail, role = null, image = null, disabled = null, name = name), principal)
 
             val user = userController.getUser(id, principal)
 
@@ -114,7 +158,7 @@ class UserApiTest : ApiBaseTest() {
         val id = OBSERVER_ID
 
         withUser(id) { principal ->
-            userController.updateUser(id, UpdateUserRequestJson(role = Role.ADMIN, oldPassword = null, password = null, mail = null, name = null), principal)
+            userController.updateUser(id, UpdateUserRequestJson(role = Role.ADMIN, oldPassword = null, password = null, mail = null, name = null, image = null, disabled = false), principal)
         }
     }
 
@@ -124,7 +168,7 @@ class UserApiTest : ApiBaseTest() {
         val ownId = USER_ID
         val otherId = OBSERVER_ID
         withUser(ownId) { principal ->
-            userController.updateUser(otherId, UpdateUserRequestJson(role = Role.ADMIN, oldPassword = null, password = null, mail = null, name = null), principal)
+            userController.updateUser(otherId, UpdateUserRequestJson(role = Role.ADMIN, oldPassword = null, password = null, mail = null, name = null, image = null, disabled = true), principal)
         }
     }
 
@@ -142,7 +186,7 @@ class UserApiTest : ApiBaseTest() {
     @Test
     fun `getUser with other user should hide email`() {
         val newUser = withUser(ADMIN_ID) { p ->
-            userController.createUser(CreateUserRequestJson("newuser@example.com", "newuser", "new user", "password", Role.USER), p)
+            userController.createUser(CreateUserRequestJson("newuser@example.com", "newuser", "new user", "Pa\$\$w0rd", Role.USER, null), p)
         }
 
         withUser(USER_ID) { p ->

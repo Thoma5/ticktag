@@ -14,6 +14,7 @@ open class LoggedTime protected constructor() {
             o.time = time
             o.comment = comment
             o.category = category
+            o.canceled = false
             return o
         }
     }
@@ -25,6 +26,9 @@ open class LoggedTime protected constructor() {
 
     @Column(name = "time")
     lateinit open var time: Duration
+
+    @Column(name = "canceled")
+    open var canceled: Boolean = false
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id", referencedColumnName = "id", nullable = false)

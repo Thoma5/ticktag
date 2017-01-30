@@ -31,11 +31,13 @@ open class CommandServiceImpl(
         private val timeCategories: TimeCategoryRepository,
         private val assignmentTags: AssignmentTagRepository,
         private val nn: NameNormalizationLibrary,
-        private val ticketTagRelationService: TicketTagRelationService,
         private val ticketAssignmentService: TicketAssignmentService
 ) : CommandService {
     @Inject()
     private lateinit var ticketService: TicketService
+
+    @Inject()
+    private lateinit var ticketTagRelationService: TicketTagRelationService
 
     @PreAuthorize(AuthExpr.USER)
     override fun applyCommands(comment: Comment, @Valid commands: List<Command>, principal: Principal) {
@@ -47,10 +49,14 @@ open class CommandServiceImpl(
 
         val ticket = comment.ticket
 
+        // Commands always reset all references tickets, because referenced tickets are delcarative, while all other
+        // commands are not. Yes this is ugly.
+        comment.mentionedTickets.clear()
+
         for ((index, command) in commands.withIndex()) {
             when (command) {
                 is Command.Assign -> {
-                    val assignUser = users.findByUsername(command.user)
+                    val assignUser = users.findByUsernameAndStatusEnabled(command.user)
                     val assignTag = assignmentTags.findByNormalizedNameAndProjectId(nn.normalize(command.tag), ticket.project.id)
                     if (assignUser != null && assignTag != null) {
                         tryCommand(errors, index) {
@@ -83,12 +89,12 @@ open class CommandServiceImpl(
                 }
                 is Command.Close -> {
                     tryCommand(errors, index) {
-                        ticketService.updateTicket(UpdateTicket(null, UpdateValue(false), null, null, null, null, null, null), ticket.id, principal)
+                        ticketService.updateTicket(UpdateTicket(null, UpdateValue(false), null, null, null, null, null, null, null), ticket.id, principal)
                     }
                 }
                 is Command.Reopen -> {
                     tryCommand(errors, index) {
-                        ticketService.updateTicket(UpdateTicket(null, UpdateValue(true), null, null, null, null, null, null), ticket.id, principal)
+                        ticketService.updateTicket(UpdateTicket(null, UpdateValue(true), null, null, null, null, null, null, null), ticket.id, principal)
                     }
                 }
                 is Command.Tag -> {
@@ -113,7 +119,7 @@ open class CommandServiceImpl(
                 }
                 is Command.Est -> {
                     tryCommand(errors, index) {
-                        ticketService.updateTicket(UpdateTicket(null, null, null, null, UpdateValue(command.duration), null, null, null), ticket.id, principal)
+                        ticketService.updateTicket(UpdateTicket(null, null, null, null, UpdateValue(command.duration), null, null, null, null), ticket.id, principal)
                     }
                 }
                 is Command.Time -> {
@@ -124,6 +130,16 @@ open class CommandServiceImpl(
                         }
                     } else {
                         failedCommand(errors, index)
+                    }
+                }
+                is Command.Sp -> {
+                    tryCommand(errors, index) {
+                        ticketService.updateTicket(UpdateTicket(null, null, UpdateValue(command.sp), null, null, null, null, null, null), ticket.id, principal)
+                    }
+                }
+                is Command.Due -> {
+                    tryCommand(errors, index) {
+                        ticketService.updateTicket(UpdateTicket(null, null, null, null, null, UpdateValue(command.date), null, null, null), ticket.id, principal)
                     }
                 }
                 is Command.RefTicket -> {

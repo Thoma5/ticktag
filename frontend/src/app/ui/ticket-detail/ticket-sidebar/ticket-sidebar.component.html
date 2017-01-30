@@ -3,26 +3,24 @@
         <h2 class="first">Ticket Users</h2>
         <div class="assigned-user" *ngFor="let a of assignments; trackBy: assignedUserTrackBy">
             <tt-assigned-user
+                [editable]="isAllowedToEdit"
                 [user]="a.user"
                 [tags]="a.tags"
                 [allTags]="allAssignmentTags"
                 (tagAdd)="onTagAdd(a.user.id, $event)"
                 (tagRemove)="onTagRemove(a.user.id, $event)"
+                [projectId]="ticket.projectId"
             ></tt-assigned-user>
         </div>
         <div class="add-assigned-user">
-            <a *ngIf="!adding && !checking" href="javascript:void(0)" (click)="onShowAdd()">Add&nbsp;User</a>
+            <a *ngIf="!adding && !checking && isAllowedToEdit" href="javascript:void(0)" (click)="onShowAdd()">Add&nbsp;User</a>
             <div *ngIf="adding || checking">
                 <input
                     type="text"
                     value=""
                     placeholder="Username"
-                    [(ngModel)]="newUserName"
                     ttFocus
-                    ttSelectAll
-                    (blur)="onHideAdd()"
-                    (keydown.enter)="onAdd()"
-                    [disabled]="checking">
+                    ttSelectAll>
                 <div *ngIf="checking" class="loading">
                     <tt-spinner>
                     </tt-spinner>

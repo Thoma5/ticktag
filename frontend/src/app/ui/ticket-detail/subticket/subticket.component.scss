@@ -6,9 +6,6 @@
     flex-wrap: nowrap;
 }
 
-.open {
-}
-
 .closed {
   color: palette(Grey, 600);
   text-decoration: line-through;
@@ -45,16 +42,19 @@
 .progress-numbers-logged {
   width: 7.5%;
   text-align: right;
+  white-space: nowrap;
   margin-left: $internal-gap;
 }
 
 .progress-numbers-estimated {
   width: 7.5%;
+  white-space: nowrap;
   text-align: right;
 }
 
 .progress-numbers-initial {
   width: 7.5%;
+  white-space: nowrap;
   color: palette(Grey, 600);
   text-align: right;
 }

@@ -13,7 +13,6 @@ import java.util.*
 
 enum class Scope {
     INTERNAL,
-    ANONYMOUS,
     REGULAR
 }
 
@@ -29,12 +28,9 @@ data class Principal(
 ) {
     companion object {
         val INTERNAL = Principal(UUID(-1, -1), null, Scope.INTERNAL, null, null, null, null, null)
-        val ANONYMOUS = Principal(UUID(-1, -1), null, Scope.ANONYMOUS, null, null, null, null, null)
     }
 
     fun isInternal(): Boolean = scope == Scope.INTERNAL
-
-    fun isAnonymous(): Boolean = scope == Scope.ANONYMOUS
 
     fun isId(otherId: UUID?): Boolean {
 
@@ -50,20 +46,20 @@ data class Principal(
         if (members == null) return false
 
         val member = members.findByUserIdAndProjectId(id, projectId) ?: return false
-        return member.role.includesRole(ProjectRole.valueOf(roleString))
+        return member.role.includesRole(ProjectRole.valueOf(roleString)) && !member.project.disabled
     }
 
     fun hasProjectRoleForTicket(ticketId: UUID, roleString: String): Boolean {
         if (members == null) return false
         val member = members.findByUserIdAndTicketId(this.id, ticketId) ?: return false
-        return member.role.includesRole(ProjectRole.valueOf(roleString))
+        return member.role.includesRole(ProjectRole.valueOf(roleString)) && !member.project.disabled
 
     }
 
     fun hasProjectRoleForComment(commentId: UUID, roleString: String): Boolean {
         if (members == null) return false
         val member = members.findByUserIdAndCommentId(this.id, commentId) ?: return false
-        return member.role.includesRole(ProjectRole.valueOf(roleString))
+        return member.role.includesRole(ProjectRole.valueOf(roleString)) && !member.project.disabled
 
     }
 
@@ -77,7 +73,7 @@ data class Principal(
     fun hasProjectRoleForLoggedTime(loggedTimeId: UUID, roleString: String): Boolean {
         if (members == null) return false
         val member = members.findByUserIdAndLoggedTimeId(this.id, loggedTimeId) ?: return false
-        return member.role.includesRole(ProjectRole.valueOf(roleString))
+        return member.role.includesRole(ProjectRole.valueOf(roleString)) && !member.project.disabled
 
     }
 
@@ -103,25 +99,25 @@ data class Principal(
     fun hasProjectRoleForTicketAssignment(ticketId: UUID, roleString: String): Boolean {
         if (members == null) return false
         val member = members.findByUserIdAndTicketId(this.id, ticketId) ?: return false
-        return member.role.includesRole(ProjectRole.valueOf(roleString))
+        return member.role.includesRole(ProjectRole.valueOf(roleString)) && !member.project.disabled
     }
 
     fun hasProjectRoleForTicketTagRelation(ticketId: UUID, roleString: String): Boolean {
         if (members == null) return false
         val member = members.findByUserIdAndTicketId(this.id, ticketId) ?: return false
-        return member.role.includesRole(ProjectRole.valueOf(roleString))
+        return member.role.includesRole(ProjectRole.valueOf(roleString)) && !member.project.disabled
     }
 
     fun hasProjectRoleForTicketTagGroup(ticketTagGroupId: UUID, roleString: String): Boolean {
         if (members == null) return false
         val member = members.findByUserIdAndTicketTagGroupId(this.id, ticketTagGroupId) ?: return false
-        return member.role.includesRole(ProjectRole.valueOf(roleString))
+        return member.role.includesRole(ProjectRole.valueOf(roleString)) && !member.project.disabled
     }
 
     fun hasProjectRoleForTicketTag(ticketTagId: UUID, roleString: String): Boolean {
         if (members == null) return false
         val member = members.findByUserIdAndTicketTagId(this.id, ticketTagId) ?: return false
-        return member.role.includesRole(ProjectRole.valueOf(roleString))
+        return member.role.includesRole(ProjectRole.valueOf(roleString)) && !member.project.disabled
     }
 
 }
@@ -179,6 +175,7 @@ class AuthExpr private constructor() {
         const val WRITE_TICKET_TAG_RELATION = "principal.hasRole('$ROLE_GLOBAL_ADMIN') || principal.hasProjectRoleForTicketTagRelation(#authTicketId, '$ROLE_PROJECT_USER')"
 
         const val ADMIN_OR_SELF = "principal.hasRole('$ROLE_GLOBAL_ADMIN') || principal.isId(#userId)"
+
 
     }
 }

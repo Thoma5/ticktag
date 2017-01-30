@@ -1,5 +1,6 @@
 @import "reset.css";
 @import "constants.scss";
+@import "datatable-material.scss";
 
 html, body {
     font-family: $base-font;
@@ -10,13 +11,26 @@ html, body {
     color: $font-color;
 }
 
-/* Background pattern from subtlepatterns.com */
 body {
-    background-image: url('../public/img/handmadepaper.png')
+    background: rgba(230, 230, 230, 1);
 }
 
 html {
   box-sizing: border-box;
+}
+
+// Somehow those datepicker styles are ignored if put into ticket-filter.component.scss
+datepicker .well-sm {
+    padding: 0px !important;
+    border-color: white !important;
+    background-color: white !important;
+    margin-bottom: 0px;
+    .btn {
+      @extend %btn;
+    }
+}
+datepicker th {
+    vertical-align: middle !important;
 }
 
 *, *:before, *:after {

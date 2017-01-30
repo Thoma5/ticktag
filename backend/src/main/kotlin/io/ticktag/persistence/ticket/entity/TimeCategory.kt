@@ -14,6 +14,7 @@ open class TimeCategory protected constructor() {
             o.name = name
             o.normalizedName = normalizedName
             o.project = project
+            o.disabled = false
             o.loggedTimes = mutableListOf()
             o.loggedTimeAddedEvents = mutableListOf()
             o.loggedTimeRemovedEvents = mutableListOf()
@@ -35,6 +36,9 @@ open class TimeCategory protected constructor() {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", referencedColumnName = "id", nullable = false)
     lateinit open var project: Project
+
+    @Column(name = "disabled", nullable = false)
+    open var disabled: Boolean = false
 
     @OneToMany(mappedBy = "category")
     lateinit open var loggedTimes: MutableList<LoggedTime>

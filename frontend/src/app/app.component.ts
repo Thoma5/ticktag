@@ -1,12 +1,17 @@
-import { Component, OnInit, ViewContainerRef, OnDestroy, NgZone } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewContainerRef, OnDestroy, NgZone } from '@angular/core';
 import { Location } from '@angular/common';
+import { Title } from '@angular/platform-browser';
 import '../style/app.scss';
 import { AuthService, ApiCallService, User, ErrorHandler } from './service';
-import { Router } from '@angular/router';
+import { ProjectApi, ProjectResultJson, ProjectUserResultJson, PageProjectResultJson } from './api';
+import { Router, ActivatedRoute, NavigationStart } from '@angular/router';
 import { Overlay } from 'angular2-modal';
 import { Modal } from 'angular2-modal/plugins/bootstrap';
 import { Response } from '@angular/http';
 import * as $ from 'jquery';
+import * as _ from 'lodash';
+import * as imm from 'immutable';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -15,32 +20,103 @@ import * as $ from 'jquery';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
-  private title: string;
+  @ViewChild('start') sidebar: any;
+  private showLoginButton: boolean;
   private user: User;
   private directTicketLinkEvent: (eventObject: JQueryEventObject) => any;
+  private loadingProject: boolean = false;
+  private _project: ProjectResultJson | null = null;
+  private projectRole: ProjectUserResultJson.ProjectRoleEnum | null = null;
+  private userProjects: imm.List<ProjectResultJson> | null = null;
 
   // TODO make readonly once Intellij supports readonly properties in ctr
   constructor(
+    private route: ActivatedRoute,
     private authService: AuthService,
     private modal: Modal,
     private overlay: Overlay,
     private vcRef: ViewContainerRef,
     private router: Router,
+    private title: Title,
     private location: Location,
     private zone: NgZone,
-    private apiCallService: ApiCallService) {
+    private apiCallService: ApiCallService,
+    private projectApi: ProjectApi) {
 
     apiCallService.initErrorHandler(this);
-    this.title = 'TickTag';
     overlay.defaultViewContainer = vcRef;
   }
 
+  set project(val: ProjectResultJson | null) {
+    this._project = val;
+    if (val != null) {
+      this.title.setTitle(val.name + ' | TickTag');
+    } else {
+      this.title.setTitle('TickTag');
+    }
+  }
+
+  get project(): ProjectResultJson | null {
+    return this._project;
+  }
 
   ngOnInit(): void {
-    this.user = this.authService.user;
-    this.authService.observeUser()
-      .subscribe(user => {
-        this.user = user;
+    this.userObservable()
+      .subscribe(user => this.user = user);
+
+    this.userObservable()
+      .flatMap(u => {
+        if (u == null) {
+          return Observable.of(null);
+        } else {
+          return this.loadUserProjects(u.id)
+            .catch((err: any) => {
+              console.log('Error loading user projects');
+              console.dir(err);
+              return Observable.of(null);
+            });
+        }
+      })
+      .subscribe(userProjects => {
+        this.userProjects = userProjects;
+      });
+
+    this.router.events
+      .filter(e => e instanceof NavigationStart)
+      .map(e => e.url)
+      .map(url => (url.indexOf('login') < 0) ? this.showLoginButton = true : this.showLoginButton = false )
+      .distinctUntilChanged()
+      .subscribe(result => { });
+
+    this.router.events
+      .filter(e => e instanceof NavigationStart)
+      .map(e => e.url)
+      .map(url => projectIdFromUrl(url))
+      .distinctUntilChanged()
+      .combineLatest(this.userObservable())
+      .switchMap(projectIdAndUser => {
+        let projectId = projectIdAndUser[0];
+        let user = projectIdAndUser[1];
+        this.loadingProject = true;
+        if (user == null) {
+          return Observable.of([null, null]);
+        }
+        if (projectId != null) {
+          // TODO do we need better error handling here?
+          return this.loadProjectInfo(projectId, user.id)
+            .catch((err: any) => {
+              console.log('Error loading project');
+              console.dir(err);
+              return Observable.empty<[ProjectResultJson, ProjectUserResultJson.ProjectRoleEnum]>();
+            });
+        } else {
+          return Observable.of([null, null]);
+        }
+      })
+      .subscribe(projectAndMembership => {
+        this.project = projectAndMembership[0];
+        this.projectRole = projectAndMembership[1] != null ? projectAndMembership[1].projectRole : null;
+        this.loadingProject = false;
       });
 
     $(document).on('click', 'a.grammar-htmlifyCommands', this.directTicketLinkEvent = (e) => {
@@ -56,10 +132,27 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
     });
   }
 
+  private userObservable(): Observable<User> {
+    return Observable.concat(Observable.of(this.authService.user), this.authService.observeUser());
+  }
+
   ngOnDestroy() {
     if (this.directTicketLinkEvent) {
       $(document).off('click', 'a.grammar-htmlifyCommands', this.directTicketLinkEvent);
     }
+  }
+
+  loadProjectInfo(id: string, userId: string): Observable<[ProjectResultJson, ProjectUserResultJson]> {
+    return Observable.zip(this.apiCallService.callNoError(p => this.projectApi.getProjectUsingGETWithHttpInfo(id, p)),
+                          this.apiCallService.callNoError(p => this.projectApi.listProjectMembersUsingGETWithHttpInfo(id, false, p))
+                            .map((members: ProjectUserResultJson[]) => _.filter(members, member => member.id === userId)[0])
+                          );
+  }
+
+  loadUserProjects(userId: string): Observable<imm.List<ProjectResultJson>> {
+    return this.apiCallService
+      .callNoError(p => this.projectApi.listProjectsUsingGETWithHttpInfo(0, 10, 'NAME', true, null, false, false, p))
+      .map((p: PageProjectResultJson) => imm.List(p.content));
   }
 
   logout(): void {
@@ -103,19 +196,8 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
   }
 
   private unauthenticatedError(resp: Response): void {
-    this.modal.alert()
-      .size('sm')
-      .isBlocking(true)
-      .title('Unauthenticated')
-      .body('You are not logged in')
-      .okBtn('Login')
-      .open()
-      .then(promise => {
-        promise.result.then(result => {
-          this.clearUser();
-          this.gotoLogin();
-        });
-      });
+    this.authService.user = null;
+    this.gotoLogin();
   }
 
   private unauthorizedError(resp: Response): void {
@@ -126,15 +208,7 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
       return;
     }
 
-    this.modal.alert()
-      .size('sm')
-      .title('Unauthorized')
-      .body('You are not permitted to access this page')
-      .okBtn('Take me back')
-      .open()
-      .then(promise => {
-        promise.result.then(result => this.goBack());
-      });
+    this.gotoHome();
   }
 
   private notFoundError(resp: Response): void {
@@ -205,6 +279,17 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
   private clearUser() {
     this.authService.user = null;
   }
+}
+
+function projectIdFromUrl(url: string): string | null {
+  // Better solutions are very welcome
+  let re = /^.*\/project\/(.*?)\/.*$/g;
+  let matches = re.exec(url);
+  if (matches != null && matches.length > 1) {
+    return matches[1];
+  }
+
+  return null;
 }
 
 function statusGroup(statusCode: number) {

@@ -28,9 +28,12 @@ import * as models from './models';
 export interface UpdateMemberRequestJson {
     projectRole?: UpdateMemberRequestJson.ProjectRoleEnum;
 
+    defaultAssignmentTagId?: string;
+
 }
 export namespace UpdateMemberRequestJson {
     export enum ProjectRoleEnum {
+        NONE = <any> 'NONE',
         OBSERVER = <any> 'OBSERVER',
         USER = <any> 'USER',
         ADMIN = <any> 'ADMIN'

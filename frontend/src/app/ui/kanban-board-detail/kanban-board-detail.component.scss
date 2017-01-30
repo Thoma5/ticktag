@@ -1,0 +1,64 @@
+@import '../../../style/constants.scss';
+
+
+.kanban-board-detail-container {
+  height: 100%;
+  width: 100%;
+}
+
+.loading {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.title {
+  @extend %title;
+  margin-bottom: $medium-gap;
+}
+
+.container {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  width: 100%;
+  margin-left: -2rem;
+  margin-right: -2rem;
+}
+
+.ticket-container {
+  @extend %card;
+  background-color: rgb(202, 202, 202);
+  padding: $small-gap;
+  height: 100%;
+}
+
+.column-container {
+  flex-grow: 1;
+  width: 100%;
+  margin: $small-gap;
+}
+
+.column-header {
+  border-radius: 0.1em;
+  box-shadow: 0 ($px * 1em) 0 rgba(0,0,0,0.12);
+  margin-bottom: $small-gap;
+  text-align: center;
+  font-size: ($base-pt * 1.25);
+  padding: $small-gap;
+  font-weight: bold;
+}
+
+.title{
+  margin-bottom: 0.2em;
+}
+
+.card{
+  @extend %card;
+  margin-bottom: 0;
+  margin-right: 4em;
+}
+
+

@@ -1,5 +1,6 @@
 package io.ticktag.persistence.ticket.entity
 
+import io.ticktag.persistence.kanban.entity.KanbanCell
 import io.ticktag.persistence.project.entity.Project
 import io.ticktag.persistence.user.entity.User
 import java.time.Duration
@@ -37,6 +38,7 @@ open class Ticket protected constructor() {
             o.parentChangedEventsSrc = mutableListOf()
             o.mentionAddedEvents = mutableListOf()
             o.mentionRemovedEvents = mutableListOf()
+            o.kanbanCells = mutableSetOf()
             return o
         }
     }
@@ -57,6 +59,7 @@ open class Ticket protected constructor() {
 
     @Column(name = "open", nullable = false)
     open var open: Boolean = false
+
 
     @Column(name = "story_points", nullable = true)
     open var storyPoints: Int? = null
@@ -132,4 +135,8 @@ open class Ticket protected constructor() {
     @OneToMany(mappedBy = "mentionedTicket")
     lateinit open var mentionRemovedEvents: MutableList<TicketEventMentionRemoved>
         protected set
+
+    @OneToMany(mappedBy = "ticket", cascade = arrayOf(CascadeType.REMOVE))
+    lateinit open var kanbanCells: MutableSet<KanbanCell>
+
 }

@@ -13,10 +13,7 @@ import io.ticktag.persistence.user.UserRepository
 import io.ticktag.persistence.user.entity.User
 import io.ticktag.service.*
 import io.ticktag.service.command.service.CommandService
-import io.ticktag.service.ticket.dto.CreateTicket
-import io.ticktag.service.ticket.dto.ProgressResult
-import io.ticktag.service.ticket.dto.TicketResult
-import io.ticktag.service.ticket.dto.UpdateTicket
+import io.ticktag.service.ticket.dto.*
 import io.ticktag.service.ticket.service.TicketService
 import io.ticktag.service.ticketassignment.dto.TicketAssignmentResult
 import io.ticktag.service.ticketassignment.services.TicketAssignmentService
@@ -40,9 +37,10 @@ open class TicketServiceImpl @Inject constructor(
         private val comments: CommentRepository,
         private val assignments: TicketAssignmentRepository,
         private val ticketAssignmentService: TicketAssignmentService,
-        private val commandService: CommandService,
         private val ticketEvents: TicketEventRepository
 ) : TicketService {
+    @Inject()
+    private lateinit var commandService: CommandService
     companion object {
         private val LOG = LoggerFactory.getLogger(TicketServiceImpl::class.java)
     }
@@ -59,44 +57,80 @@ open class TicketServiceImpl @Inject constructor(
     }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
-    override fun listTickets(@P("authProjectId") project: UUID,
-                             number: Int?,
-                             title: String?,
-                             tags: List<String>?,
-                             users: List<String>?,
-                             progressOne: Float?,
-                             progressTwo: Float?,
-                             progressGreater: Boolean?,
-                             dueDateOne: Instant?,
-                             dueDateTwo: Instant?,
-                             dueDateGreater: Boolean?,
-                             storyPointsOne: Int?,
-                             storyPointsTwo: Int?,
-                             storyPointsGreater: Boolean?,
-                             open: Boolean?,
-                             pageable: Pageable): Page<TicketResult> {
-
+    override fun listTicketsOverview(@P("authProjectId") project: UUID,
+                                     numbers: List<Int>?,
+                                     title: String?,
+                                     tags: List<String>?,
+                                     users: List<String>?,
+                                     progressOne: Float?,
+                                     progressTwo: Float?,
+                                     progressGreater: Boolean?,
+                                     dueDateOne: Instant?,
+                                     dueDateTwo: Instant?,
+                                     dueDateGreater: Boolean?,
+                                     storyPointsOne: Int?,
+                                     storyPointsTwo: Int?,
+                                     storyPointsGreater: Boolean?,
+                                     open: Boolean?,
+                                     parent: Int?,
+                                     pageable: Pageable): Page<TicketOverviewResult> {
         if (progressOne?.isNaN() ?: false || progressOne?.isInfinite() ?: false) {
-            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueProgressOne"))))
+            throw TicktagValidationException(listOf(ValidationError("listTickets.ProgressOne", ValidationErrorDetail.Other("invalidValue"))))
         }
         if (progressTwo?.isNaN() ?: false || progressTwo?.isInfinite() ?: false) {
-            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueProgressTwo"))))
+            throw TicktagValidationException(listOf(ValidationError("listTickets.ProgressTwo", ValidationErrorDetail.Other("invalidValue"))))
         }
         if (tags?.contains("") ?: false) {
-            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueInTags"))))
+            throw TicktagValidationException(listOf(ValidationError("listTickets.Tags", ValidationErrorDetail.Other("invalidValue"))))
         }
         if (users?.contains("") ?: false) {
-            throw TicktagValidationException(listOf(ValidationError("listTickets", ValidationErrorDetail.Other("invalidValueInTags"))))
+            throw TicktagValidationException(listOf(ValidationError("listTickets.Tags", ValidationErrorDetail.Other("invalidValue"))))
         }
-        val filter = TicketFilter(project, number, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open)
+        val filter = TicketFilter(project, if (numbers?.size == 0) null else numbers, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open, parent)
         val page = tickets.findAll(filter, pageable)
-        val content = toResultDtos(page.content)
+        val content = page.content.map(::TicketOverviewResult)
         return PageImpl(content, pageable, page.totalElements)
     }
 
     @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
+    override fun listTicketsStoryPoints(@P("authProjectId") project: UUID,
+                                        numbers: List<Int>?,
+                                        title: String?,
+                                        tags: List<String>?,
+                                        users: List<String>?,
+                                        progressOne: Float?,
+                                        progressTwo: Float?,
+                                        progressGreater: Boolean?,
+                                        dueDateOne: Instant?, dueDateTwo: Instant?,
+                                        dueDateGreater: Boolean?,
+                                        storyPointsOne: Int?,
+                                        storyPointsTwo: Int?,
+                                        storyPointsGreater: Boolean?,
+                                        open: Boolean?,
+                                        parent: Int?): List<TicketStoryPointResult> {
+        if (progressOne?.isNaN() ?: false || progressOne?.isInfinite() ?: false) {
+            throw TicktagValidationException(listOf(ValidationError("listTickets.ProgressOne", ValidationErrorDetail.Other("invalidValue"))))
+        }
+        if (progressTwo?.isNaN() ?: false || progressTwo?.isInfinite() ?: false) {
+            throw TicktagValidationException(listOf(ValidationError("listTickets.ProgressTwo", ValidationErrorDetail.Other("invalidValue"))))
+        }
+        if (tags?.contains("") ?: false) {
+            throw TicktagValidationException(listOf(ValidationError("listTickets.Tags", ValidationErrorDetail.Other("invalidValue"))))
+        }
+        if (users?.contains("") ?: false) {
+            throw TicktagValidationException(listOf(ValidationError("listTickets.Users", ValidationErrorDetail.Other("invalidValue"))))
+        }
+        val filter = TicketFilter(project, if (numbers?.size == 0) null else numbers, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, null, parent)
+        val ticketResult = tickets.findAll(filter)
+        return ticketResult.map { t -> TicketStoryPointResult(t.id, t.open, t.storyPoints) }
+    }
+
+
+    @PreAuthorize(AuthExpr.PROJECT_OBSERVER)
     override fun listTickets(@P("authProjectId") project: UUID, pageable: Pageable): Page<TicketResult> {
-        return listTickets(project, null, null, null, null, null, null, null, null, null, null, null, null, null, null, pageable)
+        val page = tickets.findByProjectId(project, pageable)
+        val content = toResultDtos(page.content)
+        return PageImpl(content, pageable, page.totalElements)
     }
 
     @PreAuthorize(AuthExpr.READ_TICKET)
@@ -116,7 +150,6 @@ open class TicketServiceImpl @Inject constructor(
         return toResultDtos(tickets.findByIds(permittedIds)).associateBy { it.id }
     }
 
-    //TODO: Reference: Mentions, Tags
     @PreAuthorize(AuthExpr.PROJECT_USER)
     override fun createTicket(@Valid createTicket: CreateTicket, principal: Principal, @P("authProjectId") projectId: UUID): TicketResult {
 
@@ -145,7 +178,7 @@ open class TicketServiceImpl @Inject constructor(
             throw TicktagValidationException(listOf(ValidationError("createTicket", ValidationErrorDetail.Other("nonestedsubtickets"))))
         }
         val newTicket = Ticket.create(number, createTime, title, open, storyPoints, null, null, dueDate, parentTicket, project, user)
-        setEstimations(newTicket, initialEstimatedTime, currentEstimatedTime)
+        setEstimations(newTicket, UpdateValue(initialEstimatedTime), UpdateValue(currentEstimatedTime))
         tickets.insert(newTicket)
 
         //Comment
@@ -172,6 +205,9 @@ open class TicketServiceImpl @Inject constructor(
 
         // Execute commands
         commandService.applyCommands(newComment, createTicket.commands, principal)
+
+        //Save open Date in Events
+        ticketEvents.insert(TicketEventStateChanged.create(newTicket, user, false, true))
 
         // Neither EM nor UPDATECASCADE can reload the ticket
         val ticketResult = toResultDto(newTicket)
@@ -201,9 +237,7 @@ open class TicketServiceImpl @Inject constructor(
             ticket.storyPoints = updateTicket.storyPoints.value
         }
 
-        val newInitialEstimatedTime = updateTicket.initialEstimatedTime?.value ?: ticket.initialEstimatedTime
-        val newCurrentEstimatedTime = updateTicket.currentEstimatedTime?.value ?: ticket.currentEstimatedTime
-        setEstimationsWithEvents(ticket, newInitialEstimatedTime, newCurrentEstimatedTime, user)
+        setEstimationsWithEvents(ticket, updateTicket.initialEstimatedTime, updateTicket.currentEstimatedTime, user)
 
         if (updateTicket.dueDate != null) {
             if (ticket.dueDate != updateTicket.dueDate.value)
@@ -231,11 +265,28 @@ open class TicketServiceImpl @Inject constructor(
                 ticketEvents.insert(TicketEventParentChanged.create(ticket, user, ticket.parentTicket, parentTicket))
             ticket.parentTicket = parentTicket
         }
+
+        //Close Parent Ticket if it has no estimated time and all sub tickets are closed
+        if (!ticket.open && ticket.parentTicket != null) {
+            val parentTicket = ticket.parentTicket ?: throw NotFoundException()
+            if (parentTicket.open && parentTicket.currentEstimatedTime == null) {
+                val subtickets = tickets.findSubticketsByTicketIds(listOf(parentTicket.id)).get(parentTicket.id).orEmpty()
+                val closeParent = subtickets.none { it.id != ticketId && it.open }
+                if (closeParent) {
+                    var updateParentTicket = UpdateTicket(open = UpdateValue(false), commands = null, currentEstimatedTime = null, description = null, dueDate = null, initialEstimatedTime = null, parentTicket = null, storyPoints = null, title = null)
+                    updateTicket(updateParentTicket, parentTicket.id, principal)
+                }
+            }
+        }
+
         //Comment
         if (updateTicket.description != null) {
             if (ticket.descriptionComment.text != updateTicket.description.value)
                 ticketEvents.insert(TicketEventCommentTextChanged.create(ticket, user, ticket.descriptionComment, ticket.descriptionComment.text, updateTicket.description.value))
             ticket.descriptionComment.text = updateTicket.description.value
+        }
+        if (updateTicket.commands != null) {
+            commandService.applyCommands(ticket.descriptionComment, updateTicket.commands, principal)
         }
 
         return toResultDto(ticket)
@@ -246,11 +297,11 @@ open class TicketServiceImpl @Inject constructor(
         tickets.delete(tickets.findOne(id) ?: throw NotFoundException())
     }
 
-    private fun setEstimationsWithEvents(ticket: Ticket, initial: Duration?, current: Duration?, user: User) {
+    private fun setEstimationsWithEvents(ticket: Ticket, updateInitial: UpdateValue<Duration?>?, updateCurrent: UpdateValue<Duration?>?, user: User) {
         val prevInitial = ticket.initialEstimatedTime
         val prevCurrent = ticket.currentEstimatedTime
 
-        setEstimations(ticket, initial, current)
+        setEstimations(ticket, updateInitial, updateCurrent)
 
         if (ticket.initialEstimatedTime != prevInitial) {
             ticketEvents.insert(TicketEventInitialEstimatedTimeChanged.create(ticket, user, prevInitial, ticket.initialEstimatedTime))
@@ -260,13 +311,29 @@ open class TicketServiceImpl @Inject constructor(
         }
     }
 
-    private fun setEstimations(ticket: Ticket, initial: Duration?, current: Duration?) {
+    private fun setEstimations(ticket: Ticket, updateInitial: UpdateValue<Duration?>?, updateCurrent: UpdateValue<Duration?>?) {
+        val initial = if (updateInitial != null) {
+            updateInitial.value
+        } else {
+            ticket.initialEstimatedTime
+        }
+        val current = if (updateCurrent != null) {
+            updateCurrent.value
+        } else {
+            ticket.currentEstimatedTime
+        }
+
         if (initial == null && current == null) {
             ticket.initialEstimatedTime = null
             ticket.currentEstimatedTime = null
         } else if (initial == null && current != null) {
-            ticket.initialEstimatedTime = null
-            ticket.currentEstimatedTime = null
+            if (updateInitial == null && updateCurrent != null) {
+                ticket.initialEstimatedTime = current
+                ticket.currentEstimatedTime = current
+            } else {
+                ticket.initialEstimatedTime = null
+                ticket.currentEstimatedTime = null
+            }
         } else if (initial != null && current == null) {
             ticket.initialEstimatedTime = initial
             ticket.currentEstimatedTime = initial

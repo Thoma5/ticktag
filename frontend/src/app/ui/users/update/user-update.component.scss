@@ -1,0 +1,23 @@
+ @import '../../../../style/constants.scss';
+ .row {
+   margin-top: $small-gap;
+   margin-bottom: 0;
+   padding-bottom: 0;
+   position: relative;
+ }
+ 
+ .row .form-group {
+   margin-bottom: 0;
+ }
+ 
+ * .btn {
+    @extend %btn;
+ }
+ 
+ small {
+   color: darkgrey;
+ }
+ 
+ #imagePickerCol {
+   padding-left: 0px;
+ }
