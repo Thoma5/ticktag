@@ -54,7 +54,7 @@ open class KanbanServiceImpl @Inject constructor(
         val result = emptyList<KanbanColumnResult>().toMutableList()
         val filter = TicketFilter(columns.first().ticketTagGroup.project.id, numbers, title, tags, users, progressOne, progressTwo, progressGreater, dueDateOne, dueDateTwo, dueDateGreater, storyPointsOne, storyPointsTwo, storyPointsGreater, open, parent)
 
-        val pageRequest = PageRequest(0, 40)
+        val pageRequest = PageRequest(0, 200)
         val filteredTickets = ticketRepository.findAll(filter,pageRequest)
         for (column in columns) {
             var lastSort = kanbanCellRepository.findByTicketTagId(column.id).toMutableList()
