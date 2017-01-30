@@ -99,7 +99,7 @@ class User:
     def __init__(self, usercount):
         self.id = random_uuid()
         self.name = faker.name()
-        self.username = re.sub(r"[^a-z0-9_]", "", self.name.lower())
+        self.username = re.sub(r"[^a-z0-9_]", "", self.name.lower()) + str(usercount)
         self.mail = re.sub(r"[^a-z0-9_]", "", self.name.lower()) + "@example.invalid"
         self.password_hash = PASSWORD_HASH
         self.role = ROLES[min(2, usercount %10)]
