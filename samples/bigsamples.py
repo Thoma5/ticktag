@@ -128,7 +128,7 @@ class Project:
     def insert(self):
         return """
             insert into public.project
-            values ({}, {}, {}, {}, {}, {}, {})
+            values ({}, {}, {}, {}, {}, {}, {}, {})
         ;""".format(
             sql(self.id),
             sql(self.name),
@@ -136,6 +136,7 @@ class Project:
             sql(self.time),
             sql(None),
             sql(None),
+            sql(''),
             sql(self.disabled))
 
 class TicketTag:
