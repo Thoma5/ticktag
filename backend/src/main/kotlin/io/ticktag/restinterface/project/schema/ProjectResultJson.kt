@@ -15,9 +15,11 @@ class ProjectResultJson(
         val id: UUID,
         val name: String,
         val description: String,
+        val ticketTemplate: String,
         val disabled: Boolean,
         val creationDate: Date,
         val icon: String?
 ) {
-    constructor(p: ProjectResult) : this(id = p.id, name = p.name, description = p.description, disabled = p.disabled, creationDate = p.creationDate, icon = createBase64StringWithMimeInfo(p.iconMimeInfo, p.icon))
+    constructor(p: ProjectResult) : this(id = p.id, name = p.name, description = p.description, ticketTemplate = p.ticketTemplate,
+            disabled = p.disabled, creationDate = p.creationDate, icon = createBase64StringWithMimeInfo(p.iconMimeInfo, p.icon))
 }

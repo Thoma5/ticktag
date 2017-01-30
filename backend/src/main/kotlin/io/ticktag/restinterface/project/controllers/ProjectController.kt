@@ -61,7 +61,7 @@ open class ProjectController @Inject constructor(
 
     @PostMapping
     open fun createProject(@RequestBody req: CreateProjectRequestJson): ProjectResultJson {
-        val project = projectService.createProject(CreateProject(req.name, req.description, req.icon))
+        val project = projectService.createProject(CreateProject(req.name, req.description, req.ticketTemplate, req.icon))
         return ProjectResultJson(project)
     }
 
@@ -73,7 +73,7 @@ open class ProjectController @Inject constructor(
     @PutMapping(value = "/{id}")
     open fun updateProject(@PathVariable(name = "id") id: UUID,
                            @RequestBody req: UpdateProjectRequestJson): ProjectResultJson {
-        val project = projectService.updateProject(id, UpdateProject(req.name, req.description, req.disabled, req.icon))
+        val project = projectService.updateProject(id, UpdateProject(req.name, req.description, req.ticketTemplate, req.disabled, req.icon))
         return ProjectResultJson(project)
     }
 

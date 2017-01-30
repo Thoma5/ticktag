@@ -42,7 +42,7 @@ open class ProjectServiceImpl @Inject constructor(
             iconMimeInfo = tempImg.mimeType
         }
         val creationDate = Date()
-        val newProject = Project.create(name, description, creationDate, iconMimeInfo, icon)
+        val newProject = Project.create(name, description, creationDate, iconMimeInfo, icon, project.ticketTemplate)
         projects.insert(newProject)
         return ProjectResult(newProject)
     }

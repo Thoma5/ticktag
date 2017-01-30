@@ -12,11 +12,12 @@ import javax.persistence.*
 @Table(name = "project")
 open class Project protected constructor() {
     companion object {
-        fun create(name: String, description: String, creationDate: Date, iconMimeInfo: String?, icon: ByteArray?): Project {
+        fun create(name: String, description: String, creationDate: Date, iconMimeInfo: String?, icon: ByteArray?, ticketTemplate: String): Project {
             val p = Project()
             p.id = UUID.randomUUID()
             p.name = name
             p.description = description
+            p.ticketTemplate = ticketTemplate
             p.disabled = false
             p.creationDate = creationDate
             p.iconMimeInfo = iconMimeInfo
@@ -40,6 +41,9 @@ open class Project protected constructor() {
 
     @Column(name = "description", nullable = false)
     lateinit open var description: String
+
+    @Column(name = "ticket_template", nullable = true)
+    lateinit open var ticketTemplate: String
 
     @Column(name = "creation_date", nullable = false)
     lateinit open var creationDate: Date
