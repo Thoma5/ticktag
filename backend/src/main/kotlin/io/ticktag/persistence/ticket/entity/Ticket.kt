@@ -38,6 +38,7 @@ open class Ticket protected constructor() {
             o.parentChangedEventsSrc = mutableListOf()
             o.mentionAddedEvents = mutableListOf()
             o.mentionRemovedEvents = mutableListOf()
+            o.kanbanCells = mutableSetOf()
             return o
         }
     }
