@@ -14,6 +14,7 @@ export class ProjectCreateComponent {
   request: CreateProjectRequestJson = {
     name: '',
     description: '',
+    ticketTemplate: '',
     icon: undefined
   };
   iconWithMimeType: String = undefined;
@@ -39,6 +40,7 @@ export class ProjectCreateComponent {
           if (result.isValid) {
             this.request.name = '';
             this.request.description = '';
+            this.request.ticketTemplate = '';
             this.request.icon = undefined;
             this.created.emit(result.result);
           } else {

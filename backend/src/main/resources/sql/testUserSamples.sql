@@ -22,8 +22,8 @@ INSERT INTO public."user" (id, username, mail, name, password_hash, role, curren
    '$2a$10$mTEkiQq2Wo./aqfekJHPk.5sG8JLWqWYbtMODwk9xQwQp0GtkCiM.', 'USER', '4aa33174-0001-4d33-0000-add96d0905e1', FALSE); --aaaa
 
 INSERT INTO "project" VALUES
-  ('00000000-0002-0000-0000-000000000001', 'Bitchip', 'Pfizer Consumer Healthcare', '2016-07-03 08:49:05', NULL, NULL, FALSE),
-  ('00000000-0002-0000-0000-000000000002', 'Veribet', 'H E B', '2016-08-26 21:57:39', NULL, NULL, FALSE);
+  ('00000000-0002-0000-0000-000000000001', 'Bitchip', 'Pfizer Consumer Healthcare', '2016-07-03 08:49:05', NULL, NULL, '', FALSE),
+  ('00000000-0002-0000-0000-000000000002', 'Veribet', 'H E B', '2016-08-26 21:57:39', NULL, NULL, '', FALSE);
 INSERT INTO "member" VALUES
   ('00000000-0001-0000-0000-000000000001', '00000000-0002-0000-0000-000000000001', 'ADMIN',
    to_date('2016-11-11', 'YYYY-MM-DD')),

@@ -90,7 +90,7 @@
           </div>
           <div class="body">
             <tt-ticket-create [projectId]="projectId" [allTicketTags]="allTicketTags" [allTimeCategories]="allTimeCategories" [allAssignmentTags]="allAssignmentTags"
-              (ticketAdd)="onTicketCreate($event)" [working]="createRunning">
+              (ticketAdd)="onTicketCreate($event)" [working]="createRunning" [template]="newTicketTemplate">
             </tt-ticket-create>
           </div>
         </div>

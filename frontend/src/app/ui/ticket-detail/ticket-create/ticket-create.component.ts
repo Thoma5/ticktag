@@ -22,6 +22,7 @@ export class TicketCreateComponent {
   @Input() allTicketTags: imm.Map<string, CommandTextviewTicketTag>;
   @Input() allTimeCategories: imm.Map<string, CommandTextviewTimeCategory>;
   @Input() allAssignmentTags: imm.Map<string, CommandTextviewAssignmentTag>;
+  @Input() template: string = '';
   readonly activeTags = imm.List.of();
   readonly assignedUsers = imm.List.of();
 

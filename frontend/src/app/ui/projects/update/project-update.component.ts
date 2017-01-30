@@ -15,6 +15,7 @@ export class ProjectUpdateComponent implements OnInit {
     name: undefined,
     description: undefined,
     icon: undefined,
+    ticketTemplate: undefined,
     disabled: undefined
   };
   active: Boolean;
@@ -49,6 +50,7 @@ export class ProjectUpdateComponent implements OnInit {
             this.request.name = '';
             this.request.description = '';
             this.request.icon = '';
+            this.request.ticketTemplate = '';
             this.updated.emit(result.result);
           } else {
             this.error(result);
@@ -76,6 +78,7 @@ export class ProjectUpdateComponent implements OnInit {
     this.request.description = this.project.description;
     this.request.icon = this.defaultIcon;
     this.iconWithMimeType = this.project.icon;
+    this.request.ticketTemplate = this.project.ticketTemplate;
     this.request.disabled = this.project.disabled;
     this.active = !this.project.disabled;
   }

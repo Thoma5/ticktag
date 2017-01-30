@@ -9,7 +9,7 @@ import {
   AssignmentTagResultJson, UserResultJson, TicketTagResultJson,
   TimeCategoryJson,
   TickettagApi, TicketuserrelationApi, TickettagrelationApi, ProjectApi,
-  TimecategoryApi
+  TimecategoryApi, ProjectResultJson
 } from '../../api';
 import {
   TicketOverview, TicketOverviewTag, TicketOverviewAssTag, TicketOverviewUser,
@@ -46,6 +46,7 @@ export class TicketOverviewComponent implements OnInit {
   private filterTerms = new Subject<TicketFilter>();
   private ticketFilter: TicketFilter = new TicketFilter(undefined, undefined, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+  private newTicketTemplate: string = '';
   sortprop = ['NUMBER_ASC'];
   offset = 0;
   limit = 30;
@@ -178,8 +179,11 @@ export class TicketOverviewComponent implements OnInit {
     let timeCategoriesObs = this.allTimeCategories ? Observable.of(this.allTimeCategories) : this.apiCallService
       .callNoError<TimeCategoryJson[]>(p => this.timeCategoryApi.listProjectTimeCategoriesUsingGETWithHttpInfo(this.projectId, p))
       .map(tcs => idListToMap(tcs).map(tc => new TicketOverviewTimeCategory(tc)).toMap());
+    let newTicketTemplateObs = this.apiCallService
+      .callNoError<ProjectResultJson>(p => this.projectApi.getProjectUsingGETWithHttpInfo(this.projectId, p))
+      .map(p => p.ticketTemplate);
     return Observable
-      .zip(rawTicketObs, assignmentTagsObs, ticketTagsObs, projectUsersObs, timeCategoriesObs)
+      .zip(rawTicketObs, assignmentTagsObs, ticketTagsObs, projectUsersObs, timeCategoriesObs, newTicketTemplateObs)
       .do(
       tuple => {
         if (!this.loading) {
@@ -190,6 +194,7 @@ export class TicketOverviewComponent implements OnInit {
         this.allProjectUsers = tuple[3];
         this.allTimeCategories = tuple[4];
         this.totalElements = tuple[0].totalElements;
+        this.newTicketTemplate = tuple[5];
         this.tickets = [];
         const start = this.offset * this.limit;
         const end = start + this.limit;

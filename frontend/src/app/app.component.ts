@@ -92,8 +92,8 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
       .filter(e => e instanceof NavigationStart)
       .map(e => e.url)
       .map(url => projectIdFromUrl(url))
-      .combineLatest(this.userObservable())
       .distinctUntilChanged()
+      .combineLatest(this.userObservable())
       .switchMap(projectIdAndUser => {
         let projectId = projectIdAndUser[0];
         let user = projectIdAndUser[1];
