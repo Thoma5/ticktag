@@ -7,6 +7,7 @@
         <div class='tags'>
             <span class='hint' *ngIf='tags.size === 0'>This user has no tags assigned and therefore is not associated with this ticket.</span>
             <tt-taginput
+                [editable]="editable"
                 [tags]="tags"
                 [allTags]="allTags"
                 (tagAdd)="tagAdd.emit($event)"

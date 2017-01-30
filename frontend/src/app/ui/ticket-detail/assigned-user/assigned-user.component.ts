@@ -15,6 +15,8 @@ export class AssignedUserComponent implements OnInit {
   @Input() tags: imm.List<{ id: string, transient: boolean }>;
   @Input() allTags: imm.Map<string, TicketDetailAssTag>;
   @Input() projectId: string;
+  @Input() editable: boolean = true;
+
   @Output() readonly tagAdd = new EventEmitter<string>();
   @Output() readonly tagRemove = new EventEmitter<string>();
 
