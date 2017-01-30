@@ -2,13 +2,14 @@ BEGIN;
 
 
 CREATE TABLE IF NOT EXISTS "project" (
-  "id"             UUID PRIMARY KEY,
-  "name"           TEXT      NOT NULL,
-  "description"    TEXT      NOT NULL,
-  "creation_date"  TIMESTAMP NOT NULL,
-  "icon_mime_info" TEXT,
-  "icon"           BYTEA,
-  "disabled"       BOOLEAN   NOT NULL
+  "id"              UUID PRIMARY KEY,
+  "name"            TEXT      NOT NULL,
+  "description"     TEXT      NOT NULL,
+  "creation_date"   TIMESTAMP NOT NULL,
+  "icon_mime_info"  TEXT,
+  "icon"            BYTEA,
+  "ticket_template" TEXT      NOT NULL,
+  "disabled"        BOOLEAN   NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS "assignment_tag" (
