@@ -208,15 +208,7 @@ export class AppComponent implements OnInit, OnDestroy, ErrorHandler {
       return;
     }
 
-    this.modal.alert()
-      .size('sm')
-      .title('Unauthorized')
-      .body('You are not permitted to access this page')
-      .okBtn('Take me back')
-      .open()
-      .then(promise => {
-        promise.result.then(result => this.goBack());
-      });
+    this.gotoHome();
   }
 
   private notFoundError(resp: Response): void {
