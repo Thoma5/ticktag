@@ -1,22 +1,33 @@
 <form (ngSubmit)="onSubmit()" #f="ngForm">
   <div class="row">
-     <label for="imagepicker">Icon</label>
+    <label for="imagepicker">Icon</label>
     <tt-image-picker (image)="setImage($event)" name="imagepicker"></tt-image-picker>
   </div>
   <div class="row">
     <label for="name">Name *</label>
     <div class="form-group" [ngClass]="{'has-error has-feedback': f.controls.name?.touched && ! f.controls.name?.valid}">
-    <input class="form-control"  minlength="3" maxlength="30" type="text" name="name" [(ngModel)]="request.name" placeholder="Name" required>
-    <span *ngIf="f.controls.name?.touched && ! f.controls.name?.valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
-    <small>At least 3 characters, max. 30</small>
+      <input class="form-control" minlength="3" maxlength="30" type="text" name="name" [(ngModel)]="request.name" placeholder="Name"
+        required>
+        <span *ngIf="f.controls.name?.touched && ! f.controls.name?.valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
+        <small>At least 3 characters, max. 30</small>
     </div>
   </div>
   <div class="row">
     <label for="description">Description *</label>
     <div class="form-group" [ngClass]="{'has-error': f.controls.description?.touched && ! f.controls.description?.valid}">
-    <textarea rows="6" cols="50" class="form-control"  minlength="3" maxlength="255" type="text" name="description" [(ngModel)]="request.description" placeholder="Description" required></textarea></div>
-    <small>At least 3 characters, max. 255</small>
+      <textarea rows="6" cols="50" class="form-control" minlength="3" maxlength="255" type="text" name="description" [(ngModel)]="request.description"
+        placeholder="Description" required></textarea>
     </div>
+    <small>At least 3 characters, max. 255</small>
+  </div>
+  <div class="row">
+    <label for="ticketTemplate">Ticket Description Template</label>
+    <div class="form-group" [ngClass]="{'has-error': f.controls.ticketTemplate?.touched && ! f.controls.ticketTemplate?.valid}">
+      <textarea rows="6" cols="50" class="form-control" minlength="0" maxlength="255" type="text" name="ticketTemplate" [(ngModel)]="request.ticketTemplate"
+        placeholder="Ticket Description Template"></textarea>
+    </div>
+    <small>max. 255 Characters</small>
+  </div>
   <div class="row">
     <input type="button" type="submit" [disabled]="!f.form.valid" class="btn btn-success btn-block" *ngIf="!working" (click)="onSubmit()"
       value="Create Project">
