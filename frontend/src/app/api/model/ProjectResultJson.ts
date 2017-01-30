@@ -38,5 +38,7 @@ export interface ProjectResultJson {
 
     name: string;
 
+    ticketTemplate: string;
+
 }
 
