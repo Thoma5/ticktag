@@ -178,7 +178,7 @@ open class TicketServiceImpl @Inject constructor(
             throw TicktagValidationException(listOf(ValidationError("createTicket", ValidationErrorDetail.Other("nonestedsubtickets"))))
         }
         val newTicket = Ticket.create(number, createTime, title, open, storyPoints, null, null, dueDate, parentTicket, project, user)
-        setEstimations(newTicket, initialEstimatedTime, currentEstimatedTime)
+        setEstimations(newTicket, UpdateValue(initialEstimatedTime), UpdateValue(currentEstimatedTime))
         tickets.insert(newTicket)
 
         //Comment
@@ -237,9 +237,7 @@ open class TicketServiceImpl @Inject constructor(
             ticket.storyPoints = updateTicket.storyPoints.value
         }
 
-        val newInitialEstimatedTime = updateTicket.initialEstimatedTime?.value ?: ticket.initialEstimatedTime
-        val newCurrentEstimatedTime = updateTicket.currentEstimatedTime?.value ?: ticket.currentEstimatedTime
-        setEstimationsWithEvents(ticket, newInitialEstimatedTime, newCurrentEstimatedTime, user)
+        setEstimationsWithEvents(ticket, updateTicket.initialEstimatedTime, updateTicket.currentEstimatedTime, user)
 
         if (updateTicket.dueDate != null) {
             if (ticket.dueDate != updateTicket.dueDate.value)
@@ -299,11 +297,11 @@ open class TicketServiceImpl @Inject constructor(
         tickets.delete(tickets.findOne(id) ?: throw NotFoundException())
     }
 
-    private fun setEstimationsWithEvents(ticket: Ticket, initial: Duration?, current: Duration?, user: User) {
+    private fun setEstimationsWithEvents(ticket: Ticket, updateInitial: UpdateValue<Duration?>?, updateCurrent: UpdateValue<Duration?>?, user: User) {
         val prevInitial = ticket.initialEstimatedTime
         val prevCurrent = ticket.currentEstimatedTime
 
-        setEstimations(ticket, initial, current)
+        setEstimations(ticket, updateInitial, updateCurrent)
 
         if (ticket.initialEstimatedTime != prevInitial) {
             ticketEvents.insert(TicketEventInitialEstimatedTimeChanged.create(ticket, user, prevInitial, ticket.initialEstimatedTime))
@@ -313,13 +311,29 @@ open class TicketServiceImpl @Inject constructor(
         }
     }
 
-    private fun setEstimations(ticket: Ticket, initial: Duration?, current: Duration?) {
+    private fun setEstimations(ticket: Ticket, updateInitial: UpdateValue<Duration?>?, updateCurrent: UpdateValue<Duration?>?) {
+        val initial = if (updateInitial != null) {
+            updateInitial.value
+        } else {
+            ticket.initialEstimatedTime
+        }
+        val current = if (updateCurrent != null) {
+            updateCurrent.value
+        } else {
+            ticket.currentEstimatedTime
+        }
+
         if (initial == null && current == null) {
             ticket.initialEstimatedTime = null
             ticket.currentEstimatedTime = null
         } else if (initial == null && current != null) {
-            ticket.initialEstimatedTime = null
-            ticket.currentEstimatedTime = null
+            if (updateInitial == null && updateCurrent != null) {
+                ticket.initialEstimatedTime = current
+                ticket.currentEstimatedTime = current
+            } else {
+                ticket.initialEstimatedTime = null
+                ticket.currentEstimatedTime = null
+            }
         } else if (initial != null && current == null) {
             ticket.initialEstimatedTime = initial
             ticket.currentEstimatedTime = initial

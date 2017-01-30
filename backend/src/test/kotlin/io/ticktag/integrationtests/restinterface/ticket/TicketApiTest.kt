@@ -227,7 +227,7 @@ class TicketApiTest : ApiBaseTest() {
     }
 
     @Test
-    fun `update with initial not set should clear estimated and initial`() {
+    fun `update with initial not set but current set should update estimated (and current if null)`() {
         withUser(ADMIN_ID) { p ->
             val create = CreateTicketRequestJson("title", true, null, null, null, null, "description",
                     PROJECT_AOU_AUO_ID, emptyList(), emptyList(), emptyList(), null, emptyList())
@@ -236,8 +236,8 @@ class TicketApiTest : ApiBaseTest() {
             val req = UpdateTicketRequestJson(null, null, null, null, UpdateNullableValueJson(Duration.ofDays(2)), null, null, null, null)
             val result = ticketController.updateTicket(req, ticket.id, p)
 
-            assertNull(result.initialEstimatedTime)
-            assertNull(result.currentEstimatedTime)
+            assertEquals(req.currentEstimatedTime!!.value, result.initialEstimatedTime)
+            assertEquals(req.currentEstimatedTime!!.value, result.initialEstimatedTime)
         }
     }
 

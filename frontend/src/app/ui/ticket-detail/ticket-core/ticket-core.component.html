@@ -32,6 +32,7 @@
             <div class="subticket-add">
               <tt-subticket-add *ngIf="isAllowedToEdit"
                 [parentTicket]='ticket'
+                [template]='ticketTemplate'
                 [allTicketTags]='allTicketTags'
                 [allTimeCategories]='allTimeCategories'
                 [allAssignmentTags]='allAssignmentTags'
