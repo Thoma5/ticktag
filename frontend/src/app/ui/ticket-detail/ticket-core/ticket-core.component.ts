@@ -56,6 +56,7 @@ export class TicketCoreComponent implements OnChanges {
 
   // Readonly
   @Input() ticket: TicketDetail;
+  @Input() ticketTemplate: string;
   @Input() number: number;
   @Input() creator: TicketDetailUser;
   @Input() createTime: number;

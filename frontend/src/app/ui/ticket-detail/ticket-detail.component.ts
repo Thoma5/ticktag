@@ -7,7 +7,7 @@ import { Overlay } from 'angular2-modal';
 import { ApiCallService, ApiCallResult } from '../../service';
 import { TaskQueue } from '../../util/task-queue';
 import {
-  TicketApi, TicketResultJson, CommentsApi, AssignmenttagApi,
+  ProjectApi, ProjectResultJson, TicketApi, TicketResultJson, CommentsApi, AssignmenttagApi,
   AssignmentTagResultJson, CommentResultJson, TicketTagResultJson,
   TickettagApi, TimeCategoryJson, TimecategoryApi,
   GetApi, GetResultJson, UpdateTicketRequestJson,
@@ -56,6 +56,7 @@ export class TicketDetailComponent implements OnInit {
   private comments: imm.Map<string, TicketDetailComment>;
   private relatedTickets: imm.Map<string, TicketDetailRelated>;
   private relatedProgresses: imm.Map<string, TicketDetailProgress>;
+  private ticketTemplate: string;
 
   // Internal state
   private currentTicketJson: TicketResultJson;  // Only use to recreate the ticket
@@ -80,6 +81,7 @@ export class TicketDetailComponent implements OnInit {
     private router: Router,
     private apiCallService: ApiCallService,
     private ticketApi: TicketApi,
+    private projectApi: ProjectApi,
     private commentsApi: CommentsApi,
     private assigmentTagsApi: AssignmenttagApi,
     private ticketTagsApi: TickettagApi,
@@ -99,8 +101,6 @@ export class TicketDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-
     this.route.params
       .do(() => {
         this.loading = true;
@@ -427,6 +427,7 @@ export class TicketDetailComponent implements OnInit {
       this.comments = undefined;
       this.relatedTickets = undefined;
       this.relatedProgresses = undefined;
+      this.ticketTemplate = undefined;
 
       this.currentTicketJson = undefined;
       this.transientUsers = imm.List<TicketDetailTransientUser>();
@@ -479,6 +480,8 @@ export class TicketDetailComponent implements OnInit {
 
     let rawTicketObs = this.apiCallService
       .callNoError<TicketResultJson>(p => this.ticketApi.getTicketByNumberUsingGETWithHttpInfo(projectId, ticketNumber, p));
+
+    let projectObs = this.apiCallService.callNoError<ProjectResultJson>(p => this.projectApi.getProjectUsingGETWithHttpInfo(projectId, p));
 
     let assignmentTagsObs = this.apiCallService
       .callNoError<AssignmentTagResultJson[]>(p => this.assigmentTagsApi.listAssignmentTagsUsingGETWithHttpInfo(projectId, p))
@@ -573,14 +576,15 @@ export class TicketDetailComponent implements OnInit {
     });
 
     return Observable.zip(rawTicketObs, assignmentTagsObs, ticketTagsObs, timeCategoriesObs, rawCommentObs,
-      Observable.zip(rawTicketEventObs, getObs))
+      Observable.zip(rawTicketEventObs, getObs, projectObs))
       .do(tuple => {
-        let [ticket, assignmentTags, ticketTags, timeCategories, comments, [ticketEvents, get]] = tuple;
+        let [ticket, assignmentTags, ticketTags, timeCategories, comments, [ticketEvents, get, project]] = tuple;
 
         this.allTicketTags = ticketTags;
         this.allAssignmentTags = assignmentTags;
         this.allTimeCategories = timeCategories;
         this.currentTicketJson = ticket;
+        this.ticketTemplate = project.ticketTemplate;
         this.relatedProgresses = imm.Map(get.ticketStatistics).map((p, tid) => new TicketDetailProgress(tid, p)).toMap();
         this.interestingUsers = imm.Map(get.users).map(u => new TicketDetailUser(u)).toMap();
         this.relatedTickets = imm.Map(get.tickets).map(t => newTicketDetailRelated(t, this.relatedProgresses)).toMap();
