@@ -17,15 +17,15 @@ class LoggedTimeApiTest : ApiBaseTest() {
     lateinit var loggedTimeController: LoggedTimeController
 
     override fun loadTestData(): List<String> {
-        return arrayListOf("sql/testBaseSamples.sql", "sql/WILL_BE_DELETED_SOON.sql")
+        return arrayListOf("sql/testBaseSamples.sql")
     }
 
     @Test
     fun `createLoggTime positiv`() {
         withUser(ADMIN_ID) { principal ->
             val duration = Duration.ofDays(1)
-            val commentId = UUID.fromString("00000000-0004-0000-0000-000000000001")
-            val categoryId = UUID.fromString("00000000-0007-0000-0000-000000000001")
+            val commentId = UUID.fromString("00000000-0004-0000-0000-000000000101")
+            val categoryId = UUID.fromString("00000000-0007-0000-0000-000000000101")
             val req = CreateLoggedTimeJson(duration, commentId,
                     categoryId)
 
@@ -41,8 +41,8 @@ class LoggedTimeApiTest : ApiBaseTest() {
     fun `updateLoggTime positiv`() {
         withUser(ADMIN_ID) { principal ->
             val duration = Duration.ofDays(2)
-            val categoryId = UUID.fromString("00000000-0007-0000-0000-000000000002")
-            val loggTimeId = UUID.fromString("00000000-0008-0000-0000-000000000001")
+            val categoryId = UUID.fromString("00000000-0007-0000-0000-000000000102")
+            val loggTimeId = UUID.fromString("00000000-0008-0000-0000-000000000101")
             val req = UpdateLoggedTimeJson(duration, categoryId, false)
             val result = loggedTimeController.updateLoggedTime(req = req, id = loggTimeId)
             assertEquals(result.time,(duration))
@@ -53,7 +53,7 @@ class LoggedTimeApiTest : ApiBaseTest() {
     @Test
     fun `updateLoggTime canceled`() {
         withUser(ADMIN_ID) { principal ->
-            val loggTimeId = UUID.fromString("00000000-0008-0000-0000-000000000001")
+            val loggTimeId = UUID.fromString("00000000-0008-0000-0000-000000000101")
             val req = UpdateLoggedTimeJson(null, null, true)
             val result = loggedTimeController.updateLoggedTime(req = req, id = loggTimeId)
             assertEquals(true, result.canceled)
@@ -71,9 +71,9 @@ class LoggedTimeApiTest : ApiBaseTest() {
     @Test
     fun `listLoggTime With ProjectId UserId and CategoryId positiv`() {
         withUser(ADMIN_ID) { principal ->
-            val userId = UUID.fromString("660f2968-aa46-4870-bcc5-a3805366cff2")
-            val projectId = UUID.fromString("00000000-0002-0000-0000-000000000001")
-            val categoryId = UUID.fromString("00000000-0007-0000-0000-000000000001")
+            val userId = UUID.fromString("00000000-0001-0000-0000-000000000103")
+            val projectId = UUID.fromString("00000000-0002-0000-0000-000000000101")
+            val categoryId = UUID.fromString("00000000-0007-0000-0000-000000000101")
             loggedTimeController.getLoggedTimesForProjectAndUserAndCategory(projectId = projectId,
                     userId = userId, categoryId = categoryId)
         }
@@ -83,8 +83,8 @@ class LoggedTimeApiTest : ApiBaseTest() {
     fun `createLoggTime negativ permission`() {
         withoutUser { ->
             val duration = Duration.ofDays(1)
-            val commentId = UUID.fromString("00000000-0004-0000-0000-000000000001")
-            val categoryId = UUID.fromString("00000000-0007-0000-0000-000000000001")
+            val commentId = UUID.fromString("00000000-0004-0000-0000-000000000101")
+            val categoryId = UUID.fromString("00000000-0007-0000-0000-000000000101")
             val req = CreateLoggedTimeJson(duration, commentId,
                     categoryId)
 
@@ -97,8 +97,8 @@ class LoggedTimeApiTest : ApiBaseTest() {
     fun `updateLoggTime  negativ permission`() {
         withoutUser { ->
             val duration = Duration.ofDays(2)
-            val categoryId = UUID.fromString("00000000-0007-0000-0000-000000000002")
-            val loggTimeId = UUID.fromString("00000000-0008-0000-0000-000000000001")
+            val categoryId = UUID.fromString("00000000-0007-0000-0000-000000000102")
+            val loggTimeId = UUID.fromString("00000000-0008-0000-0000-000000000101")
             val req = UpdateLoggedTimeJson(duration, categoryId, false)
             loggedTimeController.updateLoggedTime(req = req, id = loggTimeId)
 
@@ -116,9 +116,9 @@ class LoggedTimeApiTest : ApiBaseTest() {
     @Test(expected = AccessDeniedException::class)
     fun `listLoggTime With ProjectId UserId and CategoryId  negativ permission`() {
         withoutUser { ->
-            val userId = UUID.fromString("660f2968-aa46-4870-bcc5-a3805366cff2")
-            val projectId = UUID.fromString("00000000-0002-0000-0000-000000000001")
-            val categoryId = UUID.fromString("00000000-0007-0000-0000-000000000001")
+            val userId = UUID.fromString("00000000-0001-0000-0000-000000000103")
+            val projectId = UUID.fromString("00000000-0002-0000-0000-000000000101")
+            val categoryId = UUID.fromString("00000000-0007-0000-0000-000000000101")
             loggedTimeController.getLoggedTimesForProjectAndUserAndCategory(projectId = projectId,
                     userId = userId, categoryId = categoryId)
         }

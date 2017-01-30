@@ -16,7 +16,7 @@ class GetApiTest : ApiBaseTest() {
     @Inject lateinit var getController: GetController
 
     override fun loadTestData(): List<String> {
-        return arrayListOf("sql/testBaseSamples.sql", "sql/WILL_BE_DELETED_SOON.sql")
+        return arrayListOf("sql/testBaseSamples.sql")
     }
 
     @Test
@@ -25,23 +25,23 @@ class GetApiTest : ApiBaseTest() {
             val result = getController.get(
                     GetRequestJson(
                             userIds = listOf(
-                                    UUID.fromString("93ef43d9-20b7-461a-b960-2d1e89ba099f"),
-                                    UUID.fromString("660f2968-aa46-4870-bcc5-a3805366cff2"),
-                                    UUID.fromString("99999999-9999-9999-9999-999999999999")),
+                                    UUID.fromString("00000000-0001-0000-0000-000000000101"),
+                                    UUID.fromString("00000000-0001-0000-0000-000000000102"),
+                                    UUID.fromString("00000000-0001-0000-0000-000000000103")),
                             ticketIds = null,
                             loggedTimeIds = null,
                             ticketIdsForStatistic = null),
                     principal = p
             )
 
-            assertEquals(2, result.users.size)
+            assertEquals(3, result.users.size)
             assertEquals(0, result.tickets.size)
             assertEquals(0, result.ticketStatistics.size)
-            assertTrue(result.users.containsKey(UUID.fromString("93ef43d9-20b7-461a-b960-2d1e89ba099f")))
-            assertTrue(result.users.containsKey(UUID.fromString("660f2968-aa46-4870-bcc5-a3805366cff2")))
+            assertTrue(result.users.containsKey(UUID.fromString("00000000-0001-0000-0000-000000000101")))
+            assertTrue(result.users.containsKey(UUID.fromString("00000000-0001-0000-0000-000000000102")))
 
-            val user = result.users[UUID.fromString("93ef43d9-20b7-461a-b960-2d1e89ba099f")]!!
-            assertEquals("Michael Heinzl", user.name)
+            val user = result.users[UUID.fromString("00000000-0001-0000-0000-000000000101")]!!
+            assertEquals("Admiral Admin", user.name)
         }
     }
 
@@ -57,7 +57,7 @@ class GetApiTest : ApiBaseTest() {
                             ticketIds = listOf(
                                     firstId,
                                     secondId,
-                                    UUID.fromString("99999999-9999-9999-9999-999999999999")),
+                                    UUID.fromString("00000000-0001-0000-0000-000000000103")),
                             ticketIdsForStatistic = null),
                     principal = p
             )
@@ -85,7 +85,7 @@ class GetApiTest : ApiBaseTest() {
                             ticketIdsForStatistic = listOf(
                                     firstId,
                                     secondId,
-                                    UUID.fromString("99999999-9999-9999-9999-999999999999"))),
+                                    UUID.fromString("00000000-0001-0000-0000-000000000103"))),
                     principal = p
             )
 

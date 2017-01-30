@@ -58,7 +58,7 @@ WHERE id = '00000000-0003-0000-0000-000000000101';
 INSERT INTO PUBLIC.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, OPEN, story_points, initial_estimated_time, current_estimated_time, due_date)
 VALUES ('00000000-0003-0000-0000-000000000102', 1, NULL, '00000000-0002-0000-0000-000000000102',
                                                 '00000000-0001-0000-0000-000000000101', NULL,
-                                                '2016-11-16 17:06:07.221000', 'Project 2 Ticket One', TRUE, 10, 20, 25,
+                                                '2016-11-16 17:06:07.221000', 'Project 2 Ticket One', TRUE, 11, 20, 25,
         '2016-11-20 17:07:05.554000');
 INSERT INTO PUBLIC.comment (id, user_id, ticket_id, create_time, TEXT)
 VALUES ('00000000-0004-0000-0000-000000000102', '00000000-0001-0000-0000-000000000101',
@@ -71,7 +71,7 @@ WHERE id = '00000000-0003-0000-0000-000000000102';
 INSERT INTO PUBLIC.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, OPEN, story_points, initial_estimated_time, current_estimated_time, due_date)
 VALUES ('00000000-0003-0000-0000-000000000103', 1, NULL, '00000000-0002-0000-0000-000000000103',
                                                 '00000000-0001-0000-0000-000000000101', NULL,
-                                                '2016-11-16 17:06:07.221000', 'Project 3 Ticket One', TRUE, 10, 20, 25,
+                                                '2016-11-16 17:06:07.221000', 'Project 3 Ticket One', TRUE, 12, 20, 25,
         '2016-11-20 17:07:05.554000');
 INSERT INTO PUBLIC.comment (id, user_id, ticket_id, create_time, TEXT)
 VALUES ('00000000-0004-0000-0000-000000000103', '00000000-0001-0000-0000-000000000101',
@@ -84,7 +84,7 @@ WHERE id = '00000000-0003-0000-0000-000000000103';
 INSERT INTO PUBLIC.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, OPEN, story_points, initial_estimated_time, current_estimated_time, due_date)
 VALUES ('00000000-0003-0000-0000-000000000104', 1, NULL, '00000000-0002-0000-0000-000000000104',
                                                 '00000000-0001-0000-0000-000000000101', NULL,
-                                                '2016-11-16 17:06:07.221000', 'Project 4 Ticket One', TRUE, 10, 20, 25,
+                                                '2016-11-16 17:06:07.221000', 'Project 4 Ticket One', TRUE, 20, 20, 25,
         '2016-11-20 17:07:05.554000');
 INSERT INTO PUBLIC.comment (id, user_id, ticket_id, create_time, TEXT)
 VALUES ('00000000-0004-0000-0000-000000000104', '00000000-0001-0000-0000-000000000101',
@@ -97,14 +97,14 @@ WHERE id = '00000000-0003-0000-0000-000000000104';
 INSERT INTO PUBLIC.ticket (id, number, parent_ticket_id, project_id, created_by, description_comment_id, create_time, title, OPEN, story_points, initial_estimated_time, current_estimated_time, due_date)
 VALUES ('00000000-0003-0000-0000-000000000105', 2, NULL, '00000000-0002-0000-0000-000000000101',
                                                 '00000000-0001-0000-0000-000000000101', NULL,
-                                                '2016-11-16 17:06:07.221000', 'Project 1 Ticket Two', TRUE, 10, 20, 25,
+                                                '2016-11-16 17:06:07.221000', 'Project 1 Ticket Two', TRUE, 15, 20, 25,
         '2016-11-20 17:07:05.554000');
 INSERT INTO PUBLIC.comment (id, user_id, ticket_id, create_time, TEXT)
 VALUES ('00000000-0004-0000-0000-000000000105', '00000000-0001-0000-0000-000000000101',
-        '00000000-0003-0000-0000-000000000104', '2016-11-16 17:09:59.019000', 'Description Project4 Ticket1');
+        '00000000-0003-0000-0000-000000000105', '2016-11-16 17:09:59.019000', 'Description Project4 Ticket1');
 UPDATE PUBLIC.ticket
 SET description_comment_id = '00000000-0004-0000-0000-000000000105'
-WHERE id = '00000000-0003-0000-0000-000000000104';
+WHERE id = '00000000-0003-0000-0000-000000000105';
 
 --######################################## COMMENTS ##################################################################
 --####################################################################################################################
@@ -280,5 +280,12 @@ INSERT INTO public.assigned_ticket_tag (ticket_id, ticket_tag_id) VALUES
   ('00000000-0003-0000-0000-000000000101', '00000000-0005-0000-0000-000000000108');
 
 -- Tags for Tickets 00000000-0003-0000-0000-0000000001 2&3 reserved for insert tests
+
+
+--########################################## LOGGED TIME #############################################################
+--####################################################################################################################
+INSERT INTO public.logged_time (id, comment_id, category_id, time, canceled)
+VALUES ('00000000-0008-0000-0000-000000000101', '00000000-0004-0000-0000-000000000101',
+        '00000000-0007-0000-0000-000000000101', 10, false);
 
 COMMIT;

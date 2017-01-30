@@ -2,15 +2,14 @@ package io.ticktag.integrationtests.restinterface.tickettag
 
 import io.ticktag.PROJECT_AOU_OAU_ID
 import io.ticktag.USER_ID
+import io.ticktag.integrationtests.restinterface.ApiBaseTest
 import io.ticktag.persistence.tickettag.TicketTagRepository
 import io.ticktag.persistence.tickettaggroup.TicketTagGroupRepository
-import io.ticktag.integrationtests.restinterface.ApiBaseTest
 import io.ticktag.restinterface.tickettag.controllers.TicketTagController
 import io.ticktag.restinterface.tickettag.schema.CreateTicketTagRequestJson
 import io.ticktag.restinterface.tickettag.schema.UpdateTicketTagRequestJson
 import org.junit.Assert
 import org.junit.Assert.assertEquals
-import org.junit.Ignore
 import org.junit.Test
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.AccessDeniedException
@@ -22,14 +21,13 @@ class TicketTagApiTest : ApiBaseTest() {
     @Inject lateinit var ticketTagRepo: TicketTagRepository
     @Inject lateinit var ticketTagGroupRepo: TicketTagGroupRepository
 
-    val LOCAL_USER_ID: UUID = UUID.fromString("00000000-0001-0000-0000-000000000002")
+    val LOCAL_USER_ID: UUID = UUID.fromString("00000000-0001-0000-0000-000000000103")
 
     override fun loadTestData(): List<String> {
-        return arrayListOf("sql/testBaseSamples.sql", "sql/WILL_BE_DELETED_SOON.sql")
+        return arrayListOf("sql/testBaseSamples.sql")
     }
 
-    // TODO
-    @Ignore("Failing because of tag id not matching new data")
+
     @Test
     fun getTicketTag_positive() {
         withUser(LOCAL_USER_ID) { ->
@@ -51,10 +49,10 @@ class TicketTagApiTest : ApiBaseTest() {
     }
 
 
-    val ticketTagToInsert = CreateTicketTagRequestJson("ticket", "000000", 0, UUID.fromString("00000000-0009-0000-0000-000000000001"),false)
 
     @Test
-    fun createTicketTag_positive() {
+    fun createTicketTagAs_positive() {
+        val ticketTagToInsert = CreateTicketTagRequestJson("ticket", "000000", 0, UUID.fromString("00000000-0009-0000-0000-000000000105"), false)
         withUser(LOCAL_USER_ID) { ->
             val resp = ticketTagController.createTicketTag(ticketTagToInsert)
             val tag = ticketTagRepo.findOne(resp.id)!!
@@ -66,15 +64,26 @@ class TicketTagApiTest : ApiBaseTest() {
     }
 
     @Test(expected = AccessDeniedException::class)
+    fun createTicketTagAsUser_negative() {
+        val ticketTagToInsert = CreateTicketTagRequestJson("ticket", "000000", 0, UUID.fromString("00000000-0009-0000-0000-000000000101"), false)
+
+        withUser(LOCAL_USER_ID) { ->
+            val resp = ticketTagController.createTicketTag(ticketTagToInsert)
+        }
+    }
+
+    @Test(expected = AccessDeniedException::class)
     fun createTicketTag_negative() {
+        val ticketTagToInsert = CreateTicketTagRequestJson("ticket", "000000", 0, UUID.fromString("00000000-0009-0000-0000-000000000101"), false)
+
         withoutUser { ->
             ticketTagController.createTicketTag(ticketTagToInsert)
         }
     }
 
 
-    val ticketTagToUpdate = UpdateTicketTagRequestJson("ticket", "000000", 0, UUID.fromString("00000000-0009-0000-0000-000000000002"),false)
-    val ticketTagToUpdateId = UUID.fromString("00000000-0005-0000-0000-000000000001")!!
+    val ticketTagToUpdate = UpdateTicketTagRequestJson("ticket", "000000", 0, UUID.fromString("00000000-0009-0000-0000-000000000105"), false)
+    val ticketTagToUpdateId = UUID.fromString("00000000-0005-0000-0000-000000000114")!!
 
     @Test
     fun updateTicketTag_positive() {
@@ -95,7 +104,7 @@ class TicketTagApiTest : ApiBaseTest() {
         }
     }
 
-    val ticketTagToDeleteId = UUID.fromString("00000000-0005-0000-0001-000000000003")!!
+    val ticketTagToDeleteId = UUID.fromString("00000000-0005-0000-0000-000000000114")!!
 
     @Test
     fun deleteTicketTag_positive() {
@@ -129,8 +138,6 @@ class TicketTagApiTest : ApiBaseTest() {
         }
     }
 
-    // TODO
-    @Ignore("Failing because of tag id not matching new data")
     @Test
     fun `listTicketTags should pass with ticketTagGroupId parameter`() {
         withUser(LOCAL_USER_ID) { ->
