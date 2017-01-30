@@ -34,8 +34,10 @@ export class EditTextviewDateTimeEditComponent implements TextviewEditComponent<
   @Input() set content(v: number) {
     this._content = (v !== null && v !== undefined) ? moment(v).format('YYYY-MM-DD') : '';
   }
+
   get content() {
-    return this._content ? moment(this._content + ' +0000', 'YYYY-MM-DD ZZ').valueOf() : null;
+    let m = this.parseAsUtc(this._content);
+    return m != null ? m.valueOf() : null;
   }
 
   valid: boolean = true;
@@ -52,8 +54,8 @@ export class EditTextviewDateTimeEditComponent implements TextviewEditComponent<
     }
 
     const regexp = new RegExp('\\d{4}-\\d{2}-\\d{2}');
-    const m = moment(val, 'YYYY-MM-DD');
-    this.valid = regexp.test(val) && m.isValid();
+    const m = this.parseAsUtc(val);
+    this.valid = regexp.test(val) && m != null && m.isValid();
     if (this.valid) {
       this.contentChange.emit(m.valueOf());
     }
@@ -63,6 +65,12 @@ export class EditTextviewDateTimeEditComponent implements TextviewEditComponent<
     if (this.valid) {
       this.save.emit();
     }
+  }
+
+  private parseAsUtc(val: string): moment.Moment {
+    let utcTimestamp =  val ? moment(val + ' +0000', 'YYYY-MM-DD ZZ') : null;
+    console.log(utcTimestamp);
+    return utcTimestamp;
   }
 }
 
