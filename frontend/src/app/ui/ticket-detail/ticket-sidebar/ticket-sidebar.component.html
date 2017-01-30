@@ -3,6 +3,7 @@
         <h2 class="first">Ticket Users</h2>
         <div class="assigned-user" *ngFor="let a of assignments; trackBy: assignedUserTrackBy">
             <tt-assigned-user
+                [editable]="isAllowedToEdit"
                 [user]="a.user"
                 [tags]="a.tags"
                 [allTags]="allAssignmentTags"

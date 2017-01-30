@@ -30,7 +30,7 @@ export class TaginputComponent implements OnChanges {
 
   // Array of `Tag.id` values of `allTags`.
   @Input() tags: imm.List<TagRef>;
-  @Input() editable: boolean;
+  @Input() editable: boolean = true;
   @Output() readonly tagsChange = new EventEmitter<imm.List<TagRef>>();
   @Output() readonly tagAdd = new EventEmitter<string>();
   @Output() readonly tagRemove = new EventEmitter<string>();
