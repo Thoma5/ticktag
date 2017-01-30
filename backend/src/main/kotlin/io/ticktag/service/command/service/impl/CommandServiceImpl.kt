@@ -144,7 +144,7 @@ open class CommandServiceImpl(
                 }
                 is Command.RefTicket -> {
                     val refNum = command.ticketNumber
-                    val referencedTicket = tickets.findByNumber(command.ticketNumber)
+                    val referencedTicket = tickets.findByProjectIdAndNumber(ticket.project.id, command.ticketNumber)
                     if (referencedTicket != null) {
                         comment.mentionedTickets.add(referencedTicket)
                     } else {
