@@ -63,6 +63,7 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
     @Input() resetEventObservable: Observable<string> | null = null;
     @Input() noCommands: boolean = false;
     @Input() hasShortcut: boolean = false;
+    @Input() realInitialContent: string = '';
 
     @Output() readonly contentChange = new EventEmitter<CommandTextviewSaveEvent>();
     @Output() readonly save = new EventEmitter<void>();
@@ -104,11 +105,15 @@ export class CommandTextviewComponent implements AfterViewInit, OnChanges, OnDes
                 }, 100);
             }
         });
+        this.instance.setValue(this.realInitialContent || '');
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         if ('resetEventObservable' in changes) {
             this.resubscribeResetEvent();
+        }
+        if (this.instance && 'realInitialContent' in changes) {
+            this.instance.setText(this.realInitialContent);
         }
     }
 
